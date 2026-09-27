@@ -136,3 +136,69 @@ This is a **gap analysis relative to the proposed platform**, not a comprehensiv
 - [Census of India tables](https://censusindia.gov.in/census.website/data/census-tables)
 - [National Data Governance framework](https://www.negd.gov.in/ndg/ndg)
 - [MeitY metadata and data standards](https://docs.apisetu.gov.in/document-central/mdds/Introduction.html)
+
+## Additional research: gaps documented by audits and evaluations
+
+The earlier sections identified gaps by comparing what existing portals publish with what the proposed platform needs. The following primary-source evaluations add concrete, bounded examples. Audit findings below are **specific to the audited state, time period, and sample**; they should not be generalized to every state or every project.
+
+### Citizen grievance handling: closure can be mistaken for resolution
+
+A Parliamentary Standing Committee reviewing public grievances noted that some departments closed cases by telling citizens to contact another agency or portal; it also observed that valid reasons for closure were not provided in many such cases. The Committee specifically described cases related to State governments where petitioners were told to approach the State and the grievance was disposed instead of being forwarded, leaving no redressal. This demonstrates a gap between **administrative disposal** and **verified resolution**.
+
+**Implication:** a platform should track the citizen’s reported outcome and follow-up, not count a “closed” status alone as proof that the need was met. It should also surface recurring issues across agencies instead of simply routing each report in isolation.
+
+Source: [Rajya Sabha Department-related Parliamentary Standing Committee report on grievances (PDF)](https://sansad.in/getFile/rsnew/Committee_site/Committee_File/ReportFile/18/164/111_2022_3_18.pdf?source=rajyasabha), especially paragraphs 2.6 and 2.12.
+
+### Drinking water: infrastructure completion and functional service can diverge
+
+The CAG’s **Kerala-specific** performance audit of Jal Jeevan Mission (Report No. 10 of 2025) found that, as of 15 March 2024, 72 schemes (13.46% of the schemes in the relevant audit table) had at least one critical component not awarded; the report concluded these schemes could not be made functional. The audit also reported water-test data gaps: WQMIS records lacked key sampling/report dates, sampling location, and remedial-action information, with test-result turnaround times of 33–45 days in test-checked districts. It further found that results were not shared with GPs, limiting community awareness of contaminated sources.
+
+This is evidence for three separate planning risks: a household connection count may not establish a functioning end-to-end scheme; monitoring records may not carry the fields needed to act on a quality problem; and local communities may not receive the information needed to respond.
+
+**Implication:** link connections to scheme components, operational status, service continuity, water-quality test metadata, remedial action, and village-level communication. Keep the audit’s state and period explicit when using its figures.
+
+Sources: [CAG Kerala JJM audit landing page](https://cag.gov.in/ag2/gujarat/en/audit-report/details/123724) and [full report PDF](https://cag.gov.in/webroot/uploads/download_audit_report/2025/1.PA-on-JJM--English-0699d4ee1651af6.08263828.pdf). The report cover identifies Government of Kerala, Report No. 10 of 2025.
+
+### Rural roads: maintenance and quality need to be tracked after construction
+
+A CAG audit report for **Sikkim** states that joint physical inspection visited 21 of 34 sampled roads under maintenance; all inspected PMGSY roads completed during 2017–21 were found in dilapidated condition. Reported defects included damaged road surfaces, blocked drains and culverts, and slips/landslides. A separate Odisha audit (2012–17) found that contractors had not maintained 23 of 84 inspected completed roads; the report also recorded pending action on quality-monitor findings. These are state-specific samples, not a national failure rate, but they show why road length constructed is an incomplete measure of service.
+
+**Implication:** connect road project records to maintenance responsibility, condition inspections, accessibility during monsoon/disasters, repair history, and community reports after handover.
+
+Sources: [CAG audit report for Sikkim, year ended March 2023](https://cag.gov.in/uploads/download_audit_report/2025/Report-of-the-Comptroller-and-Auditor-General-of-India-on-Social%2C-Economic%2C-Revenue%2C-General-Sectors-and-Local-Bodies-for-the-year-ended-March-2023-%28Report-No.-3-of-2025%29-0693c04b885ca95.29034188.pdf); [CAG Odisha audit report, year ended March 2017](https://cag.gov.in/uploads/download_audit_report/2018/Chapter_2_Performance_Audit_of_Report_No_2_of_2018_-_General_and_Social_Sector_Government_of_Odisha.pdf).
+
+### Schools: facility counts can miss functionality and maintenance
+
+A Union CAG audit of school toilets constructed by central public-sector enterprises reported that, in the audit sample, 75% received a three-star or lower rating under the grading criteria used. The audit identified maintenance, dedicated funding, and water availability as issues. The report is historical and limited to its sampled schools; it is best used as evidence that an asset count is not a complete functionality measure, rather than as a current national estimate.
+
+**Implication:** when identifying school infrastructure gaps, distinguish “facility exists” from “facility functional, accessible, supplied, and maintained.”
+
+Source: [CAG Report No. 21 of 2019 on construction of toilets in schools](https://cag.gov.in/uploads/download_audit_report/2019/Report_No_21_of_2019_Construction_of_toilets_in_schools_by_CPSEs_Union_Government_Commercial.pdf).
+
+### District monitoring: indicators and rankings need context
+
+NITI Aayog’s published assessment of the Aspirational Districts Programme describes the use of 49 indicators/81 data points and a mix of district-entered and third-party-validated information. The UNDP appraisal notes that some data is uploaded by district officials while some indicators come from central ministries. The appraisal also reports that remote districts faced more difficulty implementing infrastructure projects than districts near highways or cities, and identifies scope to strengthen collaboration and technical support. A separate NITI-hosted assessment recommends peer-group comparisons and baseline studies, and notes that indicators already near saturation may show little incremental improvement.
+
+These findings do not mean the programme lacks value: the appraisal also reports progress and describes data-driven monitoring and convergence as strengths. The design lesson is that a rank or delta score alone can conceal starting conditions, remoteness, indicator maturity, and differences in local implementation capacity.
+
+**Implication:** show absolute service levels as well as change-over-time; compare like districts where appropriate; add remoteness/access costs and uncertainty; avoid rewarding only easy-to-improve indicators.
+
+Sources: [NITI Aayog / UNDP appraisal of ADP](https://www.niti.gov.in/node/694) (published report text includes the appraisal’s data and remote-area observations); [NITI Aayog assessment of ADP](https://www.niti.gov.in/node/693).
+
+### What this evidence changes in the platform gap analysis
+
+These audits sharpen the earlier gap list:
+
+- **Resolution quality:** case closure needs outcome confirmation and a valid-action trail.
+- **Functionality:** count usable service, not only installed assets or completed works.
+- **Maintenance:** include post-construction responsibility and condition over time.
+- **Data quality:** store location, timestamps, completeness, source, verification, and remedial action for monitoring data.
+- **Equity and comparability:** account for remoteness, starting baseline, and unequal reporting access when ranking.
+- **Evidence scope:** preserve state, period, and sample metadata so local audit observations are not misrepresented as national prevalence.
+
+## Research notes and evidence limits
+
+- The CAG reports are strong sources for the issues found in their specific audit scope; they are not all-India prevalence studies.
+- The ADP appraisal and assessment are valuable implementation/evaluation references, but findings are tied to the programme and evaluation period stated in each report.
+- Current dashboard values and historical audit findings answer different questions. A dashboard may show current reported coverage; an audit can reveal weaknesses in verification, quality, maintenance, or implementation in a specific sample.
+- Before using a finding to rank present-day districts, refresh the underlying data and verify whether the relevant deficiency has since been corrected.
