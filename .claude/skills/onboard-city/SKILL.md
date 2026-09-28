@@ -1,11 +1,11 @@
 ---
 name: onboard-city
-description: Use when adding a new city to INFRA-AI or replacing a pilot city. A city must be configuration plus a pipeline run — no code changes. Covers the city config, boundaries, languages, news queries, coverage checks and language evaluation.
+description: Use when adding a new city to INFRA-AI or replacing a showcase city. A city must be configuration plus a pipeline run — no code changes. Covers the city config, boundaries, languages, news queries, coverage checks and language evaluation.
 ---
 
 # Onboard a city
 
-The promise under test: **city #N = one config file + one pipeline run** (README §17, ADR-0001). If adding a city needs a code change, the code is wrong — generalize the code; don't special-case the city.
+The promise under test: **city #N = one config file + one pipeline run** (README §17, `AGENTS.md` invariant 8). Fields already cover all of India (ADR-0013); a city config adds local depth — boundaries, wards, languages, local news and sources. If adding a city needs a code change, the code is wrong — generalize the code; don't special-case the city.
 Paths follow README §12; if one does not exist yet, create it there.
 
 ## 1. Write `config/cities/<city_id>.yaml`
@@ -44,5 +44,5 @@ A language new to the platform needs all of this before it is switched on anywhe
 
 ## 6. Document
 
-- Pilot city? Update README §4 and write a superseding ADR for ADR-0002.
+- Showcase city? Update README §4 and write a superseding ADR for ADR-0002.
 - Data gaps left? Add them to README §18.

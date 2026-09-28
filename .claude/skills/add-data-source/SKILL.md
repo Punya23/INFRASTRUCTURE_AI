@@ -5,7 +5,7 @@ description: Use when adding or changing any dataset or feed in INFRA-AI — an 
 
 # Add or change a data source
 
-Read first: `AGENTS.md` invariants 1, 2, 7, 8, 9 · README §5 (source table) and §8.1 (ingestion) · ADR-0012 (licensing).
+Read first: `AGENTS.md` invariants 1, 2, 7, 8, 9 · README §5 (source table) and §8.1 (ingestion) · ADR-0012 (licensing) · your field plan in `docs/fields/`.
 Paths follow README §12; if one does not exist yet, create it there.
 
 ## 1. Is it worth it?
@@ -26,7 +26,7 @@ Paths follow README §12; if one does not exist yet, create it there.
 - Write to `data/raw/<source>/<YYYY-MM-DD>/` (gitignored) and commit `data/manifests/<source>.yaml` with: url, fetched_at, sha256, license, attribution, row count.
 - Fetching is re-runnable; raw files are never edited.
 
-## 4. Load — `ml/pipeline/ingest_<source>.py`
+## 4. Load — `ml/fields/<field>/ingest_<source>.py` (field sources) or `ml/pipeline/ingest_<source>.py` (shared sources)
 
 - Map source fields and tags to canonical kinds through `config/taxonomy.yaml`; never inline mappings in code.
 - Every row carries `source`, `source_ref` (a stable upstream id), `fetched_at`, `license` and `confidence`.
