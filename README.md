@@ -575,7 +575,7 @@ Conventions: `api/openapi.yaml` is the contract, and the web client is generated
 | Map | MapLibre GL JS; OpenFreeMap basemap for the demo, self-hosted Protomaps in production | Open source, no API keys, DPG-friendly; native heatmap and fill layers |
 | Boundaries | Survey of India–compliant national and state outlines | Required for maps of India |
 | API | Go — stdlib `net/http` routing, pgx, sqlc | Small and fast; typed SQL without an ORM |
-| Pipeline and analytics | Python 3.12 — GeoPandas, DuckDB (spatial), h3-py, PySAL `esda`, trafilatura | Standard geo-data stack; DuckDB reads Overture GeoParquet by bounding box |
+| Pipeline and analytics | Python 3.12 (uv) — GeoPandas, Shapely, DuckDB (spatial), rasterio, h3-py, networkx, pdfplumber, PySAL `esda`, trafilatura | Standard geo-data stack; DuckDB streams the OSM PBF and reads Overture GeoParquet by bounding box; networkx routes the NH graph for circuity (pgRouting once the graph lives in PostGIS) |
 | AI serving | Flask, one synchronous endpoint (`/brief`) | Team standard for thin ML endpoints |
 | Database | PostgreSQL + PostGIS + pgvector + pg_trgm | Geometry, vectors, fuzzy search and the queue in one store |
 | Speech and translation | Bhashini; AI4Bharat IndicConformer (speech recognition), IndicTrans2 (translation), IndicXlit (transliteration), Indic Parler-TTS; Whisper as fallback | 22 scheduled languages; open models for self-hosting |
@@ -602,6 +602,7 @@ INFRA_AI/
 ├── config/
 │   ├── cities/<city>.yaml       boundary, LGD codes, languages, news queries         (M0)
 │   ├── fields/<field>.yaml      field parameters: distances, bands, H3 resolution    (M1)
+│   ├── sources.yaml             source registry: URL, license, attribution, used_by  (M1)
 │   ├── taxonomy.yaml            source tags → canonical kinds; request categories    (M0)
 │   └── scoring.yaml             norms, weights, reach, stage weights                  (M2)
 ├── db/migrations/               plain SQL, numbered, forward-only                     (M0)
@@ -613,6 +614,7 @@ INFRA_AI/
 │   ├── app.py                   Flask: /brief, /healthz
 │   ├── worker.py                queue worker: intake and news jobs
 │   ├── ai/                      one module per AI capability + prompts/<capability>/vN.md
+│   ├── common/fetch.py          downloads every source in config/sources.yaml, writes data/manifests/
 │   ├── fields/<field>/          field loaders and analyses (national_highways, metro_rail, …)
 │   ├── pipeline/                shared: ingest_*, conflate, grid, scores, hotspots (CLI)
 │   ├── eval/                    gold sets (JSONL) + evaluation runner
@@ -748,7 +750,7 @@ Decided in [ADR-0011](docs/adr/0011-privacy-do-no-harm.md) and [ADR-0012](docs/a
 5. **LLM budget and constraints:** what API budget, and is there a requirement for Indian / self-hosted models?
 6. **Shared ownership:** with two UI owners and two field owners, who owns `api/` (Go) and the citizen-intake pipeline? If nobody has Go capacity, FastAPI replaces Go ([ADR-0006](docs/adr/0006-three-service-monorepo.md)).
 7. **Metro owner:** add the second data owner's name to [`docs/fields/README.md`](docs/fields/README.md) and the metro plan.
-8. **NHAI GeoServer:** the richest NH source — segments with lanes, project alignments, crash points — states no license. Ask NHAI/MoRTH, use it only for internal validation, or skip it? Until decided, skill `add-data-source` blocks it.
+8. **NHAI GeoServer — decided:** used for analysis; only aggregates are committed, never its raw records or geometry; terms still to be requested from NHAI/MoRTH ([ADR-0014](docs/adr/0014-nhai-geoserver-data.md)).
 
 **Differences with the existing team docs — decide before M0**
 

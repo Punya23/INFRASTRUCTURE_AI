@@ -1,0 +1,11 @@
+id: nhai_bharatmala
+license: none stated — analysis use by team decision (ADR-0014); not redistributed
+attribution: National Highways Authority of India — Datalake GeoServer
+used_by:
+- national_highways
+files:
+- file: data/raw/nhai/bharatmala_corridors.geojson
+  url: https://datalakew.nhai.gov.in/geoserver/NHAI/ows
+  bytes: 16683218
+  sha256: de7517ec036c140107946f054d21ba8364d7afdd84d7edb61a7eaafe73072e35
+  fetched_at: '2026-09-28T18:15:17Z'

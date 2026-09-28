@@ -1,0 +1,18 @@
+# National Highways field parameters (docs/fields/national-highways.md). Every number states its basis.
+h3_res_fixture: 4                    # ≈1,770 km² hexagons; res 5 (13k cells) measured 5.6 MB, over the 5 MB fixture cap — 2026-09-29
+access_bands_km: [5, 10, 25]         # team judgment, 2026-09
+access_target_km: 10                 # "within reach of an NH" for gain counts — team judgment, 2026-09
+corridor_rings_km: {near: 2, far: [2, 10]}   # event-study rings — team judgment, 2026-09
+corridor_open_years: [2001, 2019]    # opened between the two GHSL epochs (2000, 2020)
+city_pairs:
+  min_population: 300000             # GeoNames cities with ≥3 lakh people
+  top_cities: 120                    # runtime cap for all-pairs Dijkstra
+  min_km: 100                        # straight-line distance band for circuity
+  max_km: 600
+  snap_max_km: 25                    # cities farther than this from the NH graph are skipped
+graph_snap_m: 50                     # dead end → nearest NH graph node: OSM ways that meet without a
+                                     #   shared node (5,408 such ends in the 2026-09 extract) — team judgment
+circuity_flag: 1.5                   # network km ÷ straight km above this = candidate missing link
+toll_booth_snap_m: 50                # OSM toll booth → NH way; plaza nodes sit between carriageways — field plan
+crash_snap_m: 200                    # crash point → nearest NHAI segment for lane-band rates
+fixture_simplify_deg: 0.005          # ≈500 m after merging way pieces; keeps the national segment fixture under 5 MB (measured 2026-09-29)

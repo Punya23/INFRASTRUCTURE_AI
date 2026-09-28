@@ -1,0 +1,11 @@
+id: morth_annual_report_2024_25
+license: none stated — Government of India publication
+attribution: Ministry of Road Transport & Highways, Annual Report 2024-25
+used_by:
+- national_highways
+files:
+- file: data/raw/morth/annual-report-2024-25.pdf
+  url: https://morth.gov.in/backend/documents/uploaded/1755600919_Annual-Report-English-with-Cover.pdf
+  bytes: 19474671
+  sha256: 59f3693bddda349aef2e87c4c344bca7d7028167e6e12d840468e8bc67624251
+  fetched_at: '2026-09-28T18:13:55Z'

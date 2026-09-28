@@ -1,0 +1,11 @@
+id: nhai_toll_plazas
+license: none stated — analysis use by team decision (ADR-0014); not redistributed
+attribution: National Highways Authority of India — Datalake GeoServer
+used_by:
+- national_highways
+files:
+- file: data/raw/nhai/toll_plaza.geojson
+  url: https://datalakew.nhai.gov.in/geoserver/NHAI/ows
+  bytes: 249967
+  sha256: 9edf1e5b64f367b69a4bf93c5980a3547787322be52563ab423fc913897c021b
+  fetched_at: '2026-09-28T18:12:00Z'

@@ -1,0 +1,157 @@
+# Every external source, declared once (skill add-data-source).
+# Fetch: cd ml && uv run python -m common.fetch [source_id ...]
+# `kind` is the expected file type; downloads whose first bytes don't match are rejected.
+
+osm_india:
+  url: https://download.geofabrik.de/asia/india-latest.osm.pbf
+  dest: osm/india-latest.osm.pbf
+  kind: pbf
+  license: ODbL-1.0
+  attribution: © OpenStreetMap contributors
+  used_by: [national_highways, metro_rail]
+
+worldpop_india_2020_1km:
+  url: https://data.worldpop.org/GIS/Population/Global_2000_2020_1km_UNadj/2020/IND/ind_ppp_2020_1km_Aggregated_UNadj.tif
+  dest: worldpop/ind_ppp_2020_1km_Aggregated_UNadj.tif
+  kind: tiff
+  license: CC-BY-4.0
+  attribution: WorldPop (www.worldpop.org) — India 2020, 1 km, UN-adjusted
+  used_by: [shared]
+
+datameet_states:
+  files:
+    - {url: https://raw.githubusercontent.com/datameet/maps/master/States/Admin2.shp, dest: datameet/States/Admin2.shp, kind: shp}
+    - {url: https://raw.githubusercontent.com/datameet/maps/master/States/Admin2.shx, dest: datameet/States/Admin2.shx, kind: shp}
+    - {url: https://raw.githubusercontent.com/datameet/maps/master/States/Admin2.dbf, dest: datameet/States/Admin2.dbf, kind: dbf}
+    - {url: https://raw.githubusercontent.com/datameet/maps/master/States/Admin2.prj, dest: datameet/States/Admin2.prj, kind: text}
+    - {url: https://raw.githubusercontent.com/datameet/maps/master/States/Admin2.cpg, dest: datameet/States/Admin2.cpg, kind: text}
+  license: CC-BY-4.0
+  attribution: India state boundaries by DataMeet India community (CC BY 4.0)
+  used_by: [shared]
+
+ghsl_built_s_2000_1km:
+  url: https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/GHSL/GHS_BUILT_S_GLOBE_R2023A/GHS_BUILT_S_E2000_GLOBE_R2023A_54009_1000/V1-0/GHS_BUILT_S_E2000_GLOBE_R2023A_54009_1000_V1_0.zip
+  dest: ghsl/GHS_BUILT_S_E2000_GLOBE_R2023A_54009_1000_V1_0.zip
+  kind: zip
+  license: CC-BY-4.0
+  attribution: European Commission, JRC — GHSL GHS-BUILT-S R2023A
+  used_by: [shared]
+
+ghsl_built_s_2020_1km:
+  url: https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/GHSL/GHS_BUILT_S_GLOBE_R2023A/GHS_BUILT_S_E2020_GLOBE_R2023A_54009_1000/V1-0/GHS_BUILT_S_E2020_GLOBE_R2023A_54009_1000_V1_0.zip
+  dest: ghsl/GHS_BUILT_S_E2020_GLOBE_R2023A_54009_1000_V1_0.zip
+  kind: zip
+  license: CC-BY-4.0
+  attribution: European Commission, JRC — GHSL GHS-BUILT-S R2023A
+  used_by: [shared]
+
+geonames_cities15000:
+  url: https://download.geonames.org/export/dump/cities15000.zip
+  dest: geonames/cities15000.zip
+  kind: zip
+  license: CC-BY-4.0
+  attribution: GeoNames (www.geonames.org)
+  used_by: [shared]
+
+morth_annual_report_2024_25:
+  url: https://morth.gov.in/backend/documents/uploaded/1755600919_Annual-Report-English-with-Cover.pdf
+  dest: morth/annual-report-2024-25.pdf
+  kind: pdf
+  license: none stated — Government of India publication
+  attribution: Ministry of Road Transport & Highways, Annual Report 2024-25
+  used_by: [national_highways]
+
+rai_2024_report:
+  url: https://data.opencity.in/dataset/33d29ab0-f9e8-4fc7-b404-c93c1ed8e1b8/resource/30af828c-3513-4c74-a919-8daa708f077d/download/road-accidents-in-india-2024.pdf
+  dest: rai/road-accidents-in-india-2024.pdf
+  kind: pdf
+  license: Public domain (OpenCity); publisher MoRTH
+  attribution: MoRTH, Road Accidents in India 2024 (via OpenCity)
+  used_by: [national_highways]
+
+rai_2024_states_accidents:
+  url: https://data.opencity.in/dataset/33d29ab0-f9e8-4fc7-b404-c93c1ed8e1b8/resource/115647dd-4e46-4a22-8638-bd230edbcca4/download/road-accidents-2024-states-road-accidents.csv
+  dest: rai/road-accidents-2024-states-road-accidents.csv
+  kind: text
+  license: Public domain (OpenCity); publisher MoRTH
+  attribution: MoRTH, Road Accidents in India 2024 (via OpenCity)
+  used_by: [national_highways]
+
+rai_2024_states_fatalities:
+  url: https://data.opencity.in/dataset/33d29ab0-f9e8-4fc7-b404-c93c1ed8e1b8/resource/b834e6cb-52f9-4ae5-8b00-ff1416141df0/download/road-accidents-2024-states-fatalities.csv
+  dest: rai/road-accidents-2024-states-fatalities.csv
+  kind: text
+  license: Public domain (OpenCity); publisher MoRTH
+  attribution: MoRTH, Road Accidents in India 2024 (via OpenCity)
+  used_by: [national_highways]
+
+# NHAI Datalake GeoServer — no license stated; used for analysis by team decision (ADR-0014).
+# Read-only GetFeature requests; `keep` is a keep-list, so personal fields never reach disk.
+nhai_nh_network:
+  url: https://datalakew.nhai.gov.in/geoserver/NHAI/ows
+  layer: NHAI:nh_network_of_india_new
+  keep: [state_ut, road_name, greenfield, road_type, lane_statu, completion, completi_1, toll_type, agency, gis_length]
+  dest: nhai/nh_network_of_india_new.geojson
+  kind: wfs
+  license: none stated — analysis use by team decision (ADR-0014); not redistributed
+  attribution: National Highways Authority of India — Datalake GeoServer
+  used_by: [national_highways]
+
+nhai_toll_plazas:
+  url: https://datalakew.nhai.gov.in/geoserver/NHAI/ows
+  layer: NHAI:toll_plaza
+  keep: [tollplazan, nooflanes, nhno_new, stateid, concession, tollingmod, designcapa, project_na, feecollect]
+  dest: nhai/toll_plaza.geojson
+  kind: wfs
+  license: none stated — analysis use by team decision (ADR-0014); not redistributed
+  attribution: National Highways Authority of India — Datalake GeoServer
+  used_by: [national_highways]
+
+nhai_crashes:
+  url: https://datalakew.nhai.gov.in/geoserver/NHAI/ows
+  layer: NHAI:RoadAccident_Spot_GIS_Layer
+  keep: [accident_d, accident_t, upc, project_na, blackspot, project_st, chainage_f, chainage_t, classifica, no__of_fat]
+  dest: nhai/road_accident_spots.geojson
+  kind: wfs
+  license: none stated — analysis use by team decision (ADR-0014); not redistributed
+  attribution: National Highways Authority of India — Datalake GeoServer
+  used_by: [national_highways]
+
+nhai_black_spots:
+  url: https://datalakew.nhai.gov.in/geoserver/NHAI/ows
+  layer: NHAI:RoadAccident_GIS_Layer
+  keep: [blackspot_, blackspot1, nh_no_, start_chai, end_chaina, severity, state, district, type_of_ar, junction_r, type_of_ju, category_o, status_of_]
+  dest: nhai/black_spots.geojson
+  kind: wfs
+  license: none stated — analysis use by team decision (ADR-0014); not redistributed
+  attribution: National Highways Authority of India — Datalake GeoServer
+  used_by: [national_highways]
+
+nhai_projects:
+  url: https://datalakew.nhai.gov.in/geoserver/NHAI/ows
+  layer: NHAI:upc_wise_alignments_wfs_layer
+  keep: [upc, length, lane, scheme, mode, state, phase, project_ty, project_na, current_st, starting_l, end_latitu, start_long, end_long, nh_new, green_brown_field]
+  dest: nhai/upc_projects.geojson
+  kind: wfs
+  srs: null  # attribute-only layer (start/end coordinates as fields)
+  license: none stated — analysis use by team decision (ADR-0014); not redistributed
+  attribution: National Highways Authority of India — Datalake GeoServer
+  used_by: [national_highways]
+
+nhai_bharatmala:
+  url: https://datalakew.nhai.gov.in/geoserver/NHAI/ows
+  layer: NHAI:bharatmala_corridors
+  keep: [name, corridor_t, classifica, code, corridor, category_1]
+  dest: nhai/bharatmala_corridors.geojson
+  kind: wfs
+  license: none stated — analysis use by team decision (ADR-0014); not redistributed
+  attribution: National Highways Authority of India — Datalake GeoServer
+  used_by: [national_highways]
+
+rai_2020_2024_annual:
+  url: https://data.opencity.in/dataset/33d29ab0-f9e8-4fc7-b404-c93c1ed8e1b8/resource/f8af91cb-7b12-4404-bbca-976321be84bd/download/road-accidents-annual-2020-2024.csv
+  dest: rai/road-accidents-annual-2020-2024.csv
+  kind: text
+  license: Public domain (OpenCity); publisher MoRTH
+  attribution: MoRTH, Road Accidents in India 2024 (via OpenCity)
+  used_by: [national_highways]

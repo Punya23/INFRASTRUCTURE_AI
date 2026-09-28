@@ -1,0 +1,11 @@
+id: rai_2024_states_fatalities
+license: Public domain (OpenCity); publisher MoRTH
+attribution: MoRTH, Road Accidents in India 2024 (via OpenCity)
+used_by:
+- national_highways
+files:
+- file: data/raw/rai/road-accidents-2024-states-fatalities.csv
+  url: https://data.opencity.in/dataset/33d29ab0-f9e8-4fc7-b404-c93c1ed8e1b8/resource/b834e6cb-52f9-4ae5-8b00-ff1416141df0/download/road-accidents-2024-states-fatalities.csv
+  bytes: 2634
+  sha256: c2b103be0b2d837709f1feda6d4d57268a7ef12801db5b15a7cdc195633393ec
+  fetched_at: '2026-09-28T18:14:14Z'

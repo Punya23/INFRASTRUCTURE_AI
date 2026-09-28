@@ -1,0 +1,11 @@
+id: nhai_black_spots
+license: none stated — analysis use by team decision (ADR-0014); not redistributed
+attribution: National Highways Authority of India — Datalake GeoServer
+used_by:
+- national_highways
+files:
+- file: data/raw/nhai/black_spots.geojson
+  url: https://datalakew.nhai.gov.in/geoserver/NHAI/ows
+  bytes: 2135947
+  sha256: 2b87fbbfda2b0cde2acec9ad0ca09aeec69eb73daf221f2e14fe3a591ab83d7a
+  fetched_at: '2026-09-28T18:14:24Z'

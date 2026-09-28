@@ -1,0 +1,12 @@
+id: osm_india
+license: ODbL-1.0
+attribution: © OpenStreetMap contributors
+used_by:
+- national_highways
+- metro_rail
+files:
+- file: data/raw/osm/india-latest.osm.pbf
+  url: https://download.geofabrik.de/asia/india-latest.osm.pbf
+  bytes: 1708401264
+  sha256: 6668872fbd815fc04fa4f116518328655ce5691a9b0a7a0c63dec9d4e190660b
+  fetched_at: '2026-09-28T18:12:15Z'

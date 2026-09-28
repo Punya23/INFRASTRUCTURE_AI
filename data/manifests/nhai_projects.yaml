@@ -1,0 +1,11 @@
+id: nhai_projects
+license: none stated — analysis use by team decision (ADR-0014); not redistributed
+attribution: National Highways Authority of India — Datalake GeoServer
+used_by:
+- national_highways
+files:
+- file: data/raw/nhai/upc_projects.geojson
+  url: https://datalakew.nhai.gov.in/geoserver/NHAI/ows
+  bytes: 647480
+  sha256: b54de4d72458c482586a9dc51cf54648bb94c1e14f05257aec3d117e7bc9a39d
+  fetched_at: '2026-09-28T18:19:58Z'

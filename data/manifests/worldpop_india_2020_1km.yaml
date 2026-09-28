@@ -1,0 +1,11 @@
+id: worldpop_india_2020_1km
+license: CC-BY-4.0
+attribution: WorldPop (www.worldpop.org) — India 2020, 1 km, UN-adjusted
+used_by:
+- shared
+files:
+- file: data/raw/worldpop/ind_ppp_2020_1km_Aggregated_UNadj.tif
+  url: https://data.worldpop.org/GIS/Population/Global_2000_2020_1km_UNadj/2020/IND/ind_ppp_2020_1km_Aggregated_UNadj.tif
+  bytes: 18313124
+  sha256: 27d08e3eabf59f63a2147901c25c046d584c3295f9ceb4c4cf08a902a5bec911
+  fetched_at: '2026-09-28T18:12:35Z'

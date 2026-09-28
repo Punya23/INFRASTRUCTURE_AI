@@ -1,0 +1,11 @@
+id: rai_2024_report
+license: Public domain (OpenCity); publisher MoRTH
+attribution: MoRTH, Road Accidents in India 2024 (via OpenCity)
+used_by:
+- national_highways
+files:
+- file: data/raw/rai/road-accidents-in-india-2024.pdf
+  url: https://data.opencity.in/dataset/33d29ab0-f9e8-4fc7-b404-c93c1ed8e1b8/resource/30af828c-3513-4c74-a919-8daa708f077d/download/road-accidents-in-india-2024.pdf
+  bytes: 21376701
+  sha256: b45b0e4d8e14a8d4653790f9080a01b9b95b79008359ba93dc12497064be69b2
+  fetched_at: '2026-09-28T18:14:14Z'

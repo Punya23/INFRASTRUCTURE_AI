@@ -1,0 +1,11 @@
+id: ghsl_built_s_2020_1km
+license: CC-BY-4.0
+attribution: European Commission, JRC — GHSL GHS-BUILT-S R2023A
+used_by:
+- shared
+files:
+- file: data/raw/ghsl/GHS_BUILT_S_E2020_GLOBE_R2023A_54009_1000_V1_0.zip
+  url: https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/GHSL/GHS_BUILT_S_GLOBE_R2023A/GHS_BUILT_S_E2020_GLOBE_R2023A_54009_1000/V1-0/GHS_BUILT_S_E2020_GLOBE_R2023A_54009_1000_V1_0.zip
+  bytes: 152527564
+  sha256: 5ab899936b560f1b803778fffe6912a28de50036e2bfa0338d55ed34e502d8a2
+  fetched_at: '2026-09-28T18:13:45Z'

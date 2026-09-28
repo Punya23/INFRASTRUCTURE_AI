@@ -1,0 +1,11 @@
+id: nhai_crashes
+license: none stated — analysis use by team decision (ADR-0014); not redistributed
+attribution: National Highways Authority of India — Datalake GeoServer
+used_by:
+- national_highways
+files:
+- file: data/raw/nhai/road_accident_spots.geojson
+  url: https://datalakew.nhai.gov.in/geoserver/NHAI/ows
+  bytes: 46522050
+  sha256: e171f7dd127ef272840d76342f3f688020015ada991d3de571150d5ce3639f29
+  fetched_at: '2026-09-28T18:14:10Z'

@@ -19,6 +19,7 @@ Short records of significant decisions — context, decision, consequences, alte
 | [0011](0011-privacy-do-no-harm.md) | Privacy and do-no-harm by design (DPDP-aligned) | Proposed |
 | [0012](0012-licensing-open-standards.md) | Licensing and open standards | Proposed |
 | [0013](0013-field-first-scope.md) | Field-first scope: national highways and metro rail first, then one field at a time | Accepted |
+| [0014](0014-nhai-geoserver-data.md) | Use NHAI Datalake GeoServer data for analysis; publish aggregates only | Accepted |
 
 **Statuses:** Proposed → Accepted → Deprecated, or Superseded by ADR-NNNN. Proposed ADRs are the working default until the team reviews them. An accepted decision is never rewritten — a new ADR supersedes it.
 

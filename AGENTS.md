@@ -67,7 +67,16 @@ Claude Code discovers these automatically. Other agents and people: open the mat
 
 ## Commands
 
-None yet. M0 adds `docker compose up`, `make migrate`, `make city CITY=<id>`, `make eval CAP=<capability>` and `make test`. Document each one here the moment it exists.
+Python lives in `ml/` (uv project, Python 3.12):
+
+```bash
+cd ml && uv sync                                        # environment
+cd ml && uv run python -m common.fetch                  # download every source in config/sources.yaml
+cd ml && uv run python -m fields.national_highways all  # NH field: extract → … → analyze → fixtures
+cd ml && uv run pytest && uv run ruff check .           # checks before every commit
+```
+
+Still to come at M0: `docker compose up`, `make migrate`, `make city CITY=<id>`, `make eval CAP=<capability>`. Document each one here the moment it exists.
 
 ## When unsure
 

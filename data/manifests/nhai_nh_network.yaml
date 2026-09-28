@@ -1,0 +1,11 @@
+id: nhai_nh_network
+license: none stated — analysis use by team decision (ADR-0014); not redistributed
+attribution: National Highways Authority of India — Datalake GeoServer
+used_by:
+- national_highways
+files:
+- file: data/raw/nhai/nh_network_of_india_new.geojson
+  url: https://datalakew.nhai.gov.in/geoserver/NHAI/ows
+  bytes: 129543787
+  sha256: 124ae1206e4f31d4012f6f46c0de5ed06cf799214f2c39acee5cdfcabf5700d2
+  fetched_at: '2026-09-28T18:11:54Z'
