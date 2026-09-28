@@ -8,7 +8,7 @@ A multilingual, location-first infrastructure intelligence platform for India, b
 
 ## Status
 
-Planning done; no code yet. Scope is field-first: **national highways** and **metro rail** across India (ADR-0013). **Next: M0 — Foundation** (README §13). Update this line whenever a milestone lands.
+Scope is field-first: **national highways** and **metro rail** across India (ADR-0013). National highways: M1 data and M2 analysis landed (`ml/fields/national_highways/`, findings in `docs/fields/national-highways.md`); metro starts M1. **Next: M0 — Foundation** (README §13: DB, API, UI shell). Update this line whenever a milestone lands.
 ADR-0003 and ADR-0013 are Accepted; ADR-0001 is superseded; the others are Proposed pending team review — follow them as the working default.
 
 ## Read in this order
