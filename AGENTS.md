@@ -1,0 +1,74 @@
+# AGENTS.md — how to work in INFRA-AI
+
+Read this before changing anything. It applies to people and AI coding agents alike. Claude Code loads it through `CLAUDE.md`; Codex, Cursor and other agents read it directly.
+
+## What this repo is
+
+A multilingual, location-first infrastructure intelligence platform for India, built as a Digital Public Good. Pin a place → what exists, what changed, what's coming (from news, press releases and tenders — cited), what residents are asking for, and where the gaps and priorities are. The full plan is [README.md](README.md).
+
+## Status
+
+Planning done; no code yet. **Next: M0 — Foundation** (README §13). Update this line whenever a milestone lands.
+ADR-0003 is Accepted; the other ADRs are Proposed pending team review — follow them as the working default.
+
+## Read in this order
+
+1. README §0–4 — product, users, problem-statement coverage, data scope (about 10 minutes).
+2. Team research: [India_Existing_Project_Gaps.md](India_Existing_Project_Gaps.md) (why existing systems fall short) and [LokDristi_Datasets.md](LokDristi_Datasets.md) (dataset catalog, LGD join architecture). README §18 lists where they differ from the plan — those are open decisions, not settled ones.
+3. [`docs/adr/`](docs/adr/README.md) — what was decided and why. To disagree, write a superseding ADR (skill `write-adr`); never silently diverge.
+4. README §6–8 — architecture, data model, pipelines — before touching those areas.
+5. The skill that matches your task (table below).
+
+## Invariants — non-negotiable; every PR is reviewed against them
+
+1. **Provenance on everything.** Every record carries `source`, `source_ref`, `fetched_at`, `license` and `confidence`. No anonymous data.
+2. **Fail closed.** Invalid or ambiguous input goes to `ingest_error` or the review queue, or returns a 4xx. Never drop silently, never default silently. Unknown is not fine.
+3. **AI never originates facts.** Extracted claims carry a verbatim evidence quote that code verifies against the source. Briefs cite fact ids and use only numbers present in those facts; on validation failure they fall back to templated output. (ADR-0008)
+4. **Explainable analytics only.** Scores are config-weighted sums of observable facts with stored `drivers`. No predictive or black-box models. (ADR-0003)
+5. **Privacy by default.** No raw phone numbers, names or contact details outside the opt-in `contact` table. Redact before storage and before any hosted model; public outputs are aggregates with counts below 5 suppressed. Never collect Aadhaar. (ADR-0011)
+6. **Official boundaries.** National and state outlines come only from the Survey of India–compliant layer. (ADR-0007)
+7. **Licenses before data.** Check terms before ingesting; OSM attribution and ODbL share-alike on OSM-derived exports; news stored as metadata + a short quote + link. (ADR-0012)
+8. **City-agnostic code.** No city names, bounding boxes, languages or thresholds in code — only in `config/cities/*.yaml` and `config/scoring.yaml`. (ADR-0001)
+9. **Idempotent pipelines.** Upsert on `(source, source_ref)` or the provider message id; every step can re-run safely.
+10. **Contract-first API.** `api/openapi.yaml` is the source of truth; web types are generated from it; SQL goes through sqlc. (ADR-0006)
+11. **Swappable AI providers.** Each AI capability is one function in `ml/ai/`; the provider is picked by an environment variable; no provider SDK calls anywhere else. (ADR-0008)
+12. **Lean stack.** No new service, datastore or dependency without an ADR. Postgres does geometry, search, vectors and the queue. (ADR-0005)
+
+## Conventions
+
+- **Go (`api/`)** — `cmd/` + `internal/` layout; stdlib `net/http` routing; pgx + sqlc, no ORM; `context` with a timeout on all I/O; wrap errors with `%w`; validate at the handler boundary; table-driven tests.
+- **Python (`ml/`)** — 3.12, type hints, ruff for lint and format, pytest. Pipeline steps are plain functions behind a thin CLI; the Flask app stays thin (parse → call → return); notebooks import from `ml/` and hold no logic of their own.
+- **TypeScript (`web/`)** — Next.js App Router; server components by default, `"use client"` only for the map and interactive parts; Tailwind; strict mode; API types generated from OpenAPI; UI strings in per-language dictionaries (en, hi, kn), never hard-coded.
+- **SQL (`db/migrations/`)** — plain numbered SQL, forward-only; geometry in EPSG:4326 with GiST indexes; constraints (CHECK, UNIQUE, FK) in the database, not only in application code.
+- **Config** — YAML; every number carries a comment with its basis (a norm, a source, or "team judgment, <date>").
+- **Commits and PRs** — small, one concern each; the message says what changed and why; the PR template checklist is filled in.
+
+## Definition of done
+
+- A test or runnable check fails if the new logic breaks, and the whole suite passes.
+- Every invariant the change touches still holds.
+- Docs are updated in the same PR: the README section, an ADR if a decision changed, a skill if a workflow changed.
+- AI changes attach the gold-set evaluation table; scoring changes attach the sensitivity summary.
+
+## Skills — `.claude/skills/`
+
+| Skill | Use when |
+|---|---|
+| [`add-data-source`](.claude/skills/add-data-source/SKILL.md) | Adding or changing any dataset, scrape, feed or raster |
+| [`onboard-city`](.claude/skills/onboard-city/SKILL.md) | Adding a city or replacing a pilot city |
+| [`change-ai-pipeline`](.claude/skills/change-ai-pipeline/SKILL.md) | Touching prompts, schemas, models, speech, translation, embeddings or briefs |
+| [`change-scoring`](.claude/skills/change-scoring/SKILL.md) | Touching indices, weights, norms, hotspots or recommendations |
+| [`add-api-endpoint`](.claude/skills/add-api-endpoint/SKILL.md) | Adding or changing a Go or Flask endpoint or a webhook |
+| [`write-adr`](.claude/skills/write-adr/SKILL.md) | Making or challenging a significant decision |
+
+Claude Code discovers these automatically. Other agents and people: open the matching `SKILL.md` — it is plain Markdown.
+
+## Commands
+
+None yet. M0 adds `docker compose up`, `make migrate`, `make city CITY=<id>`, `make eval CAP=<capability>` and `make test`. Document each one here the moment it exists.
+
+## When unsure
+
+- Product or scope question → add it to README §18 and ask the team; don't guess.
+- Technical choice with trade-offs → skill `write-adr`, status Proposed.
+- Data looks wrong → don't "fix" it silently in code; route it to `ingest_error` and note it in the EDA report.
