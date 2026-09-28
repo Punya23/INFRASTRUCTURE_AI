@@ -8,16 +8,17 @@ A multilingual, location-first infrastructure intelligence platform for India, b
 
 ## Status
 
-Planning done; no code yet. **Next: M0 — Foundation** (README §13). Update this line whenever a milestone lands.
-ADR-0003 is Accepted; the other ADRs are Proposed pending team review — follow them as the working default.
+Planning done; no code yet. Scope is field-first: **national highways** and **metro rail** across India (ADR-0013). **Next: M0 — Foundation** (README §13). Update this line whenever a milestone lands.
+ADR-0003 and ADR-0013 are Accepted; ADR-0001 is superseded; the others are Proposed pending team review — follow them as the working default.
 
 ## Read in this order
 
 1. README §0–4 — product, users, problem-statement coverage, data scope (about 10 minutes).
-2. Team research: [India_Existing_Project_Gaps.md](India_Existing_Project_Gaps.md) (why existing systems fall short) and [LokDristi_Datasets.md](LokDristi_Datasets.md) (dataset catalog, LGD join architecture). README §18 lists where they differ from the plan — those are open decisions, not settled ones.
-3. [`docs/adr/`](docs/adr/README.md) — what was decided and why. To disagree, write a superseding ADR (skill `write-adr`); never silently diverge.
-4. README §6–8 — architecture, data model, pipelines — before touching those areas.
-5. The skill that matches your task (table below).
+2. [`docs/fields/`](docs/fields/README.md) — the field plans (national highways, metro rail), the done bar, and the shared layer contract the UI builds against.
+3. Team research: [India_Existing_Project_Gaps.md](India_Existing_Project_Gaps.md) (why existing systems fall short) and [LokDristi_Datasets.md](LokDristi_Datasets.md) (dataset catalog, LGD join architecture). README §18 lists where they differ from the plan — those are open decisions, not settled ones.
+4. [`docs/adr/`](docs/adr/README.md) — what was decided and why. To disagree, write a superseding ADR (skill `write-adr`); never silently diverge.
+5. README §6–8 — architecture, data model, pipelines — before touching those areas.
+6. The skill that matches your task (table below).
 
 ## Invariants — non-negotiable; every PR is reviewed against them
 
@@ -28,7 +29,7 @@ ADR-0003 is Accepted; the other ADRs are Proposed pending team review — follow
 5. **Privacy by default.** No raw phone numbers, names or contact details outside the opt-in `contact` table. Redact before storage and before any hosted model; public outputs are aggregates with counts below 5 suppressed. Never collect Aadhaar. (ADR-0011)
 6. **Official boundaries.** National and state outlines come only from the Survey of India–compliant layer. (ADR-0007)
 7. **Licenses before data.** Check terms before ingesting; OSM attribution and ODbL share-alike on OSM-derived exports; news stored as metadata + a short quote + link. (ADR-0012)
-8. **City-agnostic code.** No city names, bounding boxes, languages or thresholds in code — only in `config/cities/*.yaml` and `config/scoring.yaml`. (ADR-0001)
+8. **City- and field-agnostic core.** No city names, bounding boxes, languages or thresholds in code — only in `config/cities/*.yaml`, `config/fields/*.yaml` and `config/scoring.yaml`. Field logic lives in `ml/fields/<field>/`; shared code never special-cases a field. (ADR-0013)
 9. **Idempotent pipelines.** Upsert on `(source, source_ref)` or the provider message id; every step can re-run safely.
 10. **Contract-first API.** `api/openapi.yaml` is the source of truth; web types are generated from it; SQL goes through sqlc. (ADR-0006)
 11. **Swappable AI providers.** Each AI capability is one function in `ml/ai/`; the provider is picked by an environment variable; no provider SDK calls anywhere else. (ADR-0008)
@@ -55,11 +56,12 @@ ADR-0003 is Accepted; the other ADRs are Proposed pending team review — follow
 | Skill | Use when |
 |---|---|
 | [`add-data-source`](.claude/skills/add-data-source/SKILL.md) | Adding or changing any dataset, scrape, feed or raster |
-| [`onboard-city`](.claude/skills/onboard-city/SKILL.md) | Adding a city or replacing a pilot city |
+| [`onboard-city`](.claude/skills/onboard-city/SKILL.md) | Adding a city or replacing a showcase city |
 | [`change-ai-pipeline`](.claude/skills/change-ai-pipeline/SKILL.md) | Touching prompts, schemas, models, speech, translation, embeddings or briefs |
 | [`change-scoring`](.claude/skills/change-scoring/SKILL.md) | Touching indices, weights, norms, hotspots or recommendations |
 | [`add-api-endpoint`](.claude/skills/add-api-endpoint/SKILL.md) | Adding or changing a Go or Flask endpoint or a webhook |
 | [`write-adr`](.claude/skills/write-adr/SKILL.md) | Making or challenging a significant decision |
+| [`add-field`](.claude/skills/add-field/SKILL.md) | Starting or restructuring a field — one type of infrastructure covered for all of India |
 
 Claude Code discovers these automatically. Other agents and people: open the matching `SKILL.md` — it is plain Markdown.
 

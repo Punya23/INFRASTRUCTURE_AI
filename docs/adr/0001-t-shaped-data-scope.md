@@ -1,6 +1,6 @@
 # ADR-0001: T-shaped data scope — every layer for two pilot cities, backbone networks for all of India
 
-- Status: Proposed
+- Status: Superseded by ADR-0013
 - Date: 2026-09-28
 - Deciders: project team
 - Related: README §4, §17 · ADR-0002, ADR-0004

@@ -5,7 +5,7 @@
 A multilingual, location-first infrastructure intelligence platform, designed as a Digital Public Good (DPG).
 
 > **Status:** planning — no code yet. This README is the master plan.
-> Why each decision was made: [`docs/adr/`](docs/adr/README.md) · How to work in this repo (humans and AI agents): [`AGENTS.md`](AGENTS.md) · Step-by-step workflows: [`.claude/skills/`](.claude/skills/)
+> Why each decision was made: [`docs/adr/`](docs/adr/README.md) · How to work in this repo (humans and AI agents): [`AGENTS.md`](AGENTS.md) · Step-by-step workflows: [`.claude/skills/`](.claude/skills/) · Field plans: [`docs/fields/`](docs/fields/README.md)
 > Team research already in the repo: [India_Existing_Project_Gaps.md](India_Existing_Project_Gaps.md) (where existing systems fall short, with audit evidence) · [LokDristi_Datasets.md](LokDristi_Datasets.md) (dataset catalog and LGD join architecture). Where they differ from this plan: [§18](#18-open-questions-and-assumptions).
 
 **Contents:** [0 TL;DR](#0-tldr) · [1 Problem](#1-problem-and-our-angle) · [2 Users](#2-users-and-what-they-get) · [3 PS coverage](#3-problem-statement-coverage) · [4 Data scope](#4-data-scope-what-we-build-first) · [5 Sources](#5-data-sources) · [6 Architecture](#6-architecture) · [7 Data model](#7-data-model) · [8 Pipelines and analytics](#8-pipelines-and-analytics) · [9 Product and demo](#9-product-surfaces-and-demo) · [10 API](#10-api) · [11 Stack](#11-tech-stack) · [12 Layout](#12-repository-layout) · [13 Build plan](#13-build-plan) · [14 Evaluation](#14-evaluation) · [15 DPG and privacy](#15-digital-public-good-privacy-and-responsible-ai) · [16 Risks](#16-risks-and-mitigations) · [17 Scaling](#17-scaling-to-all-of-india) · [18 Open questions](#18-open-questions-and-assumptions) · [19 Working here](#19-working-on-this-repo) · [A Config](#appendix-a-config-examples) · [B Glossary](#appendix-b-glossary)
@@ -18,7 +18,7 @@ A multilingual, location-first infrastructure intelligence platform, designed as
 - **The product.** Drop a pin and get: what exists (roads, flyovers, metro, rail, airports, hospitals, schools — public and private); what changed over 20+ years; what is under construction, approved or announced (extracted from news, press releases and tenders — every claim cited); what residents are asking for (voice, text or WhatsApp, in their own language); and a gap, priority and growth outlook.
 - **For policymakers.** Statistically significant demand and gap hotspots, ranked project recommendations with evidence, a spending-vs-need misalignment view, and before/after impact tracking.
 - **How.** Every source is joined on one H3 hexagon grid in PostgreSQL/PostGIS. Transparent indices (Access Gap, Citizen Demand, Growth Momentum, Priority) plus Getis-Ord Gi* hotspots. **No predictive model** — LLMs only read and structure text and write cited summaries.
-- **Scope.** T-shaped: every layer for two pilot cities (Bengaluru, Lucknow) plus national backbone networks (highways, rail, airports, metro) for all of India. A new city is one config file.
+- **Scope.** Field by field, all of India: national highways and metro rail first, each owned end to end — data → EDA → geospatial analysis → findings → map layers. Railways, airports, water (canals) and more follow the same template. A new city is one config file.
 - **DPG-ready.** Open source, open data exports, open standards (Open311, vector tiles, LGD codes), swappable AI providers, DPDP-aligned privacy.
 
 ## 1. Problem and our angle
@@ -63,7 +63,7 @@ The growth outlook is informational, never investment advice ([§15](#15-digital
 
 | The PS asks for | How we deliver | Where |
 |---|---|---|
-| Scalable | Adding a city is configuration; multi-resolution H3 rollups; national backbone loaded from day one | §17, ADR-0001 |
+| Scalable | Every field covers all of India from day one; a new field follows one template (`docs/fields/`); a new city is configuration; multi-resolution H3 rollups | §4, §17, ADR-0013 |
 | Multilingual | 22 scheduled languages via Bhashini / AI4Bharat; code-mixed and romanized input handled | §8.5, ADR-0009 |
 | Digital Public Good | DPG Standard met indicator by indicator | §15, ADR-0011, ADR-0012 |
 | Requests via voice, text and messaging apps | WhatsApp, Telegram, web app with microphone, IVR (stretch) | §8.5, ADR-0010 |
@@ -75,24 +75,21 @@ The growth outlook is informational, never investment advice ([§15](#15-digital
 
 ## 4. Data scope: what we build first
 
-Decided in [ADR-0001](docs/adr/0001-t-shaped-data-scope.md) and [ADR-0002](docs/adr/0002-pilot-cities.md).
+Decided in [ADR-0013](docs/adr/0013-field-first-scope.md), which supersedes the earlier T-shaped scope ([ADR-0001](docs/adr/0001-t-shaped-data-scope.md)).
 
-Two options were on the table:
+**Field by field, all of India.** A *field* is one type of infrastructure, covered nationally and owned end to end by one person: sources → canonical data → EDA → geospatial analysis → findings → map layers and API → a cited pipeline of its projects. Two fields first; the next starts when both meet the done bar in [`docs/fields/`](docs/fields/README.md).
 
-| | **A — breadth:** 2–3 network layers (national highways, metro, railways) for every city | **B — depth:** every available layer for 2 cities |
-|---|---|---|
-| Computes gaps and hotspots (the core of the PS) | No — a gap needs hospitals, schools and transit together | Yes |
-| Pin → brief demo | Thin | Rich |
-| Shows national scale | Yes | Only if the pipeline is config-driven |
-| Data effort | Medium, but cleaning at national scale | High, but bounded |
+| # | Field | Owner | Covers | Plan |
+|---|---|---|---|---|
+| 1 | **National Highways** | Punya | NH network incl. expressways, lanes, toll plazas; NH pipeline incl. land-acquisition notifications; safety | [national-highways.md](docs/fields/national-highways.md) |
+| 2 | **Metro rail** | Data teammate | Metro, RRTS and monorail: lines, stations, pipeline, ridership, station catchments, TOD zones | [metro-rail.md](docs/fields/metro-rail.md) |
+| Next | Railways · airports · water (canals, irrigation) · health · education | — | One at a time, same template — skill [`add-field`](.claude/skills/add-field/SKILL.md) | — |
 
-**Decision: T-shaped — B, plus the backbone of A.**
+**Team:** two people on the UI, two on data (one per field). Shared parts — H3 grid and population, growth layers (GHSL, VIIRS, Open Buildings), news AI, the pin API and brief — are built once and reused by every field.
 
-- **Deep:** every layer, plus news, projects and citizen intake, for two pilot cities.
-- **Wide:** national backbone networks for all of India — expressways and national highways, rail lines and stations, airports, metro systems. They come from a single OpenStreetMap India extract, so they are nearly free, and they matter to cities: ring roads and expressways run through the periphery, where growth happens.
-- **Scale is proven by the pipeline, not by the demo data:** city #3 = `config/cities/<city>.yaml` + one pipeline run ([§17](#17-scaling-to-all-of-india)).
+**Why not every layer for two cities:** two data people cannot clean a dozen layers well. Field-first finishes something real, covers the whole country from day one, and makes "add a field" the scaling story ([§17](#17-scaling-to-all-of-india)).
 
-**Pilot cities (proposed): Bengaluru and Lucknow.**
+**Showcase cities for the demo (proposed): Bengaluru and Lucknow** — both have metro lines and highway or expressway activity, so the pin story works for both fields. They no longer bound the data.
 
 | | Bengaluru | Lucknow |
 |---|---|---|
@@ -102,16 +99,15 @@ Two options were on the table:
 
 Swap-ins if the team knows another city better: Pune (Marathi), Hyderabad (Telugu), Ahmedabad (Gujarati), Indore (Hindi). A swap costs one config file.
 
-**Layer catalog**
+**Backlog for later fields**
 
-| Group | Pilot cities (deep) | All India (backbone) |
-|---|---|---|
-| Transport | Expressways, NH/SH, ring roads, arterials, flyovers and rail over-bridges, metro lines and stations, suburban rail, rail stations, bus terminals, airports | Expressways, NH, rail lines and stations, airports, metro systems |
-| Social | Hospitals (public and private), primary and urban health centers, schools, colleges, police, fire stations, parks | — |
-| Utilities (where data exists) | Water and sewage treatment plants, power substations | — |
-| Economic and private | IT parks and SEZs, industrial areas, malls, RERA-registered real-estate projects | — |
-| Context | Wards, population grid, built-up history, night lights, land use | States and districts (LGD codes), population grid |
-| Pipeline signals | Projects from NIP / India Investment Grid, tenders, clearances, budgets, news | Cabinet approvals and PIB releases for national projects |
+| Group | Layers |
+|---|---|
+| Transport | Railways (lines, stations), airports, bus terminals, state highways and ring roads, flyovers and rail over-bridges |
+| Water | Canals and irrigation, water and sewage treatment plants |
+| Social | Hospitals and health centers, schools and colleges, police and fire stations, parks |
+| Economic and private | IT parks and SEZs, industrial areas, malls, RERA-registered real-estate projects |
+| Shared context (built once) | Wards, LGD districts, population grid, built-up history, night lights, land use |
 
 ## 5. Data sources
 
@@ -348,7 +344,7 @@ Example mappings (the full list lives in `config/taxonomy.yaml`):
 
 ### 8.2 Exploratory data analysis
 
-EDA comes before any scoring: it tells us what the scattered data can support.
+EDA comes before any scoring: it tells us what the scattered data can support. Each field has its own notebooks in `ml/notebooks/<field>/`, listed in its plan under [`docs/fields/`](docs/fields/README.md); the notebooks below are the cross-field ones.
 
 | Notebook | Questions it answers | Feeds |
 |---|---|---|
@@ -414,12 +410,12 @@ covered(c,j)  = highest stage_weight among approved-or-later projects of a match
 
 `gap_j` is the gap for the service that matches category *j* (health → hospitals and health centers; education → schools; transit → stations and bus stops). Categories without a facility layer (drainage, water) drop the gap term and renormalize the weights. `severity` = the highest urgency plus related news signals (for example, repeated waterlogging reports). `new_facility` requests ("we need a school here") count directly. Adjacent top hexagons merge into a zone, and each zone becomes a card:
 
-> **Build or upgrade stormwater drainage near \<locality\>** — about 1.8 lakh (180,000) residents · 212 reports in 90 days (drainage) · no approved drainage project within 2 km · 3 waterlogging news reports · *evidence links*
-> Drivers: demand 0.97 · severity 0.91 · population 0.84 · gap n/a
+> **Grade-separated crossing on \<NH\> near \<village\>** — about 38,000 residents within 2 km, split by a 2-lane undivided highway · 64 underpass requests in 90 days · 5 fatal crashes reported in 2 years · no approved junction improvement within 5 km · *evidence links*
+> Drivers: demand 0.95 · severity 0.93 · gap 0.88 · population 0.71
 >
 > *(Illustrative, not real data.)*
 
-Category → intervention mappings (drainage → stormwater drain, health → urban primary health center, transit → feeder bus route, …) live in config.
+Category → intervention mappings (highway crossing → underpass or foot over-bridge, metro access → feeder bus route or station footpaths, drainage → stormwater drain, …) live in config.
 
 **Silent gaps** — top 20 % Access Gap but bottom 40 % demand: underserved *and* unheard. Flagged for outreach (IVR drives, ward visits), so the loudest neighborhoods do not win by default.
 
@@ -514,7 +510,7 @@ sequenceDiagram
   P-->>C: ticket id, category, "14 neighbors reported this"
 ```
 
-Request categories (fixed, mapped to municipal departments): roads and potholes · junctions and traffic · public transport · drainage and flooding · water supply · sewage and sanitation · solid waste · streetlights and power · health facility · school · parks and public space · public safety · other.
+Request categories (fixed, mapped to the responsible agencies): **highways** — crossings and underpasses · service roads · potholes and repairs · accident spots · tolls; **metro** — extensions and new stations · feeder and last-mile · station access and parking · crowding and frequency; **everything else** is kept for later fields, never dropped — local roads · drainage and flooding · water supply · sanitation · streetlights and power · health facility · school · public safety · other.
 
 ### 8.6 Pin → area brief
 
@@ -528,8 +524,8 @@ Request categories (fixed, mapped to municipal departments): roads and potholes 
 Example (illustrative, not real data):
 
 > **What's coming (0–2 years).** A metro station 700 m north is under construction, expected in 2027 according to the operator's latest release [F12] and two news reports [F14, F15]. A ring-road segment 3.1 km east was tendered in August 2026 [F21].
-> **What people need.** 38 reports in the last 90 days, mostly waterlogging (21) [F30]; no approved drainage project within 2 km [F31].
-> **Outlook.** Growth momentum 82/100 (city percentile), driven by the metro station and the ring road [F40]; risk: recurring waterlogging [F30]. *Informational, not investment advice.*
+> **What people need.** 38 reports in the last 90 days, mostly requests for a feeder bus and footpaths to the new station (21) [F30]; no feeder route is planned [F31].
+> **Outlook.** Growth momentum 82/100 (city percentile), driven by the metro station and the ring road [F40]; risk: the station's completion date has slipped twice [F16]. *Informational, not investment advice.*
 
 ## 9. Product surfaces and demo
 
@@ -546,11 +542,11 @@ The interface ships in English, Hindi and Kannada first; strings live in per-lan
 | Time | Beat | On screen |
 |---|---|---|
 | 0:00 | The problem in one line; the "one pin" promise | Title over a collage of scattered sources |
-| 0:20 | A Lucknow resident sends a Hindi voice note with a location: "हमारी गली में हर बारिश में पानी भर जाता है" | Phone: Hindi reply with a ticket and "14 neighbors reported this" |
-| 0:50 | The report lands on the live map, inside a demand hotspot | Map; the hexagon lights up |
-| 1:10 | Policymaker view: Lucknow hotspots → recommendation #1 with drivers and evidence; misalignment chart | Dashboard |
-| 1:50 | Bengaluru: a pin near the airport corridor; time slider 2000 → 2030; Past / Present / Future; cited news cards; momentum with drivers | Map and area panel |
-| 2:30 | A Kannada question — "ನನ್ನ ಏರಿಯಾದಲ್ಲಿ ಏನು ಬರುತ್ತಿದೆ?" — gets a Kannada text and voice brief | Chat |
+| 0:20 | A villager near Lucknow sends a Hindi voice note with a location: "हाईवे पार करने के लिए अंडरपास चाहिए, रोज़ हादसे होते हैं" | Phone: Hindi reply with a ticket and "14 neighbors reported this" |
+| 0:50 | The request lands on the NH layer, inside a demand hotspot on a 2-lane stretch | Map; the hexagon lights up |
+| 1:10 | Policymaker view: NH recommendations — crossing #1 with drivers and evidence; national NH access-gap map; pipeline vs gap chart | Dashboard |
+| 1:50 | Bengaluru: a pin near an upcoming metro station on the airport corridor; time slider 2000 → 2030; nearest NH and expressway pipeline; station catchment and TOD zone; cited news cards | Map and area panel |
+| 2:30 | A Kannada question — "ನನ್ನ ಏರಿಯಾದಲ್ಲಿ ಮೆಟ್ರೋ ಯಾವಾಗ ಬರುತ್ತದೆ?" — gets a Kannada text and voice answer with the station's stage and expected date | Chat |
 | 2:45 | Scale and DPG: "city #3 is one config file"; open exports; open standards | Config file and export button |
 
 ## 10. API
@@ -598,12 +594,14 @@ INFRA_AI/
 ├── AGENTS.md                    rules for humans and AI agents working here
 ├── CLAUDE.md                    Claude Code entry point (imports AGENTS.md)
 ├── docs/adr/                    architecture decision records + template
+├── docs/fields/                 one plan per field + the done bar + the shared layer contract
 ├── .claude/skills/              step-by-step workflows (add-data-source, onboard-city, …)
 ├── .github/                     PR template with the definition-of-done checklist
 ├── docker-compose.yml           postgres+postgis, api, ml, web                       (M0)
 ├── Makefile                     migrate, city, eval, test                            (M0)
 ├── config/
 │   ├── cities/<city>.yaml       boundary, LGD codes, languages, news queries         (M0)
+│   ├── fields/<field>.yaml      field parameters: distances, bands, H3 resolution    (M1)
 │   ├── taxonomy.yaml            source tags → canonical kinds; request categories    (M0)
 │   └── scoring.yaml             norms, weights, reach, stage weights                  (M2)
 ├── db/migrations/               plain SQL, numbered, forward-only                     (M0)
@@ -615,48 +613,54 @@ INFRA_AI/
 │   ├── app.py                   Flask: /brief, /healthz
 │   ├── worker.py                queue worker: intake and news jobs
 │   ├── ai/                      one module per AI capability + prompts/<capability>/vN.md
-│   ├── pipeline/                ingest_*, conflate, grid, scores, hotspots (CLI)
+│   ├── fields/<field>/          field loaders and analyses (national_highways, metro_rail, …)
+│   ├── pipeline/                shared: ingest_*, conflate, grid, scores, hotspots (CLI)
 │   ├── eval/                    gold sets (JSONL) + evaluation runner
-│   ├── notebooks/               01_inventory … 07_sensitivity; reports/ (HTML, committed)
+│   ├── notebooks/               <field>/NN_*.ipynb + cross-field 01–07; reports/ (HTML, committed)
 │   └── tests/
 ├── web/                         Next.js App Router                                    (M0)
 │   ├── app/                     explore map + pin panel; policy/ dashboard
+│   ├── fixtures/<field>/        simplified GeoJSON samples from field owners (≤ 5 MB each)
 │   └── lib/api/                 client generated from api/openapi.yaml
 └── data/                        raw/ is gitignored; manifests/ is committed           (M1)
 ```
 
 ## 13. Build plan
 
-**Scope (MoSCoW)**
-
-| Priority | Scope |
-|---|---|
-| **Must** | Both pilot cities ingested (transport, health, education) + the national backbone layer · H3 grid with Access Gap, Demand, Momentum, Priority and Gi* hotspots · news AI for both cities with verified, cited events · pin → area panel with a cited brief · Telegram intake (WhatsApp if verified) in English, Hindi and Kannada, text and voice · policy dashboard with top-10 recommendations · EDA notebooks 01–05 |
-| **Should** | Time slider · misalignment view · silent gaps · review console · open exports · Open311 endpoints · notebooks 06–07 |
-| **Could** | IVR · voice replies · impact tracker · tender, clearance and RERA ingestion · street-network access (pandana / OSRM) · photo attachments · ward-level PDF reports |
-| **Won't (this round)** | Price or demand forecasting · parcel-level recommendations · Aadhaar or any identity integration · deep layers for every city |
-
-**Milestones** — each one ends in something demoable.
-
-| # | Milestone | Deliverables | Done when |
-|---|---|---|---|
-| M0 | Foundation | Monorepo, Docker Compose, migrations, city configs, taxonomy, OpenAPI skeleton, CI | `docker compose up` shows an empty map of both cities with ward boundaries |
-| M1 | Data layer | OSM / Overture / government loaders, conflation, H3 grid, population, curated anchor projects; EDA 01–03 | Every layer on the map with a status filter; a coverage report per layer |
-| M2 | Analytics | Access Gap, Demand (on seeded requests), Momentum (history + curated projects), Priority, Gi* hotspots, drivers | Hotspot overlays and top-10 recommendations with "why" |
-| M3 | News AI | Discover → extract → verify → geocode → link → timeline; gold set | A pin shows "What's coming" with cited events; extraction precision measured |
-| M4 | Intake | Webhooks, queue, speech/translation/understanding/redaction/dedup, replies | A Hindi voice note appears on the map in under 30 s with a Hindi reply |
-| M5 | Brief and polish | Area brief with validator, time slider, dashboard, demo script | The 3-minute demo runs end to end twice without intervention |
+Field-first ([ADR-0013](docs/adr/0013-field-first-scope.md)): each data owner takes one field end to end, two people build the UI against a fixed layer contract, and shared parts are built once.
 
 **Team of four**
 
 | Role | Owns | Starts on day one with |
 |---|---|---|
-| Data / GIS | Loaders, conflation, H3, access and gap, anchor projects, EDA | The OSM extract for both cities |
-| AI / NLP | News AI, intake AI, briefs, gold sets, evaluations | 100 saved articles and 50 recorded voice notes |
-| Backend | Schema, Go API, tiles, webhooks, queue, auth | Migrations and the OpenAPI skeleton |
-| Frontend + pitch | Map, panels, dashboard, i18n, demo video, deck | Fixtures taken from the OpenAPI examples |
+| Field owner — National Highways (Punya) | NH sources, EDA, geospatial analysis, findings, NH layers and fixtures, NH pipeline events | OSM India extract filtered to NH + MoRTH state-wise NH length |
+| Field owner — Metro rail (data teammate) | Metro sources, EDA, geospatial analysis, findings, metro layers and fixtures, metro pipeline events | OSM metro lines and stations + operator km and station counts |
+| UI — explore | Map, layer toggles, status filter, pin → area panel, time slider | Fixtures in `web/fixtures/` + the layer contract in [`docs/fields/`](docs/fields/README.md) |
+| UI — policy and citizen | Policy dashboard, recommendations view, citizen web app, i18n (en, hi, kn) | The same fixtures + the examples in `api/openapi.yaml` |
 
-The OpenAPI spec written in M0 is the contract between the four roles, so nobody waits on anybody.
+Shared work has named owners: the two field owners own `db/` and the shared pipeline (grid, population, growth layers, news AI); the UI pair owns `web/`. Owners for `api/` and citizen intake are settled at M0 ([§18](#18-open-questions-and-assumptions)).
+
+**Milestones** — each one ends in something demoable.
+
+| # | Milestone | Deliverables | Done when |
+|---|---|---|---|
+| M0 | Foundation | Repo skeleton, Docker Compose (PostGIS), migrations, taxonomy, layer contract, OpenAPI skeleton, UI shell on fixtures | The UI shows both fields' fixture layers on a map of India |
+| M1 | Field data | Both fields' sources ingested, normalized and conflated; coverage reports vs official totals; real fixtures committed | NH and metro layers on the map with a status filter; coverage gap vs MoRTH / operator totals documented |
+| M2 | Field analysis | EDA notebooks and geospatial metrics per field — access, catchments, pipeline gain, corridor and station effects | Each field plan has 5+ evidence-backed findings; access and gap overlays on the map |
+| M3 | Pipeline and news | Projects and cited events for both fields — press releases, news, tenders, land-acquisition notifications; timelines and delay flags | A pin shows "What's coming" for both fields, every claim cited |
+| M4 | Product | Pin → area panel for both fields; one recommendation type per field; citizen intake for transport categories | A Hindi voice note about an NH crossing appears on the map in under 30 s with a Hindi reply |
+| M5 | Demo, then field #3 | Brief with validator, dashboard polish, demo script; start field #3 with skill `add-field` | The 3-minute demo runs end to end twice without intervention |
+
+**Scope (MoSCoW)**
+
+| Priority | Scope |
+|---|---|
+| **Must** | NH and metro fields done end to end (data, EDA, analysis, findings, layers, cited pipeline) · pin → area panel for both · one recommendation type per field (NH crossings or upgrades; metro catchment gaps) · citizen intake for transport categories in English, Hindi and Kannada, text and voice · policy dashboard |
+| **Should** | Field #3 (railways, or water canals) · time slider · misalignment view · silent gaps · review console · open exports · Open311 endpoints |
+| **Could** | IVR · voice replies · impact tracker · GTFS service-level analysis · toll analysis · TOD opportunity map · street-network access (pandana / OSRM) · photo attachments |
+| **Won't (this round)** | Price or demand forecasting · parcel-level recommendations · Aadhaar or any identity integration · every field at once |
+
+The layer contract in [`docs/fields/README.md`](docs/fields/README.md) and the OpenAPI spec are the contracts between the four roles, so nobody waits on anybody.
 
 ## 14. Evaluation
 
@@ -710,7 +714,7 @@ Decided in [ADR-0011](docs/adr/0011-privacy-do-no-harm.md) and [ADR-0012](docs/a
 
 | Risk | Impact | Mitigation |
 |---|---|---|
-| Government data behind logins or locked in PDFs | Missing layers | OSM and Overture first; hand-curate about 50 anchor projects per pilot city; ask the organizers for PM GatiShakti / state GIS access |
+| Government data behind logins or locked in PDFs | Missing layers | OSM and Overture first; hand-curate about 50 anchor projects per field; ask the organizers for PM GatiShakti / state GIS access |
 | No public raw grievance data | Empty demand layer at demo time | Own intake plus a clearly labeled synthetic seed set; import public dumps where they exist |
 | The LLM invents or misreads a project | False "coming soon" claims | Verified evidence quotes, multi-source confidence, review queue; official sources outrank news |
 | Ambiguous place names ("MG Road" is in every city) | Wrong locations | Geocode inside the city boundary; store precision; ask the citizen for a pin |
@@ -723,7 +727,7 @@ Decided in [ADR-0011](docs/adr/0011-privacy-do-no-harm.md) and [ADR-0012](docs/a
 
 ## 17. Scaling to all of India
 
-- **A new city** is configuration plus one pipeline run (skill [`onboard-city`](.claude/skills/onboard-city/SKILL.md)); the backbone is already national.
+- **A new field** follows one template (skill [`add-field`](.claude/skills/add-field/SKILL.md)) and covers all of India from the start; **a new city** is configuration plus one pipeline run (skill [`onboard-city`](.claude/skills/onboard-city/SKILL.md)).
 - **Rural and district coverage:** add PMGSY rural roads, UDISE+ schools and NHRR facilities nationally; analyze at H3 resolution 6–7.
 - **Grid size:** India at resolution 8 is ≈4.5 million cells (3.29 million km² ÷ 0.74 km²) — it fits one Postgres. Partition score tables by state; keep materialized rollups for national views.
 - **Serving:** a stateless Go API behind a CDN; tiles versioned by snapshot and cached; a read replica for analytics.
@@ -736,25 +740,26 @@ Decided in [ADR-0011](docs/adr/0011-privacy-do-no-harm.md) and [ADR-0012](docs/a
 
 **Open questions — need a team answer**
 
-1. **Pilot cities:** are Bengaluru and Lucknow right? ([ADR-0002](docs/adr/0002-pilot-cities.md))
+1. **Showcase cities:** are Bengaluru and Lucknow right for the demo? They no longer bound the data ([ADR-0013](docs/adr/0013-field-first-scope.md)).
 2. **Event format:** hackathon length, judging criteria and demo format — these set the MoSCoW cut line.
 3. **Data access through the organizers:** PM GatiShakti, state GIS layers, CPGRAMS or municipal grievance extracts?
 4. **WhatsApp:** can business verification finish in time, or is the demo Telegram-first?
 5. **LLM budget and constraints:** what API budget, and is there a requirement for Indian / self-hosted models?
-6. **Team skills:** is there Go capacity? If not, FastAPI replaces Go ([ADR-0006](docs/adr/0006-three-service-monorepo.md)).
+6. **Shared ownership:** with two UI owners and two field owners, who owns `api/` (Go) and the citizen-intake pipeline? If nobody has Go capacity, FastAPI replaces Go ([ADR-0006](docs/adr/0006-three-service-monorepo.md)).
+7. **Metro owner:** add the second data owner's name to [`docs/fields/README.md`](docs/fields/README.md) and the metro plan.
 
 **Differences with the existing team docs — decide before M0**
 
 1. **Name:** this plan says INFRA-AI; the team docs say LokDristi (renamed from PRISM). Pick one — renaming is a find-and-replace.
 2. **Hackathon tech requirements:** [LokDristi_Datasets.md](LokDristi_Datasets.md) says Google Earth Engine is a Google hackathon requirement, and it uses Gemini and BigQuery. If Google tech is required: Gemini becomes the default provider behind the same `ml/ai/` functions (ADR-0008 already allows the swap); the growth layers — GHSL, VIIRS, Open Buildings, all in the Earth Engine catalog — are computed in Earth Engine; BigQuery is optional, next to PostGIS. Record the outcome as superseding ADRs.
-3. **Pilot scope:** the gap report suggests one district and one sector (rural drinking water), and the dataset catalog leans rural and district-level; this plan, built from the original location-first idea, is urban, multi-layer and covers two cities. Options: keep the T and add one rural district as a third deep area; or make Pune a pilot city — PCMC's 2025 grievance data would give a real demand layer ([ADR-0002](docs/adr/0002-pilot-cities.md)).
+3. **Pilot scope — decided:** field-first — national highways and metro rail across India ([ADR-0013](docs/adr/0013-field-first-scope.md)). Rural drinking water, the gap report's suggestion, is a candidate for field #3; PCMC's 2025 grievance data is still the best real demand sample for the demo.
 4. **Citizen identifier:** the catalog's request schema has an Aadhaar-hashed citizen id; [ADR-0011](docs/adr/0011-privacy-do-no-harm.md) forbids Aadhaar. Keep ADR-0011: an unsalted hash of a 12-digit number can be reversed by brute force, and storing Aadhaar-derived identifiers brings UIDAI obligations a feedback platform does not need. An HMAC of the phone number does the same job.
 5. **Join key:** both use LGD codes for administrative data; this plan adds H3 hexagons for points, lines, rasters and hotspots ([ADR-0004](docs/adr/0004-h3-grid-spatial-key.md)). Compatible — confirm.
 6. **Optimizer and attribution:** the catalog proposes an OR-Tools portfolio optimizer and an attribution engine; this plan has explainable priority scores and a descriptive impact tracker. Compatible — optimization is not prediction ([ADR-0003](docs/adr/0003-explainable-analytics-no-prediction.md)); decide whether the optimizer is Must or Should.
 
 **Assumptions this plan makes — correct them if wrong**
 
-- A hackathon-style build with a live demo; a team of about four; timeline unknown, so the plan is milestone-based.
+- A hackathon-style build with a live demo; a team of four — two on the UI, two on data; timeline unknown, so the plan is milestone-based.
 - The stack follows the team defaults: Next.js, Go, Python/Flask, PostgreSQL.
 - "Plan an investment over there" has two lenses: public investment priorities (policymakers) and a growth outlook (citizens, investors) — never financial advice.
 
@@ -762,7 +767,8 @@ Decided in [ADR-0011](docs/adr/0011-privacy-do-no-harm.md) and [ADR-0012](docs/a
 
 - **Rules:** [`AGENTS.md`](AGENTS.md) — invariants, conventions, definition of done. It applies to humans and AI agents; Claude Code loads it through [`CLAUDE.md`](CLAUDE.md).
 - **Decisions:** [`docs/adr/`](docs/adr/README.md) — read the relevant ones before changing an area. To disagree, write a superseding ADR; don't silently diverge.
-- **Workflows:** [`.claude/skills/`](.claude/skills/) — `add-data-source`, `onboard-city`, `change-ai-pipeline`, `change-scoring`, `add-api-endpoint`, `write-adr`. Plain Markdown, so any agent or person can follow them.
+- **Fields:** [`docs/fields/`](docs/fields/README.md) — one plan per field, the done bar and the shared layer contract. Field owners and UI owners start there.
+- **Workflows:** [`.claude/skills/`](.claude/skills/) — `add-field`, `add-data-source`, `onboard-city`, `change-ai-pipeline`, `change-scoring`, `add-api-endpoint`, `write-adr`. Plain Markdown, so any agent or person can follow them.
 - **Pull requests:** fill in the checklist in [`.github/pull_request_template.md`](.github/pull_request_template.md).
 
 ---
