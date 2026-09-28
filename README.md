@@ -131,7 +131,7 @@ Every record keeps `source`, `source_ref`, `fetched_at` and `license`. Licenses 
 | Citizen requests | Our intake channels; a labeled synthetic seed set for the demo; public grievance dumps where published | Own data, with consent | Demand |
 | Indices | MoHUA Ease of Living Index, NITI Aayog SDG Urban India Index, NFHS-5 district indicators | GODL-India | Context and validation |
 | Price sanity check | RBI House Price Index, NHB RESIDEX (city level) | Site terms | City-level check of momentum only — never micro-location claims |
-| Integration target | PM GatiShakti National Master Plan — restricted; the 2025–26 Union Budget announced private-sector access | Restricted | Ask the organizers for access |
+| Integration target | PM GatiShakti National Master Plan — government login; the 2025–26 Union Budget announced private-sector access, and "GatiShakti Public" (Oct 2025) offers about 230 datasets after registration, view and analysis only | Restricted | Ask the organizers for access |
 
 Census 2011 is the latest published census; swap in Census 2027 figures when they are released.
 
@@ -724,6 +724,7 @@ Decided in [ADR-0011](docs/adr/0011-privacy-do-no-harm.md) and [ADR-0012](docs/a
 | AI cost at national scale | Budget overrun | Cheap relevance filter, Batch API, prompt caching; distill classification into an open Indic model once labeled data exists |
 | Scores read as forecasts or advice | Bad decisions, speculation | Drivers on every score, disclaimers, published sensitivity analysis, no parcel-level output |
 | ODbL share-alike on OSM-derived data | License breach | Publish OSM-derived exports under ODbL, with attribution |
+| Official data published without a license (NHAI GeoServer, GatiShakti extracts) | Legal risk, takedown | Ask the agency; until cleared, internal validation at most — never in exports or public layers |
 
 ## 17. Scaling to all of India
 
@@ -747,6 +748,7 @@ Decided in [ADR-0011](docs/adr/0011-privacy-do-no-harm.md) and [ADR-0012](docs/a
 5. **LLM budget and constraints:** what API budget, and is there a requirement for Indian / self-hosted models?
 6. **Shared ownership:** with two UI owners and two field owners, who owns `api/` (Go) and the citizen-intake pipeline? If nobody has Go capacity, FastAPI replaces Go ([ADR-0006](docs/adr/0006-three-service-monorepo.md)).
 7. **Metro owner:** add the second data owner's name to [`docs/fields/README.md`](docs/fields/README.md) and the metro plan.
+8. **NHAI GeoServer:** the richest NH source — segments with lanes, project alignments, crash points — states no license. Ask NHAI/MoRTH, use it only for internal validation, or skip it? Until decided, skill `add-data-source` blocks it.
 
 **Differences with the existing team docs — decide before M0**
 

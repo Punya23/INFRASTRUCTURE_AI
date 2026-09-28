@@ -29,15 +29,20 @@ For policy:
 
 Each source goes through skill `add-data-source` before loading — license and terms first.
 
-| Source | What it gives | Access | Used for |
+Verified on 2026-09-28 (links, access, license); re-check before loading.
+
+| Source | What it gives | Access · license | Use |
 |---|---|---|---|
-| OpenStreetMap India | Lines (`railway=subway` / `light_rail` / `monorail`), stations, construction and proposed alignments, opening dates where tagged, tunnels and bridges | Bulk PBF (ODbL) | Lines, stations, pipeline geometry |
-| GTFS feeds where published (e.g. Delhi Open Transit Data, Kochi Metro) | Stations, routes, frequencies | ZIP download | Service levels, validation |
-| Operator sites and annual reports (DMRC, BMRCL, CMRL, MMRCL, MMRDA, Maha Metro, GMRC, UPMRC, KMRL, HMRL, JMRC, NCRTC, …) | Official km, stations, phases, opening dates, ridership | Web · PDF | Reference totals, timelines |
-| MoHUA · PIB (Cabinet approvals) | Sanctioned projects: length, cost, completion targets | Web · RSS | Pipeline events |
-| data.gov.in — Parliament-answer tables | City-wise ridership, actual vs projected | CSV / API (GODL-India) | Ridership analysis |
-| National TOD Policy (2017) and city TOD policies | Influence-zone radius, density rules | PDF | TOD zones |
-| CAG and Parliamentary Standing Committee reports | Ridership shortfalls, delays, costs | PDF | Context for findings |
+| OpenStreetMap India | ~4.5k `railway=subway` ways, 121 `route=subway` relations, ~1.2k `station=subway` nodes, monorail; 390 `construction=subway` and 78 `proposed=subway` ways (taginfo, Sep 2026). RRTS is also tagged `subway` | Bulk download · ODbL | Lines, stations, pipeline geometry |
+| [Wikidata](https://query.wikidata.org) | 971 Indian metro stations — 910 with coordinates, 840 with opening dates | SPARQL · **CC0** | Opening dates, station cross-check |
+| [Wikipedia — Urban rail transit in India](https://en.wikipedia.org/wiki/Urban_rail_transit_in_India) | System and line tables: km, stations, opening dates | HTML · CC BY-SA (share-alike) | Cross-check only, cited |
+| MoHUA figures via [Parliament answers](https://sansad.in/rs/questions/questions-and-answers) | ~1,159 km operational including 82 km RRTS (~1,077 km metro) in 26 cities; 886 km under construction (Monsoon session 2026) | HTML / PDF · public record | Reference totals — definitions differ, so store the source |
+| Operator sites and reports (DMRC, BMRCL, CMRL, MMRCL, MMRDA, Maha Metro, GMRC, UPMRC, KMRL, HMRL, JMRC, …) · PIB Cabinet approvals | Official km, stations, phases, opening dates; sanctioned projects with cost and targets | Web (often JavaScript apps) · PDF · site terms | Reference totals, timelines, pipeline events |
+| [NCRTC](https://ncrtc.in/details/) | Delhi–Meerut RRTS: 82 km, 16 stations plus 9 Meerut Metro stations, fully open since 22 Feb 2026 | HTML | RRTS layer |
+| GTFS — [Hyderabad](https://hmrl.co.in/open-data/) (official) · [Delhi Metro via Delhi OTD](https://otd.delhi.gov.in/data/staticDMRC) (Aug 2023) · [Kochi](https://kochimetro.org/opendata/KMRLOpenData.zip) (calendar expired Dec 2025) · [Bengaluru](https://github.com/Vonter/bmrcl-gtfs) (community, approximate times) | Stops, routes, frequencies | ZIP · Hyderabad: free reuse with attribution; Delhi: registration form, proprietary terms; Kochi: attribution; Bengaluru: ODbL | Service levels where a feed is current. Chennai has only a stub and Mumbai none; more feeds in the [Mobility Database](https://files.mobilitydatabase.org/feeds_v2.csv) |
+| Ridership — data.gov.in (Mumbai Lines 2A/7 and Monorail daily, Jan 2024–Sep 2025; Delhi Metro to 2021-22) · OpenCity (Bengaluru hourly by station, Aug–Sep 2025; Chennai monthly, Apr 2023–Jun 2026) · [L&T Metro Hyderabad](https://ltmetro.com/ridership/) (monthly) | City and station ridership | CSV · XLSX · HTML · GODL-India; the Bengaluru file is non-commercial | `04_ridership` |
+| Projections — [CAG Report 11 of 2021](https://cag.gov.in/en/audit-report/details/114644) (Delhi Metro), Standing Committee on Housing and Urban Affairs, 13th Report 2021-22 (Bengaluru) | Actual vs projected or break-even ridership for specific cities | PDF | `ridership_ratio` — no multi-city dataset exists; build a curated table with a source per row |
+| [National TOD Policy 2017](https://mohua.gov.in/static/uploads/2025/10/ba0cf0a6a17909cf36099ae402f2ab63.pdf) | Influence zone "generally up to a radius of nearly 500-800m" of a station; about 500 m either side of the corridor where stations are under 1 km apart (clause 7.1.2) | PDF | TOD zones |
 | Shared layers | Population, GHSL, VIIRS, Open Buildings, Overture places (jobs proxy) | — | Catchments, growth effect |
 
 ## Canonical mapping
@@ -46,7 +51,7 @@ Each source goes through skill `add-data-source` before loading — license and 
 |---|---|---|---|
 | `railway=subway` or `light_rail` in a metro route relation | `metro_line` | operational | `line` from the relation name or colour; `elevation`: underground if `tunnel=yes`, elevated if `bridge=yes` or `layer>0`, else at grade |
 | `railway=monorail` | `monorail_line` | operational | |
-| RRTS (Namo Bharat) lines and stations | `rrts_line`, `rrts_station` | by tags | |
+| RRTS (Namo Bharat) — tagged `railway=subway` in OSM | `rrts_line`, `rrts_station` | by tags | Separate from metro by `network` / `operator` (NCRTC) |
 | `railway=construction` + `construction` ∈ subway, light_rail, monorail | `metro_line` | under_construction | Confirm against operator openings — OSM lags |
 | `railway=proposed` + `proposed` ∈ subway, light_rail, monorail | `metro_line` | proposed | |
 | `railway=station` + `station` ∈ subway, light_rail, monorail (or `public_transport=station` + `subway=yes`) | `metro_station` | operational | `interchange` when two or more lines share it |
@@ -56,7 +61,8 @@ Normalization rules — each one fails closed into `ingest_error`, never silentl
 - **Double-tracked lines:** many lines are drawn one way per track, so naive length doubles. Measure along the route relation, or merge parallel tracks within ~20 m. Coverage must match operator km within a documented gap.
 - **Station names:** English, Hindi and local-script names, "Metro Station" suffixes and renamed stations → a normalized key plus an alias table.
 - **Several operators in one city** (Mumbai, Delhi NCR) → `agency` per line, never per city.
-- **Opening dates:** OSM tags are sparse; fill them from operator records and the curated timeline, with the source on every date.
+- **Opening dates:** OSM tags are sparse; fill them from Wikidata (CC0) and operator records, with the source on every date.
+- **Reference totals disagree** by definition (metro only, with RRTS, Wikipedia's count): store every total with its source and as-of date.
 
 ## EDA plan
 
@@ -83,7 +89,7 @@ Catchments are walking-scale, so this field uses H3 resolution 9 (≈0.1 km² ce
 | `city_coverage_share` | %, per city | People within 1 km of any station ÷ city population |
 | `pipeline_coverage_gain` | percentage points, per city | Coverage with under-construction and approved stations added, minus today's |
 | `transit_gap` | flag, per cell | Top population density and momentum, more than 2 km from any existing or planned station; Gi* groups these into corridors |
-| `tod_zone` | polygon | 500 m and 800 m buffers around operational and upcoming stations |
+| `tod_zone` | polygon | 500 m and 800 m buffers around operational and upcoming stations; about 500 m either side of the corridor where stations are under 1 km apart (TOD Policy clause 7.1.2) |
 | `integration_m` | m, per station | Distance to the nearest mainline rail station, bus terminal and airport |
 | `ridership_ratio` | ratio, per city | Actual daily ridership ÷ projected |
 | `station_effect` | percentage points | Near-minus-far growth difference around openings (descriptive event study) |
@@ -91,7 +97,7 @@ Catchments are walking-scale, so this field uses H3 resolution 9 (≈0.1 km² ce
 ```yaml
 # config/fields/metro_rail.yaml — starting values; every number states its basis
 h3_res: 9                             # walking-scale catchments
-catchment_radii_m: [500, 800, 1000]   # 500–800 m: National TOD Policy influence zone (verify in the policy text); 1 km: common planning radius
+catchment_radii_m: [500, 800, 1000]   # 500–800 m: National TOD Policy 2017 influence zone (clause 7.1.2); 1 km: common planning radius
 transit_gap_km: 2                     # team judgment, 2026-09
 parallel_track_merge_m: 20
 effect_rings_km: { near: 1, far: [2, 5] }
@@ -136,6 +142,7 @@ _Add as analysis lands — statement, number, notebook, date._
 
 ## Open questions
 
-- Which cities publish GTFS, and is station-level ridership public anywhere?
+- GTFS is current only for Hyderabad (Delhi's is from 2023; Kochi's calendar has expired). Use timetable-free metrics (catchments, coverage) nationally, and GTFS service levels only where a feed is current?
+- Station-level ridership is public only for Bengaluru (Aug–Sep 2025, non-commercial) — enough for a showcase-city analysis?
 - RRTS and monorail: same field with their own kinds (default), or separate fields?
 - Which projection counts when a DPR was revised?

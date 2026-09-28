@@ -18,6 +18,8 @@ Paths follow README §12; if one does not exist yet, create it there.
 
 - Record the license, the attribution text and the terms URL. Acceptable: ODbL, CC BY / BY-SA, CDLA, GODL-India, public domain, public records.
 - Scraping: obey robots.txt and the site terms, throttle to at most 1 request per second unless the source allows more, and send a descriptive User-Agent.
+- Behind a login, registration form or CAPTCHA? A person downloads it by hand and the manifest says how. Never automate past a CAPTCHA or login.
+- Services that advertise write operations (for example WFS-T): send read-only requests only.
 - News and other text: keep metadata, a short evidence quote and the link — never republish full text.
 - License unclear? Do not ingest. Add it to README §18.
 
@@ -25,6 +27,7 @@ Paths follow README §12; if one does not exist yet, create it there.
 
 - Write to `data/raw/<source>/<YYYY-MM-DD>/` (gitignored) and commit `data/manifests/<source>.yaml` with: url, fetched_at, sha256, license, attribution, row count.
 - Fetching is re-runnable; raw files are never edited.
+- Check the content type and file signature, not just HTTP 200 — dead government links often return an HTML page with status 200.
 
 ## 4. Load — `ml/fields/<field>/ingest_<source>.py` (field sources) or `ml/pipeline/ingest_<source>.py` (shared sources)
 
@@ -32,6 +35,7 @@ Paths follow README §12; if one does not exist yet, create it there.
 - Every row carries `source`, `source_ref` (a stable upstream id), `fetched_at`, `license` and `confidence`.
 - Upsert into `raw_<source>` on `(source, source_ref)` — loading twice must not duplicate anything.
 - City names, boundaries and languages come from `config/cities/*.yaml`, never from code.
+- Drop personal fields at ingest — names, phone numbers, survey or plot numbers (ADR-0011).
 - Geometry: EPSG:4326, made valid, inside India's bounding box. Anything that fails goes to `ingest_error` with a reason. Never drop rows silently.
 
 ## 5. Conflate

@@ -29,33 +29,44 @@ For policy:
 
 Each source goes through skill `add-data-source` before loading — license and terms first.
 
-| Source | What it gives | Access | Used for |
+Verified on 2026-09-28 (links, access, license); re-check before loading.
+
+| Source | What it gives | Access · license | Use |
 |---|---|---|---|
-| OpenStreetMap India — Geofabrik extract; Overpass for quick tests | NH and expressway geometry, `ref`, lanes, surface, maxspeed, bridges, toll booths, `construction` / `proposed` ways | Bulk PBF (ODbL) | Network, toll points, under-construction corridors |
-| MoRTH Annual Report · Basic Road Statistics of India | Official NH length by state, lane-wise NH length, km built per year | PDF tables | Coverage reference, trends |
-| data.gov.in — Parliament-answer tables | State-wise NH length over years, km built per year, black spots, NH accidents | CSV / API (GODL-India) | Trends, safety |
-| MoRTH "Road Accidents in India" (annual) | Accidents and deaths on NHs by state | PDF tables | Safety rates |
-| NHAI Toll Information System | Toll plazas: NH, location, rates | Portal | Toll layer, conflated with OSM toll booths |
-| Bhoomi Rashi · eGazette | NH land-acquisition notifications — 3A (intent), 3D (declaration): NH number, villages | Portal search · gazette PDFs | Earliest pipeline signal |
-| NHAI and MoRTH project pages · PIB (MoRTH) releases · CPPP and NHAI tenders · PARIVESH | Project stage, cost, dates | Web · RSS · portals | Pipeline events through the news AI |
+| [OpenStreetMap India](https://download.geofabrik.de/asia/india.html) — Geofabrik: 1.6 GB PBF, updated daily; six zone extracts also as GeoPackage and shapefile | NH ways (`highway=trunk` + `ref=NH44`), `ref:old` on ~63% and `lanes` on ~58% of trunk ways, expressways, construction and proposed ways, ~2.7k toll-booth nodes (taginfo, Sep 2026) | Bulk download · ODbL | Primary network layer |
+| [data.gov.in](https://data.gov.in) — Rajya Sabha answer tables | State-wise 2-, 4- and 6–8-lane NH length with the balance under construction and awarded (2024-25); NH built 2019-20 to 2023-24; Bharatmala awarded and built; NH-wise black-spot counts (2016–18, 2017–19); NCRB road-class accidents 2023 | Small CSVs · GODL-India | Lane check, trends, safety |
+| MoRTH Annual Report 2024-25 · Basic Road Statistics 2020-22 ([morth.gov.in](https://morth.gov.in)) | NH length 1,46,195 km, state-wise NH list, Bharatmala components; NH series 1950–2022 (as of 31 Mar 2022); lane figures only nationally | PDF — the 2025-26 report is scanned and needs OCR · none stated | Reference totals, long-run trend |
+| [PIB Year End Review 2025](https://pib.gov.in/PressReleasePage.aspx?PRID=2209837) · [Parliament questions](https://sansad.in/rs/questions/questions-and-answers) | NH 1,46,560 km, 3,052 km access-controlled, 43,512 km with 4+ lanes; the freshest figures, and the source of most data.gov.in tables | HTML / PDF · public record | Latest totals — keep the as-of date |
+| MoRTH Road Accidents in India 2023 and 2024 ([2024 CSVs on OpenCity](https://data.opencity.in/dataset/road-accidents-in-india-2024)) | State-wise NH accidents, deaths and injuries, 2021–24 | PDF; the CSVs lack the NH annexures · none stated | Safety rates |
+| [IHMCL NH fee plazas](https://ihmcl.co.in/wp-content/uploads/2025/08/NH-Fee-Plazas-1.pdf) (Aug 2025) | ~1,159 plazas: state, district, section, NH — no coordinates | PDF · none stated | Toll list, matched to OSM toll booths |
+| [NHAI Datalake — Projects under Execution](https://datalakeg.nhai.gov.in/nhai/mISC/DataLakeGISDashboard) | Project code, NH, lanes, cost, progress %, dates | Web map · none stated | Pipeline stages |
+| [Bhoomi Rashi](https://bhoomirashi.gov.in) | Project search with 3a/3A/3D dates and land-acquisition cost; Highway Land Register with Excel export | Web forms behind a CAPTCHA — manual exports only · none stated | Land-acquisition timeline |
+| [eGazette](https://egazette.gov.in) | Section 3A/3D notifications: NH, chainage, village, survey numbers, area, owner names | Individual PDFs, search UI · government publication | Earliest pipeline signal — keep NH, chainage, village and date; drop survey numbers and owner names at ingest |
+| PIB (MoRTH) releases · CPPP and NHAI tenders · PARIVESH | Announcements, tenders, clearances | Web · RSS · portals | Pipeline events through the news AI |
+| NHAI GeoServer — `datalakew.nhai.gov.in/geoserver/NHAI/ows` | 7,452 NH segments (lanes, greenfield flag, completion FY23–26), 1,010 project alignments, 678 toll plazas, 91,508 crash points 2020–23 with a black-spot flag, Bharatmala corridors — roughly a 2023 snapshot | WFS GeoJSON, no login · **no license stated** | The richest NH source, but blocked until the team decides (README §18). Read-only requests only — it advertises write operations |
+| Community extracts — [india-geodata](https://github.com/yashveeeeeeer/india-geodata) (GatiShakti-MoRTH NH lines, Jun 2022), [ramSeraph/indian_transport](https://github.com/ramSeraph/indian_transport) | NH lines and tolls scraped from official portals | GitHub releases · upstream unlicensed, whatever the label says | Cross-check only; never redistribute |
 | Shared layers | Population, GHSL, VIIRS, Open Buildings, LGD boundaries | — | Access, growth effect |
+
+Not usable now: the NHAI Toll Information System (unreachable; the last community scrape is from 2022) · PM GatiShakti (government login; "GatiShakti Public" needs registration and is view-only) · Bhuvan (WMS images only) · DataMeet (no NH layer).
 
 ## Canonical mapping
 
 | OSM | Kind | Status | Notes |
 |---|---|---|---|
 | Way with an NH ref (`ref` like `NH48`, or a member of an NH route relation), `highway` ∈ motorway, trunk, primary, secondary | `nh_segment` | operational | |
-| `highway=motorway`, or an access-controlled `trunk` named "… Expressway" | `expressway_segment` | operational | `owner_level` = national or state |
+| `highway=motorway` (National Expressways), or `highway=trunk` with `expressway=yes` or `motorroad=yes` | `expressway_segment` | operational | `owner_level` = national or state |
 | `highway=construction` + `construction` ∈ motorway, trunk, primary, with an NH ref or expressway name | same kinds | under_construction | Check against official openings — OSM lags |
 | `highway=proposed` + the same | same kinds | proposed | |
 | `barrier=toll_booth` within 50 m of an NH way | `toll_plaza` | operational | Conflate with the NHAI list |
 
 Normalization rules — each one fails closed into `ingest_error`, never silently:
 
-- **Refs:** OSM has `NH48`, `NH 48`, `NH-48`, `NH48;SH17` and pre-2010 numbers such as `NH4`. Split on `;`, normalize to `NH<number><suffix>`, and map old numbers through MoRTH's 2010 renumbering into `old_ref`.
-- **Dual carriageways:** divided highways are drawn as two one-way ways, so naive length doubles. Measure along one direction of each route relation, or pair `oneway=yes` ways within ~30 m and count them once. The coverage report must agree with MoRTH totals within a documented gap.
-- **Lanes:** OSM `lanes` is sparse. Record `lanes_source` (`osm`, `official`, `unknown`) and never impute silently; official lane-wise lengths exist only at state level.
+- **Refs:** ways mostly carry `NH44`, with variants `NH 44`, `NH-44` and lists like `NH44;NH48`; the per-state route relations (`network=IN:NH`) carry a bare `ref=48` plus `is_in:state`, and superroutes carry `ref=NH48`. Split on `;`, normalize everything to `NH<number><suffix>`, and take `old_ref` from OSM's `ref:old` (on ~63% of trunk ways), cross-checked with MoRTH's 2010 renumbering.
+- **Dual carriageways:** divided highways are drawn as two one-way ways (about 72% of NH trunk ways are one-way), so naive length doubles. Measure along one direction of each route relation, or pair `oneway=yes` ways within ~30 m and count them once. The coverage report must agree with MoRTH totals within a documented gap.
+- **Lanes:** OSM `lanes` covers about 58% of trunk ways. Record `lanes_source` (`osm`, `official`, `unknown`), never impute silently, and check totals against the official state-wise 2/4/6–8-lane lengths on data.gov.in.
 - **Status:** OSM `construction` tags lag openings — confirm against official opening dates before calling a stretch under construction.
+- **Reference totals disagree** by definition and date (1,46,195 km in the 2024-25 Annual Report vs 1,46,560 km in PIB's Year End Review 2025): store every total with its source and as-of date, and name the one each coverage report compares against.
+- **Personal data:** gazette schedules list owner names and survey numbers, and NHAI's toll layer lists staff names and phone numbers — drop those fields at ingest (ADR-0011).
 
 ## EDA plan
 
@@ -68,7 +79,7 @@ Notebooks in `ml/notebooks/national_highways/`; logic in `ml/fields/national_hig
 | `03_growth_timeline` | Official NH km by year and state; lane mix over time; expressway opening timeline |
 | `04_access` | Distance to the nearest NH for every H3 cell; population within 5, 10 and 25 km, by district; access vs population density |
 | `05_corridor_effect` | Built-up and night-light growth within 0–2 km vs 2–10 km of expressways and upgrades opened 2005–2020, before vs after |
-| `06_safety` | Deaths per 100 NH-km by state; black spots per 100 km; overlap with 2-lane undivided stretches |
+| `06_safety` | Deaths per 100 NH-km by state (Road Accidents in India); NH-wise black-spot counts (data.gov.in); overlap with 2-lane undivided stretches; crash points only if the NHAI GeoServer is cleared |
 | `07_pipeline` | Pipeline km by stage and state; land-acquisition notifications by district; access gain once the pipeline completes |
 
 ## Geospatial analysis
@@ -123,7 +134,7 @@ Every recommendation carries drivers and evidence (README §8.3).
 
 ## Milestones and done checklist
 
-- [ ] **M1 — data:** OSM NH network with normalized refs and single-counted length; toll plazas; MoRTH state totals; coverage report by state.
+- [ ] **M1 — data:** OSM NH network with normalized refs and single-counted length; toll plazas (OSM toll booths matched to the IHMCL list); official state totals with as-of dates; coverage report by state.
 - [ ] **M1 — fixtures (first two days):** `web/fixtures/national_highways/nh_segments.geojson` and `toll_plazas.geojson`, simplified, ≤ 5 MB each.
 - [ ] **M2 — analysis:** notebooks 01–04 and 06; `nh_access` metrics; first findings.
 - [ ] **M2 — corridor effect:** notebook 05 with at least five dated openings.
@@ -137,7 +148,8 @@ _Add as analysis lands — statement, number, notebook, date._
 
 ## Open questions
 
-- Is OSM lane tagging good enough anywhere, or do lane statistics stay state-level?
-- Can land-acquisition notifications be fetched in bulk, or only searched? If only searched, which states first?
+- NHAI GeoServer: no license stated. Ask NHAI/MoRTH, use it only for internal validation, or skip it? (README §18)
+- Land acquisition: Bhoomi Rashi is CAPTCHA-gated (manual exports) and eGazette has no bulk access — which corridors to export by hand first, and is extracting gazette PDFs worth it for M3?
+- Lanes: is OSM's ~58% coverage enough for `lane_mix`, with the official state totals as the check?
 - Traffic volumes are not public — which proxies for capacity analysis (night lights, population, toll density)?
 - State-built expressways: inside this field with `owner_level` (default), or a separate field?
