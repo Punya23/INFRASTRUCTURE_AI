@@ -1,0 +1,1745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>INFRA-AI — People-First Infrastructure Intelligence for India</title>
+  <meta name="description" content="India's first location-first infrastructure intelligence platform. Pin a place — see what exists, what changed, what's coming, and what residents need. A Digital Public Good."/>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Sans+Kannada:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+  <style>
+    /* ============================
+       INFRA-AI Design System CSS
+       From Stitch: "INFRA-AI Platform Design System"
+       ============================ */
+
+    /* --- CSS Custom Properties (Design Tokens) --- */
+    :root {
+      /* Foundational Canvas & Text */
+      --canvas-base: #F7F6F2;
+      --surface: #FFFFFF;
+      --text-primary: #14202B;
+      --text-secondary: #5B6773;
+      --text-muted: #8895A5;
+      --border-subtle: #E3E1DA;
+      --border-strong: #C8C5BB;
+
+      /* Sovereign Accent */
+      --brand-teal: #0E5A66;
+      --brand-teal-hover: #0A444D;
+      --accent-saffron: #E08A1E;
+
+      /* Status Tokens */
+      --status-operational: #0E5A66;
+      --status-construction: #D97706;
+      --status-planned: #3A6EA5;
+      --status-stalled: #B3382C;
+      --status-cancelled: #6B7280;
+
+      /* Surface variants */
+      --surface-container: #e3efff;
+      --surface-container-low: #edf4ff;
+      --surface-container-high: #dde9f9;
+      --surface-container-highest: #d7e4f3;
+      --surface-container-lowest: #ffffff;
+      --surface-dim: #cfdbeb;
+      --surface-bright: #f7f9ff;
+
+      /* Primary palette */
+      --primary: #00414b;
+      --primary-container: #0e5a66;
+      --on-primary: #ffffff;
+      --on-primary-container: #90cfdd;
+
+      /* Secondary palette */
+      --secondary: #8a5100;
+      --secondary-container: #fda137;
+      --on-secondary: #ffffff;
+      --on-secondary-container: #6a3c00;
+      --secondary-fixed: #ffdcbe;
+
+      /* Tertiary palette */
+      --tertiary: #003c6a;
+      --tertiary-container: #195489;
+      --on-tertiary: #ffffff;
+      --on-tertiary-container: #9dc8ff;
+      --tertiary-fixed: #d2e4ff;
+
+      /* On surface */
+      --on-surface: #111d28;
+      --on-surface-variant: #3f484a;
+      --outline: #70797b;
+      --outline-variant: #bfc8ca;
+
+      /* Error */
+      --error: #ba1a1a;
+      --error-container: #ffdad6;
+
+      /* Spacing */
+      --space-xs: 0.25rem;
+      --space-sm: 0.5rem;
+      --space-md: 1rem;
+      --space-lg: 1.5rem;
+      --space-xl: 2.5rem;
+      --gutter: 1.5rem;
+      --margin: 2rem;
+
+      /* Radius */
+      --radius-sm: 0.25rem;
+      --radius: 0.5rem;
+      --radius-md: 0.75rem;
+      --radius-lg: 1rem;
+      --radius-xl: 1.5rem;
+      --radius-full: 9999px;
+
+      /* Elevation */
+      --shadow-1: 0px 1px 3px rgba(20, 32, 43, 0.05);
+      --shadow-2: 0px 4px 12px rgba(20, 32, 43, 0.08);
+      --shadow-3: 0px 12px 28px rgba(20, 32, 43, 0.12);
+    }
+
+    /* --- Reset & Base --- */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body {
+      font-family: 'Inter', 'Noto Sans Devanagari', 'Noto Sans Kannada', system-ui, sans-serif;
+      font-feature-settings: "tnum" 1, "cv05" 1;
+      color: var(--text-primary);
+      background: var(--canvas-base);
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    a { text-decoration: none; color: inherit; }
+    button { cursor: pointer; border: none; background: none; font-family: inherit; }
+    img { max-width: 100%; display: block; }
+    input { font-family: inherit; }
+    ul { list-style: none; }
+
+    /* --- Typography Classes --- */
+    .text-headline-xl { font-size: 2.25rem; font-weight: 700; line-height: 2.75rem; letter-spacing: -0.025em; }
+    .text-headline-lg { font-size: 1.75rem; font-weight: 600; line-height: 2.25rem; letter-spacing: -0.02em; }
+    .text-headline-md { font-size: 1.25rem; font-weight: 600; line-height: 1.75rem; letter-spacing: -0.01em; }
+    .text-title-lg { font-size: 1.125rem; font-weight: 600; line-height: 1.5rem; letter-spacing: -0.01em; }
+    .text-title-md { font-size: 1rem; font-weight: 600; line-height: 1.5rem; }
+    .text-body-lg { font-size: 1.125rem; font-weight: 400; line-height: 1.75rem; }
+    .text-body-md { font-size: 1rem; font-weight: 400; line-height: 1.5rem; }
+    .text-body-sm { font-size: 0.875rem; font-weight: 400; line-height: 1.25rem; }
+    .text-label-md { font-size: 0.8125rem; font-weight: 500; line-height: 1.125rem; letter-spacing: 0.01em; }
+    .text-label-sm { font-size: 0.6875rem; font-weight: 600; line-height: 1rem; letter-spacing: 0.04em; }
+    .text-data-metric { font-size: 1.5rem; font-weight: 600; line-height: 1.75rem; letter-spacing: -0.02em; }
+    .text-data-mono { font-family: 'JetBrains Mono', monospace; font-size: 0.8125rem; font-weight: 400; line-height: 1.125rem; }
+
+    /* --- Utility Classes --- */
+    .container { max-width: 80rem; margin: 0 auto; padding: 0 1.5rem; }
+    @media (min-width: 1024px) { .container { padding: 0 3rem; } }
+
+    /* --- Scrollbar hide --- */
+    ::-webkit-scrollbar { display: none; }
+    * { scrollbar-width: none; }
+
+    /* ============================
+       HEADER / NAV
+       ============================ */
+    .site-header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+      background: rgba(247, 249, 255, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--outline-variant);
+      box-shadow: 0 1px 8px rgba(20,32,43,0.04);
+    }
+    .header-inner {
+      height: 5rem;
+      display: flex; align-items: center; justify-content: space-between; gap: var(--space-md);
+    }
+    .brand-group { display: flex; align-items: center; gap: var(--space-lg); }
+    .brand-link { display: flex; align-items: center; gap: var(--space-sm); }
+    .brand-logo { height: 2rem; width: auto; }
+    .brand-text { display: flex; flex-direction: column; }
+    .brand-name { color: var(--primary); display: flex; align-items: center; gap: var(--space-xs); }
+    .dpg-badge {
+      display: inline-flex; align-items: center;
+      padding: 0.125rem 0.375rem; border-radius: var(--radius-full);
+      background: var(--surface-container-high); color: var(--on-surface-variant);
+      border: 1px solid var(--outline-variant); text-transform: uppercase;
+    }
+    .brand-sub { color: var(--on-surface-variant); display: none; }
+    @media (min-width: 640px) { .brand-sub { display: inline; } }
+
+    .main-nav { display: none; align-items: center; gap: var(--space-md); margin-left: var(--space-sm); }
+    @media (min-width: 1024px) { .main-nav { display: flex; } }
+    .nav-link {
+      color: var(--on-surface-variant); padding: 0.25rem 0.5rem;
+      transition: color 0.2s;
+    }
+    .nav-link:hover, .nav-link.active { color: var(--on-surface); }
+    .nav-link.active {
+      color: var(--primary); background: var(--surface-container-high);
+      padding: 0.375rem 0.5rem; border-radius: var(--radius-lg);
+    }
+
+    .header-actions { display: flex; align-items: center; gap: var(--space-sm); }
+
+    /* Language Switcher */
+    .lang-switcher {
+      display: none; align-items: center;
+      background: var(--surface-container-high); padding: 0.125rem; border-radius: var(--radius-lg);
+      border: 1px solid var(--outline-variant);
+    }
+    @media (min-width: 768px) { .lang-switcher { display: flex; } }
+    .lang-btn {
+      padding: 0.25rem 0.625rem; border-radius: var(--radius);
+      color: var(--on-surface-variant); transition: all 0.2s;
+    }
+    .lang-btn:hover { color: var(--on-surface); }
+    .lang-btn.active {
+      background: var(--surface-container-lowest); color: var(--primary);
+      font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+    }
+
+    /* Search Bar */
+    .search-trigger {
+      display: flex; align-items: center; gap: var(--space-xs);
+      padding: 0.375rem 0.75rem; border-radius: var(--radius-lg);
+      background: var(--surface-container-lowest); border: 1px solid var(--outline-variant);
+      color: var(--on-surface-variant); transition: all 0.2s;
+    }
+    .search-trigger:hover { color: var(--on-surface); background: var(--surface-container); }
+    .kbd-hint {
+      padding: 0.125rem 0.25rem; border-radius: var(--radius-sm);
+      background: var(--surface-container-high); color: var(--on-surface-variant);
+    }
+
+    /* CTA buttons */
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 0.375rem;
+      padding: 0.375rem 0.875rem; border-radius: var(--radius-lg);
+      background: var(--primary-container); color: var(--on-primary);
+      transition: background 0.2s;
+    }
+    .btn-primary:hover { background: var(--primary); }
+    .btn-accent {
+      display: inline-flex; align-items: center; gap: 0.375rem;
+      padding: 0.625rem 1.25rem; border-radius: var(--radius-lg);
+      background: var(--primary-container); color: var(--on-primary);
+      font-weight: 600; box-shadow: var(--shadow-2); transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .btn-accent:hover { background: var(--primary); transform: translateY(-1px); }
+    .btn-secondary {
+      display: inline-flex; align-items: center; gap: 0.375rem;
+      padding: 0.5rem 1rem; border-radius: var(--radius-lg);
+      background: var(--surface-container-lowest); color: var(--primary);
+      border: 1px solid var(--border-subtle); transition: all 0.2s;
+    }
+    .btn-secondary:hover { background: var(--surface-container-high); border-color: var(--border-strong); }
+    .btn-full {
+      display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+      width: 100%; padding: 0.625rem 1rem; border-radius: var(--radius-lg);
+      background: var(--primary); color: var(--on-primary);
+      font-weight: 600; box-shadow: var(--shadow-1); transition: all 0.2s;
+    }
+    .btn-full:hover { background: var(--primary-container); }
+    .btn-ghost {
+      display: flex; align-items: center; justify-content: center;
+      width: 100%; padding: 0.5rem; border-radius: var(--radius-lg);
+      background: var(--surface-container); color: var(--primary);
+      font-weight: 600; transition: all 0.2s;
+    }
+    .btn-ghost:hover { background: var(--surface-container-high); }
+
+    .avatar {
+      width: 2rem; height: 2rem; border-radius: 50%;
+      background: var(--primary); display: flex; align-items: center; justify-content: center;
+    }
+
+    /* Mobile menu */
+    .mobile-menu-btn { display: flex; align-items: center; justify-content: center; }
+    @media (min-width: 1024px) { .mobile-menu-btn { display: none; } }
+    .mobile-nav {
+      display: none; position: fixed; top: 5rem; left: 0; right: 0; z-index: 49;
+      background: var(--surface-container-lowest); border-bottom: 1px solid var(--outline-variant);
+      box-shadow: var(--shadow-2); padding: var(--space-md);
+    }
+    .mobile-nav.open { display: flex; flex-direction: column; gap: var(--space-sm); }
+    .mobile-nav .nav-link { padding: 0.75rem; border-radius: var(--radius); display: block; }
+    .mobile-nav .nav-link:hover { background: var(--surface-container); }
+
+    /* ============================
+       MAIN CONTENT
+       ============================ */
+    main { flex: 1; padding-top: 5rem; }
+
+    /* --- Sovereign Notice Bar --- */
+    .notice-bar {
+      background: var(--surface-container-high); padding: var(--space-xs) 0;
+    }
+    .notice-inner {
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-sm);
+    }
+    .notice-left { display: flex; align-items: center; gap: var(--space-xs); }
+    .notice-dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--primary-container); }
+    .notice-dpg { text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; color: var(--primary); }
+    .notice-right { display: flex; align-items: center; gap: var(--space-md); }
+    .gazette-badge {
+      display: inline-flex; align-items: center; gap: 0.25rem;
+      background: var(--surface-container-lowest); padding: 0.125rem 0.5rem;
+      border-radius: var(--radius-full); box-shadow: var(--shadow-1); color: var(--primary);
+    }
+
+    /* --- Hero Section --- */
+    .hero { padding: var(--space-xl) 0; text-align: center; }
+    .hero-inner { max-width: 64rem; margin: 0 auto; display: flex; flex-direction: column; align-items: center; }
+    .eyebrow-pill {
+      display: inline-flex; align-items: center; gap: var(--space-xs);
+      padding: 0.25rem 0.875rem; border-radius: var(--radius-full);
+      background: var(--surface-container); color: var(--primary);
+      box-shadow: var(--shadow-1); margin-bottom: var(--space-md);
+    }
+    .hero h1 { max-width: 48rem; margin-bottom: var(--space-md); color: var(--on-surface); }
+    .hero-subtitle {
+      color: var(--on-surface-variant); max-width: 40rem;
+      margin-bottom: var(--space-xl); line-height: 1.6;
+    }
+
+    /* Search Apparatus */
+    .search-apparatus {
+      width: 100%; max-width: 56rem;
+      background: var(--surface-container-lowest); border-radius: var(--radius-xl);
+      padding: var(--space-sm); box-shadow: var(--shadow-3);
+      display: flex; flex-direction: column; gap: var(--space-sm);
+    }
+    @media (min-width: 768px) { .search-apparatus { flex-direction: row; align-items: center; } }
+    .search-input-group {
+      display: flex; align-items: center; gap: var(--space-sm); flex: 1;
+      padding: 0.5rem var(--space-sm);
+    }
+    .search-input {
+      width: 100%; background: transparent; border: none; outline: none;
+      color: var(--on-surface);
+    }
+    .search-input::placeholder { color: var(--outline); }
+    .search-actions {
+      display: flex; align-items: center; gap: var(--space-xs);
+      padding: 0 var(--space-xs) var(--space-xs) var(--space-xs);
+    }
+    @media (min-width: 768px) { .search-actions { padding: 0; width: auto; } }
+    .voice-btn {
+      display: flex; align-items: center; gap: 0.375rem;
+      padding: 0.5rem 0.75rem; border-radius: var(--radius-lg);
+      background: var(--surface-container); color: var(--primary); transition: all 0.2s;
+    }
+    .voice-btn:hover { background: var(--surface-container-high); }
+    .voice-btn.listening {
+      background: var(--error-container); color: var(--error);
+      animation: pulse-voice 1.5s infinite;
+    }
+    @keyframes pulse-voice {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(186, 26, 26, 0.3); }
+      50% { box-shadow: 0 0 0 8px rgba(186, 26, 26, 0); }
+    }
+
+    /* Quick suggestion pills */
+    .quick-suggestions {
+      margin-top: var(--space-md); display: flex; flex-wrap: wrap;
+      align-items: center; justify-content: center; gap: var(--space-sm);
+    }
+    .suggestion-pill {
+      padding: 0.25rem 0.625rem; border-radius: var(--radius-full);
+      background: var(--surface-container); color: var(--on-surface); transition: all 0.2s;
+    }
+    .suggestion-pill:hover { background: var(--surface-container-high); }
+
+    /* --- Map Section --- */
+    .map-section { padding: var(--space-lg) 0; }
+    .map-frame {
+      background: var(--surface-container-lowest); border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-3); overflow: hidden;
+    }
+    .map-grid { display: grid; grid-template-columns: 1fr; min-height: 40rem; }
+    @media (min-width: 1024px) { .map-grid { grid-template-columns: 2fr 1fr; } }
+    .map-canvas {
+      background: var(--surface-container-low); position: relative; overflow: hidden;
+      display: flex; flex-direction: column; justify-content: space-between; padding: var(--space-md);
+    }
+    .map-top-overlay {
+      position: relative; z-index: 10;
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-sm);
+      background: rgba(255,255,255,0.9); backdrop-filter: blur(12px);
+      padding: var(--space-sm); border-radius: var(--radius-lg); box-shadow: var(--shadow-1);
+    }
+    .map-layer-label { display: flex; align-items: center; gap: var(--space-xs); color: var(--primary); font-weight: 600; }
+    .coords-badge {
+      padding: 0.125rem 0.5rem; border-radius: var(--radius);
+      background: var(--surface-container); color: var(--on-surface-variant);
+    }
+    .gis-badge {
+      display: inline-flex; align-items: center;
+      padding: 0.125rem 0.5rem; border-radius: var(--radius-full);
+      background: var(--surface-container-highest); color: var(--primary);
+    }
+    .map-svg-container {
+      position: absolute; inset: 0; pointer-events: none;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .map-svg-container svg { width: 100%; height: 100%; opacity: 0.9; }
+
+    /* Map Legend */
+    .map-legend {
+      position: relative; z-index: 10; max-width: 28rem;
+      background: rgba(255,255,255,0.95); backdrop-filter: blur(12px);
+      padding: var(--space-sm); border-radius: var(--radius-lg); box-shadow: var(--shadow-2);
+    }
+    .legend-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-bottom: 0.25rem;
+    }
+    .legend-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.25rem var(--space-md); }
+    .legend-item { display: flex; align-items: center; gap: 0.5rem; }
+    .legend-line-op { width: 0.75rem; height: 0.25rem; background: var(--primary); border-radius: var(--radius-full); }
+    .legend-line-uc { width: 0.75rem; height: 0.375rem; background: var(--secondary-container); border-radius: var(--radius-sm); border: 1px solid var(--secondary); }
+    .legend-line-pl { width: 0.75rem; height: 0.125rem; border-top: 2px dashed var(--tertiary); }
+    .legend-dot-cv { width: 0.625rem; height: 0.625rem; border-radius: 50%; background: var(--secondary); }
+
+    /* Zoom controls */
+    .zoom-controls {
+      position: absolute; right: var(--space-md); bottom: var(--space-md); z-index: 10;
+      display: flex; flex-direction: column; gap: 0.25rem;
+    }
+    .zoom-btn {
+      width: 2.25rem; height: 2.25rem;
+      background: var(--surface-container-lowest); border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-2); display: flex; align-items: center; justify-content: center;
+      color: var(--on-surface); transition: background 0.2s;
+    }
+    .zoom-btn:hover { background: var(--surface-container); }
+
+    /* Place Preview Panel */
+    .place-panel {
+      background: var(--surface-container-lowest); padding: var(--space-md);
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .place-content { display: flex; flex-direction: column; gap: var(--space-md); }
+    .place-header { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-xs); }
+    .precision-badge {
+      display: inline-flex; align-items: center; gap: 0.375rem;
+      padding: 0.125rem 0.5rem; border-radius: var(--radius-full);
+      background: var(--surface-container-high); color: var(--primary);
+    }
+    .update-badge {
+      background: var(--surface-container); padding: 0.25rem 0.5rem;
+      border-radius: var(--radius); color: var(--on-surface-variant);
+    }
+
+    /* Tabs */
+    .tab-bar {
+      display: flex; align-items: center; gap: 0.25rem;
+      background: var(--surface-container); padding: 0.25rem; border-radius: var(--radius-lg);
+    }
+    .tab-btn {
+      flex: 1; padding: 0.25rem; text-align: center; border-radius: var(--radius);
+      color: var(--on-surface-variant); transition: all 0.2s;
+    }
+    .tab-btn:hover { color: var(--on-surface); }
+    .tab-btn.active {
+      background: var(--surface-container-lowest); color: var(--primary);
+      box-shadow: var(--shadow-1); font-weight: 600;
+    }
+
+    /* Synopsis card */
+    .synopsis {
+      background: var(--surface-container-low); padding: var(--space-md); border-radius: var(--radius-lg);
+    }
+    .synopsis-label { text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; color: var(--primary); }
+    .citation-link { color: var(--primary); font-weight: 600; cursor: pointer; }
+    .citation-link:hover { text-decoration: underline; }
+    .confidence-indicator { color: var(--primary); display: flex; align-items: center; gap: 0.25rem; }
+    .confidence-dot { width: 0.375rem; height: 0.375rem; border-radius: 50%; background: var(--primary); }
+
+    /* Metrics grid */
+    .metrics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-sm); }
+    .metric-card {
+      padding: var(--space-sm); background: var(--surface-container); border-radius: var(--radius-lg);
+    }
+    .metric-label { color: var(--on-surface-variant); }
+    .metric-value { margin-top: 0.125rem; }
+    .metric-value.teal { color: var(--primary); }
+    .metric-value.saffron { color: var(--secondary); }
+
+    /* Hot Issue */
+    .hot-issue {
+      display: flex; align-items: center; gap: var(--space-sm);
+      padding: var(--space-sm); border-radius: var(--radius-lg);
+      background: var(--surface-container-high);
+    }
+    .hot-issue-icon {
+      width: 2rem; height: 2rem; border-radius: 50%;
+      background: var(--secondary-container); color: var(--on-secondary-container);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+
+    /* Tab content */
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* --- Five Questions Section --- */
+    .five-questions { padding: var(--space-xl) 0; background: var(--surface-container-low); }
+    .section-intro { max-width: 48rem; }
+    .section-eyebrow { text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; color: var(--secondary); }
+    .chapters-grid {
+      display: grid; grid-template-columns: 1fr; gap: var(--space-lg);
+      margin-top: var(--space-xl);
+    }
+    @media (min-width: 768px) { .chapters-grid { grid-template-columns: 1fr 1fr; } }
+    @media (min-width: 1024px) { .chapters-grid { grid-template-columns: 1fr 1fr 1fr; } }
+    .chapter-card {
+      background: var(--surface-container-lowest); padding: var(--space-lg);
+      border-radius: var(--radius-xl); box-shadow: var(--shadow-1);
+      display: flex; flex-direction: column; justify-content: space-between;
+      transition: box-shadow 0.3s, transform 0.3s;
+    }
+    .chapter-card:hover { box-shadow: var(--shadow-2); transform: translateY(-2px); }
+    .chapter-card.wide { grid-column: span 1; }
+    @media (min-width: 768px) { .chapter-card.wide { grid-column: span 2; } }
+    .chapter-header { display: flex; align-items: center; justify-content: space-between; }
+    .chapter-num { color: var(--outline); }
+    .status-pill {
+      display: inline-flex; align-items: center; gap: 0.25rem;
+      padding: 0.125rem 0.5rem; border-radius: var(--radius-full);
+    }
+    .status-pill.operational { background: rgba(14,90,102,0.08); color: var(--status-operational); }
+    .status-pill.construction { background: rgba(217,119,6,0.08); color: var(--status-construction); }
+    .status-pill.planned { background: rgba(58,110,165,0.08); color: var(--status-planned); border: 1px dashed var(--status-planned); }
+    .status-pill.citizen { background: rgba(138,81,0,0.08); color: var(--secondary); }
+    .status-pill.sovereign { background: var(--surface-container-high); color: var(--primary); }
+    .chapter-footer {
+      margin-top: var(--space-md); padding-top: var(--space-md);
+      background: var(--surface-container-low); padding: var(--space-sm);
+      border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: space-between;
+    }
+    .chapter-footer span:last-child { font-weight: 600; }
+
+    /* --- Place Explorer --- */
+    .place-explorer { padding: var(--space-xl) 0; }
+    .explorer-header {
+      display: flex; flex-direction: column; gap: var(--space-md);
+    }
+    @media (min-width: 768px) { .explorer-header { flex-direction: row; align-items: flex-end; justify-content: space-between; } }
+    .cities-grid {
+      display: grid; grid-template-columns: 1fr; gap: var(--space-lg); margin-top: var(--space-lg);
+    }
+    @media (min-width: 768px) { .cities-grid { grid-template-columns: 1fr 1fr 1fr; } }
+    .city-card {
+      background: var(--surface-container-lowest); border-radius: var(--radius-xl);
+      overflow: hidden; box-shadow: var(--shadow-2);
+      display: flex; flex-direction: column; justify-content: space-between;
+      transition: box-shadow 0.3s, transform 0.3s;
+    }
+    .city-card:hover { box-shadow: var(--shadow-3); transform: translateY(-3px); }
+    .city-image {
+      position: relative; height: 12rem; width: 100%; overflow: hidden;
+    }
+    .city-image img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform 0.5s;
+    }
+    .city-card:hover .city-image img { transform: scale(1.05); }
+    .city-state-badge {
+      position: absolute; top: var(--space-sm); left: var(--space-sm);
+      padding: 0.25rem 0.625rem; border-radius: var(--radius);
+      background: rgba(255,255,255,0.9); backdrop-filter: blur(12px);
+      color: var(--primary); font-weight: 600; box-shadow: var(--shadow-1);
+    }
+    .city-sites-badge {
+      position: absolute; bottom: var(--space-sm); right: var(--space-sm);
+      padding: 0.125rem 0.5rem; border-radius: var(--radius);
+      background: rgba(255,255,255,0.9); color: var(--on-surface); box-shadow: var(--shadow-1);
+    }
+    .city-info { padding: var(--space-md); display: flex; flex-direction: column; gap: var(--space-sm); }
+    .city-name-row { display: flex; align-items: center; justify-content: space-between; }
+    .city-metrics { padding-top: 0.5rem; display: flex; flex-direction: column; gap: 0.375rem; }
+    .city-metric { display: flex; align-items: center; gap: 0.5rem; }
+    .city-metric-dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; flex-shrink: 0; }
+    .city-metric-dot.teal { background: var(--primary); }
+    .city-metric-dot.saffron { background: var(--secondary); }
+    .city-cta { padding: var(--space-md); padding-top: 0; }
+
+    /* --- Citizen Voice --- */
+    .citizen-voice { padding: var(--space-xl) 0; background: var(--surface-container-low); }
+    .voice-card {
+      background: var(--surface-container-lowest); border-radius: var(--radius-xl);
+      padding: var(--space-lg); box-shadow: var(--shadow-2); overflow: hidden;
+    }
+    @media (min-width: 1024px) { .voice-card { padding: var(--space-xl); } }
+    .voice-header { max-width: 48rem; margin-bottom: var(--space-lg); }
+    .ground-truth-badge {
+      display: inline-flex; align-items: center; gap: 0.375rem;
+      padding: 0.25rem 0.75rem; border-radius: var(--radius-full);
+      background: var(--secondary-fixed); color: var(--on-secondary-container);
+      margin-bottom: var(--space-sm);
+    }
+    .voices-grid {
+      display: grid; grid-template-columns: 1fr; gap: var(--space-md);
+      margin-bottom: var(--space-xl);
+    }
+    @media (min-width: 768px) { .voices-grid { grid-template-columns: 1fr 1fr 1fr; } }
+    .voice-entry {
+      background: var(--surface-container-low); padding: var(--space-md);
+      border-radius: var(--radius-xl); display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .voice-entry-header { display: flex; align-items: center; justify-content: space-between; }
+    .voice-category {
+      padding: 0.125rem 0.5rem; border-radius: var(--radius);
+      background: var(--surface-container); color: var(--primary);
+    }
+    .voice-verified { display: inline-flex; align-items: center; gap: 0.25rem; color: var(--primary); font-weight: 600; }
+
+    /* Voice Action Bar */
+    .voice-action-bar {
+      padding: var(--space-md); background: var(--surface-container);
+      border-radius: var(--radius-xl); display: flex; flex-direction: column;
+      align-items: center; justify-content: space-between; gap: var(--space-md);
+    }
+    @media (min-width: 640px) { .voice-action-bar { flex-direction: row; } }
+    .voice-info { display: flex; align-items: center; gap: var(--space-sm); }
+    .voice-icon {
+      width: 3rem; height: 3rem; border-radius: 50%;
+      background: var(--primary-container); color: var(--on-primary);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .voice-actions { display: flex; align-items: center; gap: var(--space-sm); width: 100%; }
+    @media (min-width: 640px) { .voice-actions { width: auto; } }
+    .voice-actions button, .voice-actions a { flex: 1; }
+    @media (min-width: 640px) { .voice-actions button, .voice-actions a { flex: initial; } }
+
+    /* --- Submit Need Modal --- */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0; z-index: 100;
+      background: rgba(20, 32, 43, 0.5); backdrop-filter: blur(4px);
+      align-items: center; justify-content: center; padding: var(--space-md);
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-box {
+      background: var(--surface-container-lowest); border-radius: var(--radius-xl);
+      padding: var(--space-xl); max-width: 32rem; width: 100%;
+      box-shadow: var(--shadow-3); max-height: 90vh; overflow-y: auto;
+    }
+    .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-lg); }
+    .modal-close {
+      width: 2rem; height: 2rem; border-radius: 50%; display: flex;
+      align-items: center; justify-content: center;
+      background: var(--surface-container); transition: background 0.2s;
+    }
+    .modal-close:hover { background: var(--surface-container-high); }
+    .form-group { margin-bottom: var(--space-md); }
+    .form-label { display: block; margin-bottom: var(--space-xs); color: var(--on-surface); font-weight: 600; }
+    .form-input, .form-select, .form-textarea {
+      width: 100%; padding: 0.625rem 0.75rem; border-radius: var(--radius-lg);
+      border: 1px solid var(--border-subtle); background: var(--surface-container-lowest);
+      color: var(--on-surface); font-family: inherit; font-size: 0.875rem;
+      transition: border-color 0.2s;
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      outline: none; border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(14, 90, 102, 0.15);
+    }
+    .form-textarea { resize: vertical; min-height: 6rem; }
+    .form-success {
+      display: none; text-align: center; padding: var(--space-xl);
+    }
+    .form-success.show { display: flex; flex-direction: column; align-items: center; gap: var(--space-md); }
+    .success-icon {
+      width: 4rem; height: 4rem; border-radius: 50%;
+      background: rgba(14,90,102,0.1); color: var(--primary);
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* --- Trust Section --- */
+    .trust-section { padding: var(--space-xl) 0; }
+    .trust-grid {
+      display: grid; grid-template-columns: 1fr; gap: var(--space-lg); text-align: left;
+    }
+    @media (min-width: 768px) { .trust-grid { grid-template-columns: 1fr 1fr 1fr; } }
+    .trust-item { display: flex; flex-direction: column; gap: var(--space-xs); }
+    .trust-title { display: flex; align-items: center; gap: 0.5rem; color: var(--primary); }
+
+    /* --- Footer --- */
+    .site-footer {
+      background: var(--surface-container-lowest);
+      border-top: 1px solid var(--outline-variant);
+      padding: var(--space-xl) 0 var(--space-lg);
+    }
+    .footer-grid {
+      display: grid; grid-template-columns: 1fr; gap: var(--space-xl);
+      padding-bottom: var(--space-xl); border-bottom: 1px solid var(--outline-variant);
+    }
+    @media (min-width: 768px) { .footer-grid { grid-template-columns: 2fr 1fr 1fr; } }
+    @media (min-width: 1024px) { .footer-grid { grid-template-columns: 2fr 1fr 1fr 1fr; } }
+    .footer-brand { padding-right: var(--space-lg); }
+    .footer-brand-name { display: flex; align-items: center; gap: var(--space-xs); margin-bottom: var(--space-sm); }
+    .footer-dpg { display: flex; align-items: center; gap: var(--space-xs); color: var(--on-surface-variant); }
+    .footer-dpg-dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--primary-container); }
+    .footer-col h4 { margin-bottom: var(--space-md); }
+    .footer-col li { margin-bottom: var(--space-sm); }
+    .footer-col a { color: var(--on-surface-variant); transition: color 0.2s; }
+    .footer-col a:hover { color: var(--primary); }
+    .footer-bottom {
+      padding-top: var(--space-md); display: flex; flex-direction: column; gap: var(--space-md);
+      align-items: flex-start;
+    }
+    @media (min-width: 768px) { .footer-bottom { flex-direction: row; align-items: center; justify-content: space-between; } }
+    .sample-tag {
+      display: inline-flex; align-items: center;
+      padding: 0.125rem 0.5rem; border-radius: var(--radius);
+      background: var(--surface-container-high); border: 1px solid var(--outline-variant);
+      color: var(--secondary); text-transform: uppercase; letter-spacing: 0.05em;
+    }
+
+    /* --- Animated counter --- */
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+    .animate-in { animation: fadeInUp 0.6s ease-out both; }
+
+    /* --- Search Overlay --- */
+    .search-overlay {
+      display: none; position: fixed; inset: 0; z-index: 100;
+      background: rgba(20,32,43,0.6); backdrop-filter: blur(6px);
+      align-items: flex-start; justify-content: center; padding: 6rem var(--space-md) var(--space-md);
+    }
+    .search-overlay.open { display: flex; }
+    .search-modal {
+      background: var(--surface-container-lowest); border-radius: var(--radius-xl);
+      padding: var(--space-lg); max-width: 40rem; width: 100%; box-shadow: var(--shadow-3);
+    }
+    .search-modal-input {
+      width: 100%; padding: 0.75rem 1rem; border-radius: var(--radius-lg);
+      border: 2px solid var(--primary); background: var(--surface-container-lowest);
+      font-size: 1.125rem; color: var(--on-surface); outline: none;
+    }
+    .search-results { margin-top: var(--space-md); }
+    .search-result-item {
+      padding: 0.75rem; border-radius: var(--radius-lg);
+      display: flex; align-items: center; gap: var(--space-sm);
+      cursor: pointer; transition: background 0.15s;
+    }
+    .search-result-item:hover { background: var(--surface-container); }
+
+    /* --- Responsive: Mobile headline --- */
+    @media (max-width: 767px) {
+      .text-headline-xl { font-size: 1.75rem; line-height: 2.25rem; letter-spacing: -0.02em; }
+      .text-headline-lg { font-size: 1.5rem; line-height: 2rem; letter-spacing: -0.015em; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================
+       HEADER
+       ============================ -->
+  <header class="site-header" id="site-header">
+    <div class="container header-inner">
+      <div class="brand-group">
+        <a class="brand-link" href="#" id="brand-home">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48" fill="none" class="brand-logo">
+            <rect width="48" height="48" rx="8" fill="#0E5A66"/>
+            <circle cx="24" cy="24" r="16" stroke="#E08A1E" stroke-width="2" stroke-dasharray="3 2"/>
+            <path d="M24 10V38" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M10 24H38" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M14 14L34 34" stroke="#FFFFFF" stroke-width="1.75" stroke-linecap="round" opacity="0.8"/>
+            <path d="M34 14L14 34" stroke="#FFFFFF" stroke-width="1.75" stroke-linecap="round" opacity="0.8"/>
+            <circle cx="24" cy="24" r="5" fill="#E08A1E" stroke="#FFFFFF" stroke-width="1.5"/>
+          </svg>
+          <div class="brand-text">
+            <div class="brand-name">
+              <span class="text-title-lg" data-i18n="brand">INFRA-AI</span>
+              <span class="dpg-badge text-label-sm">DPG</span>
+            </div>
+            <span class="brand-sub text-label-sm" data-i18n="brandSub">Infrastructure intelligence for India</span>
+          </div>
+        </a>
+        <nav class="main-nav" id="main-nav">
+          <a class="nav-link text-title-md active" href="#hero" data-i18n="navExplore">Explore</a>
+          <a class="nav-link text-title-md" href="#map-section" data-i18n="navProjects">Projects</a>
+          <a class="nav-link text-title-md" href="#place-explorer" data-i18n="navArea">Your Area</a>
+          <a class="nav-link text-title-md" href="#citizen-voice-section" data-i18n="navVoice">Citizen Voice</a>
+          <a class="nav-link text-title-md" href="#trust-section" data-i18n="navAbout">About</a>
+        </nav>
+      </div>
+      <div class="header-actions">
+        <div class="lang-switcher" id="lang-switcher">
+          <button class="lang-btn text-label-md active" data-lang="en">English</button>
+          <button class="lang-btn text-label-md" data-lang="hi">हिन्दी</button>
+          <button class="lang-btn text-label-md" data-lang="kn">ಕನ್ನಡ</button>
+        </div>
+        <button class="search-trigger" id="search-trigger-btn" type="button" aria-label="Search">
+          <span class="material-symbols-outlined" style="font-size:18px;">search</span>
+          <span class="text-body-sm" style="display:none;" id="search-hint-text">Search gazette, corridors...</span>
+          <kbd class="kbd-hint text-data-mono" style="display:none;" id="search-kbd">⌘K</kbd>
+        </button>
+        <a class="btn-primary text-body-sm" href="#" id="report-need-trigger">
+          <span class="material-symbols-outlined" style="font-size:16px;">campaign</span>
+          <span data-i18n="reportNeed">Report a Need</span>
+        </a>
+        <div class="avatar">
+          <span class="material-symbols-outlined" style="font-size:18px;color:var(--on-primary);">person</span>
+        </div>
+        <button class="mobile-menu-btn" id="mobile-menu-btn" type="button" aria-label="Menu">
+          <span class="material-symbols-outlined" style="font-size:24px;">menu</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Nav -->
+  <div class="mobile-nav" id="mobile-nav">
+    <a class="nav-link text-title-md" href="#hero" data-i18n="navExplore">Explore</a>
+    <a class="nav-link text-title-md" href="#map-section" data-i18n="navProjects">Projects</a>
+    <a class="nav-link text-title-md" href="#place-explorer" data-i18n="navArea">Your Area</a>
+    <a class="nav-link text-title-md" href="#citizen-voice-section" data-i18n="navVoice">Citizen Voice</a>
+    <a class="nav-link text-title-md" href="#trust-section" data-i18n="navAbout">About</a>
+  </div>
+
+  <main>
+    <!-- Notice Bar -->
+    <section class="notice-bar">
+      <div class="container notice-inner text-label-sm">
+        <div class="notice-left">
+          <span class="notice-dot"></span>
+          <span class="notice-dpg" data-i18n="noticeDpg">National Digital Public Good</span>
+          <span style="color:var(--outline-variant);">/</span>
+          <span data-i18n="noticeTitle">Public Infrastructure Observatory of India</span>
+        </div>
+        <div class="notice-right">
+          <span style="display:none;color:var(--on-surface-variant);" class="notice-reconcile" data-i18n="noticeReconcile">Reconciling Gazettes, GIS Telemetry, and Ward Voices</span>
+          <div class="gazette-badge text-data-mono">
+            <span class="material-symbols-outlined" style="font-size:14px;">verified</span>
+            <span>Gazette Match: <strong id="gazette-percent">0</strong>%</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 1. HERO -->
+    <section class="hero" id="hero">
+      <div class="container hero-inner">
+        <div class="eyebrow-pill text-label-md">
+          <span class="material-symbols-outlined" style="font-size:16px;color:var(--secondary);">explore</span>
+          <span data-i18n="heroEyebrow">Hyperlocal Civic Transparency</span>
+          <span style="color:var(--outline-variant);">•</span>
+          <span class="text-data-mono" data-i18n="heroCities">812 Cities & Taluks</span>
+        </div>
+        <h1 class="text-headline-xl" data-i18n="heroTitle">Know what's happening in your place.</h1>
+        <p class="hero-subtitle text-body-lg" data-i18n="heroSubtitle">Explore infrastructure around you — what is already here, what is being built, what is planned, and what people in your area are asking for.</p>
+
+        <!-- Search Apparatus -->
+        <div class="search-apparatus" id="search-apparatus">
+          <div class="search-input-group">
+            <span class="material-symbols-outlined" style="font-size:24px;color:var(--primary);font-variation-settings:'FILL' 1;">location_on</span>
+            <input class="search-input text-body-md" id="civic-search-input" type="text" value="Pune, Maharashtra" data-placeholder-en="Search your city, neighborhood, PIN code or landmark..." data-placeholder-hi="अपना शहर, मोहल्ला, पिन कोड या लैंडमार्क खोजें..." data-placeholder-kn="ನಿಮ್ಮ ನಗರ, ನೆರೆಹೊರೆ, ಪಿನ್ ಕೋಡ್ ಅಥವಾ ಮೈಲಿಗಲ್ಲು ಹುಡುಕಿ..." placeholder="Search your city, neighborhood, PIN code or landmark..."/>
+          </div>
+          <div class="search-actions">
+            <button class="voice-btn text-label-md" id="voice-bhashini-btn" type="button" title="Search using speech">
+              <span class="material-symbols-outlined" style="font-size:18px;color:var(--secondary);">mic</span>
+              <span class="voice-btn-text" data-i18n="voiceBtn">बोलें · ಮಾತನಾಡಿ · Speak</span>
+            </button>
+            <a class="btn-accent text-title-md" href="#map-section" id="explore-btn">
+              <span data-i18n="exploreBtn">Explore your area</span>
+              <span class="material-symbols-outlined" style="font-size:18px;">arrow_forward</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Quick suggestions -->
+        <div class="quick-suggestions text-label-md">
+          <span style="color:var(--on-surface-variant);" data-i18n="trySuggestion">Try searching:</span>
+          <button class="suggestion-pill" type="button" data-city="Pune, Maharashtra">Pune</button>
+          <button class="suggestion-pill" type="button" data-city="Bengaluru (Whitefield), Karnataka">Bengaluru</button>
+          <button class="suggestion-pill" type="button" data-city="Lucknow, Uttar Pradesh">Lucknow</button>
+          <button class="suggestion-pill" type="button" data-city="Ahmedabad, Gujarat">Ahmedabad</button>
+          <span style="color:var(--outline-variant);">•</span>
+          <a href="#citizen-voice-section" style="color:var(--secondary);font-weight:600;display:flex;align-items:center;gap:0.25rem;">
+            <span data-i18n="tellUs">Tell us what your area needs</span>
+            <span class="material-symbols-outlined" style="font-size:16px;">arrow_right_alt</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. MAP SECTION -->
+    <section class="map-section" id="map-section">
+      <div class="container">
+        <div class="map-frame">
+          <div class="map-grid">
+            <!-- Map Canvas -->
+            <div class="map-canvas">
+              <div class="map-top-overlay">
+                <div class="map-layer-label text-title-md">
+                  <span class="material-symbols-outlined" style="font-size:20px;">layers</span>
+                  <span data-i18n="mapLayer">Active Geographic Layer: Pune–Mumbai Metropolitan Arc</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:var(--space-xs);">
+                  <span class="coords-badge text-data-mono">18.5204° N, 73.8567° E</span>
+                  <span class="gis-badge text-label-sm">Survey GIS</span>
+                </div>
+              </div>
+              <!-- SVG Map -->
+              <div class="map-svg-container">
+                <svg fill="none" preserveAspectRatio="xMidYMid slice" viewBox="0 0 900 600">
+                  <defs>
+                    <pattern height="10" id="hatch-amber" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse" width="10">
+                      <line stroke="#fda137" stroke-width="3" x1="0" x2="0" y1="0" y2="10"/>
+                    </pattern>
+                    <pattern height="40" id="civic-grid" patternUnits="userSpaceOnUse" width="40">
+                      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#d7e4f3" stroke-width="0.75"/>
+                    </pattern>
+                  </defs>
+                  <rect fill="url(#civic-grid)" height="600" opacity="0.6" width="900"/>
+                  <!-- River -->
+                  <path d="M 0,280 C 180,290 320,330 460,310 C 600,290 740,360 900,340" fill="none" stroke="#dde9f9" stroke-linecap="round" stroke-width="18"/>
+                  <path d="M 0,280 C 180,290 320,330 460,310 C 600,290 740,360 900,340" fill="none" stroke="#9dc8ff" stroke-dasharray="8 4" stroke-linecap="round" stroke-width="4"/>
+                  <!-- Operational Metro -->
+                  <path d="M 120,480 L 320,360 L 450,290 L 680,210 L 820,160" fill="none" stroke="#00414b" stroke-linecap="round" stroke-width="5">
+                    <animate attributeName="stroke-dasharray" values="0,2000;2000,0" dur="3s" fill="freeze"/>
+                  </path>
+                  <circle cx="120" cy="480" fill="#ffffff" r="5" stroke="#00414b" stroke-width="2.5"/>
+                  <circle cx="320" cy="360" fill="#ffffff" r="5" stroke="#00414b" stroke-width="2.5"/>
+                  <circle cx="450" cy="290" fill="#00414b" r="6" stroke="#ffffff" stroke-width="2">
+                    <animate attributeName="r" values="6;8;6" dur="2s" repeatCount="indefinite"/>
+                  </circle>
+                  <circle cx="680" cy="210" fill="#ffffff" r="5" stroke="#00414b" stroke-width="2.5"/>
+                  <circle cx="820" cy="160" fill="#ffffff" r="5" stroke="#00414b" stroke-width="2.5"/>
+                  <!-- Under Construction -->
+                  <path d="M 180,140 Q 380,180 520,380 T 840,490" fill="none" stroke="#fda137" stroke-dasharray="12 4" stroke-linecap="round" stroke-width="7">
+                    <animate attributeName="stroke-dashoffset" values="0;-32" dur="1.5s" repeatCount="indefinite"/>
+                  </path>
+                  <!-- Planned -->
+                  <path d="M 240,540 C 380,480 500,450 620,440 C 740,430 800,360 880,310" fill="none" stroke="#003c6a" stroke-dasharray="6 6" stroke-width="4"/>
+                  <!-- Delayed marker -->
+                  <circle cx="490" cy="410" fill="#ffdad6" opacity="0.6" r="16">
+                    <animate attributeName="r" values="16;20;16" dur="3s" repeatCount="indefinite"/>
+                  </circle>
+                  <circle cx="490" cy="410" fill="#ba1a1a" r="6"/>
+                  <!-- Citizen Hotspot -->
+                  <circle cx="390" cy="260" fill="#ffdcbe" opacity="0.75" r="22">
+                    <animate attributeName="opacity" values="0.75;0.4;0.75" dur="2.5s" repeatCount="indefinite"/>
+                  </circle>
+                  <circle cx="390" cy="260" fill="#8a5100" r="8"/>
+                </svg>
+              </div>
+              <!-- Legend -->
+              <div class="map-legend text-label-md">
+                <div class="legend-header">
+                  <span class="text-title-md text-body-sm" data-i18n="legendTitle">Infrastructure Map Legend</span>
+                  <span class="text-data-mono" style="color:var(--on-surface-variant);">Live Sync</span>
+                </div>
+                <div class="legend-grid">
+                  <div class="legend-item"><span class="legend-line-op"></span><span data-i18n="legendOp">Operational Metro & Exp</span></div>
+                  <div class="legend-item"><span class="legend-line-uc"></span><span data-i18n="legendUc">NH-48 Bypass (In Progress)</span></div>
+                  <div class="legend-item"><span class="legend-line-pl"></span><span data-i18n="legendPl">Planned Transit 2027+</span></div>
+                  <div class="legend-item"><span class="legend-dot-cv"></span><span data-i18n="legendCv">83 Citizen Need Flags</span></div>
+                </div>
+              </div>
+              <!-- Zoom -->
+              <div class="zoom-controls">
+                <button class="zoom-btn" aria-label="Zoom in" type="button" id="zoom-in-btn"><span class="material-symbols-outlined" style="font-size:18px;">add</span></button>
+                <button class="zoom-btn" aria-label="Zoom out" type="button" id="zoom-out-btn"><span class="material-symbols-outlined" style="font-size:18px;">remove</span></button>
+              </div>
+            </div>
+
+            <!-- Place Preview Panel -->
+            <div class="place-panel">
+              <div class="place-content">
+                <div class="place-header">
+                  <div>
+                    <div class="precision-badge text-label-sm">
+                      <span class="material-symbols-outlined" style="font-size:14px;">pin_drop</span>
+                      <span data-i18n="precisionBadge">Exact Location Centroid</span>
+                    </div>
+                    <h2 class="text-headline-md" style="margin-top:0.25rem;" id="place-name">Pune, Maharashtra</h2>
+                  </div>
+                  <span class="update-badge text-data-mono">Updated 28 Sep 2026</span>
+                </div>
+                <!-- Tabs -->
+                <div class="tab-bar" id="tab-bar">
+                  <button class="tab-btn text-body-sm active" data-tab="overview" type="button">Overview</button>
+                  <button class="tab-btn text-body-sm" data-tab="whats-here" type="button">What's Here</button>
+                  <button class="tab-btn text-body-sm" data-tab="being-built" type="button">Being Built</button>
+                  <button class="tab-btn text-body-sm" data-tab="people" type="button">People</button>
+                </div>
+                <!-- Tab: Overview -->
+                <div class="tab-content active" id="tab-overview">
+                  <div class="synopsis" style="margin-bottom:var(--space-md);">
+                    <span class="synopsis-label text-label-sm" data-i18n="synopsisLabel">About this place</span>
+                    <p class="text-body-sm" style="color:var(--on-surface);margin-top:var(--space-xs);line-height:1.5;" data-i18n="synopsisText">Several transport projects are expanding connectivity along the eastern corridor, while residents have flagged active concerns regarding evening feeder buses and stormwater drainage along low-lying culverts.</p>
+                    <div style="padding-top:0.5rem;display:flex;align-items:center;justify-content:space-between;" class="text-data-mono">
+                      <span class="citation-link" id="citation-trigger">Source [Ref: MoRTH-Gazette-2024-F12]</span>
+                      <span class="confidence-indicator"><span class="confidence-dot"></span> High confidence</span>
+                    </div>
+                  </div>
+                  <div class="metrics-grid">
+                    <div class="metric-card">
+                      <div class="metric-label text-label-md" data-i18n="metricProjects">Live Projects</div>
+                      <div class="metric-value text-data-metric teal" id="metric-projects">14 Sites</div>
+                    </div>
+                    <div class="metric-card">
+                      <div class="metric-label text-label-md" data-i18n="metricAudits">Citizen Audits</div>
+                      <div class="metric-value text-data-metric saffron" id="metric-audits">3,420</div>
+                    </div>
+                  </div>
+                  <div class="hot-issue" style="margin-top:var(--space-md);">
+                    <div class="hot-issue-icon">
+                      <span class="material-symbols-outlined" style="font-size:18px;">campaign</span>
+                    </div>
+                    <div class="text-body-sm">
+                      <span style="font-weight:600;color:var(--on-surface);" data-i18n="hotIssueLabel">Top Neighborhood Need:</span>
+                      <span style="color:var(--on-surface-variant);" data-i18n="hotIssueText"> 83 residents signed feeder bus frequency petition for Hadapsar.</span>
+                    </div>
+                  </div>
+                </div>
+                <!-- Tab: What's Here -->
+                <div class="tab-content" id="tab-whats-here">
+                  <div class="synopsis">
+                    <span class="synopsis-label text-label-sm">Infrastructure Assets</span>
+                    <div style="display:flex;flex-direction:column;gap:var(--space-sm);margin-top:var(--space-sm);">
+                      <div style="display:flex;justify-content:space-between;align-items:center;padding:var(--space-xs) 0;border-bottom:1px solid var(--border-subtle);">
+                        <span class="text-body-sm" style="font-weight:600;">Metro Stations</span>
+                        <span class="text-data-mono" style="color:var(--primary);">16 operational</span>
+                      </div>
+                      <div style="display:flex;justify-content:space-between;align-items:center;padding:var(--space-xs) 0;border-bottom:1px solid var(--border-subtle);">
+                        <span class="text-body-sm" style="font-weight:600;">Flyovers</span>
+                        <span class="text-data-mono" style="color:var(--primary);">28 audited</span>
+                      </div>
+                      <div style="display:flex;justify-content:space-between;align-items:center;padding:var(--space-xs) 0;border-bottom:1px solid var(--border-subtle);">
+                        <span class="text-body-sm" style="font-weight:600;">Water Treatment Plants</span>
+                        <span class="text-data-mono" style="color:var(--primary);">4 active</span>
+                      </div>
+                      <div style="display:flex;justify-content:space-between;align-items:center;padding:var(--space-xs) 0;">
+                        <span class="text-body-sm" style="font-weight:600;">Public Parks</span>
+                        <span class="text-data-mono" style="color:var(--primary);">142 mapped</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Tab: Being Built -->
+                <div class="tab-content" id="tab-being-built">
+                  <div class="synopsis">
+                    <span class="synopsis-label text-label-sm">Active Construction</span>
+                    <div style="display:flex;flex-direction:column;gap:var(--space-sm);margin-top:var(--space-sm);">
+                      <div style="padding:var(--space-sm);background:rgba(217,119,6,0.06);border-radius:var(--radius-lg);border-left:3px solid var(--status-construction);">
+                        <div class="text-body-sm" style="font-weight:600;">Hinjawadi–Shivajinagar Metro</div>
+                        <div class="text-data-mono" style="color:var(--status-construction);margin-top:2px;">62% complete · ETA Dec 2027</div>
+                        <div style="margin-top:var(--space-xs);height:6px;background:var(--surface-container-high);border-radius:var(--radius-full);overflow:hidden;">
+                          <div style="width:62%;height:100%;background:var(--status-construction);border-radius:var(--radius-full);transition:width 1s;"></div>
+                        </div>
+                      </div>
+                      <div style="padding:var(--space-sm);background:rgba(217,119,6,0.06);border-radius:var(--radius-lg);border-left:3px solid var(--status-construction);">
+                        <div class="text-body-sm" style="font-weight:600;">Ring Road Peripheral Acquisition</div>
+                        <div class="text-data-mono" style="color:var(--status-construction);margin-top:2px;">38% complete · ETA Mar 2028</div>
+                        <div style="margin-top:var(--space-xs);height:6px;background:var(--surface-container-high);border-radius:var(--radius-full);overflow:hidden;">
+                          <div style="width:38%;height:100%;background:var(--status-construction);border-radius:var(--radius-full);transition:width 1s;"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Tab: People -->
+                <div class="tab-content" id="tab-people">
+                  <div class="synopsis">
+                    <span class="synopsis-label text-label-sm">Citizen Demand Summary</span>
+                    <div style="display:flex;flex-direction:column;gap:var(--space-sm);margin-top:var(--space-sm);">
+                      <div style="display:flex;align-items:center;gap:var(--space-sm);padding:var(--space-xs) 0;border-bottom:1px solid var(--border-subtle);">
+                        <span style="width:0.5rem;height:0.5rem;border-radius:50%;background:var(--secondary);flex-shrink:0;"></span>
+                        <span class="text-body-sm"><strong>Feeder Buses</strong> — 83 petitions, Hadapsar ward</span>
+                      </div>
+                      <div style="display:flex;align-items:center;gap:var(--space-sm);padding:var(--space-xs) 0;border-bottom:1px solid var(--border-subtle);">
+                        <span style="width:0.5rem;height:0.5rem;border-radius:50%;background:var(--secondary);flex-shrink:0;"></span>
+                        <span class="text-body-sm"><strong>Pedestrian Safety</strong> — 56 flags, Viman Nagar</span>
+                      </div>
+                      <div style="display:flex;align-items:center;gap:var(--space-sm);padding:var(--space-xs) 0;">
+                        <span style="width:0.5rem;height:0.5rem;border-radius:50%;background:var(--secondary);flex-shrink:0;"></span>
+                        <span class="text-body-sm"><strong>Stormwater Drainage</strong> — 41 reports, Kharadi</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div style="padding-top:var(--space-md);">
+                <a class="btn-full text-title-md" href="#place-explorer">
+                  <span data-i18n="openDossier">Open Full Pune Dossier</span>
+                  <span class="material-symbols-outlined" style="font-size:18px;">north_east</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. FIVE QUESTIONS -->
+    <section class="five-questions" id="five-questions">
+      <div class="container" style="display:flex;flex-direction:column;gap:var(--space-xl);">
+        <div class="section-intro">
+          <span class="section-eyebrow text-label-sm" data-i18n="fiveQEyebrow">Editorial Framework</span>
+          <h2 class="text-headline-lg" style="color:var(--on-surface);margin-top:0.25rem;" data-i18n="fiveQTitle">Five questions every citizen has the right to ask.</h2>
+          <p class="text-body-md" style="color:var(--on-surface-variant);margin-top:0.5rem;line-height:1.6;" data-i18n="fiveQSubtitle">Public works should not hide behind bureaucratic terminology. We translate complex municipal budgets, tender notices, and geospatial master plans into human truths.</p>
+        </div>
+        <div class="chapters-grid">
+          <!-- Chapter 1 -->
+          <article class="chapter-card">
+            <div style="display:flex;flex-direction:column;gap:var(--space-sm);">
+              <div class="chapter-header"><span class="text-data-mono chapter-num">01 / HISTORIC GROUND</span><span class="status-pill operational text-label-sm"><span class="material-symbols-outlined" style="font-size:14px;">check_circle</span> Operational</span></div>
+              <h3 class="text-headline-md" data-i18n="ch1Title">What was built?</h3>
+              <p class="text-body-sm" style="color:var(--on-surface-variant);line-height:1.5;" data-i18n="ch1Desc">Explore completed flyovers, commissioned metro routes, water treatment plants, and public parks. Review post-completion audits and see how existing assets hold up under seasonal stress.</p>
+            </div>
+            <div class="chapter-footer text-body-sm"><span style="color:var(--on-surface-variant);">Asset Longevity Tracker</span><span style="color:var(--primary);" id="stat-km">42,800+ audited km</span></div>
+          </article>
+          <!-- Chapter 2 -->
+          <article class="chapter-card">
+            <div style="display:flex;flex-direction:column;gap:var(--space-sm);">
+              <div class="chapter-header"><span class="text-data-mono chapter-num">02 / ACTIVE CAPITAL</span><span class="status-pill construction text-label-sm"><span class="material-symbols-outlined" style="font-size:14px;">engineering</span> In Construction</span></div>
+              <h3 class="text-headline-md" data-i18n="ch2Title">What is being built?</h3>
+              <p class="text-body-sm" style="color:var(--on-surface-variant);line-height:1.5;" data-i18n="ch2Desc">Real-time ground visibility on contractor mobilization, physical milestone execution, utility relocations, and honest revised delivery timelines without sugarcoating delays.</p>
+            </div>
+            <div class="chapter-footer text-body-sm"><span style="color:var(--on-surface-variant);">Active Site Feeds</span><span style="color:var(--secondary);" id="stat-sites">3,120 Worksites</span></div>
+          </article>
+          <!-- Chapter 3 -->
+          <article class="chapter-card">
+            <div style="display:flex;flex-direction:column;gap:var(--space-sm);">
+              <div class="chapter-header"><span class="text-data-mono chapter-num">03 / HORIZON 2026-30</span><span class="status-pill planned text-label-sm"><span class="material-symbols-outlined" style="font-size:14px;">calendar_month</span> Planned & Sanctioned</span></div>
+              <h3 class="text-headline-md" data-i18n="ch3Title">What is coming?</h3>
+              <p class="text-body-sm" style="color:var(--on-surface-variant);line-height:1.5;" data-i18n="ch3Desc">Upcoming alignments, land acquisition status, environmental green clearances, and sanctioned budgetary disbursements before barricades arrive in your neighborhood.</p>
+            </div>
+            <div class="chapter-footer text-body-sm"><span style="color:var(--on-surface-variant);">Pipeline Gazette</span><span style="color:var(--tertiary);" id="stat-budget">₹4.8L Cr Approved</span></div>
+          </article>
+          <!-- Chapter 4 -->
+          <article class="chapter-card">
+            <div style="display:flex;flex-direction:column;gap:var(--space-sm);">
+              <div class="chapter-header"><span class="text-data-mono chapter-num">04 / CIVIC GROUND TRUTH</span><span class="status-pill citizen text-label-sm"><span class="material-symbols-outlined" style="font-size:14px;">record_voice_over</span> Citizen Voices</span></div>
+              <h3 class="text-headline-md" data-i18n="ch4Title">What do people need?</h3>
+              <p class="text-body-sm" style="color:var(--on-surface-variant);line-height:1.5;" data-i18n="ch4Desc">Community priorities that master plans overlook. Flag dangerous crossings, flood-prone underpasses, absent bus shelters, or lack of footpath connectivity in your native language.</p>
+            </div>
+            <div class="chapter-footer text-body-sm"><span style="color:var(--on-surface-variant);">Ward Demands Logged</span><span style="color:var(--secondary);" id="stat-submissions">184,200 Submissions</span></div>
+          </article>
+          <!-- Chapter 5 -->
+          <article class="chapter-card wide">
+            <div style="display:flex;flex-direction:column;gap:var(--space-sm);">
+              <div class="chapter-header"><span class="text-data-mono chapter-num">05 / VERIFICATION PROVENANCE</span><span class="status-pill sovereign text-label-sm"><span class="material-symbols-outlined" style="font-size:14px;">verified_user</span> Sovereign Trust</span></div>
+              <h3 class="text-headline-md" data-i18n="ch5Title">What is the source?</h3>
+              <p class="text-body-sm" style="color:var(--on-surface-variant);line-height:1.5;max-width:40rem;" data-i18n="ch5Desc">Every inference connects to an open gazette, state tender portal, or satellite radar pass. No black boxes. Check confidence ratings, ministry reference numbers, and ground audit notes with one click.</p>
+            </div>
+            <div style="padding-top:var(--space-md);margin-top:var(--space-md);display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-md);" class="text-body-sm text-data-mono" style="color:var(--on-surface-variant);">
+              <span style="display:flex;align-items:center;gap:0.25rem;"><span style="width:0.5rem;height:0.5rem;border-radius:50%;background:var(--primary);"></span> MoRTH Gazette Sync</span>
+              <span style="display:flex;align-items:center;gap:0.25rem;"><span style="width:0.5rem;height:0.5rem;border-radius:50%;background:var(--primary);"></span> State PWD Master Ledgers</span>
+              <span style="display:flex;align-items:center;gap:0.25rem;"><span style="width:0.5rem;height:0.5rem;border-radius:50%;background:var(--secondary);"></span> Bhashini Multilingual Intake</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. PLACE EXPLORER -->
+    <section class="place-explorer" id="place-explorer">
+      <div class="container">
+        <div class="explorer-header">
+          <div>
+            <span class="text-label-sm" style="text-transform:uppercase;letter-spacing:0.05em;font-weight:600;color:var(--primary);" data-i18n="explorerEyebrow">Place Explorer</span>
+            <h2 class="text-headline-lg" style="color:var(--on-surface);margin-top:0.25rem;" data-i18n="explorerTitle">Start with a place you care about.</h2>
+            <p class="text-body-md" style="color:var(--on-surface-variant);margin-top:0.25rem;" data-i18n="explorerSubtitle">High-density infrastructure dossiers maintained with continuous citizen updates.</p>
+          </div>
+          <a href="#" style="color:var(--primary);font-weight:600;display:flex;align-items:center;gap:0.25rem;white-space:nowrap;">
+            <span data-i18n="explorerAll">View all 800+ registered regions</span>
+            <span class="material-symbols-outlined" style="font-size:18px;">arrow_forward</span>
+          </a>
+        </div>
+        <div class="cities-grid">
+          <!-- City 1: Pune -->
+          <div class="city-card">
+            <div>
+              <div class="city-image">
+                <img alt="Aerial view of Pune city showing modern metro viaducts" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpzlUQvh-zVlxg3ZbAvhWo0QH9WA3FLS8Ea8Ypilu1PtTcBkh_vGyD4csK7cbl9cHraPTdjNPceCBTYKENGsbiGUNJcoqoJ5-1ZWV043i3FwWUK7Z8T3kDFtxEu9I84B09BpbxDEkpNLAVgcHOzfejqqrTJZabbZsB-RqZ5eCxzfU9Trcnr8-UPq4Tz-zKLBlU6YVFHFdDG3-BrUUCvHvCYx51XUX2n-Qqi6IIBk7TRnuZiHyT8T1YPA"/>
+                <div class="city-state-badge text-body-sm">Maharashtra</div>
+                <div class="city-sites-badge text-data-mono">12 Active Sites</div>
+              </div>
+              <div class="city-info">
+                <div class="city-name-row">
+                  <h3 class="text-headline-md">Pune Metropolitan</h3>
+                  <span class="material-symbols-outlined" style="color:var(--outline);">east</span>
+                </div>
+                <p class="text-body-sm" style="color:var(--on-surface-variant);">Metro line expansion, Ring Road peripheral acquisition, and flood basin storm-line desilting.</p>
+                <div class="city-metrics">
+                  <div class="city-metric text-body-sm"><span class="city-metric-dot teal"></span><span><strong>2 Corridors underway</strong> (Hinjawadi–Shivajinagar)</span></div>
+                  <div class="city-metric text-body-sm"><span class="city-metric-dot saffron"></span><span><strong>3,420 Citizen audits</strong> verified by ward officers</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="city-cta"><a class="btn-ghost text-body-sm" href="#">Explore Pune Projects</a></div>
+          </div>
+          <!-- City 2: Bengaluru -->
+          <div class="city-card">
+            <div>
+              <div class="city-image">
+                <img alt="Modern elevated rapid transit line in Bengaluru" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYKEhdJpZ3jEbnogM3MwQ6tA-Ekiia9pfkb9tN9BvoaM9R8u3ftoKn0MzVLB1rgEzYrIECLDZBLA5eAK600gOskT-Mgei-QTNiT50kwkckCRp1QoiYxEy5-k0tszptapfnQL517IAwvclPpqm02pAyWsG6VwNtCQ3WMoFhPku5j-S4CPCxitH7pd0Cxu6_svhBmP0nqHW_89qnu84cSAC62f-GkKhdUCnkAQEfYoyfkYERHjaOTEq5cg"/>
+                <div class="city-state-badge text-body-sm">Karnataka</div>
+                <div class="city-sites-badge text-data-mono">19 Active Sites</div>
+              </div>
+              <div class="city-info">
+                <div class="city-name-row">
+                  <h3 class="text-headline-md">Bengaluru (East)</h3>
+                  <span class="material-symbols-outlined" style="color:var(--outline);">east</span>
+                </div>
+                <p class="text-body-sm" style="color:var(--on-surface-variant);">Metro Phase 2B airport link, suburban rail corridor, and Raja Kaluve stormwater rehabilitation.</p>
+                <div class="city-metrics">
+                  <div class="city-metric text-body-sm"><span class="city-metric-dot teal"></span><span><strong>Airport Link Metro</strong> (Phase 2B pillar casting)</span></div>
+                  <div class="city-metric text-body-sm"><span class="city-metric-dot saffron"></span><span><strong>Stormwater priority</strong> (54 resident geotags)</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="city-cta"><a class="btn-ghost text-body-sm" href="#">Explore Bengaluru East</a></div>
+          </div>
+          <!-- City 3: Lucknow -->
+          <div class="city-card">
+            <div>
+              <div class="city-image">
+                <img alt="Serene panoramic view of Gomti riverfront in Lucknow" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUI8MeLHjD04l-UHc_jEdZP_roSfE2EkQ1NwS7YBDsCjZ2XduSvf0Be6nYBt1U6DWpvaXacHh31WvEpEQIv3xRvKuR434G8xuBQZdUND-JIsVyYQ4gv83gnJXSKlZb84mBvDQo1KMnBI11OIbiITjF0sarj4-FMBd2ov2n3MK-xGZW8pq7bEKEbECOcRAAehyibi1EFT4l0wrAobodhTx5j8dT44erg7FUhDZltsvXsJC4w9xcDyv4Gw"/>
+                <div class="city-state-badge text-body-sm">Uttar Pradesh</div>
+                <div class="city-sites-badge text-data-mono">9 Active Sites</div>
+              </div>
+              <div class="city-info">
+                <div class="city-name-row">
+                  <h3 class="text-headline-md">Lucknow Capital</h3>
+                  <span class="material-symbols-outlined" style="color:var(--outline);">east</span>
+                </div>
+                <p class="text-body-sm" style="color:var(--on-surface-variant);">Kisan Path Outer Ring Road completion, Gomti greenway preservation, and green transit electric bus fleet.</p>
+                <div class="city-metrics">
+                  <div class="city-metric text-body-sm"><span class="city-metric-dot teal"></span><span><strong>Outer Ring Road</strong> (104 km full circumference)</span></div>
+                  <div class="city-metric text-body-sm"><span class="city-metric-dot saffron"></span><span><strong>1,890 Citizen requests</strong> for feeder connectivity</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="city-cta"><a class="btn-ghost text-body-sm" href="#">Explore Lucknow Dossier</a></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. CITIZEN VOICE -->
+    <section class="citizen-voice" id="citizen-voice-section">
+      <div class="container">
+        <div class="voice-card">
+          <div class="voice-header">
+            <div class="ground-truth-badge text-label-md">
+              <span class="material-symbols-outlined" style="font-size:16px;">campaign</span>
+              <span data-i18n="groundTruth">Ground Truth Network</span>
+            </div>
+            <h2 class="text-headline-xl" data-i18n="voiceTitle">What does your area need?</h2>
+            <p class="text-body-lg" style="color:var(--on-surface-variant);margin-top:0.5rem;" data-i18n="voiceSubtitle">Tell us what is difficult, missing, unsafe, or changing in your neighborhood. Submissions are verified with neighbors and mapped straight to municipal ward works.</p>
+          </div>
+          <div class="voices-grid">
+            <!-- Card 1 -->
+            <div class="voice-entry">
+              <div style="display:flex;flex-direction:column;gap:var(--space-xs);">
+                <div class="voice-entry-header">
+                  <span class="voice-category text-label-sm">Road Safety</span>
+                  <span class="text-data-mono" style="color:var(--on-surface-variant);">Pune (Viman Nagar)</span>
+                </div>
+                <p class="text-body-md" style="font-weight:500;padding-top:0.25rem;">"Safer pedestrian crossing and zebra markings near the metro station exit before schools open."</p>
+              </div>
+              <div style="padding-top:var(--space-sm);display:flex;align-items:center;justify-content:space-between;" class="text-body-sm">
+                <span class="voice-verified"><span class="material-symbols-outlined" style="font-size:16px;">how_to_reg</span> 56 neighbors verified</span>
+                <span class="text-label-sm" style="color:var(--on-surface-variant);">4 days ago</span>
+              </div>
+            </div>
+            <!-- Card 2 -->
+            <div class="voice-entry">
+              <div style="display:flex;flex-direction:column;gap:var(--space-xs);">
+                <div class="voice-entry-header">
+                  <span class="voice-category text-label-sm">Public Transport</span>
+                  <span class="text-data-mono" style="color:var(--on-surface-variant);">Bengaluru (Whitefield)</span>
+                </div>
+                <p class="text-body-md" style="font-weight:500;padding-top:0.25rem;">"Reliable feeder buses after 8 PM connecting metro terminal to residential clusters in Kadugodi."</p>
+              </div>
+              <div style="padding-top:var(--space-sm);display:flex;align-items:center;justify-content:space-between;" class="text-body-sm">
+                <span class="voice-verified"><span class="material-symbols-outlined" style="font-size:16px;">how_to_reg</span> 83 neighbors verified</span>
+                <span class="text-label-sm" style="color:var(--on-surface-variant);">Yesterday</span>
+              </div>
+            </div>
+            <!-- Card 3 -->
+            <div class="voice-entry">
+              <div style="display:flex;flex-direction:column;gap:var(--space-xs);">
+                <div class="voice-entry-header">
+                  <span class="voice-category text-label-sm">Drainage & Monsoon</span>
+                  <span class="text-data-mono" style="color:var(--on-surface-variant);">Lucknow (Gomti Nagar Ext)</span>
+                </div>
+                <p class="text-body-md" style="font-weight:500;padding-top:0.25rem;">"Our underpass road floods every monsoon season because the silt trap hasn't been cleaned in 2 years."</p>
+              </div>
+              <div style="padding-top:var(--space-sm);display:flex;align-items:center;justify-content:space-between;" class="text-body-sm">
+                <span class="voice-verified"><span class="material-symbols-outlined" style="font-size:16px;">how_to_reg</span> 41 neighbors verified</span>
+                <span class="text-label-sm" style="color:var(--on-surface-variant);">2 weeks ago</span>
+              </div>
+            </div>
+          </div>
+          <!-- Action Bar -->
+          <div class="voice-action-bar">
+            <div class="voice-info">
+              <div class="voice-icon"><span class="material-symbols-outlined" style="font-size:24px;">mic</span></div>
+              <div>
+                <div class="text-title-md" data-i18n="voicePrefer">Prefer speaking over typing?</div>
+                <div class="text-body-sm" style="color:var(--on-surface-variant);" data-i18n="voiceIntake">Voice intake enabled in Hindi, Kannada, Marathi, Tamil, Bengali & English via Bhashini AI.</div>
+              </div>
+            </div>
+            <div class="voice-actions">
+              <button class="btn-secondary text-title-md" id="speak-language-btn" type="button">
+                <span class="material-symbols-outlined" style="font-size:18px;color:var(--secondary);">mic_external_on</span>
+                <span data-i18n="speakBtn">Speak in your language</span>
+              </button>
+              <a class="btn-accent text-title-md" href="#" id="submit-need-trigger">
+                <span data-i18n="submitNeed">Submit neighborhood request</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. TRUST SECTION -->
+    <section class="trust-section" id="trust-section">
+      <div class="container">
+        <div class="trust-grid">
+          <div class="trust-item">
+            <div class="trust-title text-title-md">
+              <span class="material-symbols-outlined" style="font-size:20px;">policy</span>
+              <span data-i18n="trustTitle1">Zero Surveillance Principle</span>
+            </div>
+            <p class="text-body-sm" style="color:var(--on-surface-variant);line-height:1.5;" data-i18n="trustDesc1">INFRA-AI collects no personal phone numbers, advertising identifiers, or tracking tokens. Every contribution is geocoded anonymously to protect civic participation.</p>
+          </div>
+          <div class="trust-item">
+            <div class="trust-title text-title-md">
+              <span class="material-symbols-outlined" style="font-size:20px;">menu_book</span>
+              <span data-i18n="trustTitle2">Gazette Open Verification</span>
+            </div>
+            <p class="text-body-sm" style="color:var(--on-surface-variant);line-height:1.5;" data-i18n="trustDesc2">All data pipelines map strictly to published union state gazettes, legislative assembly budgetary questions, and public tender awards verified on Open Data standards.</p>
+          </div>
+          <div class="trust-item">
+            <div class="trust-title text-title-md">
+              <span class="material-symbols-outlined" style="font-size:20px;">public</span>
+              <span data-i18n="trustTitle3">Sovereign Public Infrastructure</span>
+            </div>
+            <p class="text-body-sm" style="color:var(--on-surface-variant);line-height:1.5;" data-i18n="trustDesc3">Maintained as a Digital Public Good (DPG) under open governance principles to ensure permanent public access across all 28 states and 8 union territories.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-brand-name">
+            <span class="text-title-lg" style="color:var(--primary);">INFRA-AI</span>
+            <span style="color:var(--outline-variant);">—</span>
+            <span class="text-body-sm" style="color:var(--on-surface-variant);" data-i18n="footerBrandSub">Infrastructure intelligence for India</span>
+          </div>
+          <p class="text-body-sm" style="color:var(--on-surface-variant);max-width:28rem;margin-bottom:var(--space-md);" data-i18n="footerBrandDesc">A sovereign, public-access infrastructure observatory reconciling capital works, spatial planning, and citizen ground truth across Indian states and union territories.</p>
+          <div class="footer-dpg text-data-mono">
+            <span class="footer-dpg-dot"></span>
+            <span>Digital Public Good (DPG) Registry Standard v2.4</span>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4 class="text-title-md" data-i18n="footerExplore">Explore</h4>
+          <ul class="text-body-sm">
+            <li><a href="#">City maps</a></li>
+            <li><a href="#">Transit corridors</a></li>
+            <li><a href="#">Highway networks</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4 class="text-title-md" data-i18n="footerProjects">Projects</h4>
+          <ul class="text-body-sm">
+            <li><a href="#">Under Construction</a></li>
+            <li><a href="#">Planned 2026-30</a></li>
+            <li><a href="#">Completed Audits</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4 class="text-title-md" data-i18n="footerVoice">Citizen Voice & Trust</h4>
+          <ul class="text-body-sm">
+            <li><a href="#" id="footer-report-need">Share neighborhood need</a></li>
+            <li><a href="#">Local petitions</a></li>
+            <li><a href="#">Voice reporting (Bhashini)</a></li>
+            <li><a href="#">Gazette verification</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom text-body-sm" style="color:var(--on-surface-variant);">
+        <span>Map data © OpenStreetMap contributors • Built on Digital Public Good principles</span>
+        <span class="sample-tag text-label-sm">Sample data · Prototype · Informational civic platform</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- SUBMIT NEED MODAL -->
+  <div class="modal-overlay" id="submit-modal">
+    <div class="modal-box">
+      <div id="submit-form-container">
+        <div class="modal-header">
+          <h3 class="text-headline-md" data-i18n="modalTitle">Submit a Neighborhood Need</h3>
+          <button class="modal-close" id="modal-close-btn" type="button"><span class="material-symbols-outlined" style="font-size:18px;">close</span></button>
+        </div>
+        <form id="need-form">
+          <div class="form-group">
+            <label class="form-label text-label-md" for="need-location" data-i18n="formLocation">Location</label>
+            <input class="form-input" id="need-location" type="text" placeholder="e.g. Viman Nagar, Pune" required/>
+          </div>
+          <div class="form-group">
+            <label class="form-label text-label-md" for="need-category" data-i18n="formCategory">Category</label>
+            <select class="form-select" id="need-category" required>
+              <option value="">Select category...</option>
+              <option value="road-safety">Road Safety</option>
+              <option value="public-transport">Public Transport</option>
+              <option value="drainage">Drainage & Monsoon</option>
+              <option value="water-supply">Water Supply</option>
+              <option value="electricity">Electricity</option>
+              <option value="sanitation">Sanitation</option>
+              <option value="pedestrian">Pedestrian & Footpaths</option>
+              <option value="green-space">Green Spaces & Parks</option>
+              <option value="other">Other Infrastructure</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label text-label-md" for="need-description" data-i18n="formDescription">Describe the need</label>
+            <textarea class="form-textarea" id="need-description" placeholder="What is difficult, missing, or unsafe? Be specific about the location and the impact on your daily life." required></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label text-label-md" for="need-urgency" data-i18n="formUrgency">Urgency Level</label>
+            <select class="form-select" id="need-urgency">
+              <option value="moderate">Moderate — affects daily life</option>
+              <option value="high">High — safety concern</option>
+              <option value="critical">Critical — immediate danger</option>
+            </select>
+          </div>
+          <button class="btn-full text-title-md" type="submit" style="margin-top:var(--space-md);">
+            <span class="material-symbols-outlined" style="font-size:18px;">send</span>
+            <span data-i18n="formSubmit">Submit Request</span>
+          </button>
+        </form>
+      </div>
+      <div class="form-success" id="submit-success">
+        <div class="success-icon"><span class="material-symbols-outlined" style="font-size:32px;">check_circle</span></div>
+        <h3 class="text-headline-md" data-i18n="successTitle">Request Submitted!</h3>
+        <p class="text-body-md" style="color:var(--on-surface-variant);" data-i18n="successDesc">Your neighborhood need has been logged and will be verified with nearby residents. You'll receive updates as it's matched to municipal ward works.</p>
+        <button class="btn-secondary text-title-md" id="submit-another-btn" type="button" data-i18n="successAnother">Submit another request</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEARCH OVERLAY -->
+  <div class="search-overlay" id="search-overlay">
+    <div class="search-modal">
+      <input class="search-modal-input" id="search-modal-input" type="text" placeholder="Search infrastructure, gazettes, corridors..." autofocus/>
+      <div class="search-results" id="search-results"></div>
+      <div class="text-body-sm" style="color:var(--on-surface-variant);margin-top:var(--space-md);text-align:center;">Press <kbd class="kbd-hint text-data-mono" style="padding:2px 6px;">Esc</kbd> to close</div>
+    </div>
+  </div>
+
+  <!-- CITATION POPOVER -->
+  <div id="citation-popover" style="display:none;position:fixed;z-index:60;background:var(--surface-container-lowest);border:1px solid var(--border-strong);border-radius:var(--radius-lg);padding:var(--space-md);box-shadow:var(--shadow-2);max-width:20rem;">
+    <div class="text-title-md" style="color:var(--on-surface);margin-bottom:var(--space-xs);">MoRTH Gazette 2024</div>
+    <div class="text-body-sm" style="color:var(--on-surface-variant);margin-bottom:var(--space-xs);">Ministry of Road Transport & Highways</div>
+    <div class="text-data-mono" style="color:var(--on-surface-variant);margin-bottom:var(--space-xs);">Gazette No: F12-2024-MoRTH</div>
+    <div class="text-data-mono" style="color:var(--on-surface-variant);margin-bottom:var(--space-sm);">Verified: 15 Sep 2026, 14:32 IST</div>
+    <a href="#" class="text-label-md" style="color:var(--primary);font-weight:600;">Verify at gazette.gov.in →</a>
+  </div>
+
+  <script>
+    // ============================
+    // INFRA-AI Interactive Features
+    // ============================
+
+    // --- i18n Translations ---
+    const translations = {
+      en: {
+        brand: "INFRA-AI", brandSub: "Infrastructure intelligence for India",
+        navExplore: "Explore", navProjects: "Projects", navArea: "Your Area", navVoice: "Citizen Voice", navAbout: "About",
+        reportNeed: "Report a Need",
+        noticeDpg: "National Digital Public Good", noticeTitle: "Public Infrastructure Observatory of India",
+        noticeReconcile: "Reconciling Gazettes, GIS Telemetry, and Ward Voices",
+        heroEyebrow: "Hyperlocal Civic Transparency", heroCities: "812 Cities & Taluks",
+        heroTitle: "Know what's happening in your place.",
+        heroSubtitle: "Explore infrastructure around you — what is already here, what is being built, what is planned, and what people in your area are asking for.",
+        voiceBtn: "बोलें · ಮಾತನಾಡಿ · Speak", exploreBtn: "Explore your area",
+        trySuggestion: "Try searching:", tellUs: "Tell us what your area needs",
+        mapLayer: "Active Geographic Layer: Pune–Mumbai Metropolitan Arc",
+        legendTitle: "Infrastructure Map Legend", legendOp: "Operational Metro & Exp", legendUc: "NH-48 Bypass (In Progress)", legendPl: "Planned Transit 2027+", legendCv: "83 Citizen Need Flags",
+        precisionBadge: "Exact Location Centroid", synopsisLabel: "About this place",
+        synopsisText: "Several transport projects are expanding connectivity along the eastern corridor, while residents have flagged active concerns regarding evening feeder buses and stormwater drainage along low-lying culverts.",
+        metricProjects: "Live Projects", metricAudits: "Citizen Audits",
+        hotIssueLabel: "Top Neighborhood Need:", hotIssueText: " 83 residents signed feeder bus frequency petition for Hadapsar.",
+        openDossier: "Open Full Pune Dossier",
+        fiveQEyebrow: "Editorial Framework", fiveQTitle: "Five questions every citizen has the right to ask.",
+        fiveQSubtitle: "Public works should not hide behind bureaucratic terminology. We translate complex municipal budgets, tender notices, and geospatial master plans into human truths.",
+        ch1Title: "What was built?", ch1Desc: "Explore completed flyovers, commissioned metro routes, water treatment plants, and public parks.",
+        ch2Title: "What is being built?", ch2Desc: "Real-time ground visibility on contractor mobilization, milestone execution, and honest delivery timelines.",
+        ch3Title: "What is coming?", ch3Desc: "Upcoming alignments, land acquisition status, and sanctioned budgetary disbursements.",
+        ch4Title: "What do people need?", ch4Desc: "Community priorities that master plans overlook. Flag dangerous crossings and missing infrastructure.",
+        ch5Title: "What is the source?", ch5Desc: "Every inference connects to an open gazette, state tender portal, or satellite radar pass. No black boxes.",
+        explorerEyebrow: "Place Explorer", explorerTitle: "Start with a place you care about.",
+        explorerSubtitle: "High-density infrastructure dossiers maintained with continuous citizen updates.",
+        explorerAll: "View all 800+ registered regions",
+        groundTruth: "Ground Truth Network", voiceTitle: "What does your area need?",
+        voiceSubtitle: "Tell us what is difficult, missing, unsafe, or changing in your neighborhood.",
+        voicePrefer: "Prefer speaking over typing?", voiceIntake: "Voice intake enabled in Hindi, Kannada, Marathi, Tamil, Bengali & English via Bhashini AI.",
+        speakBtn: "Speak in your language", submitNeed: "Submit neighborhood request",
+        trustTitle1: "Zero Surveillance Principle", trustDesc1: "INFRA-AI collects no personal phone numbers, advertising identifiers, or tracking tokens.",
+        trustTitle2: "Gazette Open Verification", trustDesc2: "All data pipelines map strictly to published union state gazettes and public tender awards.",
+        trustTitle3: "Sovereign Public Infrastructure", trustDesc3: "Maintained as a Digital Public Good (DPG) under open governance principles.",
+        footerBrandSub: "Infrastructure intelligence for India", footerBrandDesc: "A sovereign, public-access infrastructure observatory.",
+        footerExplore: "Explore", footerProjects: "Projects", footerVoice: "Citizen Voice & Trust",
+        modalTitle: "Submit a Neighborhood Need", formLocation: "Location", formCategory: "Category",
+        formDescription: "Describe the need", formUrgency: "Urgency Level", formSubmit: "Submit Request",
+        successTitle: "Request Submitted!", successDesc: "Your neighborhood need has been logged and will be verified with nearby residents.",
+        successAnother: "Submit another request"
+      },
+      hi: {
+        brand: "INFRA-AI", brandSub: "भारत के लिए बुनियादी ढांचा खुफिया",
+        navExplore: "अन्वेषण", navProjects: "परियोजनाएं", navArea: "आपका क्षेत्र", navVoice: "नागरिक आवाज़", navAbout: "जानकारी",
+        reportNeed: "ज़रूरत बताएं",
+        noticeDpg: "राष्ट्रीय डिजिटल सार्वजनिक हित", noticeTitle: "भारत का सार्वजनिक बुनियादी ढांचा वेधशाला",
+        heroEyebrow: "हाइपरलोकल नागरिक पारदर्शिता", heroCities: "812 शहर और तालुक",
+        heroTitle: "जानिए आपके स्थान पर क्या हो रहा है।",
+        heroSubtitle: "अपने आसपास का बुनियादी ढांचा देखें — क्या पहले से है, क्या बन रहा है, क्या योजना में है, और लोग क्या मांग रहे हैं।",
+        voiceBtn: "बोलें · ಮಾತನಾಡಿ · Speak", exploreBtn: "अपना क्षेत्र खोजें",
+        trySuggestion: "खोजें:", tellUs: "बताएं आपके क्षेत्र को क्या चाहिए",
+        fiveQTitle: "पांच सवाल जो हर नागरिक को पूछने का अधिकार है।",
+        fiveQSubtitle: "सार्वजनिक कार्य नौकरशाही शब्दावली के पीछे नहीं छिपने चाहिए।",
+        ch1Title: "क्या बनाया गया?", ch2Title: "क्या बन रहा है?", ch3Title: "क्या आने वाला है?", ch4Title: "लोगों को क्या चाहिए?", ch5Title: "स्रोत क्या है?",
+        voiceTitle: "आपके क्षेत्र को क्या चाहिए?", voiceSubtitle: "बताइए क्या कठिन है, क्या गायब है, क्या असुरक्षित है।",
+        modalTitle: "पड़ोस की ज़रूरत दर्ज करें", formSubmit: "अनुरोध भेजें",
+        successTitle: "अनुरोध भेजा गया!"
+      },
+      kn: {
+        brand: "INFRA-AI", brandSub: "ಭಾರತಕ್ಕಾಗಿ ಮೂಲಸೌಕರ್ಯ ಬುದ್ಧಿಮತ್ತೆ",
+        navExplore: "ಅನ್ವೇಷಿಸಿ", navProjects: "ಯೋಜನೆಗಳು", navArea: "ನಿಮ್ಮ ಪ್ರದೇಶ", navVoice: "ನಾಗರಿಕ ಧ್ವನಿ", navAbout: "ಕುರಿತು",
+        reportNeed: "ಅಗತ್ಯ ವರದಿ",
+        heroTitle: "ನಿಮ್ಮ ಸ್ಥಳದಲ್ಲಿ ಏನಾಗುತ್ತಿದೆ ಎಂಬುದನ್ನು ತಿಳಿಯಿರಿ.",
+        heroSubtitle: "ನಿಮ್ಮ ಸುತ್ತಮುತ್ತಲಿನ ಮೂಲಸೌಕರ್ಯವನ್ನು ಅನ್ವೇಷಿಸಿ.",
+        fiveQTitle: "ಪ್ರತಿ ನಾಗರಿಕನಿಗೆ ಕೇಳುವ ಹಕ್ಕಿರುವ ಐದು ಪ್ರಶ್ನೆಗಳು.",
+        voiceTitle: "ನಿಮ್ಮ ಪ್ರದೇಶಕ್ಕೆ ಏನು ಬೇಕು?",
+        modalTitle: "ನೆರೆಹೊರೆ ಅಗತ್ಯ ಸಲ್ಲಿಸಿ",
+        successTitle: "ವಿನಂತಿ ಸಲ್ಲಿಸಲಾಗಿದೆ!"
+      }
+    };
+
+    let currentLang = 'en';
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      const dict = translations[lang] || translations.en;
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (dict[key]) el.textContent = dict[key];
+        else if (translations.en[key]) el.textContent = translations.en[key];
+      });
+      // Update lang switcher
+      document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+      // Update search placeholder
+      const input = document.getElementById('civic-search-input');
+      if (input) input.placeholder = input.getAttribute(`data-placeholder-${lang}`) || input.getAttribute('data-placeholder-en');
+      // Update html lang
+      document.documentElement.lang = lang;
+    }
+
+    // --- Language Switcher ---
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.addEventListener('click', () => setLanguage(btn.dataset.lang));
+    });
+
+    // --- Mobile Menu ---
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileNav = document.getElementById('mobile-nav');
+    mobileMenuBtn.addEventListener('click', () => {
+      mobileNav.classList.toggle('open');
+      const icon = mobileMenuBtn.querySelector('.material-symbols-outlined');
+      icon.textContent = mobileNav.classList.contains('open') ? 'close' : 'menu';
+    });
+    mobileNav.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => mobileNav.classList.remove('open'));
+    });
+
+    // --- Search Suggestions ---
+    const suggestionPills = document.querySelectorAll('.suggestion-pill');
+    suggestionPills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        document.getElementById('civic-search-input').value = pill.dataset.city;
+      });
+    });
+
+    // --- Voice Search Simulation ---
+    const voiceBtn = document.getElementById('voice-bhashini-btn');
+    const speakLangBtn = document.getElementById('speak-language-btn');
+    function simulateVoice() {
+      const input = document.getElementById('civic-search-input');
+      voiceBtn.classList.add('listening');
+      input.value = "🎤 Listening...";
+      setTimeout(() => {
+        input.value = "Hadapsar Flyover, Pune, Maharashtra";
+        voiceBtn.classList.remove('listening');
+      }, 1800);
+    }
+    voiceBtn.addEventListener('click', simulateVoice);
+    speakLangBtn.addEventListener('click', simulateVoice);
+
+    // --- Tabs ---
+    const tabBar = document.getElementById('tab-bar');
+    const tabBtns = tabBar.querySelectorAll('.tab-btn');
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        tabBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+        document.getElementById(`tab-${btn.dataset.tab}`).classList.add('active');
+      });
+    });
+
+    // --- Zoom Animation ---
+    let zoomLevel = 1;
+    const mapSvg = document.querySelector('.map-svg-container svg');
+    document.getElementById('zoom-in-btn').addEventListener('click', () => {
+      zoomLevel = Math.min(zoomLevel + 0.15, 2);
+      mapSvg.style.transform = `scale(${zoomLevel})`;
+      mapSvg.style.transition = 'transform 0.3s ease';
+    });
+    document.getElementById('zoom-out-btn').addEventListener('click', () => {
+      zoomLevel = Math.max(zoomLevel - 0.15, 0.5);
+      mapSvg.style.transform = `scale(${zoomLevel})`;
+      mapSvg.style.transition = 'transform 0.3s ease';
+    });
+
+    // --- Search Overlay ---
+    const searchOverlay = document.getElementById('search-overlay');
+    const searchModalInput = document.getElementById('search-modal-input');
+    const searchResults = document.getElementById('search-results');
+    const searchData = [
+      { icon: "location_city", name: "Pune, Maharashtra", type: "City", count: "14 projects" },
+      { icon: "location_city", name: "Bengaluru (East), Karnataka", type: "City", count: "19 projects" },
+      { icon: "location_city", name: "Lucknow, Uttar Pradesh", type: "City", count: "9 projects" },
+      { icon: "train", name: "Pune Metro Line 3 (Hinjawadi–Shivajinagar)", type: "Project", count: "Under Construction" },
+      { icon: "directions_car", name: "NH-48 Pune–Mumbai Bypass", type: "Corridor", count: "In Progress" },
+      { icon: "water_drop", name: "Mula-Mutha Riverfront Development", type: "Project", count: "Planned" },
+      { icon: "directions_bus", name: "Hadapsar Feeder Bus Network", type: "Citizen Need", count: "83 petitions" },
+      { icon: "article", name: "MoRTH Gazette 2024 — National Highway Expansion", type: "Gazette", count: "Published" },
+      { icon: "location_city", name: "Ahmedabad, Gujarat", type: "City", count: "11 projects" },
+    ];
+
+    function renderSearchResults(query) {
+      const q = query.toLowerCase();
+      const filtered = q ? searchData.filter(d => d.name.toLowerCase().includes(q) || d.type.toLowerCase().includes(q)) : searchData;
+      searchResults.innerHTML = filtered.map(d => `
+        <div class="search-result-item" onclick="document.getElementById('civic-search-input').value='${d.name}';searchOverlay.classList.remove('open');">
+          <span class="material-symbols-outlined" style="font-size:20px;color:var(--primary);">${d.icon}</span>
+          <div style="flex:1;">
+            <div class="text-body-md" style="font-weight:500;">${d.name}</div>
+            <div class="text-label-sm" style="color:var(--on-surface-variant);">${d.type} · ${d.count}</div>
+          </div>
+          <span class="material-symbols-outlined" style="font-size:16px;color:var(--outline);">arrow_forward</span>
+        </div>
+      `).join('');
+    }
+
+    document.getElementById('search-trigger-btn').addEventListener('click', () => {
+      searchOverlay.classList.add('open');
+      searchModalInput.value = '';
+      renderSearchResults('');
+      setTimeout(() => searchModalInput.focus(), 100);
+    });
+    searchOverlay.addEventListener('click', (e) => { if (e.target === searchOverlay) searchOverlay.classList.remove('open'); });
+    searchModalInput.addEventListener('input', (e) => renderSearchResults(e.target.value));
+    document.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); searchOverlay.classList.add('open'); renderSearchResults(''); setTimeout(() => searchModalInput.focus(), 100); }
+      if (e.key === 'Escape') searchOverlay.classList.remove('open');
+    });
+
+    // --- Submit Need Modal ---
+    const submitModal = document.getElementById('submit-modal');
+    const formContainer = document.getElementById('submit-form-container');
+    const successDiv = document.getElementById('submit-success');
+    function openModal() { submitModal.classList.add('open'); formContainer.style.display = 'block'; successDiv.classList.remove('show'); }
+    function closeModal() { submitModal.classList.remove('open'); }
+    document.getElementById('report-need-trigger').addEventListener('click', (e) => { e.preventDefault(); openModal(); });
+    document.getElementById('submit-need-trigger').addEventListener('click', (e) => { e.preventDefault(); openModal(); });
+    document.getElementById('footer-report-need').addEventListener('click', (e) => { e.preventDefault(); openModal(); });
+    document.getElementById('modal-close-btn').addEventListener('click', closeModal);
+    submitModal.addEventListener('click', (e) => { if (e.target === submitModal) closeModal(); });
+    document.getElementById('need-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      formContainer.style.display = 'none';
+      successDiv.classList.add('show');
+    });
+    document.getElementById('submit-another-btn').addEventListener('click', () => {
+      formContainer.style.display = 'block';
+      successDiv.classList.remove('show');
+      document.getElementById('need-form').reset();
+    });
+
+    // --- Citation Popover ---
+    const citationTrigger = document.getElementById('citation-trigger');
+    const citationPopover = document.getElementById('citation-popover');
+    citationTrigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const rect = citationTrigger.getBoundingClientRect();
+      citationPopover.style.display = citationPopover.style.display === 'none' ? 'block' : 'none';
+      citationPopover.style.left = `${Math.min(rect.left, window.innerWidth - 340)}px`;
+      citationPopover.style.top = `${rect.bottom + 8}px`;
+    });
+    document.addEventListener('click', () => { citationPopover.style.display = 'none'; });
+
+    // --- Animated Counter for Gazette % ---
+    function animateCounter(el, target, suffix = '') {
+      let current = 0;
+      const step = target / 60;
+      function update() {
+        current = Math.min(current + step, target);
+        el.textContent = Math.round(current * 10) / 10 + suffix;
+        if (current < target) requestAnimationFrame(update);
+      }
+      update();
+    }
+    // Run on page load
+    window.addEventListener('load', () => {
+      animateCounter(document.getElementById('gazette-percent'), 98.4);
+    });
+
+    // --- Nav Active State on Scroll ---
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.main-nav .nav-link');
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(section => {
+        const rect = section.getBoundingClientRect();
+        if (rect.top <= 120) current = section.id;
+      });
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === `#${current}`) link.classList.add('active');
+      });
+    });
+
+    // --- Show search hints on xl screens ---
+    function checkSearchHints() {
+      const show = window.innerWidth >= 1280;
+      const hint = document.getElementById('search-hint-text');
+      const kbd = document.getElementById('search-kbd');
+      const reconcile = document.querySelector('.notice-reconcile');
+      if (hint) hint.style.display = show ? 'inline' : 'none';
+      if (kbd) kbd.style.display = show ? 'inline' : 'none';
+      if (reconcile) reconcile.style.display = window.innerWidth >= 768 ? 'inline' : 'none';
+    }
+    checkSearchHints();
+    window.addEventListener('resize', checkSearchHints);
+  </script>
+</body>
+</html>
