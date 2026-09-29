@@ -405,5 +405,12 @@
   "inv.gap.metro_access.none": "Almost no residents live within {km} km of a metro station",
   "inv.why.nh_access.none": "Almost no residents live within {km} km of a national highway",
   "inv.why.rail_access.none": "Almost no residents live within {km} km of a railway station",
-  "inv.why.metro_access.none": "Almost no residents live within {km} km of a metro station"
+  "inv.why.metro_access.none": "Almost no residents live within {km} km of a metro station",
+  "inv.city.map.title": "Map of areas",
+  "inv.city.map.zoom_in": "Zoom in",
+  "inv.city.map.zoom_out": "Zoom out",
+  "inv.city.map.close": "Close",
+  "inv.city.map.gesture_ctrl": "Hold Ctrl and scroll to zoom the map",
+  "inv.city.map.gesture_cmd": "Hold ⌘ and scroll to zoom the map",
+  "inv.city.map.gesture_touch": "Use two fingers to move the map"
 }

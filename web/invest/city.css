@@ -124,6 +124,8 @@
 }
 .city-layers input { inline-size: 1.125rem; block-size: 1.125rem; margin: 0; accent-color: var(--brand-teal); }
 .city-layers input:disabled + .city-key, .city-layers label:has(input:disabled) { opacity: 0.5; cursor: not-allowed; }
+.city-layers__error { margin-block-start: var(--space-1); }
+#city-layer-msg > * + * { margin-block-start: var(--space-2); }
 .city-layers__note { margin-block-end: var(--space-1); padding-inline-start: calc(1.125rem + var(--space-1)); }
 
 /* Map keys drawn to match the layers in js/map.js */

@@ -4,7 +4,7 @@
 //
 // The helpers under "Pure" run in Node (city.test.mjs); the page starts only when there is a document.
 
-import { api } from './api.js';
+import { ApiError, api } from './api.js';
 import { CITY_ID, DEFAULT_PRESET, PRESET_IDS } from './config.js';
 import { explain } from './explain.js';
 import { formatCount, formatDelta, formatScore, formatValue, tt } from './format.js';
@@ -113,6 +113,34 @@ export function compareReason(other, t = tt) {
     .join(' · ');
 }
 
+// The collection an /assets answer holds for `source`. bus_stops may be null (the city has no bus
+// feed: null is returned); anything else that is not a FeatureCollection fails closed.
+export function assetCollection(data, source) {
+  const collection = data?.[source];
+  if (source === 'bus_stops' && collection === null) return null;
+  if (collection?.type !== 'FeatureCollection' || !Array.isArray(collection.features)) {
+    throw new ApiError('bad_response', `The server sent no ${source} collection`);
+  }
+  return collection;
+}
+
+// Compare rows the page can link to: an id that fails the pattern is left out, never put in a link.
+export const linkableCities = (others) => (others ?? []).filter((o) => typeof o?.id === 'string' && CITY_ID.test(o.id));
+
+// True when an element is not wholly inside the viewport (so a scroll is needed to show it).
+export const outOfView = (rect, viewportHeight) => rect.top < 0 || rect.bottom > viewportHeight;
+
+// MapLibre's own UI text (its locale keys) in the page language.
+export const mapStrings = (t = tt) => ({
+  'Map.Title': t('inv.city.map.title'),
+  'NavigationControl.ZoomIn': t('inv.city.map.zoom_in'),
+  'NavigationControl.ZoomOut': t('inv.city.map.zoom_out'),
+  'Popup.Close': t('inv.city.map.close'),
+  'CooperativeGesturesHandler.WindowsHelpText': t('inv.city.map.gesture_ctrl'),
+  'CooperativeGesturesHandler.MacHelpText': t('inv.city.map.gesture_cmd'),
+  'CooperativeGesturesHandler.MobileHelpText': t('inv.city.map.gesture_touch'),
+});
+
 // ---------- Page ----------
 
 function boot() {
@@ -121,7 +149,7 @@ function boot() {
     main: $('city-main'), notFound: $('not-found'), status: $('city-status'),
     head: $('city-head'), headMsg: $('city-head-msg'), presets: $('city-presets'), presetDesc: $('city-preset-desc'),
     map: $('city-map'), mapNote: $('city-map-note'), legend: $('city-legend'), layers: $('city-layers'),
-    layerMsg: $('city-layer-msg'), areasMsg: $('city-areas-msg'), best: $('city-best'),
+    layerMsg: $('city-layer-msg'), areasMsg: $('city-areas-msg'), best: $('city-best'), bestLoading: $('city-best-loading'),
     scopes: $('city-scopes'), compare: $('city-compare'), compareMsg: $('city-compare-msg'),
   };
 
@@ -152,27 +180,34 @@ function boot() {
 
   // One data section: a sequence number drops answers that a newer request has replaced, the
   // skeleton shows only until there is something to keep, and a failure keeps the last good view.
-  function section({ body, msg, rows, load, render }) {
+  // run() resolves to true when it rendered, false when it failed, undefined when a newer run took over.
+  function section({ body, msg, skeleton = body, rows, load, render, onError }) {
     let seq = 0;
     let hasData = false;
     const run = async () => {
       const mine = ++seq;
       msg.replaceChildren();
       if (hasData) body.setAttribute('aria-busy', 'true');
-      else if (rows) renderSkeleton(body, rows);
+      else renderSkeleton(skeleton, rows);
       try {
         const data = await load();
-        if (mine !== seq) return;
+        if (mine !== seq) return undefined;
         body.removeAttribute('aria-busy');
+        if (skeleton !== body) clear(skeleton);
         hasData = true;
         render(data);
+        return true;
       } catch (error) {
-        if (mine !== seq || error?.code === 'aborted') return;
+        if (mine !== seq || error?.code === 'aborted') return undefined;
         body.removeAttribute('aria-busy');
-        if (!hasData && rows) clear(body);
+        if (!hasData || skeleton !== body) clear(skeleton); // never the last good view
+        // a bug in this page, not a failed request: say so in the console, the visitor still gets Retry
+        if (!(error instanceof ApiError)) console.error('[invest] city page:', error);
         // the id passed the pattern but no such city exists (or the server refused it)
-        if (error?.code === 'not_found' || error?.code === 'bad_request') return showNotFound();
+        if (error?.code === 'not_found' || error?.code === 'bad_request') { showNotFound(); return false; }
+        onError?.();
         renderError(msg, error, run);
+        return false;
       }
     };
     return run;
@@ -259,15 +294,24 @@ function boot() {
     el.presetDesc.textContent = tt(`inv.preset.${s.preset}.desc`);
   }
 
-  function choosePreset(id) {
+  // All three sections follow the preset. If any of them cannot load it, the page goes back to the
+  // preset it was showing and reloads the sections that had already switched (the API answers are
+  // cacheable, so that is usually instant): chips, header, map, list and compare then agree again,
+  // and the failed section keeps its error with Retry.
+  async function choosePreset(id) {
     if (id === s.preset) return;
+    const previous = s.preset;
     s.preset = id;
     syncUrl();
     renderPresets();
     setStatus(el.status, tt('inv.loading'));
-    loadHead();
-    loadAreas();
-    loadCompare();
+    const loaders = [loadHead, loadAreas, loadCompare];
+    const done = await Promise.all(loaders.map((load) => load()));
+    if (s.preset !== id || !done.includes(false)) return; // a newer choice took over, or all is shown
+    s.preset = previous;
+    syncUrl();
+    renderPresets();
+    await Promise.all(loaders.filter((_, i) => done[i] === true).map((load) => load()));
   }
 
   // ----- Map, legend and best areas -----
@@ -343,7 +387,9 @@ function boot() {
       setStatus(el.status, tt('inv.city.map.unavailable'));
       return;
     }
-    el.map.scrollIntoView({ block: 'center', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    if (outOfView(el.map.getBoundingClientRect(), innerHeight)) {
+      el.map.scrollIntoView({ block: 'nearest', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    }
     s.map.showArea(feature);
     setStatus(el.status, tt('inv.city.best.shown', { name }));
   }
@@ -355,7 +401,7 @@ function boot() {
   }
 
   const loadAreas = section({
-    body: el.best, msg: el.areasMsg, rows: 5,
+    body: el.best, skeleton: el.bestLoading, msg: el.areasMsg, rows: 5,
     load: () => api.areas(s.id, { preset: s.preset, limit: 1000 }),
     render(collection) {
       s.areas = collection.features;
@@ -372,25 +418,52 @@ function boot() {
   const assetLoads = new Map();
   function ensureAssets(source) {
     if (!assetLoads.has(source)) {
-      const load = api.assets(s.id, [source]).then((data) => s.map.addAssets(source, data[source]));
+      const load = api.assets(s.id, [source]).then((data) => {
+        const collection = assetCollection(data, source);
+        if (collection) s.map.addAssets(source, collection);
+        return collection;
+      });
       load.catch(() => assetLoads.delete(source)); // a later toggle tries again
       assetLoads.set(source, load);
     }
     return assetLoads.get(source);
   }
 
+  // One error per layer, labelled with the layer's name, so switching one layer never hides another's.
+  const layerErrors = new Map();
+  function clearLayerError(layer) {
+    layerErrors.get(layer)?.remove();
+    layerErrors.delete(layer);
+  }
+  function showLayerError(input, error) {
+    const slot = h('div', { class: 'city-layers__error' });
+    renderError(slot, error, () => { input.checked = true; toggleLayer(input); });
+    const box = h('div', null, h('p', { class: 'inv-small' }, input.closest('label').textContent.trim()), slot);
+    clearLayerError(input.value);
+    layerErrors.set(input.value, box);
+    el.layerMsg.append(box);
+  }
+
   async function toggleLayer(input) {
     const layer = input.value;
-    el.layerMsg.replaceChildren();
+    clearLayerError(layer);
     if (!s.map) { input.checked = false; return; } // the toggles are hidden until the map is ready
     if (!input.checked) return s.map.setVisible(layer, false);
     if (!s.map.hasAssets(ASSET_SOURCE[layer])) setStatus(el.status, tt('inv.loading'));
+    let collection;
     try {
-      await ensureAssets(ASSET_SOURCE[layer]);
+      collection = await ensureAssets(ASSET_SOURCE[layer]);
     } catch (error) {
       if (error?.code === 'aborted') return;
+      if (!(error instanceof ApiError)) console.error('[invest] city page:', error);
       input.checked = false;
-      renderError(el.layerMsg, error, () => { input.checked = true; toggleLayer(input); });
+      showLayerError(input, error);
+      return;
+    }
+    if (collection === null) { // the server says this city has no bus feed after all
+      s.noBusFeed = true;
+      input.checked = false;
+      renderBusToggle();
       return;
     }
     s.map.setVisible(layer, input.checked); // it may have been switched off while loading
@@ -401,7 +474,7 @@ function boot() {
     const input = el.layers.querySelector('input[value="bus_stops"]');
     const note = $('city-bus-note');
     // only a loaded city can say it has no feed; until then the toggle stays usable (an empty layer at worst)
-    const none = s.city ? !s.city.data?.bus : false;
+    const none = s.noBusFeed || (s.city ? !s.city.data?.bus : false);
     input.disabled = none || !s.map;
     note.hidden = !none;
   }
@@ -419,14 +492,15 @@ function boot() {
   function renderCompare() {
     const cmp = s.compare;
     const base = s.city?.name ?? cmp.base.name;
-    if (!cmp.others.length) {
+    const others = linkableCities(cmp.others);
+    if (!others.length) {
       el.compare.replaceChildren(h('p', { class: 'inv-empty' }, tt('inv.city.compare.empty')));
       return;
     }
     el.compare.replaceChildren(
       h('p', { class: 'city-cmp__here' }, tt('inv.city.compare.here', { rank: cmp.base_rank, total: cmp.total + 1 })),
       h('p', { class: 'inv-small inv-muted' }, tt('inv.city.compare.note', { name: base })),
-      h('ol', { class: 'city-cmp__list', role: 'list' }, cmp.others.map((o) => {
+      h('ol', { class: 'city-cmp__list', role: 'list' }, others.map((o) => {
         const up = Math.round(o.delta) > 0;
         const why = compareReason(o);
         return h('li', null, h('a', { class: 'city-cmp__row', href: cityHref(o.id, s.preset) },
@@ -443,8 +517,14 @@ function boot() {
     load: () => api.compare(s.id, { preset: s.preset, scope: s.scope ?? undefined }),
     render(cmp) {
       s.compare = cmp;
+      s.scope = cmp.scope;
       renderScopes();
       renderCompare();
+    },
+    // the chips go back to the scope the rows below still show
+    onError() {
+      s.scope = s.compare?.scope ?? null;
+      renderScopes();
     },
   });
 
@@ -456,7 +536,7 @@ function boot() {
   loadAreas();
   loadCompare();
 
-  createMap(el.map, { popupContent }).then((ctl) => {
+  createMap(el.map, { popupContent, strings: () => mapStrings() }).then((ctl) => {
     s.map = ctl;
     el.mapNote.hidden = true;
     el.layers.hidden = false;
@@ -475,6 +555,7 @@ function boot() {
     renderScopes();
     renderLegend();
     s.map?.closePopups();
+    s.map?.relabel();
     if (s.city) renderHead();
     if (s.areas) renderBest();
     if (s.compare) renderCompare();

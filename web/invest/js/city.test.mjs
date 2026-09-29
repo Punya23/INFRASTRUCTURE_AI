@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { areaPlaces, assetText, bestAreas, cityHref, compareReason, placeText, readParams } from './city.js';
-import { BREAKS, RAMP, baseLayers, bounds, cellCentre } from './map.js';
+import { areaPlaces, assetCollection, assetText, bestAreas, cityHref, compareReason, linkableCities, mapStrings, outOfView, placeText, readParams } from './city.js';
+import { ASSET_SOURCE, BREAKS, RAMP, baseLayers, bounds, cellCentre, clickAction } from './map.js';
 
 // A hexagon-ish ring around (lon, lat), closed like the API sends it.
 const ring = (lon, lat, r = 0.01) => {
@@ -125,4 +125,63 @@ test('baseLayers drops every boundary line and the country and state labels (ADR
     { id: 'label_city', 'source-layer': 'place' }, { id: 'highway_major', 'source-layer': 'transportation' },
   ];
   assert.deepEqual(baseLayers(layers).map((l) => l.id), ['water', 'label_city', 'highway_major']);
+});
+
+test('baseLayers also drops a renamed country or state label, by what its filter selects', () => {
+  const layers = [
+    { id: 'place_country_major', 'source-layer': 'place', filter: ['==', ['get', 'class'], 'country'] },
+    { id: 'place-region', 'source-layer': 'place', filter: ['all', ['==', 'class', 'state'], ['<=', 'rank', 6]] },
+    { id: 'place_town', 'source-layer': 'place', filter: ['==', ['get', 'class'], 'town'] },
+    { id: 'poi', 'source-layer': 'poi', filter: ['==', ['get', 'class'], 'state'] },
+  ];
+  assert.deepEqual(baseLayers(layers).map((l) => l.id), ['place_town', 'poi']);
+});
+
+test('clickAction: asset over hexagon, hexagon, else close the pinned popup', () => {
+  assert.equal(clickAction({ id: 's' }, { id: 'a' }), 'asset');
+  assert.equal(clickAction(undefined, { id: 'a' }), 'area');
+  assert.equal(clickAction(undefined, undefined), 'close');
+});
+
+test('every layer toggle in city.html names a known asset layer', async () => {
+  const { readFileSync } = await import('node:fs');
+  const html = readFileSync(new URL('../city.html', import.meta.url), 'utf8');
+  const values = [...html.matchAll(/<input type="checkbox" value="([^"]+)"/g)].map((m) => m[1]);
+  assert.deepEqual(values.sort(), Object.keys(ASSET_SOURCE).sort());
+});
+
+test('assetCollection fails closed on anything but a FeatureCollection, and reads a null bus feed as none', () => {
+  const fc = { type: 'FeatureCollection', features: [] };
+  assert.equal(assetCollection({ stations: fc }, 'stations'), fc);
+  assert.equal(assetCollection({ bus_stops: null }, 'bus_stops'), null);
+  for (const bad of [{}, { stations: null }, { stations: { type: 'Feature' } }, { stations: { type: 'FeatureCollection' } }, null]) {
+    assert.throws(() => assetCollection(bad, 'stations'), (e) => e.code === 'bad_response', JSON.stringify(bad));
+  }
+  assert.throws(() => assetCollection({}, 'bus_stops'), (e) => e.code === 'bad_response');
+});
+
+test('linkableCities leaves out rows whose id could not be a city id', () => {
+  const rows = [{ id: 'nagpur' }, { id: '../x' }, { id: 'javascript:alert(1)' }, { id: null }, {}, { id: 'aurangabad-mh' }];
+  assert.deepEqual(linkableCities(rows).map((r) => r.id), ['nagpur', 'aurangabad-mh']);
+  assert.deepEqual(linkableCities(undefined), []);
+});
+
+test('outOfView is true only when part of the element is off screen', () => {
+  assert.equal(outOfView({ top: 10, bottom: 500 }, 900), false);
+  assert.equal(outOfView({ top: -5, bottom: 500 }, 900), true);
+  assert.equal(outOfView({ top: 400, bottom: 950 }, 900), true);
+});
+
+test('mapStrings gives every MapLibre string the page uses from an inv.city key', () => {
+  const strings = mapStrings((key) => key);
+  assert.deepEqual(Object.keys(strings).sort(), [
+    'CooperativeGesturesHandler.MacHelpText', 'CooperativeGesturesHandler.MobileHelpText', 'CooperativeGesturesHandler.WindowsHelpText',
+    'Map.Title', 'NavigationControl.ZoomIn', 'NavigationControl.ZoomOut', 'Popup.Close']);
+  assert.ok(Object.values(strings).every((v) => v.startsWith('inv.city.map.')));
+});
+
+test('every inv.city key the map strings use is in the English dictionary', async () => {
+  const { readFileSync } = await import('node:fs');
+  const en = JSON.parse(readFileSync(new URL('../../locales/en.json', import.meta.url), 'utf8'));
+  for (const key of Object.values(mapStrings((k) => k))) assert.equal(typeof en[key], 'string', key);
 });
