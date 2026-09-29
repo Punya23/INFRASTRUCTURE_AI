@@ -78,10 +78,11 @@ function boot(doc) {
       why ? h('p', { class: 'inv-chip inv-chip--why landing-sample__why' }, tt(why.key, why.params)) : null,
       h('span', {
         class: 'inv-ring',
-        role: 'img',
-        'aria-label': tt('inv.landing.sample.score', { score }),
+        ...(Number.isFinite(city.score)
+          ? { role: 'img', 'aria-label': tt('inv.landing.sample.score', { score }) }
+          : {}),
         style: { '--value': Number.isFinite(city.score) ? city.score : 0 },
-      }, h('span', { class: 'inv-ring__value', 'aria-hidden': 'true' }, score)));
+      }, h('span', { class: 'inv-ring__value', 'aria-hidden': Number.isFinite(city.score) ? 'true' : null }, score)));
   }
 
   function renderSample() {
@@ -100,7 +101,8 @@ function boot(doc) {
     setStatus(sampleStatus, tt('inv.loading'));
     try {
       const data = await api.stateCities(SAMPLE_STATE, { limit: SAMPLE_SIZE });
-      sample = Array.isArray(data.cities) ? data.cities.slice(0, SAMPLE_SIZE) : [];
+      if (!Array.isArray(data?.cities)) throw new Error('unexpected state cities response');
+      sample = data.cities.slice(0, SAMPLE_SIZE);
       renderSample();
     } catch (error) {
       if (error?.code === 'aborted') return;
