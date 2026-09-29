@@ -194,6 +194,11 @@
       padding: 0.75rem !important; border-radius: 0.5rem !important;
       box-shadow: var(--shadow-3) !important; max-width: 280px !important;
     }
+    .tier-badge {
+      font-size: 0.5625rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em;
+      padding: 0 0.3rem; border-radius: 3px; background: rgba(217,119,6,0.12); color: var(--status-construction);
+    }
+    .transit-note { font-size: 0.625rem; color: var(--text-muted); margin-top: 0.25rem; line-height: 1.4; }
     .popup-title { font-weight: 700; font-size: 0.8125rem; color: var(--primary); margin-bottom: 0.25rem; }
     .popup-row {
       display: flex; justify-content: space-between; gap: 0.5rem;
@@ -298,6 +303,14 @@
           <span>Toll Plazas</span>
         </div>
         <div class="legend-item">
+          <div class="legend-line" style="background:#3A6EA5;"></div>
+          <span>Bus route (when enabled)</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-line" style="background:#7B3FA0;height:4px;"></div>
+          <span>Metro line (when enabled)</span>
+        </div>
+        <div class="legend-item">
           <div class="legend-line" style="background:rgba(14,90,102,0.3);height:8px;border-radius:2px;"></div>
           <span>NH Access (population within 10 km)</span>
         </div>
@@ -372,6 +385,13 @@
           <span class="layer-label">NH Access (10 km)</span>
           <span class="layer-count" id="count-access">—</span>
         </label>
+      </div>
+
+      <!-- Public transport (GTFS) — toggles built from fixtures/public_transport/index.json, data loads on demand -->
+      <div class="layer-section" id="transit-section">
+        <div class="layer-title">Public Transport <span style="text-transform:none;font-weight:500;">· loads on demand</span></div>
+        <div id="transit-toggles"><div class="transit-note">Loading feeds…</div></div>
+        <div class="transit-note"><span class="tier-badge">community</span> feeds are community-maintained GTFS, not operator releases. Stops appear from zoom 12 (bus) / 9 (metro).</div>
       </div>
 
       <!-- State table -->
@@ -507,6 +527,7 @@
         cityPairs = await pairsRes.json();
 
         addMapLayers();
+        loadTransitIndex();
         hydrateStats();
         renderStateTable();
         renderConnectivity();
@@ -610,35 +631,36 @@
     }
 
     function setupInteractions() {
-      // NH Segment click
-      map.on('click', 'nh-segments-line', (e) => {
-        const f = e.features[0];
-        const p = f.properties;
-        const html = `
-          <div class="popup-title">${p.ref || p.name || 'NH Segment'}</div>
+      // One click = one popup: the highest-priority feature under the cursor wins (see POPUPS).
+      POPUPS.push({ layer: 'toll-plazas-circle', priority: 1, width: '260px', html: tollPopup });
+      POPUPS.push({ layer: 'nh-segments-line', priority: 3, width: '280px', html: p => `
+          <div class="popup-title">${esc(p.ref || p.name || 'NH Segment')}</div>
           <div class="popup-row"><span>Status:</span><span class="popup-status status-${p.status || 'operational'}">${(p.status || 'operational').replace('_', ' ')}</span></div>
-          ${p.lanes ? `<div class="popup-row"><span>Lanes:</span><strong>${p.lanes}</strong></div>` : ''}
-          ${p.surface ? `<div class="popup-row"><span>Surface:</span><strong>${p.surface}</strong></div>` : ''}
+          ${p.lanes ? `<div class="popup-row"><span>Lanes:</span><strong>${esc(p.lanes)}</strong></div>` : ''}
+          ${p.surface ? `<div class="popup-row"><span>Surface:</span><strong>${esc(p.surface)}</strong></div>` : ''}
           ${p.length_km ? `<div class="popup-row"><span>Length:</span><strong>${Number(p.length_km).toFixed(1)} km</strong></div>` : ''}
-          ${p.source ? `<div style="font-size:0.625rem;color:var(--text-muted);margin-top:0.25rem;font-family:'JetBrains Mono',monospace;">Source: ${p.source}</div>` : ''}
-        `;
-        new maplibregl.Popup({ maxWidth: '280px' }).setLngLat(e.lngLat).setHTML(html).addTo(map);
+          ${p.source ? `<div style="font-size:0.625rem;color:var(--text-muted);margin-top:0.25rem;font-family:'JetBrains Mono',monospace;">Source: ${esc(p.source)}</div>` : ''}
+        ` });
+      map.on('click', e => {
+        const live = POPUPS.filter(r => map.getLayer(r.layer) && map.getLayoutProperty(r.layer, 'visibility') !== 'none');
+        if (!live.length) return;
+        const hits = map.queryRenderedFeatures(e.point, { layers: live.map(r => r.layer) });
+        if (!hits.length) return;
+        const best = hits.map(f => ({ f, r: live.find(r => r.layer === f.layer.id) }))
+                         .sort((a, b) => a.r.priority - b.r.priority)[0];
+        new maplibregl.Popup({ maxWidth: best.r.width }).setLngLat(e.lngLat)
+          .setHTML(best.r.html(best.f.properties)).addTo(map);
       });
-
-      // Toll plaza click
-      map.on('click', 'toll-plazas-circle', (e) => {
-        const f = e.features[0];
-        const p = f.properties;
+      function tollPopup(p) {
         const matched = !!p.ihmcl_code;
-        const html = `
-          <div class="popup-title">${p.name || 'Toll Plaza'} ${matched ? '<span class="popup-status status-operational">IHMCL match</span>' : ''}</div>
-          ${p.ref ? `<div class="popup-row"><span>Highway:</span><strong>${p.ref}</strong></div>` : ''}
-          ${p.agency ? `<div class="popup-row"><span>Agency:</span><strong>${p.agency}</strong></div>` : ''}
-          ${p.booths ? `<div class="popup-row"><span>Booths:</span><strong>${p.booths}</strong></div>` : ''}
-          <div style="font-size:0.625rem;color:var(--text-muted);margin-top:0.25rem;font-family:'JetBrains Mono',monospace;">Source: ${p.source || 'osm'} (confidence ${p.confidence ?? '—'})</div>
+        return `
+          <div class="popup-title">${esc(p.name || 'Toll Plaza')} ${matched ? '<span class="popup-status status-operational">IHMCL match</span>' : ''}</div>
+          ${p.ref ? `<div class="popup-row"><span>Highway:</span><strong>${esc(p.ref)}</strong></div>` : ''}
+          ${p.agency ? `<div class="popup-row"><span>Agency:</span><strong>${esc(p.agency)}</strong></div>` : ''}
+          ${p.booths ? `<div class="popup-row"><span>Booths:</span><strong>${esc(p.booths)}</strong></div>` : ''}
+          <div style="font-size:0.625rem;color:var(--text-muted);margin-top:0.25rem;font-family:'JetBrains Mono',monospace;">Source: ${esc(p.source || 'osm')} (confidence ${esc(p.confidence ?? '—')})</div>
         `;
-        new maplibregl.Popup({ maxWidth: '260px' }).setLngLat(e.lngLat).setHTML(html).addTo(map);
-      });
+      }
 
       // Cursors
       ['nh-segments-line', 'toll-plazas-circle'].forEach(layer => {
@@ -658,6 +680,119 @@
       });
       document.getElementById('toggle-access').addEventListener('change', (e) => {
         map.setLayoutProperty('nh-access-fill', 'visibility', e.target.checked ? 'visible' : 'none');
+      });
+    }
+
+    // Feed text (stop names, route names, OSM names) is third-party: always escape before innerHTML.
+    function esc(v) {
+      return String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    }
+
+    // ---- Public transport (GTFS fixtures, loaded per feed on first toggle) ----
+    const TRANSIT_COLORS = { bus: '#3A6EA5', metro: '#7B3FA0' };
+    const transit = {};  // feed id -> { meta, loaded }
+    // clickable layers: lower priority number wins when features overlap under the cursor
+    const POPUPS = [];
+
+    async function loadTransitIndex() {
+      const box = document.getElementById('transit-toggles');
+      try {
+        const res = await fetch('fixtures/public_transport/index.json');
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const feeds = (await res.json()).feeds;
+        feeds.sort((a, b) => a.city.localeCompare(b.city) || a.mode.localeCompare(b.mode));
+        box.innerHTML = feeds.map(f => {
+          const color = TRANSIT_COLORS[f.mode] || '#555';
+          return `<label class="layer-toggle" style="color:${color};" title="${esc(f.operator)} · ${f.routes.toLocaleString('en-IN')} routes · ${esc(f.license)}">
+            <input type="checkbox" data-feed="${esc(f.id)}"/>
+            <div class="layer-swatch" style="color:${color};"></div>
+            <span class="layer-label">${esc(f.city)} · ${esc(f.operator)} ${esc(f.mode)}${f.tier === 'secondary' ? ' <span class="tier-badge">community</span>' : ''}</span>
+            <span class="layer-count" id="count-${esc(f.id)}">${f.stops.toLocaleString('en-IN')}</span>
+          </label>`;
+        }).join('');
+        feeds.forEach(f => { transit[f.id] = { meta: f, loaded: false }; });
+        box.querySelectorAll('input[data-feed]').forEach(el =>
+          el.addEventListener('change', e => toggleTransit(e.target.dataset.feed, e.target)));
+      } catch (err) {
+        box.innerHTML = `<div class="transit-note">Transit feeds unavailable (${esc(err.message)}).</div>`;
+      }
+    }
+
+    async function toggleTransit(id, input) {
+      const t = transit[id];
+      if (!t) return;
+      if (input.checked && !t.loaded) {
+        const count = document.getElementById(`count-${id}`);
+        count.textContent = 'loading…';
+        try {
+          const [routes, stops] = await Promise.all([t.meta.routes_file, t.meta.stops_file].map(async file => {
+            const res = await fetch(`fixtures/public_transport/${file}`);
+            if (!res.ok) throw new Error(`${file}: HTTP ${res.status}`);
+            return res.json();
+          }));
+          addTransitLayers(id, t.meta, routes, stops);
+          t.loaded = true;
+          count.textContent = t.meta.stops.toLocaleString('en-IN');
+          const [x0, y0, x1, y1] = t.meta.bbox;
+          map.fitBounds([[x0, y0], [x1, y1]], { padding: 40, maxZoom: 11 });
+        } catch (err) {
+          input.checked = false;  // fail visibly, not half-loaded
+          count.textContent = 'failed';
+          count.title = err.message;
+          console.error(`Transit feed ${id} failed:`, err);
+        }
+        return;
+      }
+      if (t.loaded) {
+        const vis = input.checked ? 'visible' : 'none';
+        [`tr-${id}-routes`, `tr-${id}-stops`].forEach(l => map.setLayoutProperty(l, 'visibility', vis));
+      }
+    }
+
+    function addTransitLayers(id, meta, routes, stops) {
+      const color = TRANSIT_COLORS[meta.mode] || '#555';
+      const rail = meta.mode !== 'bus';
+      const before = map.getLayer('toll-plazas-circle') ? 'toll-plazas-circle' : undefined;  // keep tolls on top
+      const routeLayer = `tr-${id}-routes`, stopLayer = `tr-${id}-stops`;
+      map.addSource(routeLayer, { type: 'geojson', data: routes });
+      map.addSource(stopLayer, { type: 'geojson', data: stops });
+      map.addLayer({
+        id: routeLayer, type: 'line', source: routeLayer,
+        layout: { 'line-cap': 'round', 'line-join': 'round' },
+        paint: {
+          'line-color': color,
+          'line-width': rail ? ['interpolate', ['linear'], ['zoom'], 8, 2, 14, 5]
+                             : ['interpolate', ['linear'], ['zoom'], 8, 0.4, 14, 2],
+          'line-opacity': rail ? 0.9 : 0.45,
+        },
+      }, before);
+      map.addLayer({
+        id: stopLayer, type: 'circle', source: stopLayer, minzoom: rail ? 9 : 12,
+        paint: {
+          'circle-radius': rail ? 4 : 2.5, 'circle-color': '#ffffff',
+          'circle-stroke-color': color, 'circle-stroke-width': rail ? 2 : 1.2,
+        },
+      }, before);
+
+      const community = meta.tier === 'secondary'
+        ? `<div style="font-size:0.625rem;color:var(--status-construction);margin-top:0.25rem;">Community-maintained feed — not operator data.</div>` : '';
+      const footer = p => `<div style="font-size:0.625rem;color:var(--text-muted);margin-top:0.25rem;font-family:'JetBrains Mono',monospace;">Source: ${esc(p.source)} (confidence ${esc(p.confidence)})</div>${community}`;
+      POPUPS.push({ layer: stopLayer, priority: 0, width: '260px', html: p => `
+          <div class="popup-title">${esc(p.name || 'Stop')}</div>
+          <div class="popup-row"><span>Operator:</span><strong>${esc(p.agency)} ${esc(p.mode)}</strong></div>
+          ${footer(p)}` });
+      POPUPS.push({ layer: routeLayer, priority: 2, width: '280px', html: p => {
+        const drawn = p.geometry_source === 'stop_sequence'
+          ? `<div class="popup-row"><span>Geometry:</span><strong>stop to stop (feed has no shapes)</strong></div>` : '';
+        return `
+          <div class="popup-title">${esc(p.ref || 'Route')}</div>
+          ${p.name ? `<div class="popup-row"><span>Route:</span><strong>${esc(p.name)}</strong></div>` : ''}
+          <div class="popup-row"><span>Operator:</span><strong>${esc(p.agency)} ${esc(p.mode)}</strong></div>
+          ${drawn}${footer(p)}`;
+      } });
+      [routeLayer, stopLayer].forEach(layer => {
+        map.on('mouseenter', layer, () => map.getCanvas().style.cursor = 'pointer');
+        map.on('mouseleave', layer, () => map.getCanvas().style.cursor = '');
       });
     }
 

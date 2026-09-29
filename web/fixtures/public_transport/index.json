@@ -1,0 +1,165 @@
+{
+ "field": "public_transport",
+ "feeds": [
+  {
+   "id": "bus_tgsrtc_gtfs",
+   "mode": "bus",
+   "operator": "TGSRTC",
+   "city": "Hyderabad",
+   "tier": "official",
+   "confidence": 0.9,
+   "license": "Terms of use on data.opencity.in \u2014 attribution required; non-commercial and research use permitted",
+   "fetched_at": "2026-09-29T16:20:16Z",
+   "stops": 5028,
+   "routes": 1031,
+   "bbox": [
+    77.4367,
+    16.099,
+    79.9535,
+    18.5977
+   ],
+   "stops_file": "bus_tgsrtc_gtfs_stops.geojson",
+   "routes_file": "bus_tgsrtc_gtfs_routes.geojson"
+  },
+  {
+   "id": "metro_hyd_hmrl_gtfs",
+   "mode": "metro",
+   "operator": "HMRL",
+   "city": "Hyderabad",
+   "tier": "official",
+   "confidence": 0.9,
+   "license": "Terms of use on data.opencity.in \u2014 attribution required; non-commercial and research use permitted",
+   "fetched_at": "2026-09-29T16:20:17Z",
+   "stops": 705,
+   "routes": 3,
+   "bbox": [
+    78.3724,
+    17.3494,
+    78.5605,
+    17.4989
+   ],
+   "stops_file": "metro_hyd_hmrl_gtfs_stops.geojson",
+   "routes_file": "metro_hyd_hmrl_gtfs_routes.geojson"
+  },
+  {
+   "id": "gtfs_mumbai_best",
+   "mode": "bus",
+   "operator": "BEST",
+   "city": "Mumbai",
+   "tier": "secondary",
+   "confidence": 0.7,
+   "license": "MIT-0 (github.com/croyla/mumbai-gtfs)",
+   "fetched_at": "2026-09-29T17:05:13Z",
+   "stops": 10279,
+   "routes": 1115,
+   "bbox": [
+    72.759,
+    18.9001,
+    73.1841,
+    19.489
+   ],
+   "stops_file": "gtfs_mumbai_best_stops.geojson",
+   "routes_file": "gtfs_mumbai_best_routes.geojson"
+  },
+  {
+   "id": "gtfs_pune_pmpml",
+   "mode": "bus",
+   "operator": "PMPML",
+   "city": "Pune",
+   "tier": "secondary",
+   "confidence": 0.7,
+   "license": "MIT-0 (github.com/croyla/pmpml-gtfs)",
+   "fetched_at": "2026-09-29T17:05:19Z",
+   "stops": 6713,
+   "routes": 617,
+   "bbox": [
+    73.407,
+    18.103,
+    74.4586,
+    18.8921
+   ],
+   "stops_file": "gtfs_pune_pmpml_stops.geojson",
+   "routes_file": "gtfs_pune_pmpml_routes.geojson"
+  },
+  {
+   "id": "gtfs_bengaluru_bmtc",
+   "mode": "bus",
+   "operator": "BMTC",
+   "city": "Bengaluru",
+   "tier": "secondary",
+   "confidence": 0.7,
+   "license": "ODbL-1.0 (github.com/Vonter/bmtc-gtfs) \u2014 share-alike on derived exports",
+   "fetched_at": "2026-09-29T17:05:47Z",
+   "stops": 9960,
+   "routes": 4416,
+   "bbox": [
+    75.1173,
+    12.0308,
+    78.3942,
+    17.7722
+   ],
+   "stops_file": "gtfs_bengaluru_bmtc_stops.geojson",
+   "routes_file": "gtfs_bengaluru_bmtc_routes.geojson"
+  },
+  {
+   "id": "gtfs_chennai_mtc",
+   "mode": "bus",
+   "operator": "MTC",
+   "city": "Chennai",
+   "tier": "secondary",
+   "confidence": 0.7,
+   "license": "MIT (github.com/ungalsoththu/ChennaiGTFS)",
+   "fetched_at": "2026-09-29T17:05:55Z",
+   "stops": 5580,
+   "routes": 3934,
+   "bbox": [
+    79.8019,
+    12.6148,
+    80.3358,
+    13.4904
+   ],
+   "stops_file": "gtfs_chennai_mtc_stops.geojson",
+   "routes_file": "gtfs_chennai_mtc_routes.geojson"
+  },
+  {
+   "id": "gtfs_chennai_cmrl",
+   "mode": "metro",
+   "operator": "CMRL",
+   "city": "Chennai",
+   "tier": "secondary",
+   "confidence": 0.7,
+   "license": "MIT (github.com/ungalsoththu/ChennaiGTFS)",
+   "fetched_at": "2026-09-29T17:05:55Z",
+   "stops": 44,
+   "routes": 3,
+   "bbox": [
+    80.1642,
+    12.9808,
+    80.309,
+    13.184
+   ],
+   "stops_file": "gtfs_chennai_cmrl_stops.geojson",
+   "routes_file": "gtfs_chennai_cmrl_routes.geojson"
+  },
+  {
+   "id": "gtfs_bengaluru_bmrcl",
+   "mode": "metro",
+   "operator": "BMRCL",
+   "city": "Bengaluru",
+   "tier": "secondary",
+   "confidence": 0.7,
+   "license": "ODbL-1.0 (github.com/Vonter/bmrcl-gtfs) \u2014 share-alike on derived exports",
+   "fetched_at": "2026-09-29T17:05:57Z",
+   "stops": 488,
+   "routes": 3,
+   "bbox": [
+    77.4612,
+    12.8191,
+    77.7581,
+    13.0576
+   ],
+   "stops_file": "gtfs_bengaluru_bmrcl_stops.geojson",
+   "routes_file": "gtfs_bengaluru_bmrcl_routes.geojson"
+  }
+ ]
+}
