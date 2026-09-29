@@ -7,6 +7,8 @@ GTFS feed exists for five cities only, so a bus factor would not compare across 
 
 from __future__ import annotations
 
+import unicodedata
+
 import geopandas as gpd
 import numpy as np
 import pandas as pd
@@ -55,12 +57,41 @@ def _keep_one_per_cluster(stations: pd.DataFrame, within_m: float) -> np.ndarray
     return keep
 
 
-def load_stations(mode: str) -> pd.DataFrame:
-    """Operating stations of `mode` ("rail" or "metro") as DataFrame[lon, lat, name, source].
+def _name_key(name: object) -> str:
+    """A station name reduced to what identifies it: NFKC, case-folded, only letters, marks and
+    digits ("Pachaiyappa's College" and "PACHAIYAPPAS  COLLEGE." agree). "" when there is no name."""
+    if not isinstance(name, str):
+        return ""
+    folded = unicodedata.normalize("NFKC", name).casefold()
+    return "".join(c for c in folded if unicodedata.category(c)[0] in "LMN")
 
-    The OSM stations of that mode, plus the GTFS metro stops and stations when `mode` is "metro"
-    (not their entrances or lifts), with near-duplicates removed: stations within the configured
-    `station_dedupe_m` of one already kept are one station. `source` is the registry id of the feed
+
+def _gtfs_twins(stations: pd.DataFrame, within_m: float) -> np.ndarray:
+    """Boolean mask over `stations`: the GTFS rows that repeat an OSM row, meaning an OSM station of
+    the same normalised name lies within `within_m`. A feed puts a station hundreds of metres from
+    where OSM puts its node, too far for the proximity pass. OSM rows are never merged by name."""
+    is_osm = (stations["source"] == OSM_SOURCE).to_numpy()
+    key = stations["name"].map(_name_key).to_numpy()
+    points = _points(stations).to_crs(INDIA_CRS).to_numpy()
+    gtfs_at, osm_at = np.flatnonzero(~is_osm), np.flatnonzero(is_osm)
+    near_gtfs, near_osm = shapely.STRtree(points[osm_at]).query(
+        points[gtfs_at], predicate="dwithin", distance=within_m
+    )
+    g, o = gtfs_at[near_gtfs], osm_at[near_osm]
+    twin = np.zeros(len(stations), dtype=bool)
+    twin[g[(key[g] == key[o]) & (key[g] != "")]] = True
+    return twin
+
+
+def load_stations(mode: str) -> pd.DataFrame:
+    """Stations of `mode` ("rail" or "metro") as mapped, as DataFrame[lon, lat, name, source].
+
+    "As mapped" is not "open": OSM still tags some stations under construction railway=station
+    (see pipeline.invest.osm). The OSM stations of that mode, plus the GTFS metro stops and
+    stations when `mode` is "metro" (not their entrances or lifts), with duplicates removed in two
+    passes: stations within the configured `station_dedupe_m` of one already kept are one station
+    (OSM before GTFS, named before unnamed), and a GTFS stop with the same normalised name as an OSM
+    station within `station_name_merge_m` is that station. `source` is the registry id of the feed
     the survivor came from; `name` is None where it has none (a NaN would not survive JSON).
     """
     if mode not in _MODES:
@@ -78,7 +109,10 @@ def load_stations(mode: str) -> pd.DataFrame:
             )
         )
     stations = pd.concat(parts, ignore_index=True)[["lon", "lat", "name", "source"]]
-    stations = stations[_keep_one_per_cluster(stations, facts_config()["station_dedupe_m"])]
+    cfg = facts_config()
+    stations = stations[_keep_one_per_cluster(stations, cfg["station_dedupe_m"])]
+    stations = stations.reset_index(drop=True)
+    stations = stations[~_gtfs_twins(stations, cfg["station_name_merge_m"])]
     stations = stations.reset_index(drop=True)
     stations["name"] = stations["name"].astype(object).where(stations["name"].notna(), None)
     return stations

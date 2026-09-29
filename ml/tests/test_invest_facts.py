@@ -347,6 +347,45 @@ def test_station_access_uses_the_deduplicated_stations(pt_files):
     assert len(pt.load_stations("rail")) == 1
 
 
+def test_a_gtfs_stop_repeating_an_osm_station_by_name_merges_within_the_configured_distance(
+    pt_files, monkeypatch
+):
+    cfg = facts_config()
+    merge = cfg["station_name_merge_m"]
+    near, far = 0.7 * merge, 1.3 * merge
+    assert near > cfg["station_dedupe_m"]  # so the name rule, not the proximity rule, does the merging
+    _write_osm(
+        pt_files,
+        [
+            (_east(0), "Pachaiyappa's College", "metro"),
+            (_east(10_000), "Guindy", "metro"),
+            (_east(20_000), "Alandur", "metro"),
+            (_east(30_000), "Central", "metro"),
+            (_east(30_000 + near), "Central", "metro"),  # two OSM stations that share a name: both stay
+            (_east(40_000), None, "metro"),  # unnamed: nothing to match a GTFS stop on
+        ],
+    )
+    _write_gtfs(
+        pt_files,
+        [
+            (_east(near), 18.5, "PACHAIYAPPAS  COLLEGE.", "metro", "gtfs_test_cmrl"),  # same station
+            (_east(10_000 + near), 18.5, "Guindy Junction", "metro", "gtfs_test_cmrl"),  # own name
+            (_east(20_000 + far), 18.5, "Alandur", "metro", "gtfs_test_cmrl"),  # same name, too far
+            (_east(40_000 + near), 18.5, None, "metro", "gtfs_test_cmrl"),  # unnamed beside unnamed
+        ],
+    )
+    metro = pt.load_stations("metro")
+    assert metro["name"].tolist() == [
+        "Pachaiyappa's College", "Guindy", "Alandur", "Central", "Central", None,  # OSM, all six
+        "Guindy Junction", "Alandur", None,  # the GTFS stops that are stations of their own
+    ]  # fmt: skip
+    assert metro["source"].tolist() == ["osm_india"] * 6 + ["gtfs_test_cmrl"] * 3
+    # the distance is read from config at call time: shrunk below the gap, the twin is a station
+    with monkeypatch.context() as patch:
+        patch.setattr(pt, "facts_config", lambda: {**cfg, "station_name_merge_m": 0.5 * near})
+        assert "PACHAIYAPPAS  COLLEGE." in pt.load_stations("metro")["name"].tolist()
+
+
 def test_bus_stops_are_counted_per_cell_and_grouped_by_feed(pt_files):
     a, b, empty = (h3.latlng_to_cell(lat, 75.0, RES) for lat in (19.0, 19.3, 19.6))
     la, lb = (h3.cell_to_latlng(c) for c in (a, b))
