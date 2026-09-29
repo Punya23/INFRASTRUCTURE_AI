@@ -21,12 +21,14 @@ import shapely
 import yaml
 
 from fields.national_highways.normalize import (
+    check_toll_class_ratios,
     classify_osm,
     dual_carriageway_weights,
     nhai_status,
     parse_indian_number,
     parse_lanes,
     parse_refs,
+    toll_fees,
 )
 from pipeline.shared_layers import (
     CANONICAL_STATES,
@@ -576,7 +578,23 @@ def build_nhai() -> None:
     unknown = {c: sorted(net.loc[net[c].isna() & net[s].notna(), s].astype(str).unique())[:20]
                for c, s in (("status", "completion"), ("lanes", "lane_statu"))}
     unknown["state"] = int(net["state"].isna().sum())
+    fees = pd.DataFrame([toll_fees(r, _CFG["toll_fee_columns"]) for r in net.to_dict("records")], index=net.index)
+    ratios = check_toll_class_ratios(fees, _CFG["toll_fee_rule_ratios"], _CFG["toll_ratio_tolerance"])
+    net = net.join(fees.add_prefix("fee_"))
+    traffic = net[_CFG["traffic_columns"]].apply(pd.to_numeric, errors="coerce")  # "Data Not Available" -> NaN
+    net[_CFG["traffic_columns"]] = traffic
+    net["has_traffic"] = traffic.notna().all(axis=1)
+    net = net.drop(columns=[c for c in net.columns if c.startswith("toll_rat")])
     net.to_parquet(OUT / "nhai_network.parquet")
+
+    survey = gpd.read_file(_require(src / "traffic_survey.geojson"))
+    for col in ("toll_plaza", "existing_i", "final_outp"):
+        survey[col] = survey[col].str.strip().str.lower().map({"yes": True, "no": False})
+    survey["state"] = state_at_midpoint(survey.geometry)
+    survey.to_parquet(OUT / "nhai_traffic_survey.parquet")
+    print(f"nhai: toll class ratios to car {({k: round(v, 2) for k, v in ratios.items()})}; "
+          f"{fees['car'].notna().sum():,} stretches with a car fee; {net['has_traffic'].sum():,} with traffic counts; "
+          f"{len(survey):,} traffic survey points")
 
     tolls = gpd.read_file(_require(src / "toll_plaza.geojson"))
     tolls["lanes"] = tolls["nooflanes"].map(parse_lanes)

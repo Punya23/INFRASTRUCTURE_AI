@@ -14,6 +14,7 @@ import argparse
 import hashlib
 import http.client
 import json
+import ssl
 import sys
 import time
 import urllib.parse
@@ -61,16 +62,31 @@ def load_registry(path: Path = REGISTRY) -> dict:
 def _files(source: dict) -> list[dict]:
     if "files" in source:
         return source["files"]
-    keys = ("url", "dest", "kind", "layer", "keep", "srs")
+    keys = ("url", "dest", "kind", "layer", "keep", "srs", "tls_max")
     return [{k: source[k] for k in keys if k in source}]
 
 
-def _get(url: str, attempts: int = 3) -> bytes:
+def tls_context(tls_max: str | None) -> ssl.SSLContext | None:
+    """Certificate-verifying context, optionally capped at TLS 1.2 (`tls_max: "1.2"` in the registry).
+
+    Some government servers drop the large TLS 1.3 ClientHello that OpenSSL 3.5 sends (post-quantum
+    key share) and fail with UNEXPECTED_EOF; TLS 1.2 sends no key share. Verification stays on.
+    """
+    if tls_max is None:
+        return None
+    if str(tls_max) != "1.2":
+        raise FetchError(f"unsupported tls_max {tls_max!r} (only '1.2')")
+    ctx = ssl.create_default_context()
+    ctx.maximum_version = ssl.TLSVersion.TLSv1_2
+    return ctx
+
+
+def _get(url: str, attempts: int = 3, context: ssl.SSLContext | None = None) -> bytes:
     last_error: Exception | None = None
     for attempt in range(1, attempts + 1):
         try:
             request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
-            with urllib.request.urlopen(request, timeout=180) as response:
+            with urllib.request.urlopen(request, timeout=180, context=context) as response:
                 return response.read()
         except (OSError, http.client.HTTPException) as exc:  # network errors: retry, then fail loudly
             last_error = exc
@@ -80,7 +96,8 @@ def _get(url: str, attempts: int = 3) -> bytes:
 
 
 def _download_wfs(
-    url: str, layer: str, keep: list[str], dest: Path, srs: str | None = "EPSG:4326", page: int = 5000
+    url: str, layer: str, keep: list[str], dest: Path, srs: str | None = "EPSG:4326", page: int = 5000,
+    context: ssl.SSLContext | None = None,
 ) -> tuple[int, str]:
     """Page through a WFS layer (read-only GetFeature) and write one GeoJSON file.
 
@@ -100,7 +117,7 @@ def _download_wfs(
         if srs:  # layers without geometry reject srsName
             params["srsName"] = srs
         query = urllib.parse.urlencode(params)
-        payload = _get(f"{url}?{query}")
+        payload = _get(f"{url}?{query}", context=context)
         if not matches_kind(payload[:1024], "text"):
             raise FetchError(f"{layer}: server returned HTML/XML instead of GeoJSON")
         data = json.loads(payload)
@@ -121,7 +138,8 @@ def _download_wfs(
     return len(body), hashlib.sha256(body).hexdigest()
 
 
-def _download(url: str, dest: Path, kind: str, attempts: int = 3) -> tuple[int, str]:
+def _download(url: str, dest: Path, kind: str, attempts: int = 3,
+              context: ssl.SSLContext | None = None) -> tuple[int, str]:
     """Stream url to dest atomically; return (bytes, sha256). Raises FetchError."""
     dest.parent.mkdir(parents=True, exist_ok=True)
     part = dest.with_suffix(dest.suffix + ".part")
@@ -130,7 +148,7 @@ def _download(url: str, dest: Path, kind: str, attempts: int = 3) -> tuple[int, 
         try:
             request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
             digest, size, head = hashlib.sha256(), 0, b""
-            with urllib.request.urlopen(request, timeout=60) as response, part.open("wb") as out:
+            with urllib.request.urlopen(request, timeout=60, context=context) as response, part.open("wb") as out:
                 while chunk := response.read(CHUNK):
                     if len(head) < 1024:
                         head += chunk[: 1024 - len(head)]
@@ -168,12 +186,13 @@ def fetch(source_id: str, source: dict, force: bool = False) -> Path:
             print(f"  skip {rel} (already fetched)")
             continue
         print(f"  get  {spec['url']} {spec.get('layer', '')}", flush=True)
+        context = tls_context(spec.get("tls_max"))
         if spec["kind"] == "wfs":
             size, sha = _download_wfs(
-                spec["url"], spec["layer"], spec["keep"], dest, spec.get("srs", "EPSG:4326")
+                spec["url"], spec["layer"], spec["keep"], dest, spec.get("srs", "EPSG:4326"), context=context
             )
         else:
-            size, sha = _download(spec["url"], dest, spec["kind"])
+            size, sha = _download(spec["url"], dest, spec["kind"], context=context)
         records.append({
             "file": rel,
             "url": spec["url"],

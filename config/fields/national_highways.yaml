@@ -21,3 +21,15 @@ toll_cluster_m: 500                  # OSM booths closer than this form one plaz
 toll_name_match: 0.82                # name score (0.8 wrongly pairs Khalapur–Kelapur) (token containment or difflib ratio) for IHMCL ↔ OSM plaza names within a state — team judgment
 crash_snap_m: 200                    # crash point → nearest NHAI segment for lane-band rates
 fixture_simplify_deg: 0.005          # ≈500 m after merging way pieces; keeps the national segment fixture under 5 MB (measured 2026-09-29)
+
+# NHAI toll fees: single-journey fee columns in nh_network_of_india_new, by vehicle class. The mapping is
+# checked on every build: each class's median fee ÷ car fee must match the National Highways Fee
+# (Determination of Rates and Collection) Rules, 2008 base-rate ratios within toll_ratio_tolerance.
+toll_fee_columns: {car: toll_rate_, lcv: toll_rat_1, bus_truck: toll_rat_3, three_axle: toll_rat_5,
+                   hcm_eme: toll_rat_7, oversized: toll_rat_9}
+toll_fee_rule_ratios:              # Fee Rules 2008 base rates per km: 0.65, 1.05, 2.20, 2.40, 3.45, 4.20 (car = 1)
+  {lcv: 1.615, bus_truck: 3.385, three_axle: 3.692, hcm_eme: 5.308, oversized: 6.462}
+toll_ratio_tolerance: 0.10         # ±10% on the median ratio — team judgment, 2026-09-29
+traffic_columns: [traffic_1, traffic_2, traffic_3, traffic_4, traffic_5, traffic_6, traffic_7, traffic_8,
+                  traffic_9, traffic_10, traffic_11, traffic_12, traffic_13, traffic_14]
+                                   # unlabelled NHAI counts: profiled only, never interpreted, until NHAI gives the legend

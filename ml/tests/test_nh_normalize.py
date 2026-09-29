@@ -3,8 +3,9 @@ import pyproj
 import pytest
 from shapely import LineString
 
-from common.fetch import matches_kind
+from common.fetch import FetchError, matches_kind, tls_context
 from fields.national_highways.normalize import (
+    check_toll_class_ratios,
     classify_osm,
     dual_carriageway_weights,
     expressway_key,
@@ -19,6 +20,7 @@ from fields.national_highways.normalize import (
     plaza_key,
     plaza_name_score,
     road_lanes,
+    toll_fees,
 )
 from pipeline.shared_layers import CANONICAL_STATES, INDIA_CRS, normalize_state
 
@@ -233,3 +235,31 @@ def test_plaza_name_score():
     assert plaza_name_score("aganampudi", "agnampadi") >= 0.82
     assert plaza_name_score("khalapur", "kelapur") < 0.82  # two different Maharashtra plazas
     assert plaza_name_score("ivr", "ivr chennai") < 1.0  # too short to trust containment
+
+
+def test_tls_context_caps_at_1_2_and_keeps_verification():
+    import ssl
+
+    assert tls_context(None) is None
+    ctx = tls_context("1.2")
+    assert ctx.maximum_version == ssl.TLSVersion.TLSv1_2 and ctx.verify_mode == ssl.CERT_REQUIRED
+    with pytest.raises(FetchError):
+        tls_context("1.0")
+
+
+COLS = {"car": "a", "lcv": "b"}
+
+
+def test_toll_fees_treat_zero_and_text_as_missing():
+    assert toll_fees({"a": "110", "b": "175"}, COLS) == {"car": 110.0, "lcv": 175.0}
+    fees = toll_fees({"a": "0", "b": "Data Not Available"}, COLS)
+    assert np.isnan(fees["car"]) and np.isnan(fees["lcv"])
+
+
+def test_check_toll_class_ratios_fails_on_swapped_columns():
+    import pandas as pd
+
+    fees = pd.DataFrame({"car": [100.0, 60.0, np.nan], "lcv": [162.0, 97.0, 50.0]})
+    assert round(check_toll_class_ratios(fees, {"lcv": 1.615}, 0.1)["lcv"], 2) == 1.62
+    with pytest.raises(ValueError, match="lcv"):
+        check_toll_class_ratios(fees.rename(columns={"car": "lcv", "lcv": "car"}), {"lcv": 1.615}, 0.1)

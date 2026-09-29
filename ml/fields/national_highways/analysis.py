@@ -130,6 +130,45 @@ def toll_coverage_by_state() -> pd.DataFrame:
     return df.sort_values("ihmcl_plazas", ascending=False)
 
 
+def tolls_and_traffic_by_state() -> tuple[pd.DataFrame, pd.DataFrame]:
+    """NHAI completed NH per state: tolled length and median single-journey car fee; share of length
+    with (unlabelled) traffic counts; traffic survey points per 100 official km. Also the national
+    median fee ratio per vehicle class. Aggregates only (ADR-0014)."""
+    net = nhai_network().query("status == 'operational' and road_type == 'National Highway'").copy()
+    net["tolled"] = net["toll_type"].isin(["Open", "Closed"])
+    survey = gpd.read_parquet(OUT / "nhai_traffic_survey.parquet")
+
+    def per_state(g: pd.DataFrame) -> pd.Series:
+        km = g["length_km"]
+        return pd.Series({
+            "nhai_nh_km": km.sum(),
+            "tolled_km": km[g["tolled"]].sum(),
+            "tolled_km_share": km[g["tolled"]].sum() / km.sum(),
+            "stretches_with_fee": int(g["fee_car"].notna().sum()),
+            "median_car_fee_inr": g["fee_car"].median(),
+            "median_truck_fee_inr": g["fee_bus_truck"].median(),
+            "traffic_count_km_share": km[g["has_traffic"]].sum() / km.sum(),
+        })
+
+    by_state = net.groupby("state").apply(per_state, include_groups=False)
+    by_state.loc["India"] = per_state(net)
+    stations = survey[survey["final_outp"].fillna(False)].groupby("state").size()
+    stations.loc["India"] = stations.sum()
+    by_state["traffic_survey_points"] = stations
+    by_state["survey_points_per_100_official_km"] = (
+        by_state["traffic_survey_points"] / official().set_index("state")["length_km"] * 100)
+    by_state.loc["India", "survey_points_per_100_official_km"] = (
+        stations.loc["India"] / official()["length_km"].sum() * 100)
+    fees = net.filter(like="fee_")
+    with_car = fees[fees["fee_car"] > 0]
+    classes = pd.DataFrame({
+        "median_fee_inr": fees.median(),
+        "median_ratio_to_car": (with_car.div(with_car["fee_car"], axis=0)).median(),
+        "fee_rule_ratio": pd.Series({f"fee_{k}": v for k, v in CFG["toll_fee_rule_ratios"].items()} | {"fee_car": 1.0}),
+    }).round(3)
+    return by_state.sort_values("tolled_km", ascending=False), classes
+
+
 # --------------------------------------------------------------------------- 04 access
 def _nearest_km(points_m: np.ndarray, lines_m: np.ndarray) -> np.ndarray:
     tree = shapely.STRtree(lines_m)
@@ -400,6 +439,12 @@ def run_all() -> dict:
     completeness_by_state().to_csv(A / "completeness_by_state.csv")
     lane_mix_by_state().to_csv(A / "lane_mix_by_state.csv")
     toll_coverage_by_state().to_csv(A / "toll_coverage_by_state.csv")
+    tt, classes = tolls_and_traffic_by_state()
+    tt.to_csv(A / "tolls_traffic_by_state.csv")
+    classes.to_csv(A / "toll_fee_by_class.csv")
+    results["tolled_km_share"] = float(tt.loc["India", "tolled_km_share"])
+    results["median_car_fee_inr"] = float(tt.loc["India", "median_car_fee_inr"])
+    results["traffic_count_km_share"] = float(tt.loc["India", "traffic_count_km_share"])
     pixels, acc = access()
     pixels.to_parquet(A / "access_pixels.parquet")
     acc.to_csv(A / "access_by_state.csv")
@@ -489,11 +534,14 @@ def write_fixtures() -> None:
     den = pd.read_csv(A / "density_by_state.csv", index_col=0)
     saf = pd.read_csv(A / "safety_by_state.csv", index_col=0)
     pipe = pd.read_csv(A / "pipeline_by_state.csv", index_col=0)
+    tt = pd.read_csv(A / "tolls_traffic_by_state.csv", index_col=0)
     table = cov[["official_km", "osm_nh_km", "osm_ratio"]].join(
         acc[["population", "mean_km_now", "share_within_10km_now", "share_within_10km_future"]], how="left").join(
         den[["km_per_1000_km2", "km_per_lakh_people"]], how="left").join(
         saf[["accidents", "deaths", "deaths_per_100km"]].add_prefix("rai_2024_"), how="left").join(
-        pipe.filter(like="nhai_target_").sum(axis=1).rename("nhai_km_under_construction"), how="left")
+        pipe.filter(like="nhai_target_").sum(axis=1).rename("nhai_km_under_construction"), how="left").join(
+        tt[["tolled_km_share", "median_car_fee_inr", "traffic_count_km_share",
+            "survey_points_per_100_official_km"]], how="left")
     FIXTURES.mkdir(parents=True, exist_ok=True)
     records = json.loads(table.round(3).reset_index().rename(columns={"index": "state"}).to_json(orient="records"))
     (FIXTURES / "nh_state_metrics.json").write_text(json.dumps({

@@ -255,3 +255,29 @@ def plaza_name_score(a: str, b: str) -> float:
     if short and (short <= ta & tb) and max(map(len, short)) >= 4:
         return 1.0
     return difflib.SequenceMatcher(None, a, b).ratio()
+
+
+def toll_fees(raw: dict[str, object], columns: dict[str, str]) -> dict[str, float]:
+    """Single-journey fee per vehicle class from NHAI's toll columns; 0, blank or non-numeric -> NaN
+    (no fee recorded, not a free road)."""
+    out = {}
+    for cls, col in columns.items():
+        try:
+            value = float(raw.get(col))
+        except (TypeError, ValueError):
+            value = float("nan")
+        out[cls] = value if value > 0 else float("nan")
+    return out
+
+
+def check_toll_class_ratios(fees, expected: dict[str, float], tolerance: float) -> dict[str, float]:
+    """Median fee ÷ car fee per class, over rows with a car fee. Raises if any class is off the
+    statutory ratio by more than `tolerance` — the column-to-class mapping would then be wrong."""
+    with_car = fees[fees["car"] > 0]
+    if with_car.empty:
+        raise ValueError("no tolled stretches with a car fee — toll columns changed?")
+    medians = {cls: float((with_car[cls] / with_car["car"]).median()) for cls in expected}
+    off = {c: round(m, 2) for c, m in medians.items() if abs(m / expected[c] - 1) > tolerance}
+    if off:
+        raise ValueError(f"toll class ratios off the Fee Rules 2008 ratios: {off} (expected {expected})")
+    return medians
