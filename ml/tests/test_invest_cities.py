@@ -1,3 +1,5 @@
+import re
+
 import numpy as np
 import pandas as pd
 import pytest
@@ -146,20 +148,95 @@ def test_unnamed_piece_beside_a_named_one_keeps_none_and_integer_ids():
     assert out.loc[1, ["geonameid", "lat", "lon"]].isna().all()
 
 
-def test_big_place_is_required_because_it_is_config():
-    pieces = pd.DataFrame({"label": [1], "population": [900_000]})
-    places = pd.DataFrame(
+def _one_piece():
+    return pd.DataFrame({"label": [1], "population": [900_000]})
+
+
+def _places(rows, label=1):
+    """GeoNames places in one piece; rows are (geonameid, name, population)."""
+    ids, names, populations = zip(*rows)
+    return pd.DataFrame(
         {
-            "geonameid": [10],
-            "name": ["A"],
-            "lat": [1.0],
-            "lon": [1.0],
-            "population": [5],
-            "label": [1],
+            "geonameid": ids,
+            "name": names,
+            "lat": 28.0,
+            "lon": 77.0,
+            "population": populations,
+            "label": label,
         }
     )
+
+
+def test_big_place_is_required_because_it_is_config():
     with pytest.raises(TypeError, match="big_place"):
-        name_pieces(pieces, places, overrides={})
+        name_pieces(_one_piece(), _places([(1, "A", 5)]), overrides={})
+
+
+def test_a_single_big_place_needs_no_review():
+    places = _places([(1, "Kota", 400_000), (2, "Sakatpura", 99_999)])
+    out = name_pieces(_one_piece(), places, {}, big_place=100_000).iloc[0]
+    assert out["name"] == "Kota" and out["aliases"] == [] and bool(out["review"]) is False
+
+
+def test_a_place_of_exactly_big_place_people_counts_and_one_fewer_does_not():
+    places = _places([(1, "Kota", 400_000), (2, "Exactly", 100_000), (3, "One short", 99_999)])
+    out = name_pieces(_one_piece(), places, {}, big_place=100_000).iloc[0]
+    assert out["aliases"] == ["Exactly"] and bool(out["review"]) is True
+
+
+def test_equal_populations_go_to_the_lower_geonameid():
+    places = _places([(21, "Twenty-one", 200_000), (20, "Twenty", 200_000)])  # higher id first
+    out = name_pieces(_one_piece(), places, {}, big_place=100_000).iloc[0]
+    assert (out["name"], out["geonameid"], out["aliases"]) == ("Twenty", 20, ["Twenty-one"])
+
+
+def test_empty_pieces_give_empty_naming_columns():
+    empty = pd.DataFrame({"label": [], "population": []})
+    out = name_pieces(empty, _places([(1, "A", 5)]), {}, big_place=100_000)
+    assert out.empty and {"name", "geonameid", "lat", "lon", "aliases", "review"} <= set(
+        out.columns
+    )
+
+
+def test_renaming_the_anchor_keeps_its_geonames_name_as_an_alias():
+    places = _places([(10, "Faridabad", 1_400_000), (11, "Gurgaon", 876_000)])
+    out = name_pieces(_one_piece(), places, {11: "Gurugram"}, big_place=100_000).iloc[0]
+    assert out["name"] == "Gurugram" and out["aliases"] == ["Gurgaon", "Faridabad"]
+
+
+def test_two_overrides_in_one_piece_the_larger_place_wins_and_the_other_is_an_alias():
+    places = _places(
+        [(10, "Mumbai", 12_000_000), (11, "Navi Mumbai", 1_100_000), (12, "Thane", 1_800_000)]
+    )
+    # dict order and geonameid order both favour 11; the larger place (12) must still win
+    overrides = {11: "Navi Mumbai City", 12: "Thane"}
+    out = name_pieces(_one_piece(), places, overrides, big_place=100_000).iloc[0]
+    assert (out["name"], out["geonameid"]) == ("Thane", 12)
+    # largest first; the losing override's place is listed under its override name
+    assert out["aliases"] == ["Mumbai", "Navi Mumbai City"]
+
+
+def test_an_override_on_a_small_place_still_lists_it_as_an_alias():
+    places = _places([(1, "Kota", 400_000), (2, "Sakatpura", 50_000)])
+    out = name_pieces(_one_piece(), places, {1: "Kota", 2: "Sakat"}, big_place=100_000).iloc[0]
+    assert out["aliases"] == ["Sakat"] and bool(out["review"]) is False  # review counts big places
+
+
+@pytest.mark.parametrize(
+    ("overrides", "listed"),
+    [
+        ({999: "Nowhere"}, "[999]"),  # no such place
+        ({12: "Rural"}, "[12]"),  # a place that lies outside every piece
+        ({999: "Nowhere", 12: "Rural", 10: "Faridabad"}, "[12, 999]"),  # every stale id, sorted
+    ],
+)
+def test_a_stale_override_raises_and_names_its_ids(overrides, listed):
+    places = pd.concat(
+        [_places([(10, "Faridabad", 1_400_000)]), _places([(12, "Rural", 5_000)], label=0)],
+        ignore_index=True,
+    )
+    with pytest.raises(ValueError, match=re.escape(f"lie in no piece: {listed}")):
+        name_pieces(_one_piece(), places, overrides, big_place=100_000)
 
 
 def test_make_slugs_disambiguates_by_state_then_counter():

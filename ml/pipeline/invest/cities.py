@@ -104,13 +104,27 @@ def assign_places(places: pd.DataFrame, labels: np.ndarray, transform: Affine) -
 def name_pieces(
     pieces: pd.DataFrame, places: pd.DataFrame, overrides: dict[int, str], big_place: int
 ) -> pd.DataFrame:
-    """Name each piece after its anchor place: the largest GeoNames place inside it, or the place an
-    override names. Adds name, geonameid, lat, lon, aliases (other places with at least `big_place`
-    people) and review (two or more such places). A piece with no place gets name None, geonameid
-    <NA> and lat/lon NaN — the caller reviews and skips it.
+    """Name each piece after its anchor place; adds name, geonameid, lat, lon, aliases and review.
+
+    Anchor: the largest place in the piece that an override names, else the largest place (a tie
+    goes to the lower geonameid). If overrides name several places in one piece, the larger place's
+    override wins and the others stay in the piece as aliases. The piece takes the anchor's override
+    name, if it has one.
+
+    aliases: the anchor's GeoNames name when an override renamed it (so a search for the old name
+    still finds the piece), then every other place with at least `big_place` people or an override,
+    largest first, each under its override name if it has one.
+    review: two or more places reach `big_place`, so a human looks at the piece.
+
+    A piece with no place gets name None, geonameid <NA> and lat/lon NaN: the caller reviews and
+    skips it. An override id that lies in no piece is stale config and raises ValueError.
 
     `big_place` has no default: it is config (cities.alias_min_population), never a constant here.
     """
+    placed = {int(g) for g in places.loc[places["label"].isin(pieces["label"]), "geonameid"]}
+    stale = sorted(set(overrides) - placed)
+    if stale:
+        raise ValueError(f"name_overrides ids that lie in no piece: {stale}")
     rows = []
     for piece in pieces.itertuples():
         inside = places[places["label"] == piece.label].sort_values(
@@ -125,18 +139,23 @@ def name_pieces(
             "review": False,
         }
         if len(inside):
-            forced = inside[inside["geonameid"].isin(list(overrides))]
-            anchor = (forced if len(forced) else inside).iloc[0]
-            big = inside[
-                (inside["population"] >= big_place) & (inside["geonameid"] != anchor["geonameid"])
+            big = inside["population"] >= big_place
+            named = inside["geonameid"].isin(list(overrides))
+            anchor = inside[named].iloc[0] if named.any() else inside.iloc[0]
+            shown = overrides.get(int(anchor["geonameid"]), anchor["name"])
+            others = inside[(big | named) & (inside["geonameid"] != anchor["geonameid"])]
+            aliases = [
+                str(overrides.get(int(g), n)) for g, n in zip(others["geonameid"], others["name"])
             ]
+            if shown != anchor["name"]:
+                aliases.insert(0, str(anchor["name"]))
             row.update(
-                name=overrides.get(int(anchor["geonameid"]), anchor["name"]),
+                name=shown,
                 geonameid=int(anchor["geonameid"]),
                 lat=float(anchor["lat"]),
                 lon=float(anchor["lon"]),
-                aliases=[str(n) for n in big["name"]],
-                review=bool((inside["population"] >= big_place).sum() >= 2),
+                aliases=aliases,
+                review=bool(big.sum() >= 2),
             )
         rows.append(row)
     # object dtype keeps a missing name None (pandas 3 would make it NaN); the other columns get
