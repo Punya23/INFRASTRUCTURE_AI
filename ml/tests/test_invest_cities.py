@@ -50,7 +50,9 @@ def test_cells_outside_every_state_polygon_inherit_the_neighbour_state():
 def test_assign_places_uses_the_raster_cell():
     labels = np.zeros((2, 2), dtype=np.int32)
     labels[0, 0] = 5
-    transform = Affine(0.1, 0, 73.0, 0, -0.1, 19.0)  # pixel (0,0) spans lon 73.0-73.1, lat 18.9-19.0
+    transform = Affine(
+        0.1, 0, 73.0, 0, -0.1, 19.0
+    )  # pixel (0,0) spans lon 73.0-73.1, lat 18.9-19.0
     places = pd.DataFrame({"lon": [73.05, 73.15, 80.0], "lat": [18.95, 18.95, 18.95]})
     assert assign_places(places, labels, transform)["label"].tolist() == [5, 0, 0]
 
@@ -93,7 +95,9 @@ def test_override_promotes_the_named_place_to_anchor():
 def test_piece_without_a_place_gets_no_name():
     out = name_pieces(
         pd.DataFrame({"label": [3], "population": [120_000]}),
-        pd.DataFrame({"geonameid": [], "name": [], "lat": [], "lon": [], "population": [], "label": []}),
+        pd.DataFrame(
+            {"geonameid": [], "name": [], "lat": [], "lon": [], "population": [], "label": []}
+        ),
         overrides={},
     )
     assert out.iloc[0]["name"] is None
@@ -120,7 +124,13 @@ def test_unnamed_piece_beside_a_named_one_keeps_none_and_integer_ids():
 def test_make_slugs_disambiguates_by_state_then_counter():
     names = ["Aurangabad", "Aurangabad", "Pune", "Pune", "Nashik"]
     states = ["MH", "BR", "MH", "MH", "MH"]
-    assert make_slugs(names, states) == ["aurangabad-mh", "aurangabad-br", "pune-mh", "pune-mh-2", "nashik"]
+    assert make_slugs(names, states) == [
+        "aurangabad-mh",
+        "aurangabad-br",
+        "pune-mh",
+        "pune-mh-2",
+        "nashik",
+    ]
 
 
 def test_make_slugs_are_ascii_and_api_safe():
@@ -134,7 +144,8 @@ def test_make_slugs_rejects_mismatched_lengths():
 
 
 @pytest.mark.parametrize(
-    ("population", "tier"), [(2_500_000, "metro"), (2_499_999, "large"), (1_000_000, "large"), (999_999, "mid")]
+    ("population", "tier"),
+    [(2_500_000, "metro"), (2_499_999, "large"), (1_000_000, "large"), (999_999, "mid")],
 )
 def test_tier_of(population, tier):
     assert tier_of(population, 2_500_000, 1_000_000) == tier

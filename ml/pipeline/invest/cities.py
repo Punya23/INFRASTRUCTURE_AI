@@ -89,7 +89,9 @@ def assign_places(places: pd.DataFrame, labels: np.ndarray, transform) -> pd.Dat
     return out
 
 
-def name_pieces(pieces: pd.DataFrame, places: pd.DataFrame, overrides: dict[int, str]) -> pd.DataFrame:
+def name_pieces(
+    pieces: pd.DataFrame, places: pd.DataFrame, overrides: dict[int, str]
+) -> pd.DataFrame:
     """Name each piece after its anchor place: the largest GeoNames place inside it, or the place an
     override names. Adds name, geonameid, lat, lon, aliases (other places >= 100,000) and review
     (two or more such places). A piece with no place gets name None, geonameid <NA> and lat/lon
@@ -99,11 +101,20 @@ def name_pieces(pieces: pd.DataFrame, places: pd.DataFrame, overrides: dict[int,
         inside = places[places["label"] == piece.label].sort_values(
             ["population", "geonameid"], ascending=[False, True]
         )
-        row = {"name": None, "geonameid": None, "lat": None, "lon": None, "aliases": [], "review": False}
+        row = {
+            "name": None,
+            "geonameid": None,
+            "lat": None,
+            "lon": None,
+            "aliases": [],
+            "review": False,
+        }
         if len(inside):
             forced = inside[inside["geonameid"].isin(list(overrides))]
             anchor = (forced if len(forced) else inside).iloc[0]
-            big = inside[(inside["population"] >= BIG_PLACE) & (inside["geonameid"] != anchor["geonameid"])]
+            big = inside[
+                (inside["population"] >= BIG_PLACE) & (inside["geonameid"] != anchor["geonameid"])
+            ]
             row.update(
                 name=overrides.get(int(anchor["geonameid"]), anchor["name"]),
                 geonameid=int(anchor["geonameid"]),
