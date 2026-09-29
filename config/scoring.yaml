@@ -61,7 +61,7 @@ factors:
     unit: pp
     better: higher
     headline_band_km: null
-    bands: [[0, 0], [1, 30], [3, 60], [8, 90], [15, 100]]    # percentage-point change in built-up share 2000→2020 (GHSL built-up surface). Measured on the 2026-09 run over 47,386 areas: p50 0.9, p90 3.9, p99 12.1, max 31; per resident p25 0.75, p50 1.6, p75 3.7, p90 7.1, p99 17. The first knots (3→30, 10→60, 25→90, 40→100) left 94 % of areas below the watch-out line and 3 % able to be a driver; these put the median resident's area near 40 — measured 2026-09-30
+    bands: [[0, 0], [1, 30], [3, 60], [8, 90], [15, 100]]    # percentage-point change in built-up share 2000→2020 (GHSL built-up surface). Measured on the 2026-09 run over the 47,386 unique areas: p50 0.9, p90 3.9, p99 12.1, max 31.1 (15 areas above 25, none above 40); per resident p50 1.6, p90 7.1, p99 17. The first knots (3→30, 10→60, 25→90, 40→100) misfit that distribution: 93.8 % of areas and 83.8 % of residents scored below the watch-out line of 40 (fixture values, one row per unique cell) and 3.2 % could ever be a driver. These keep the shape, rescaled so the median resident's area sits near 40 — measured 2026-09-30
 
 presets:                          # weights order: nh, rail, metro, roads, growth; each row sums to 1 — team judgment, 2026-09-29
   balanced: {default: true, weights: {nh_access: 0.25, rail_access: 0.15, metro_access: 0.15, road_strength: 0.15, built_up_growth: 0.30}}
