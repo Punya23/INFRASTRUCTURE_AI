@@ -220,6 +220,7 @@ def test_nh_access_measures_to_operational_highways_only(nh_dir):
             ("nh_segment", "operational", 1.0, _east_west(18.50)),
             ("nh_segment", "under_construction", 1.0, _east_west(18.521)),  # nearest, but not open
             ("nh_segment", "proposed", 1.0, _east_west(18.5205)),
+            ("nh_connector", "operational", 1.0, _east_west(18.5202)),  # open, but not an NH kind
             ("expressway_segment", "operational", 1.0, _east_west(18.60)),
         ],
     )
@@ -256,6 +257,35 @@ def test_arterial_km_spreads_open_nh_along_its_line_and_adds_context_ways(nh_dir
     for cell, share in on_line.items():
         assert km[cell] == pytest.approx(5.0 * share, abs=0.15)  # by where the road runs
     assert km.drop(on_line.index).sum() == pytest.approx(ctx, rel=1e-2)  # the rest is context
+
+
+def _way(way_id, lon, lat0, lat1):
+    """A two-node north-south way, in drawing order: (way_id, pos, lon, lat) rows."""
+    return [(way_id, 1, lon, lat0), (way_id, 2, lon, lat1)]
+
+
+def test_arterial_km_counts_a_divided_road_once(nh_dir):
+    _write_segments(  # far from the ways below: the highway is not what this test is about
+        nh_dir, [("nh_segment", "operational", 1.0, _east_west(10.0, 77.0, 77.01))]
+    )
+    gap = 21 / 105_400  # about 21 m of longitude, inside the 30 m a partner carriageway may be
+    groups = {
+        "one node": [(0, 1, 75.0, 18.605)],  # no length, and sorted before the pair below
+        "divided": [*_way(1, 73.80, 18.60, 18.61), *_way(2, 73.80 + gap, 18.61, 18.60)],
+        "lone": _way(3, 74.00, 18.60, 18.61),
+        "same direction": [*_way(4, 74.20, 18.60, 18.61), *_way(5, 74.20 + gap, 18.60, 18.61)],
+        "far apart": [*_way(6, 74.40, 18.60, 18.61), *_way(7, 74.403, 18.61, 18.60)],  # 316 m
+    }
+    ways_counted = {"one node": 0, "divided": 1, "lone": 1, "same direction": 2, "far apart": 2}
+    _write_context(nh_dir, [row for rows in groups.values() for row in rows])
+    km = nh.arterial_km_by_cell(RES)
+
+    one_way = h3.great_circle_distance((18.60, 73.8), (18.61, 73.8), unit="km")
+    for name, rows in groups.items():
+        cells = list({h3.latlng_to_cell(18.605, lon, RES) for _, _, lon, _ in rows})
+        # opposite ways 21 m apart are the two carriageways of one road: half each, one road's km;
+        # ways that run the same direction, or lie far apart, are separate roads: all of their km
+        assert km.reindex(cells).sum() == pytest.approx(ways_counted[name] * one_way, rel=1e-2), name
 
 
 # --- public transport: stations and bus stops -----------------------------------------------------
