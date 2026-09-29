@@ -1,0 +1,288 @@
+{
+  "as_of": "2026-09-29",
+  "disclaimer": "Scores describe existing infrastructure and past growth. They are not forecasts, price predictions or financial advice.",
+  "factors": [
+    {
+      "bands": [
+        [
+          0.0,
+          100.0
+        ],
+        [
+          2.0,
+          90.0
+        ],
+        [
+          5.0,
+          70.0
+        ],
+        [
+          10.0,
+          40.0
+        ],
+        [
+          25.0,
+          0.0
+        ]
+      ],
+      "better": "lower",
+      "group": "access",
+      "headline_band_km": 10,
+      "id": "nh_access",
+      "unit": "km"
+    },
+    {
+      "bands": [
+        [
+          0.0,
+          100.0
+        ],
+        [
+          1.0,
+          90.0
+        ],
+        [
+          3.0,
+          65.0
+        ],
+        [
+          8.0,
+          25.0
+        ],
+        [
+          15.0,
+          0.0
+        ]
+      ],
+      "better": "lower",
+      "group": "access",
+      "headline_band_km": 2,
+      "id": "rail_access",
+      "unit": "km"
+    },
+    {
+      "bands": [
+        [
+          0.0,
+          100.0
+        ],
+        [
+          1.0,
+          90.0
+        ],
+        [
+          2.0,
+          70.0
+        ],
+        [
+          5.0,
+          30.0
+        ],
+        [
+          10.0,
+          0.0
+        ]
+      ],
+      "better": "lower",
+      "group": "access",
+      "headline_band_km": 2,
+      "id": "metro_access",
+      "unit": "km"
+    },
+    {
+      "bands": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.3,
+          30.0
+        ],
+        [
+          1.0,
+          65.0
+        ],
+        [
+          2.0,
+          90.0
+        ],
+        [
+          3.0,
+          100.0
+        ]
+      ],
+      "better": "higher",
+      "group": "access",
+      "headline_band_km": null,
+      "id": "road_strength",
+      "unit": "km_per_km2"
+    },
+    {
+      "bands": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          30.0
+        ],
+        [
+          3.0,
+          60.0
+        ],
+        [
+          8.0,
+          90.0
+        ],
+        [
+          15.0,
+          100.0
+        ]
+      ],
+      "better": "higher",
+      "group": "momentum",
+      "headline_band_km": null,
+      "id": "built_up_growth",
+      "unit": "pp"
+    }
+  ],
+  "grid": {
+    "best_area_min_population": 5000,
+    "buffer_rings": 3,
+    "h3_res": 7,
+    "min_area_population": 1000
+  },
+  "presets": [
+    {
+      "default": true,
+      "id": "balanced",
+      "weights": {
+        "built_up_growth": 0.3,
+        "metro_access": 0.15,
+        "nh_access": 0.25,
+        "rail_access": 0.15,
+        "road_strength": 0.15
+      }
+    },
+    {
+      "default": false,
+      "id": "commuter",
+      "weights": {
+        "built_up_growth": 0.25,
+        "metro_access": 0.3,
+        "nh_access": 0.1,
+        "rail_access": 0.25,
+        "road_strength": 0.1
+      }
+    },
+    {
+      "default": false,
+      "id": "highway",
+      "weights": {
+        "built_up_growth": 0.3,
+        "metro_access": 0.0,
+        "nh_access": 0.45,
+        "rail_access": 0.05,
+        "road_strength": 0.2
+      }
+    },
+    {
+      "default": false,
+      "id": "growth",
+      "weights": {
+        "built_up_growth": 0.55,
+        "metro_access": 0.1,
+        "nh_access": 0.15,
+        "rail_access": 0.1,
+        "road_strength": 0.1
+      }
+    }
+  ],
+  "schema_version": 1,
+  "sources": [
+    {
+      "attribution": "TGSRTC (Telangana State Road Transport Corporation), via OpenCity.in — GTFS static feed, February 2026",
+      "id": "bus_tgsrtc_gtfs",
+      "license": "Terms of use on data.opencity.in — attribution required; non-commercial and research use permitted",
+      "name": "TGSRTC (Telangana State Road Transport Corporation), via OpenCity.in"
+    },
+    {
+      "attribution": "India state boundaries by DataMeet India community (CC BY 4.0)",
+      "id": "datameet_states",
+      "license": "CC-BY-4.0",
+      "name": "India state boundaries by DataMeet India community (CC BY 4.0)"
+    },
+    {
+      "attribution": "GeoNames (www.geonames.org)",
+      "id": "geonames_cities15000",
+      "license": "CC-BY-4.0",
+      "name": "GeoNames (www.geonames.org)"
+    },
+    {
+      "attribution": "European Commission, JRC — GHSL GHS-BUILT-S R2023A",
+      "id": "ghsl_built_s_2000_1km",
+      "license": "CC-BY-4.0",
+      "name": "European Commission, JRC"
+    },
+    {
+      "attribution": "European Commission, JRC — GHSL GHS-BUILT-S R2023A",
+      "id": "ghsl_built_s_2020_1km",
+      "license": "CC-BY-4.0",
+      "name": "European Commission, JRC"
+    },
+    {
+      "attribution": "Vonter/bmrcl-gtfs — community GTFS for Namma Metro (BMRCL), Bengaluru (commit f402c4c, 2026-08-17)",
+      "id": "gtfs_bengaluru_bmrcl",
+      "license": "ODbL-1.0 (github.com/Vonter/bmrcl-gtfs) — share-alike on derived exports",
+      "name": "Vonter/bmrcl-gtfs"
+    },
+    {
+      "attribution": "Vonter/bmtc-gtfs — community GTFS for BMTC buses, Bengaluru (commit ee945dc, 2026-09-08)",
+      "id": "gtfs_bengaluru_bmtc",
+      "license": "ODbL-1.0 (github.com/Vonter/bmtc-gtfs) — share-alike on derived exports",
+      "name": "Vonter/bmtc-gtfs"
+    },
+    {
+      "attribution": "ungalsoththu/ChennaiGTFS — community GTFS for Chennai Metro (commit 3186a9b, 2026-04-27)",
+      "id": "gtfs_chennai_cmrl",
+      "license": "MIT (github.com/ungalsoththu/ChennaiGTFS)",
+      "name": "ungalsoththu/ChennaiGTFS"
+    },
+    {
+      "attribution": "ungalsoththu/ChennaiGTFS — community GTFS for MTC buses, Chennai (commit 3186a9b, 2026-04-27)",
+      "id": "gtfs_chennai_mtc",
+      "license": "MIT (github.com/ungalsoththu/ChennaiGTFS)",
+      "name": "ungalsoththu/ChennaiGTFS"
+    },
+    {
+      "attribution": "croyla/mumbai-gtfs — community GTFS for BEST buses, Mumbai (commit 64f9f77, 2026-08-19)",
+      "id": "gtfs_mumbai_best",
+      "license": "MIT-0 (github.com/croyla/mumbai-gtfs)",
+      "name": "croyla/mumbai-gtfs"
+    },
+    {
+      "attribution": "croyla/pmpml-gtfs — community GTFS for PMPML buses, Pune (commit 6e64e70, 2026-09-09)",
+      "id": "gtfs_pune_pmpml",
+      "license": "MIT-0 (github.com/croyla/pmpml-gtfs)",
+      "name": "croyla/pmpml-gtfs"
+    },
+    {
+      "attribution": "© OpenStreetMap contributors",
+      "id": "osm_india",
+      "license": "ODbL-1.0",
+      "name": "© OpenStreetMap contributors"
+    },
+    {
+      "attribution": "WorldPop (www.worldpop.org) — India 2020, 1 km, UN-adjusted",
+      "id": "worldpop_india_2020_1km",
+      "license": "CC-BY-4.0",
+      "name": "WorldPop (www.worldpop.org)"
+    }
+  ],
+  "tiers": {
+    "large_min_population": 1000000,
+    "metro_min_population": 2500000
+  }
+}
