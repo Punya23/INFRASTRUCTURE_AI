@@ -119,6 +119,11 @@
   --tracking-display: 0;
 }
 
+/* i18n.js sets the Noto family first on <body>, and Latin text in Noto Sans Kannada (place names, numbers,
+   PMPML) renders at regular weight even inside bold headings. Inter first keeps Latin as it is in English;
+   Kannada glyphs still fall through to Noto Sans Kannada. !important because i18n.js writes an inline style. */
+:root:lang(kn) body { font-family: 'Inter', 'Noto Sans Kannada', system-ui, sans-serif !important; }
+
 /* ---------- Base. :where() keeps these at zero specificity, so a component class always wins. ---------- */
 
 *, *::before, *::after { box-sizing: border-box; }
