@@ -1,0 +1,107 @@
+station_id,station_name,state,city,latitude,longitude,source,source_file
+MUM_RAIL_STN_001,Churchgate,Maharashtra,Mumbai,18.9352961818815,72.8271919878514,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_002,Marine Lines,Maharashtra,Mumbai,18.9457881977143,72.8238144822946,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_003,Charni Road,Maharashtra,Mumbai,18.9517165867492,72.8185706836947,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_004,Grant Road,Maharashtra,Mumbai,18.9637045605152,72.8161783832855,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_005,Mumbai Central,Maharashtra,Mumbai,18.9698932713685,72.8187988036057,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_006,Mahalaxmi,Maharashtra,Mumbai,18.9822737979282,72.8241537111258,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_007,Lower Parel,Maharashtra,Mumbai,18.9953187079519,72.830172471783,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_008,Prabhadevi,Maharashtra,Mumbai,19.0075631386431,72.8361132046624,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_009,Dadar,Maharashtra,Mumbai,19.0195608762157,72.8431374888969,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_010,Matunga Road,Maharashtra,Mumbai,19.028368597856,72.8469289503764,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_011,Mahim Junction,Maharashtra,Mumbai,19.040716517382,72.8469183881933,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_012,Bandra,Maharashtra,Mumbai,19.0555892333471,72.8403282370921,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_013,Khar Road,Maharashtra,Mumbai,19.0698951076843,72.8401277252267,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_014,Santacruz,Maharashtra,Mumbai,19.0825985273727,72.8417807673674,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_015,Vile Parle,Maharashtra,Mumbai,19.0997393565481,72.8439996742096,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_016,Andheri,Maharashtra,Mumbai,19.1171747947178,72.8465039707666,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_017,Jogeshwari,Maharashtra,Mumbai,19.1365326519053,72.8489736708461,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_018,Goregaon,Maharashtra,Mumbai,19.1648702815213,72.8496282479856,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_019,Malad,Maharashtra,Mumbai,19.1868335617006,72.8489362808279,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_020,Kandivali,Maharashtra,Mumbai,19.2045320761638,72.8520512299794,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_021,Borivali,Maharashtra,Mumbai,19.2290634217488,72.8566489030573,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_022,Dahisar,Maharashtra,Mumbai,19.2500070403722,72.8592814710169,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_023,CSMT,Maharashtra,Mumbai,18.9402720285738,72.8357059779256,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_024,Masjid Bunder,Maharashtra,Mumbai,18.9520915390942,72.8381997658401,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_025,Sandhurst Road,Maharashtra,Mumbai,18.9608785429075,72.8395788297954,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_026,Byculla,Maharashtra,Mumbai,18.976692518895,72.8327690068053,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_027,Chinchpokali,Maharashtra,Mumbai,18.9870469487976,72.8329013428044,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_028,Currey Road,Maharashtra,Mumbai,18.994110482723,72.8329987665172,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_029,Parel,Maharashtra,Mumbai,19.0092440178425,72.8376259004038,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_030,Dadar,Maharashtra,Mumbai,19.0181435365389,72.843633420996,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_031,Matunga,Maharashtra,Mumbai,19.0274961050905,72.8502084014804,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_032,Sion,Maharashtra,Mumbai,19.0477097291027,72.8640037012676,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_033,Kurla,Maharashtra,Mumbai,19.0654774786936,72.8793543303778,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_034,Vidyavihar,Maharashtra,Mumbai,19.0796208736982,72.8975799791421,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_035,Ghatkopar,Maharashtra,Mumbai,19.0859890642817,72.9084657878744,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_036,Vikhroli,Maharashtra,Mumbai,19.1119177689733,72.9281450869539,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_037,Kanjur Marg,Maharashtra,Mumbai,19.128166320162,72.9281511337221,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_038,Bhandup,Maharashtra,Mumbai,19.1424351550521,72.9376513107349,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_039,Nahur,Maharashtra,Mumbai,19.1546251377825,72.946766137471,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_040,Mulund,Maharashtra,Mumbai,19.1718662666882,72.9565534048963,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_041,Dockyard Road,Maharashtra,Mumbai,18.9665629111886,72.8443114850277,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_042,Ray Road,Maharashtra,Mumbai,18.9773683482474,72.8442481797541,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_043,Cotton Green,Maharashtra,Mumbai,18.9864939574943,72.8432893293482,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_044,Sewri,Maharashtra,Mumbai,18.9989313752645,72.854579130035,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_045,Wadala Road,Maharashtra,Mumbai,19.016006309249,72.8589424803244,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_046,Guru Tej Bahadur Nagar,Maharashtra,Mumbai,19.0380290585816,72.8643611543405,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_047,Chunna Bhatti,Maharashtra,Mumbai,19.0517072445659,72.8689456446498,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_048,Tilak Nagar,Maharashtra,Mumbai,19.0657803013233,72.8899762020043,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_049,Chembur,Maharashtra,Mumbai,19.0625976174705,72.9012441362589,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_050,Govandi,Maharashtra,Mumbai,19.0550932243739,72.9153943027253,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_051,Mankhurd,Maharashtra,Mumbai,19.0481650219614,72.9317241491866,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_052,Kings Circle,Maharashtra,Mumbai,19.032266486955,72.8571690397359,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_053,Mira Road,Maharashtra,Mumbai,19.2797406943242,72.8560972045312,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_054,Bhayandar,Maharashtra,Mumbai,19.3114392227109,72.8525704477226,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_055,Naigaon,Maharashtra,Mumbai,19.3513074099099,72.8462832948645,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_056,Vasai Road,Maharashtra,Mumbai,19.3823802721053,72.8321461041926,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_057,Nallasopara,Maharashtra,Mumbai,19.4176755166077,72.8189145644195,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_058,Virar,Maharashtra,Mumbai,19.4549995182516,72.8119284863236,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_059,Vashi,Maharashtra,Mumbai,19.0631172207064,72.9988965632495,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_060,Sanpada,Maharashtra,Mumbai,19.0661147788721,73.0093493142319,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_061,Juinagar,Maharashtra,Mumbai,19.0556163409323,73.0183903439259,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_062,Nerul,Maharashtra,Mumbai,19.0334707818177,73.0182107815982,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_063,Seawoods,Maharashtra,Mumbai,19.0219438755159,73.0191424206458,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_064,CBD Belapur,Maharashtra,Mumbai,19.0190456436135,73.0390873339028,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_065,Kharghar,Maharashtra,Mumbai,19.0261194215454,73.0593969394587,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_066,Mansarovar,Maharashtra,Mumbai,19.0166539817185,73.0804701854415,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_067,Khandeshwar,Maharashtra,Mumbai,19.0074679867507,73.0947598188553,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_068,Panvel,Maharashtra,Mumbai,18.9905700254378,73.1213414488358,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_069,Turbhe,Maharashtra,Mumbai,19.0760002886039,73.0177166307423,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_070,Kopar Kharine,Maharashtra,Mumbai,19.1032160096145,73.011342315056,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_071,Ghansoli,Maharashtra,Mumbai,19.1164805906164,73.0068894698697,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_072,Rabale,Maharashtra,Mumbai,19.1370192081831,73.0027166938337,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_073,Airoli,Maharashtra,Mumbai,19.1585309448508,72.9993795687864,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_074,Thane,Maharashtra,Mumbai,19.1861152574207,72.9759337290526,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_075,Kalwa,Maharashtra,Mumbai,19.1969032812792,72.9986747366214,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_076,Mumbra,Maharashtra,Mumbai,19.1902742542868,73.0231397296511,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_077,Diva,Maharashtra,Mumbai,19.1889502669907,73.0429514521207,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_078,Lower Kopar,Maharashtra,Mumbai,19.2106220863616,73.0769788440469,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_079,Dombivili,Maharashtra,Mumbai,19.218286062568,73.0868430181902,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_080,Thakurli,Maharashtra,Mumbai,19.2260018478666,73.0979322946715,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_081,Kalyan,Maharashtra,Mumbai,19.2351909402425,73.1299711282289,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_082,Vithalwadi,Maharashtra,Mumbai,19.2282722390585,73.1492569841108,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_083,Ulhas Nagar,Maharashtra,Mumbai,19.21808971954,73.1631032188065,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_084,Ambernath,Maharashtra,Mumbai,19.2101305480555,73.1844317400222,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_085,Badlapur,Maharashtra,Mumbai,19.1668331363957,73.2388025511903,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_086,Vangani,Maharashtra,Mumbai,19.094393395304,73.3007405284918,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_087,Shelu,Maharashtra,Mumbai,19.0634147978046,73.3178011533358,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_088,Neral,Maharashtra,Mumbai,19.0268065536976,73.3185595294996,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_089,Bhivpuri Road,Maharashtra,Mumbai,18.9700072031662,73.3314774682455,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_090,Karjat,Maharashtra,Mumbai,18.9088351428397,73.3206443228044,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_091,Palasdhari,Maharashtra,Mumbai,18.8842927108596,73.3208308318587,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_092,Kelavali,Maharashtra,Mumbai,18.8456945832501,73.3187810452539,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_093,Dolavali,Maharashtra,Mumbai,18.8342636565215,73.3200621813635,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_094,Lowjee,Maharashtra,Mumbai,18.8086214214537,73.3354354701634,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_095,Khopoli,Maharashtra,Mumbai,18.7896170591886,73.3448726092399,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_096,Shahad,Maharashtra,Mumbai,19.2443452121886,73.1583231567416,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_097,Ambivili,Maharashtra,Mumbai,19.267809303216,73.1717128739798,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_098,Titwala,Maharashtra,Mumbai,19.296877134864,73.203247161913,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_099,Khadawali,Maharashtra,Mumbai,19.3568495922065,73.2189216499799,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_100,Vasind,Maharashtra,Mumbai,19.4068464515156,73.2676652674631,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_101,Ram Mandir,Maharashtra,Mumbai,19.1516968179908,72.8501779534613,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_102,Vaitarna,Maharashtra,Mumbai,19.5194475908323,72.8502717197307,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_103,Sagar Sangam,Maharashtra,Mumbai,19.0102840709078,73.0247906779553,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_104,Targhar,Maharashtra,Mumbai,18.9904507628536,73.0347210107422,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_105,Bamandongri,Maharashtra,Mumbai,18.974619535869,73.0240407796519,BMC via OpenCity.in,mumbai_suburban_stations.kml
+MUM_RAIL_STN_106,Kharkopar,Maharashtra,Mumbai,18.9596615707448,73.0140802808399,BMC via OpenCity.in,mumbai_suburban_stations.kml

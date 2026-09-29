@@ -1,0 +1,13 @@
+id: bus_tgsrtc_gtfs
+license: Terms of use on data.opencity.in — attribution required; non-commercial and
+  research use permitted
+attribution: TGSRTC (Telangana State Road Transport Corporation), via OpenCity.in
+  — GTFS static feed, February 2026
+used_by:
+- bus
+files:
+- file: data/raw/bus/tgsrtc/telangana_opendata_gtfs_tgsrtc_08_february_2026.zip
+  url: https://data.opencity.in/dataset/88e2d145-7ec6-4666-88dd-6cf18b18312e/resource/1b0d18bb-b2fb-4a79-8ed0-1e071da5790c/download/telangana_opendata_gtfs_tgsrtc_08_february_2026.zip
+  bytes: 10546906
+  sha256: e0a90bca1b9490a5cf92a805fecba7aca2c011527b2269904d54c5cc553be4d6
+  fetched_at: '2026-09-29T06:36:47Z'

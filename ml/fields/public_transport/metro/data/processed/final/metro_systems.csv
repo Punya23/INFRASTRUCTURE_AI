@@ -1,0 +1,4 @@
+metro_system_id,city,state,operator,source,data_level,network_data_available,station_data_available,schedule_data_available,geometry_available,ridership_data_available
+HYD,Hyderabad,Telangana,HMRL,OpenCity.in GTFS,NETWORK_LEVEL,True,True,True,True,False
+BLR,Bengaluru,Karnataka,BMRCL,OpenCity.in KML,STATION_LEVEL,False,True,False,True,False
+CHN,Chennai,Tamil Nadu,CMRL,OpenCity.in ridership,CITY_LEVEL,False,False,False,False,True

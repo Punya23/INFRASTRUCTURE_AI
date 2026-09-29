@@ -1,0 +1,12 @@
+id: metro_bengaluru_bmrcl_ridership_csv
+license: Terms of use on data.opencity.in — attribution required
+attribution: BMRCL (Bangalore Metro Rail Corporation Limited), via OpenCity.in — Station-wise
+  ridership data
+used_by:
+- metro
+files:
+- file: data/raw/metro/bengaluru/bmrcl_station_ridership.csv
+  url: https://data.opencity.in/dataset/369f18e0-4342-4809-b380-44f1d21d904f/resource/1ec4f39a-eede-44d4-8e1d-e8658cb89762/download/c47d24a2-8c27-4c3a-a9cd-05c0beafc83d.csv
+  bytes: 2069
+  sha256: e75753417d4162d996e9a77a5350cd25a103c52692d94487d1e1f050a48d627d
+  fetched_at: '2026-09-29T08:27:23Z'

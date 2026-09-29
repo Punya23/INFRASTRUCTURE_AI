@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Methodology & Data Sources — INFRA-AI</title>
+  <meta name="description" content="Explainable scoring methodology, master data source catalog, and scientific foundations of the INFRA-AI Digital Public Good platform."/>
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Sans+Kannada:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+
+  <style>
+    /* ==========================================================================
+       INFRA-AI Platform Design System (Teal / Cream Palette)
+       Reused verbatim from index.html & policymaker.html
+       ========================================================================== */
+    :root {
+      --canvas-base: #F7F6F2;
+      --surface: #FFFFFF;
+      --text-primary: #14202B;
+      --text-secondary: #5B6773;
+      --text-muted: #8895A5;
+      --border-subtle: #E3E1DA;
+      --border-strong: #C8C5BB;
+
+      --brand-teal: #0E5A66;
+      --brand-teal-hover: #0A444D;
+      --accent-saffron: #E08A1E;
+
+      --status-operational: #0E5A66;
+      --status-construction: #D97706;
+      --status-planned: #3A6EA5;
+      --status-stalled: #B3382C;
+      --status-cancelled: #6B7280;
+
+      --surface-container: #e3efff;
+      --surface-container-low: #edf4ff;
+      --surface-container-high: #dde9f9;
+      --surface-container-highest: #d7e4f3;
+      --surface-container-lowest: #ffffff;
+      --surface-dim: #cfdbeb;
+      --surface-bright: #f7f9ff;
+
+      --primary: #00414b;
+      --primary-container: #0e5a66;
+      --on-primary: #ffffff;
+      --on-primary-container: #90cfdd;
+
+      --secondary: #8a5100;
+      --secondary-container: #fda137;
+      --on-secondary: #ffffff;
+      --on-secondary-container: #6a3c00;
+      --secondary-fixed: #ffdcbe;
+
+      --tertiary: #003c6a;
+      --tertiary-container: #195489;
+      --on-tertiary: #ffffff;
+      --on-tertiary-container: #9dc8ff;
+      --tertiary-fixed: #d2e4ff;
+
+      --on-surface: #111d28;
+      --on-surface-variant: #3f484a;
+      --outline: #70797b;
+      --outline-variant: #bfc8ca;
+
+      --error: #ba1a1a;
+      --error-container: #ffdad6;
+      --on-error-container: #93000a;
+
+      --space-xs: 0.25rem;
+      --space-sm: 0.5rem;
+      --space-md: 1rem;
+      --space-lg: 1.5rem;
+      --space-xl: 2.5rem;
+      --gutter: 1.5rem;
+      --margin: 2rem;
+
+      --radius-sm: 0.25rem;
+      --radius: 0.5rem;
+      --radius-md: 0.75rem;
+      --radius-lg: 1rem;
+      --radius-xl: 1.5rem;
+      --radius-full: 9999px;
+
+      --shadow-1: 0px 1px 3px rgba(20, 32, 43, 0.05);
+      --shadow-2: 0px 4px 12px rgba(20, 32, 43, 0.08);
+      --shadow-3: 0px 12px 28px rgba(20, 32, 43, 0.12);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body {
+      font-family: 'Inter', 'Noto Sans Devanagari', 'Noto Sans Kannada', system-ui, sans-serif;
+      font-feature-settings: "tnum" 1, "cv05" 1;
+      color: var(--text-primary);
+      background: var(--canvas-base);
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    a { text-decoration: none; color: inherit; }
+    button { cursor: pointer; border: none; background: none; font-family: inherit; }
+
+    /* Typography */
+    .text-headline-xl { font-size: 2.25rem; font-weight: 700; line-height: 2.75rem; letter-spacing: -0.025em; }
+    .text-headline-lg { font-size: 1.75rem; font-weight: 600; line-height: 2.25rem; letter-spacing: -0.02em; }
+    .text-headline-md { font-size: 1.25rem; font-weight: 600; line-height: 1.75rem; letter-spacing: -0.01em; }
+    .text-title-lg { font-size: 1.125rem; font-weight: 600; line-height: 1.5rem; letter-spacing: -0.01em; }
+    .text-title-md { font-size: 1rem; font-weight: 600; line-height: 1.5rem; }
+    .text-body-lg { font-size: 1.125rem; font-weight: 400; line-height: 1.75rem; }
+    .text-body-md { font-size: 1rem; font-weight: 400; line-height: 1.5rem; }
+    .text-body-sm { font-size: 0.875rem; font-weight: 400; line-height: 1.35rem; }
+    .text-label-md { font-size: 0.8125rem; font-weight: 500; line-height: 1.125rem; letter-spacing: 0.01em; }
+    .text-label-sm { font-size: 0.6875rem; font-weight: 600; line-height: 1rem; letter-spacing: 0.04em; }
+    .text-data-mono { font-family: 'JetBrains Mono', monospace; font-size: 0.8125rem; font-weight: 400; line-height: 1.125rem; }
+
+    /* Citation Chip */
+    .citation-chip {
+      display: inline-flex; align-items: center; gap: 0.25rem;
+      padding: 0.0625rem 0.3125rem; border-radius: var(--radius-sm);
+      background: var(--surface-container-high); color: var(--primary);
+      border: 1px solid rgba(0,65,75,0.15); font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6875rem; font-weight: 500; line-height: 1.1; vertical-align: middle;
+      white-space: nowrap;
+    }
+    .citation-chip:hover { background: var(--surface-container); border-color: var(--primary); }
+
+    .container { max-width: 80rem; margin: 0 auto; padding: 0 1.5rem; }
+    @media (min-width: 1024px) { .container { padding: 0 3rem; } }
+
+    /* Header & Nav */
+    .site-header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+      background: rgba(247, 249, 255, 0.95); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--outline-variant); box-shadow: 0 1px 8px rgba(20,32,43,0.04);
+    }
+    .header-inner { height: 5rem; display: flex; align-items: center; justify-content: space-between; gap: var(--space-md); }
+    .brand-group { display: flex; align-items: center; gap: var(--space-lg); }
+    .brand-link { display: flex; align-items: center; gap: var(--space-sm); }
+    .brand-logo { height: 2rem; width: auto; }
+    .brand-text { display: flex; flex-direction: column; }
+    .brand-name { color: var(--primary); display: flex; align-items: center; gap: var(--space-xs); font-weight: 700; }
+    .dpg-badge {
+      display: inline-flex; align-items: center; padding: 0.125rem 0.375rem;
+      border-radius: var(--radius-full); background: var(--surface-container-high);
+      color: var(--on-surface-variant); border: 1px solid var(--outline-variant);
+      text-transform: uppercase; font-size: 0.625rem; font-weight: 600;
+    }
+    .brand-sub { color: var(--on-surface-variant); display: none; }
+    @media (min-width: 640px) { .brand-sub { display: inline; font-size: 0.75rem; } }
+
+    .main-nav { display: none; align-items: center; gap: var(--space-md); margin-left: var(--space-sm); }
+    @media (min-width: 1024px) { .main-nav { display: flex; } }
+    .nav-link {
+      color: var(--on-surface-variant); padding: 0.25rem 0.5rem;
+      transition: color 0.2s, background 0.2s; border-radius: var(--radius-lg);
+    }
+    .nav-link:hover, .nav-link.active { color: var(--on-surface); }
+    .nav-link.active { color: var(--primary); background: var(--surface-container-high); font-weight: 600; }
+
+    .header-actions { display: flex; align-items: center; gap: var(--space-sm); }
+    .lang-switcher {
+      display: none; align-items: center; background: var(--surface-container-high);
+      padding: 0.125rem; border-radius: var(--radius-lg); border: 1px solid var(--outline-variant);
+    }
+    @media (min-width: 768px) { .lang-switcher { display: flex; } }
+    .lang-btn { padding: 0.25rem 0.625rem; border-radius: var(--radius); color: var(--on-surface-variant); transition: all 0.2s; }
+    .lang-btn:hover { color: var(--on-surface); }
+    .lang-btn.active { background: var(--surface-container-lowest); color: var(--primary); font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
+
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.375rem 0.875rem;
+      border-radius: var(--radius-lg); background: var(--primary-container); color: var(--on-primary);
+      font-weight: 600; transition: background 0.2s;
+    }
+    .btn-primary:hover { background: var(--brand-teal-hover); }
+
+    .mobile-menu-btn { display: flex; align-items: center; justify-content: center; padding: 0.5rem; color: var(--on-surface); }
+    @media (min-width: 1024px) { .mobile-menu-btn { display: none; } }
+    .mobile-nav {
+      display: none; flex-direction: column; gap: var(--space-sm); padding: var(--space-md) var(--space-lg);
+      background: var(--surface-container-lowest); border-bottom: 1px solid var(--border-subtle);
+      position: fixed; top: 5rem; left: 0; right: 0; z-index: 49;
+    }
+    .mobile-nav.open { display: flex; }
+
+    /* Notice Bar */
+    .notice-bar { margin-top: 5rem; background: var(--surface-container-high); border-bottom: 1px solid var(--outline-variant); padding: 0.375rem 0; }
+    .notice-inner { display: flex; align-items: center; justify-content: space-between; }
+    .notice-left { display: flex; align-items: center; gap: var(--space-xs); color: var(--on-surface-variant); }
+    .notice-dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--primary); }
+    .notice-dpg { font-weight: 600; color: var(--primary); }
+
+    /* Hero */
+    .dashboard-hero {
+      padding: var(--space-xl) 0 var(--space-lg);
+      background: linear-gradient(180deg, rgba(227,239,255,0.4) 0%, rgba(247,246,242,0) 100%);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .eyebrow-pill {
+      display: inline-flex; align-items: center; gap: var(--space-xs);
+      padding: 0.25rem 0.75rem; border-radius: var(--radius-full);
+      background: var(--surface-container-high); border: 1px solid var(--outline-variant);
+      color: var(--on-surface-variant); margin-bottom: var(--space-md);
+    }
+
+    /* Content Cards & Sections */
+    .content-section { padding: var(--space-xl) 0 4rem; }
+    .method-card {
+      background: var(--surface-container-lowest); border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl); padding: var(--space-lg); box-shadow: var(--shadow-1);
+      margin-bottom: var(--space-lg);
+    }
+    .card-title-row {
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+      gap: 0.5rem; margin-bottom: var(--space-md); padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    /* Formula Banner */
+    .formula-banner {
+      padding: var(--space-md); background: var(--surface-container-low);
+      border: 1px solid var(--border-strong); border-radius: var(--radius-lg);
+      margin: var(--space-md) 0;
+    }
+    .formula-expression {
+      font-family: 'JetBrains Mono', monospace; font-size: 1rem; font-weight: 700;
+      color: var(--primary); background: var(--surface-container-lowest);
+      padding: 0.625rem 1rem; border-radius: var(--radius); display: block;
+      border: 1px solid var(--border-subtle); overflow-x: auto;
+    }
+
+    /* Variables Grid */
+    .variables-grid {
+      display: grid; grid-template-columns: 1fr; gap: var(--space-md);
+      margin: var(--space-md) 0;
+    }
+    @media (min-width: 768px) { .variables-grid { grid-template-columns: repeat(2, 1fr); } }
+    .variable-cell {
+      background: var(--surface-container-low); padding: var(--space-md);
+      border-radius: var(--radius); border: 1px solid var(--border-subtle);
+    }
+    .variable-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.375rem; }
+    .variable-symbol {
+      width: 1.75rem; height: 1.75rem; border-radius: 50%; background: var(--primary);
+      color: var(--on-primary); font-family: 'JetBrains Mono', monospace;
+      font-weight: 700; font-size: 0.875rem; display: flex; align-items: center; justify-content: center;
+    }
+
+    /* Data Sources Table */
+    .sources-table {
+      width: 100%; border-collapse: separate; border-spacing: 0;
+      margin-top: var(--space-md); border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg); overflow: hidden;
+    }
+    .sources-table th, .sources-table td {
+      padding: 0.75rem 1rem; text-align: left; vertical-align: top;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .sources-table th {
+      background: var(--surface-container-low); color: var(--on-surface);
+      font-weight: 600; font-size: 0.8125rem; text-transform: uppercase; letter-spacing: 0.03em;
+    }
+    .sources-table tr:last-child td { border-bottom: none; }
+    .sources-table tr:hover td { background: var(--surface-container-low); }
+
+    /* Worked Example Box */
+    .example-box {
+      background: var(--surface-container-low); border-radius: var(--radius-lg);
+      padding: var(--space-md); border-left: 4px solid var(--primary);
+      margin-top: var(--space-md);
+    }
+
+    /* Footer */
+    .site-footer {
+      background: var(--surface-container-lowest); border-top: 1px solid var(--border-subtle);
+      padding: var(--space-lg) 0; margin-top: auto;
+    }
+  </style>
+  <script src="i18n.js"></script>
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand-group">
+        <a class="brand-link" href="index.html">
+          <svg class="brand-logo" fill="none" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+            <rect fill="#0E5A66" height="32" rx="8" width="32"></rect>
+            <path d="M7 16H25M16 7V25" stroke="#FFFFFF" stroke-linecap="round" stroke-width="2.5"></path>
+            <circle cx="16" cy="16" fill="#E08A1E" r="3.5"></circle>
+          </svg>
+          <div class="brand-text">
+            <span class="text-title-lg brand-name">INFRA-AI <span class="dpg-badge text-label-sm">DPG</span></span>
+            <span class="text-label-sm brand-sub">India Infrastructure Intelligence</span>
+          </div>
+        </a>
+        <nav class="main-nav" id="main-nav">
+          <a class="nav-link text-title-md" href="nh-explorer.html" data-i18n="navExplore">Explore</a>
+          <a class="nav-link text-title-md" href="index.html#map-section" data-i18n="navProjects">Projects</a>
+          <a class="nav-link text-title-md" href="index.html#place-explorer" data-i18n="navArea">Your Area</a>
+          <a class="nav-link text-title-md" href="index.html#citizen-voice-section" data-i18n="navVoice">Citizen Voice</a>
+          <a class="nav-link text-title-md" href="index.html#trust-section" data-i18n="navAbout">About</a>
+          <a class="nav-link text-title-md" href="policymaker.html" data-i18n="navPolicymaker">Policymaker View</a>
+          <a class="nav-link text-title-md active" href="methodology.html" data-i18n="navMethodology">Methodology</a>
+        </nav>
+      </div>
+      <div class="header-actions">
+        <div class="lang-switcher" id="lang-switcher">
+          <button class="lang-btn text-label-md active" data-lang="en">English</button>
+          <button class="lang-btn text-label-md" data-lang="hi">हिन्दी</button>
+          <button class="lang-btn text-label-md" data-lang="kn">ಕನ್ನಡ</button>
+        </div>
+        <a class="btn-primary text-body-sm" href="nh-explorer.html">
+          <span class="material-symbols-outlined" style="font-size:16px;">map</span>
+          <span>Open GIS Map</span>
+        </a>
+        <button class="mobile-menu-btn" id="mobile-menu-btn" type="button" aria-label="Menu">
+          <span class="material-symbols-outlined" style="font-size:24px;">menu</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Nav -->
+  <div class="mobile-nav" id="mobile-nav">
+    <a class="nav-link text-title-md" href="nh-explorer.html" data-i18n="navExplore">Explore</a>
+    <a class="nav-link text-title-md" href="index.html#map-section" data-i18n="navProjects">Projects</a>
+    <a class="nav-link text-title-md" href="index.html#place-explorer" data-i18n="navArea">Your Area</a>
+    <a class="nav-link text-title-md" href="index.html#citizen-voice-section" data-i18n="navVoice">Citizen Voice</a>
+    <a class="nav-link text-title-md" href="index.html#trust-section" data-i18n="navAbout">About</a>
+    <a class="nav-link text-title-md" href="policymaker.html" data-i18n="navPolicymaker">Policymaker View</a>
+    <a class="nav-link text-title-md active" href="methodology.html" data-i18n="navMethodology">Methodology</a>
+  </div>
+
+  <main>
+    <!-- Notice Bar -->
+    <section class="notice-bar">
+      <div class="container notice-inner text-label-sm">
+        <div class="notice-left">
+          <span class="notice-dot"></span>
+          <span class="notice-dpg">National Digital Public Good</span>
+          <span style="color:var(--outline-variant);">/</span>
+          <span>Scientific Methodology & Provenance Registry <span class="citation-chip">[Ref: ADR-0003]</span> <span class="citation-chip">[Ref: ADR-0013]</span></span>
+        </div>
+        <div style="display:flex;align-items:center;gap:0.5rem;" class="text-data-mono">
+          <span class="material-symbols-outlined" style="font-size:14px;color:var(--primary);">verified</span>
+          <span>Deterministic Formula • Zero Black Boxes</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Hero Header -->
+    <section class="dashboard-hero">
+      <div class="container">
+        <div class="eyebrow-pill text-label-md">
+          <span class="material-symbols-outlined" style="font-size:16px;color:var(--secondary);">menu_book</span>
+          <span>Open Governance & Mathematical Transparency</span>
+          <span style="color:var(--outline-variant);">•</span>
+          <span class="text-data-mono">India DPG Registry</span>
+        </div>
+        <h1 class="text-headline-xl" style="color:var(--on-surface);">Methodology & Data Sources</h1>
+        <p class="text-body-lg" style="color:var(--on-surface-variant);max-width:56rem;margin-top:0.375rem;">
+          A fully transparent, explainable framework for India's public infrastructure intelligence. 
+          Reconciling statutory union and state gazettes, primary census demographics, municipal grievance registries, 
+          and multilingual voice petitions — with strict provenance and zero black-box predictive models.
+        </p>
+      </div>
+    </section>
+
+    <!-- Main Content Sections -->
+    <section class="content-section">
+      <div class="container">
+
+        <!-- 1. THE PRIORITIZATION SCORING ALGORITHM -->
+        <article class="method-card" id="scoring-formula">
+          <div class="card-title-row">
+            <div style="display:flex;align-items:center;gap:0.5rem;">
+              <span class="material-symbols-outlined" style="font-size:24px;color:var(--primary);">calculate</span>
+              <h2 class="text-headline-md" style="color:var(--on-surface);">1. Prioritization Scoring Algorithm (ADR-0003)</h2>
+            </div>
+            <div style="display:flex;gap:0.375rem;">
+              <span class="citation-chip">[Ref: ADR-0003]</span>
+              <span class="citation-chip">[Ref: Govt-Project-Registry]</span>
+            </div>
+          </div>
+
+          <p class="text-body-md" style="color:var(--on-surface-variant);line-height:1.6;">
+            Capital allocation across urban local bodies, state highway authorities, and railway boards in India has historically suffered from 
+            competing anecdotal priorities and lack of transparent criteria. In compliance with <strong>ADR-0003 (Explainable Analytics Only)</strong>, 
+            INFRA-AI uses a deterministic, configuration-weighted mathematical formula evaluated directly from observable ground facts.
+          </p>
+
+          <!-- Formula Box -->
+          <div class="formula-banner">
+            <span class="text-label-sm" style="color:var(--primary);text-transform:uppercase;letter-spacing:0.04em;font-weight:700;">Mathematical Specification</span>
+            <div class="formula-expression" style="margin-top:0.375rem;">
+              Priority Score = (Complaint Volume [C] × Population Exposed [P] × Infrastructure Deficit Gap [G]) ÷ (Existing Sanctioned Budget [B] + 1)
+            </div>
+          </div>
+
+          <!-- Variable Breakdown Grid -->
+          <div class="variables-grid">
+            <!-- Variable C -->
+            <div class="variable-cell">
+              <div class="variable-header">
+                <div style="display:flex;align-items:center;gap:0.5rem;">
+                  <span class="variable-symbol">C</span>
+                  <span class="text-title-md" style="font-weight:700;">Complaint Volume</span>
+                </div>
+                <span class="citation-chip">[Ref: PCMC-Grievance-2025]</span>
+              </div>
+              <p class="text-body-sm" style="color:var(--on-surface-variant);margin-top:0.25rem;">
+                <strong>What it measures:</strong> The volume of geotagged citizen grievances, safety flags, and ward petitions lodged across municipal portals 
+                and national redressal pipelines (<span class="text-data-mono">CPGRAMS</span>).
+              </p>
+              <p class="text-body-sm" style="color:var(--outline);margin-top:0.25rem;">
+                <strong>Why it matters:</strong> Captures ground reality and human friction (severe bottlenecks, lack of safe pedestrian crossings, delayed construction) that macro master plans overlook.
+              </p>
+            </div>
+
+            <!-- Variable P -->
+            <div class="variable-cell">
+              <div class="variable-header">
+                <div style="display:flex;align-items:center;gap:0.5rem;">
+                  <span class="variable-symbol">P</span>
+                  <span class="text-title-md" style="font-weight:700;">Population Exposed</span>
+                </div>
+                <span class="citation-chip">[Ref: Census-2011-PCA]</span>
+              </div>
+              <p class="text-body-sm" style="color:var(--on-surface-variant);margin-top:0.25rem;">
+                <strong>What it measures:</strong> Resident and daily transit commuter catchment population mapped to the official 
+                Local Government Directory (<span class="text-data-mono">LGD</span>) ward polygon.
+              </p>
+              <p class="text-body-sm" style="color:var(--outline);margin-top:0.25rem;">
+                <strong>Why it matters:</strong> Weights civic interventions by democratic scale, ensuring that critical arterial corridors serving tens of thousands of citizens receive proportionate priority.
+              </p>
+            </div>
+
+            <!-- Variable G -->
+            <div class="variable-cell">
+              <div class="variable-header">
+                <div style="display:flex;align-items:center;gap:0.5rem;">
+                  <span class="variable-symbol">G</span>
+                  <span class="text-title-md" style="font-weight:700;">Infrastructure Deficit Gap</span>
+                </div>
+                <span class="citation-chip">[Ref: Mission-Antyodaya-2024]</span>
+              </div>
+              <p class="text-body-sm" style="color:var(--on-surface-variant);margin-top:0.25rem;">
+                <strong>What it measures:</strong> A normalized decimal index from <span class="text-data-mono">0.00</span> (fully served) to <span class="text-data-mono">1.00</span> (complete absence of facility) based on MoRD and NITI Aayog norms.
+              </p>
+              <p class="text-body-sm" style="color:var(--outline);margin-top:0.25rem;">
+                <strong>Why it matters:</strong> Distinguishes between routine surface maintenance requests (<span class="text-data-mono">G = 0.50</span>) versus acute life-safety hazards where zero facilities exist (<span class="text-data-mono">G = 0.92</span>).
+              </p>
+            </div>
+
+            <!-- Variable B -->
+            <div class="variable-cell">
+              <div class="variable-header">
+                <div style="display:flex;align-items:center;gap:0.5rem;">
+                  <span class="variable-symbol">B</span>
+                  <span class="text-title-md" style="font-weight:700;">Sanctioned Budget (+1 Scale)</span>
+                </div>
+                <span class="citation-chip">[Ref: Govt-Project-Registry]</span>
+              </div>
+              <p class="text-body-sm" style="color:var(--on-surface-variant);margin-top:0.25rem;">
+                <strong>What it measures:</strong> Publicly sanctioned outlay in ₹ Crore from state works programmes, municipal budget books, and gazette notifications.
+              </p>
+              <p class="text-body-sm" style="color:var(--outline);margin-top:0.25rem;">
+                <strong>The (+1) Denominator Principle:</strong> Adding 1 prevents division-by-zero errors when an asset has zero budget sanctioned (<span class="text-data-mono">B = ₹0.00 Cr</span>). Crucially, this ensures neglected, unfunded ground needs receive the maximum mathematical priority boost.
+              </p>
+            </div>
+          </div>
+
+          <!-- Worked Calculations -->
+          <div class="example-box">
+            <h4 class="text-title-md" style="color:var(--primary);margin-bottom:0.25rem;">Worked Benchmark Examples from Platform Registry:</h4>
+            <div style="display:flex;flex-direction:column;gap:0.5rem;margin-top:0.5rem;">
+              <div style="padding:0.5rem;background:var(--surface-container-lowest);border-radius:var(--radius);border:1px solid var(--border-subtle);">
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                  <strong style="font-size:0.875rem;">Baptist Hospital Pedestrian Crossing (Bengaluru, KA):</strong>
+                  <span class="citation-chip">[Ref: PCMC-Grievance-2025]</span>
+                </div>
+                <div class="text-data-mono" style="font-size:0.8125rem;color:var(--primary);margin-top:0.25rem;">
+                  (56 complaints × 48,000 pop × 0.92 gap) ÷ (₹0.00 Cr + 1) = <strong>2,472,960.00</strong> Priority Score
+                </div>
+              </div>
+              <div style="padding:0.5rem;background:var(--surface-container-lowest);border-radius:var(--radius);border:1px solid var(--border-subtle);">
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                  <strong style="font-size:0.875rem;">Hadapsar Transit Corridor Feeder Network (Pune, MH):</strong>
+                  <span class="citation-chip">[Ref: PMC-Sanction-2024]</span>
+                </div>
+                <div class="text-data-mono" style="font-size:0.8125rem;color:var(--primary);margin-top:0.25rem;">
+                  (83 complaints × 125,000 pop × 0.78 gap) ÷ (₹4.50 Cr + 1) = <strong>1,471,363.64</strong> Priority Score
+                </div>
+              </div>
+              <div style="padding:0.5rem;background:var(--surface-container-lowest);border-radius:var(--radius);border:1px solid var(--border-subtle);">
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                  <strong style="font-size:0.875rem;">Hebbal Flyover Capacity Augmentation (Bengaluru, KA):</strong>
+                  <span class="citation-chip">[Ref: BDA-Gazette-2026]</span>
+                </div>
+                <div class="text-data-mono" style="font-size:0.8125rem;color:var(--primary);margin-top:0.25rem;">
+                  (142 complaints × 185,000 pop × 0.85 gap) ÷ (₹380.00 Cr + 1) = <strong>58,607.61</strong> Priority Score
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- 2. MASTER DATA SOURCE CATALOG -->
+        <article class="method-card" id="data-sources">
+          <div class="card-title-row">
+            <div style="display:flex;align-items:center;gap:0.5rem;">
+              <span class="material-symbols-outlined" style="font-size:24px;color:var(--primary);">library_books</span>
+              <h2 class="text-headline-md" style="color:var(--on-surface);">2. Master Data Sources & Provenance Registry</h2>
+            </div>
+            <span class="citation-chip">[Ref: ADR-0001]</span>
+          </div>
+
+          <p class="text-body-md" style="color:var(--on-surface-variant);line-height:1.6;">
+            Every single fact, budget figure, corridor length, milestone date, and citizen quote across INFRA-AI carries an immutable 
+            provenance record. In adherence to our Core Invariant 1 (<strong>Provenance on everything</strong>), the table below catalogs 
+            every <span class="citation-chip">[Ref: ...]</span> identifier deployed across the platform:
+          </p>
+
+          <div style="overflow-x:auto;">
+            <table class="sources-table text-body-sm">
+              <thead>
+                <tr>
+                  <th style="width:18%;">Citation Reference</th>
+                  <th style="width:24%;">Official Entity / Dataset</th>
+                  <th style="width:38%;">Data Provided & Usage</th>
+                  <th style="width:20%;">Verification Cadence</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="citation-chip">[Ref: PCMC-Grievance-2025]</span></td>
+                  <td><strong>Pimpri Chinchwad Municipal Corp & Ward Audits</strong></td>
+                  <td>Geotagged citizen complaints, municipal defect reports, pedestrian hazard audits (e.g. 56 verified reports at Baptist Crossing, 142 at Hebbal).</td>
+                  <td>Monthly ward grievance audit</td>
+                </tr>
+                <tr>
+                  <td><span class="citation-chip">[Ref: CPGRAMS-DARPG-2025]</span></td>
+                  <td><strong>DARPG, Government of India</strong></td>
+                  <td>Centralized public grievance petitions, citizen escalation tracks for national infrastructure (NHAI, Indian Railways, Metro link access).</td>
+                  <td>Live API grievance digest</td>
+                </tr>
+                <tr>
+                  <td><span class="citation-chip">[Ref: Census-2011-PCA]</span></td>
+                  <td><strong>Registrar General & Census Commissioner of India</strong></td>
+                  <td>Primary Census Abstract (PCA Table A-1), ward-level and taluk-level population exposure, household demographics, commuter densities.</td>
+                  <td>Decennial statutory census</td>
+                </tr>
+                <tr>
+                  <td><span class="citation-chip">[Ref: Mission-Antyodaya-2024]</span></td>
+                  <td><strong>Ministry of Rural Development & MoHUA</strong></td>
+                  <td>Civic amenities deficit index, lack of paved pedestrian facilities, public drainage and transit service deficit scores (0.00 to 1.00).</td>
+                  <td>Annual nationwide survey</td>
+                </tr>
+                <tr>
+                  <td><span class="citation-chip">[Ref: NITI-SDG-Index]</span></td>
+                  <td><strong>NITI Aayog (National Institution for Transforming India)</strong></td>
+                  <td>SDG 9 & 11 sustainable transport access indicators, road traffic fatality rates, urban arterial congestion benchmarks.</td>
+                  <td>Annual state report card</td>
+                </tr>
+                <tr>
+                  <td><span class="citation-chip">[Ref: Govt-Project-Registry]</span></td>
+                  <td><strong>Ministry of Finance & State Works Programmes</strong></td>
+                  <td>Publicly sanctioned project capital outlays, cumulative disbursement vouchers, DPR budget estimates, contractor payment ledgers.</td>
+                  <td>Quarterly budget reconciliation</td>
+                </tr>
+                <tr>
+                  <td><span class="citation-chip">[Ref: BDA-Gazette-2026]</span></td>
+                  <td><strong>Bangalore Development Authority</strong></td>
+                  <td>Official state gazette notifications, flyover augmentation DPRs, tender awards, revised completion timelines (e.g. Hebbal Flyover October 2027).</td>
+                  <td>Statutory gazette notification</td>
+                </tr>
+                <tr>
+                  <td><span class="citation-chip">[Ref: MoRTH-Gazette-2024-F12]</span></td>
+                  <td><strong>Ministry of Road Transport and Highways (MoRTH)</strong></td>
+                  <td>National Highway gazette notifications, continuous FASTag traffic volume telemetry (120,000 vehicles/day on NH-44), right-of-way maps.</td>
+                  <td>Statutory Gazette of India</td>
+                </tr>
+                <tr>
+                  <td><span class="citation-chip">[Ref: NHAI-2022]</span></td>
+                  <td><strong>National Highways Authority of India (NHAI)</strong></td>
+                  <td>Commercial operation certificates, access-controlled freeway boundary layers, expressway safety audit reports.</td>
+                  <td>Statutory completion record</td>
+                </tr>
+                <tr>
+                  <td><span class="citation-chip">[Ref: BMRCL-PH2B]</span></td>
+                  <td><strong>Bangalore Metro Rail Corporation Limited</strong></td>
+                  <td>Airport Link (Phase 2B) Detailed Project Report, sanctioned capital (₹10,584 Cr), pier foundation schedules, railway crossing alignment reviews.</td>
+                  <td>Monthly DPR review</td>
+                </tr>
+                <tr>
+                  <td><span class="citation-chip">[Ref: K-RIDE-25]</span></td>
+                  <td><strong>Rail Infrastructure Development Company (Karnataka)</strong></td>
+                  <td>Bengaluru Suburban Rail Project (BSRP) Corridor-2 alignment, station package civil tenders, sanctioned budget allocation (₹2,840 Cr).</td>
+                  <td>Quarterly board report</td>
+                </tr>
+                <tr>
+                  <td><span class="citation-chip">[Ref: PMC-Sanction-2024]</span></td>
+                  <td><strong>Pune Municipal Corporation (PMC)</strong></td>
+                  <td>Municipal budget sanction book for eastern transit feeder loops, standing committee resolutions (Hadapsar feeder network ₹4.20 Cr outlay).</td>
+                  <td>Annual municipal budget book</td>
+                </tr>
+                <tr>
+                  <td><span class="citation-chip">[Ref: LDA-Gazette-2025]</span></td>
+                  <td><strong>Lucknow Development Authority (LDA)</strong></td>
+                  <td>Master plan alignments, Kisan Path grade crossing DPRs, peripheral expressway flyover sanctions.</td>
+                  <td>Statutory LDA gazette</td>
+                </tr>
+                <tr>
+                  <td><span class="citation-chip">[Ref: LGD-Directory-2026]</span></td>
+                  <td><strong>Ministry of Panchayati Raj, GOI</strong></td>
+                  <td>Local Government Directory authoritative boundary codes, administrative hierarchy joins (State → District → Sub-District/Taluk → Ward/Village).</td>
+                  <td>Authoritative spatial directory</td>
+                </tr>
+                <tr>
+                  <td><span class="citation-chip">[Ref: NIP-Capital-Gap]</span></td>
+                  <td><strong>National Infrastructure Pipeline / DEA</strong></td>
+                  <td>Capital expenditure deficit benchmark standards, classification of funding gaps (Critical >70%, Moderate 30–70%, Well-funded <30%).</td>
+                  <td>National fiscal dashboard</td>
+                </tr>
+                <tr>
+                  <td><span class="citation-chip">[Ref: Bhashini-AI-2026]</span></td>
+                  <td><strong>Digital India Bhashini Division, MeitY</strong></td>
+                  <td>National Language Translation Mission NLP models for acoustic speech recognition and cross-lingual semantic clustering (en, hi, kn).</td>
+                  <td>Government DPG AI service</td>
+                </tr>
+                <tr>
+                  <td><span class="citation-chip">[Ref: ADR-0003]</span></td>
+                  <td><strong>Architectural Decision Record 0003</strong></td>
+                  <td>Platform standard mandate: Explainable analytics only; scores are config-weighted observable sums; zero black-box models.</td>
+                  <td>Architecture Invariant</td>
+                </tr>
+                <tr>
+                  <td><span class="citation-chip">[Ref: ADR-0007]</span></td>
+                  <td><strong>Architectural Decision Record 0007</strong></td>
+                  <td>Platform standard mandate: Official boundaries derived strictly from the Survey of India compliant spatial layer.</td>
+                  <td>Architecture Invariant</td>
+                </tr>
+                <tr>
+                  <td><span class="citation-chip">[Ref: ADR-0008]</span></td>
+                  <td><strong>Architectural Decision Record 0008</strong></td>
+                  <td>Platform standard mandate: AI never originates facts; extracted claims carry a verbatim evidence quote verified against the source.</td>
+                  <td>Architecture Invariant</td>
+                </tr>
+                <tr>
+                  <td><span class="citation-chip">[Ref: ADR-0011]</span></td>
+                  <td><strong>Architectural Decision Record 0011</strong></td>
+                  <td>Platform standard mandate: Privacy by default; no personal data stored; aggregated outputs with minimum threshold of 5.</td>
+                  <td>Architecture Invariant</td>
+                </tr>
+                <tr>
+                  <td><span class="citation-chip">[Ref: ADR-0012]</span></td>
+                  <td><strong>Architectural Decision Record 0012</strong></td>
+                  <td>Platform standard mandate: Open licenses verified before data ingest; OpenStreetMap ODbL attribution; news stored as metadata + short quote + link.</td>
+                  <td>Architecture Invariant</td>
+                </tr>
+                <tr>
+                  <td><span class="citation-chip">[Ref: ADR-0013]</span></td>
+                  <td><strong>Architectural Decision Record 0013</strong></td>
+                  <td>Platform standard mandate: Field-first architecture (National Highways, Metro Rail) with uniform core contract across India.</td>
+                  <td>Architecture Invariant</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <!-- 3. CROSS-LINGUAL CLUSTERING PIPELINE -->
+        <article class="method-card" id="clustering-method">
+          <div class="card-title-row">
+            <div style="display:flex;align-items:center;gap:0.5rem;">
+              <span class="material-symbols-outlined" style="font-size:24px;color:var(--primary);">hub</span>
+              <h2 class="text-headline-md" style="color:var(--on-surface);">3. Cross-Lingual Semantic Clustering (Bhashini AI)</h2>
+            </div>
+            <div style="display:flex;gap:0.375rem;">
+              <span class="citation-chip">[Ref: Bhashini-AI-2026]</span>
+              <span class="citation-chip">[Ref: ADR-0008]</span>
+            </div>
+          </div>
+
+          <p class="text-body-md" style="color:var(--on-surface-variant);line-height:1.6;">
+            India is multilingual by definition. When citizens report ground issues, they do so in diverse languages including English, 
+            Hindi, and Kannada. Traditional civic portals fragment these reports into siloed queues, obscuring the true magnitude of an issue.
+          </p>
+
+          <div style="display:grid;grid-template-columns:1fr;gap:var(--space-md);margin-top:var(--space-md);">
+            <div style="padding:1rem;background:var(--surface-container-low);border-radius:var(--radius);border:1px solid var(--border-subtle);">
+              <h4 class="text-title-md" style="color:var(--primary);margin-bottom:0.25rem;">How Clustering Works:</h4>
+              <ol style="margin-left:1.25rem;display:flex;flex-direction:column;gap:0.5rem;" class="text-body-sm">
+                <li>
+                  <strong>Acoustic & Text Ingest:</strong> Citizen voice inputs and text reports are captured in their native tongue via 
+                  <span class="text-data-mono">Bhashini ASR</span> APIs.
+                </li>
+                <li>
+                  <strong>Dense Semantic Embedding:</strong> Cross-lingual sentence embeddings map complaints across languages into a unified 
+                  semantic vector space, identifying shared intent regardless of syntax.
+                </li>
+                <li>
+                  <strong>Hierarchical Density Clustering:</strong> Geotagged reports within an LGD ward buffer are clustered into canonical issue groups 
+                  (e.g., merging English reports of <em>"45-min bottleneck queues"</em>, Hindi reports of <em>"एक घंटे का जाम"</em>, and Kannada reports of <em>"ತೀವ್ರ ಸಂಚಾರ ದಟ್ಟಣೆ"</em>).
+                </li>
+                <li>
+                  <strong>Verbatim Provenance Retention:</strong> In compliance with <strong>ADR-0008</strong>, the system never summarizes away the original claim. 
+                  Every canonical cluster retains the verbatim original snippets for full auditability.
+                </li>
+              </ol>
+            </div>
+          </div>
+        </article>
+
+        <!-- 4. LIMITATIONS & TRANSPARENCY -->
+        <article class="method-card" id="limitations">
+          <div class="card-title-row">
+            <div style="display:flex;align-items:center;gap:0.5rem;">
+              <span class="material-symbols-outlined" style="font-size:24px;color:var(--primary);">shield</span>
+              <h2 class="text-headline-md" style="color:var(--on-surface);">4. Methodological Limitations & Transparency Disclosures</h2>
+            </div>
+            <span class="citation-chip">[Ref: ADR-0003]</span>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:var(--space-md);" class="text-body-sm">
+            <div style="padding:0.75rem;background:var(--surface-container-low);border-radius:var(--radius);border-left:3px solid var(--secondary);">
+              <strong style="color:var(--on-surface);display:block;margin-bottom:0.125rem;">Showcase Demonstration Scope:</strong>
+              <p style="color:var(--on-surface-variant);line-height:1.5;">
+                Current demonstration data spans three showcase metropolitan corridors: <strong>Bengaluru, Karnataka</strong> (Hebbal & North Corridor), 
+                <strong>Pune, Maharashtra</strong> (Hadapsar & Mula-Mutha Basin), and <strong>Lucknow, Uttar Pradesh</strong> (Kisan Path & Outer Ring). 
+                Field expansion across all 812 urban local bodies follows the field-first roadmap outlined in ADR-0013.
+              </p>
+            </div>
+
+            <div style="padding:0.75rem;background:var(--surface-container-low);border-radius:var(--radius);border-left:3px solid var(--secondary);">
+              <strong style="color:var(--on-surface);display:block;margin-bottom:0.125rem;">Census Demographic Baseline:</strong>
+              <p style="color:var(--on-surface-variant);line-height:1.5;">
+                Population exposure figures <span class="citation-chip">[Ref: Census-2011-PCA]</span> reflect the latest official decennial Census Primary Census Abstract, 
+                supplemented by ward-level Mission Antyodaya projections. Once Census 2026 figures are officially notified, the denominator joins will be updated automatically via LGD codes.
+              </p>
+            </div>
+
+            <div style="padding:0.75rem;background:var(--surface-container-low);border-radius:var(--radius);border-left:3px solid var(--secondary);">
+              <strong style="color:var(--on-surface);display:block;margin-bottom:0.125rem;">Zero Black-Box Predictive Modeling:</strong>
+              <p style="color:var(--on-surface-variant);line-height:1.5;">
+                INFRA-AI deliberately rejects predictive deep learning or opaque regression scoring for public works ranking. 
+                All priority scores are deterministic arithmetic sums computed exclusively from verifiable public records.
+              </p>
+            </div>
+
+            <div style="padding:0.75rem;background:var(--surface-container-low);border-radius:var(--radius);border-left:3px solid var(--secondary);">
+              <strong style="color:var(--on-surface);display:block;margin-bottom:0.125rem;">Privacy by Default (ADR-0011):</strong>
+              <p style="color:var(--on-surface-variant);line-height:1.5;">
+                No personally identifiable information (Aadhaar, phone numbers, or residential addresses) is stored. All citizen inputs are aggregated anonymously, 
+                and reporting bins with fewer than 5 submissions are suppressed to prevent re-identification.
+              </p>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container" style="display:flex;flex-direction:column;gap:0.75rem;align-items:center;text-align:center;">
+      <div style="display:flex;align-items:center;gap:0.5rem;" class="text-label-sm">
+        <span class="material-symbols-outlined" style="font-size:16px;color:var(--primary);">verified_user</span>
+        <span>Built on India Open Digital Public Good Standards • Explainable Analytics (ADR-0003)</span>
+      </div>
+      <p class="text-label-sm" style="color:var(--outline);max-width:44rem;">
+        Data synthesized from LGD, Census 2011 PCA, PCMC Grievance Data 2025, CPGRAMS, MoRTH Gazette, BDA DPR, BMRCL Ledgers, and Bhashini AI.
+      </p>
+      <div class="text-data-mono" style="font-size:10px;color:var(--outline);">
+        INFRA-AI • Digital Public Good Registry Standard v2.4 • Open Governance
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile navigation toggle
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileNav = document.getElementById('mobile-nav');
+    if (mobileMenuBtn && mobileNav) {
+      mobileMenuBtn.addEventListener('click', () => {
+        mobileNav.classList.toggle('open');
+        const icon = mobileMenuBtn.querySelector('.material-symbols-outlined');
+        if (icon) icon.textContent = mobileNav.classList.contains('open') ? 'close' : 'menu';
+      });
+    }
+
+    // === Language switcher — now handled by shared i18n.js ===
+  </script>
+</body>
+</html>

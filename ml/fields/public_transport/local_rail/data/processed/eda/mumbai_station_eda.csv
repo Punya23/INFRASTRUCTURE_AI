@@ -1,0 +1,15 @@
+metric,value,system
+total_stations,106.0,Mumbai Suburban
+valid_coordinates,106.0,Mumbai Suburban
+flagged_coordinates,0.0,Mumbai Suburban
+missing_coordinates,0.0,Mumbai Suburban
+coordinate_completeness_pct,100.0,Mumbai Suburban
+unique_station_names,105.0,Mumbai Suburban
+duplicate_station_names,1.0,Mumbai Suburban
+duplicate_coordinates,0.0,Mumbai Suburban
+latitude_min,18.7896170591886,Mumbai Suburban
+latitude_max,19.5194475908323,Mumbai Suburban
+longitude_min,72.8119284863236,Mumbai Suburban
+longitude_max,73.3448726092399,Mumbai Suburban
+latitude_range_deg,0.7298,Mumbai Suburban
+longitude_range_deg,0.5329,Mumbai Suburban

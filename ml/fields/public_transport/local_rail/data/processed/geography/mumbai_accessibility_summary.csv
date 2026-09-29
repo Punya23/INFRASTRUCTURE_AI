@@ -1,0 +1,4 @@
+buffer_m,buffer_km,station_count,coverage_area_km2,network_length_km,accessibility_type,notes
+500,0.5,106,83.12,307.46,THEORETICAL_GEOGRAPHIC,Geographic buffer only. NOT actual transit accessibility (service frequency unavailable).
+1000,1.0,106,332.47,307.46,THEORETICAL_GEOGRAPHIC,Geographic buffer only. NOT actual transit accessibility (service frequency unavailable).
+2000,2.0,106,1329.9,307.46,THEORETICAL_GEOGRAPHIC,Geographic buffer only. NOT actual transit accessibility (service frequency unavailable).

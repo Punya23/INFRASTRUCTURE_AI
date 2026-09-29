@@ -1,0 +1,10 @@
+metric,value,system
+total_line_segments,106.0,Mumbai Suburban
+total_network_length_km,307.46,Mumbai Suburban
+min_segment_length_m,786.01,Mumbai Suburban
+max_segment_length_m,11510.29,Mumbai Suburban
+mean_segment_length_m,2900.52,Mumbai Suburban
+median_segment_length_m,2312.0,Mumbai Suburban
+invalid_geometries,0.0,Mumbai Suburban
+empty_geometries,0.0,Mumbai Suburban
+unique_line_names,6.0,Mumbai Suburban

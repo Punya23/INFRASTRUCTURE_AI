@@ -1,0 +1,1925 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.3730262,
+          17.4965452
+        ]
+      },
+      "properties": {
+        "station_id": "MYP",
+        "station_name": "Miyapur",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.3888668,
+          17.4987037
+        ]
+      },
+      "properties": {
+        "station_id": "JNT",
+        "station_name": "JNTU College",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.4018258,
+          17.4937602
+        ]
+      },
+      "properties": {
+        "station_id": "KPH",
+        "station_name": "KPHB Colony",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.4117896,
+          17.4849033
+        ]
+      },
+      "properties": {
+        "station_id": "KUK",
+        "station_name": "Kukatpally",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.4221082,
+          17.4767464
+        ]
+      },
+      "properties": {
+        "station_id": "BLR",
+        "station_name": "Balanagar",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.4261182,
+          17.4718855
+        ]
+      },
+      "properties": {
+        "station_id": "MSP",
+        "station_name": "Moosapet",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.4305364,
+          17.4629092
+        ]
+      },
+      "properties": {
+        "station_id": "BTN",
+        "station_name": "Bharat Nagar",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.4335811,
+          17.4570487
+        ]
+      },
+      "properties": {
+        "station_id": "ERA",
+        "station_name": "Erragadda",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.4376283,
+          17.4486969
+        ]
+      },
+      "properties": {
+        "station_id": "ESI",
+        "station_name": "ESI Hospital",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.4407241,
+          17.4431205
+        ]
+      },
+      "properties": {
+        "station_id": "SRN",
+        "station_name": "S. R. Nagar",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.4447933,
+          17.4357214
+        ]
+      },
+      "properties": {
+        "station_id": "AME",
+        "station_name": "Ameerpet",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.450955,
+          17.4289362
+        ]
+      },
+      "properties": {
+        "station_id": "PUN",
+        "station_name": "Panjagutta",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.4563489,
+          17.4202292
+        ]
+      },
+      "properties": {
+        "station_id": "IRM",
+        "station_name": "Erra Manzil",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.4608678,
+          17.4116323
+        ]
+      },
+      "properties": {
+        "station_id": "KHA",
+        "station_name": "Khairatabad",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.4649442,
+          17.4040433
+        ]
+      },
+      "properties": {
+        "station_id": "LKP",
+        "station_name": "Lakdi-ka-pul",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.4708797,
+          17.3979907
+        ]
+      },
+      "properties": {
+        "station_id": "ASM",
+        "station_name": "Assembly",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.4701612,
+          17.392222
+        ]
+      },
+      "properties": {
+        "station_id": "NAM",
+        "station_name": "Nampally",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.4733347,
+          17.3858253
+        ]
+      },
+      "properties": {
+        "station_id": "GAB",
+        "station_name": "Gandhi Bhavan",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.4817011,
+          17.3820769
+        ]
+      },
+      "properties": {
+        "station_id": "OMC",
+        "station_name": "Osmania Medical College",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.4861571,
+          17.3797886
+        ]
+      },
+      "properties": {
+        "station_id": "MGB",
+        "station_name": "Mahatma Gandhi Bus Station",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.4939356,
+          17.3771888
+        ]
+      },
+      "properties": {
+        "station_id": "MKL",
+        "station_name": "Malakpet",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.5031791,
+          17.3734454
+        ]
+      },
+      "properties": {
+        "station_id": "NEM",
+        "station_name": "New Market",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.5119545,
+          17.3710873
+        ]
+      },
+      "properties": {
+        "station_id": "MSB",
+        "station_name": "Musarambagh",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.5253873,
+          17.3685493
+        ]
+      },
+      "properties": {
+        "station_id": "DSN",
+        "station_name": "Dilsukh Nagar",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.5381335,
+          17.3681501
+        ]
+      },
+      "properties": {
+        "station_id": "CHP",
+        "station_name": "Chaitanyapuri",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.5439622,
+          17.3618565
+        ]
+      },
+      "properties": {
+        "station_id": "VOM",
+        "station_name": "Victoria Memorial",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.5479412,
+          17.349846
+        ]
+      },
+      "properties": {
+        "station_id": "LBN",
+        "station_name": "L. B. Nagar",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.4840241,
+          17.3844473
+        ]
+      },
+      "properties": {
+        "station_id": "SUB",
+        "station_name": "Sultan Bazar",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.4899578,
+          17.3943658
+        ]
+      },
+      "properties": {
+        "station_id": "NAR",
+        "station_name": "Narayanaguda",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.4948964,
+          17.4003634
+        ]
+      },
+      "properties": {
+        "station_id": "CDP",
+        "station_name": "Chikkadpally",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.4968023,
+          17.4070321
+        ]
+      },
+      "properties": {
+        "station_id": "RTC",
+        "station_name": "RTC Cross Roads",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.4995051,
+          17.4178744
+        ]
+      },
+      "properties": {
+        "station_id": "MSH",
+        "station_name": "Musheerabad",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.501956,
+          17.4255155
+        ]
+      },
+      "properties": {
+        "station_id": "GNH",
+        "station_name": "Gandhi Hospital",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.4995181,
+          17.4338034
+        ]
+      },
+      "properties": {
+        "station_id": "SCR",
+        "station_name": "Secunderabad West",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.497584,
+          17.4444775
+        ]
+      },
+      "properties": {
+        "station_id": "JBS",
+        "station_name": "JBS Parade Ground",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.5588222,
+          17.3907683
+        ]
+      },
+      "properties": {
+        "station_id": "NAG",
+        "station_name": "Nagole",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.5601868,
+          17.4000665
+        ]
+      },
+      "properties": {
+        "station_id": "UPL",
+        "station_name": "Uppal",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.5542531,
+          17.4074002
+        ]
+      },
+      "properties": {
+        "station_id": "STD",
+        "station_name": "Stadium",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.5463345,
+          17.4148264
+        ]
+      },
+      "properties": {
+        "station_id": "NGR",
+        "station_name": "NGRI",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.540548,
+          17.42018
+        ]
+      },
+      "properties": {
+        "station_id": "HSG",
+        "station_name": "Habsiguda",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.5300079,
+          17.4274418
+        ]
+      },
+      "properties": {
+        "station_id": "TAR",
+        "station_name": "Tarnaka",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.5195754,
+          17.4355207
+        ]
+      },
+      "properties": {
+        "station_id": "MET",
+        "station_name": "Mettuguda",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.5054623,
+          17.4357184
+        ]
+      },
+      "properties": {
+        "station_id": "SEC_E",
+        "station_name": "Secunderabad East",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.4974687,
+          17.4431943
+        ]
+      },
+      "properties": {
+        "station_id": "PRG",
+        "station_name": "Parade Ground",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.4862436,
+          17.4434668
+        ]
+      },
+      "properties": {
+        "station_id": "PAR",
+        "station_name": "Paradise",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.4764053,
+          17.443612
+        ]
+      },
+      "properties": {
+        "station_id": "ROP",
+        "station_name": "Rasoolpura",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.4658749,
+          17.4448889
+        ]
+      },
+      "properties": {
+        "station_id": "PRN",
+        "station_name": "Prakash Nagar",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.4569341,
+          17.4375661
+        ]
+      },
+      "properties": {
+        "station_id": "BEG",
+        "station_name": "Begumpet",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.4390993,
+          17.4369652
+        ]
+      },
+      "properties": {
+        "station_id": "MUN",
+        "station_name": "Madhura Nagar",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.4273216,
+          17.4351132
+        ]
+      },
+      "properties": {
+        "station_id": "YUG",
+        "station_name": "Yusufguda",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.4232069,
+          17.4300489
+        ]
+      },
+      "properties": {
+        "station_id": "JR5",
+        "station_name": "Road No 5 Jubilee Hills",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.4137145,
+          17.4281969
+        ]
+      },
+      "properties": {
+        "station_id": "JCP",
+        "station_name": "Jubilee Hills Checkpost",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.4083721,
+          17.4306512
+        ]
+      },
+      "properties": {
+        "station_id": "PED",
+        "station_name": "Peddamma Gudi",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.4004257,
+          17.4372637
+        ]
+      },
+      "properties": {
+        "station_id": "MAD",
+        "station_name": "Madhapur",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.3875721,
+          17.4429466
+        ]
+      },
+      "properties": {
+        "station_id": "DGC",
+        "station_name": "Durgam Cheruvu",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.3831376,
+          17.4490055
+        ]
+      },
+      "properties": {
+        "station_id": "HTC",
+        "station_name": "HITEC City",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          78.3772038,
+          17.442
+        ]
+      },
+      "properties": {
+        "station_id": "RDG",
+        "station_name": "Raidurg",
+        "metro_system_id": "HYD",
+        "source": "GTFS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.757859,
+          12.9956461
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_001",
+        "station_name": "Whitefield (Kadugodi)",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.7537582,
+          12.9871126
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_002",
+        "station_name": "Hopefarm Channasandra",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.7470262,
+          12.9856768
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_003",
+        "station_name": "Kadugodi Tree Park",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.7377718,
+          12.9876393
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_004",
+        "station_name": "Pattandur Agrahara",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.7275361,
+          12.9811949
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_005",
+        "station_name": "Sathya Sai Hospital",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.7248845,
+          12.9766408
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_006",
+        "station_name": "Nallurahalli",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.7155586,
+          12.977594
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_007",
+        "station_name": "Kundalahalli",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.7087519,
+          12.9809532
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_008",
+        "station_name": "Seetharampalya",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.711326,
+          12.9888029
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_009",
+        "station_name": "Hoodi",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.7036768,
+          12.9934505
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_010",
+        "station_name": "Garudacharpalya",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.6927176,
+          12.9965445
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_011",
+        "station_name": "Singayyanapalya",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.6776721,
+          12.9999042
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_012",
+        "station_name": "Krishnarajapura",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.5001349,
+          13.0479497
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_013",
+        "station_name": "Nagasandra",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.5125535,
+          13.0432607
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_014",
+        "station_name": "Dasarahalli",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.5197351,
+          13.0394104
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_015",
+        "station_name": "Jalahalli",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.5631963,
+          12.9965253
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_016",
+        "station_name": "Srirampura",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.6523976,
+          12.9907623
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_017",
+        "station_name": "Baiyyappanahalli",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.644897,
+          12.9859306
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_018",
+        "station_name": "Swami Vivekananda Road",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.6386612,
+          12.9783325
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_019",
+        "station_name": "Indiranagar",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.626686,
+          12.9764992
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_020",
+        "station_name": "Halasuru",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.6170205,
+          12.9730218
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_021",
+        "station_name": "Trinity",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.6067902,
+          12.9755264
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_022",
+        "station_name": "Mahatma Gandhi Road",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.5975756,
+          12.9809575
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_023",
+        "station_name": "Cubbon Park",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.5916385,
+          12.9787419
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_024",
+        "station_name": "Dr. B R Ambedkar Station, Vidhana Soudha",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.58422,
+          12.9745197
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_025",
+        "station_name": "Sir M Vishweshwariah - Central College",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.5728757,
+          12.9757079
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_026",
+        "station_name": "Nadaprabhu Kempegowda Station, Majestic",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.5653767,
+          12.9758768
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_027",
+        "station_name": "Krantivira Sangolli Rayanna",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.5553523,
+          12.975632
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_028",
+        "station_name": "Magadi Road",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.5456215,
+          12.9742933
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_029",
+        "station_name": "Sri Balagangadaranatha Swamy, Hosahalli",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.5374044,
+          12.9709559
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_030",
+        "station_name": "Vijayanagara",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.5335788,
+          12.9618931
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_031",
+        "station_name": "Attiguppe",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.5370122,
+          12.9520578
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_032",
+        "station_name": "Deepanjali Nagar",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.5301588,
+          12.9467183
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_033",
+        "station_name": "Mysore Road",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.5707293,
+          12.9904629
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_034",
+        "station_name": "Mantri Square Sampige Road",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.5568986,
+          12.9985297
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_035",
+        "station_name": "Mahakavi Kuvempu Road",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.5496568,
+          13.0005247
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_036",
+        "station_name": "Rajajinagar",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.5487134,
+          13.0080952
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_037",
+        "station_name": "Mahalakshmi",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.5539839,
+          13.0146544
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_038",
+        "station_name": "Sandal Soap Factory",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.5408961,
+          13.0284078
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_039",
+        "station_name": "Goraguntepalya",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.533201,
+          13.0330189
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_040",
+        "station_name": "Peenya",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.5254924,
+          13.0363176
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_041",
+        "station_name": "Peenya Industry",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.5701194,
+          12.8960498
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_042",
+        "station_name": "Yelachenahalli",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.5731279,
+          12.9074747
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_043",
+        "station_name": "J P Nagar",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.573598,
+          12.9152208
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_044",
+        "station_name": "Banashankari",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.5802295,
+          12.9213258
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_045",
+        "station_name": "Rashtriya Vidyalaya Road",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.5801439,
+          12.9295069
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_046",
+        "station_name": "Jayanagar",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.5800556,
+          12.9382573
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_047",
+        "station_name": "South End Circle",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.580016,
+          12.9465265
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_048",
+        "station_name": "Lalbagh",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.5736794,
+          12.9505161
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_049",
+        "station_name": "National College",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.5746578,
+          12.9608788
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_050",
+        "station_name": "Krishna Rajendra Market",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.5745663,
+          12.9668935
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_051",
+        "station_name": "Chikkapete",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.5124063,
+          12.9354357
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_052",
+        "station_name": "Jnana Bharathi",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.5251166,
+          12.9416715
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_053",
+        "station_name": "Nayandahalli",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.4878557,
+          12.914689
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_054",
+        "station_name": "Kengeri Bus Terminal",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.4765784,
+          12.9079105
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_055",
+        "station_name": "Kengeri",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.5196788,
+          12.9365996
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_056",
+        "station_name": "Rajarajeshwari Nagar",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.4983509,
+          12.9242505
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_057",
+        "station_name": "Pattanagere",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.5299545,
+          12.8617298
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_058",
+        "station_name": "Silk Institute",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.5383958,
+          12.8714097
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_059",
+        "station_name": "Thalaghattapura",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.5447414,
+          12.8774369
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_060",
+        "station_name": "Vajarahalli",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.5527546,
+          12.8846435
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_061",
+        "station_name": "Doddakallasandra",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.5626665,
+          12.8889671
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_062",
+        "station_name": "Konanakunte Cross",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.54989340981854,
+          13.02327288918433
+        ]
+      },
+      "properties": {
+        "station_id": "BLR_063",
+        "station_name": "Yeshwanthapura",
+        "metro_system_id": "BLR",
+        "source": "KML"
+      }
+    }
+  ]
+}

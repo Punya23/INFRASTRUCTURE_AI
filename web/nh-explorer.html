@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>National Highways Explorer — INFRA-AI</title>
+  <meta name="description" content="Explore India's 146,194 km National Highway network — real data from OSM and MoRTH. Interactive map with toll plazas, access analysis, and state-level metrics."/>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+  <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet"/>
+  <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+  <style>
+    :root {
+      --canvas-base: #F7F6F2; --surface: #FFFFFF; --text-primary: #14202B;
+      --text-secondary: #5B6773; --text-muted: #8895A5; --border-subtle: #E3E1DA;
+      --brand-teal: #0E5A66; --brand-teal-hover: #0A444D; --accent-saffron: #E08A1E;
+      --status-operational: #0E5A66; --status-construction: #D97706;
+      --status-planned: #3A6EA5; --status-stalled: #B3382C;
+      --primary: #00414b; --on-primary: #ffffff; --primary-container: #0e5a66;
+      --secondary: #8a5100; --secondary-container: #fda137;
+      --on-surface: #111d28; --on-surface-variant: #3f484a;
+      --outline: #70797b; --outline-variant: #bfc8ca;
+      --surface-container: #e3efff; --surface-container-low: #edf4ff;
+      --surface-container-lowest: #ffffff;
+      --shadow-1: 0px 1px 3px rgba(20,32,43,0.05);
+      --shadow-2: 0px 4px 12px rgba(20,32,43,0.08);
+      --shadow-3: 0px 12px 28px rgba(20,32,43,0.12);
+      --radius: 0.5rem; --radius-lg: 1rem; --radius-xl: 1.5rem;
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', system-ui, sans-serif; background: var(--canvas-base); color: var(--text-primary); }
+    button { border: none; background: none; cursor: pointer; font: inherit; }
+    a { text-decoration: none; color: inherit; }
+
+    /* Header */
+    .header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(255,255,255,0.95); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-subtle); height: 56px;
+    }
+    .header-inner {
+      max-width: 100%; height: 100%; padding: 0 1rem;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .brand-link { display: flex; align-items: center; gap: 0.5rem; }
+    .brand-name { font-size: 1.125rem; font-weight: 700; color: var(--primary); letter-spacing: -0.02em; }
+    .brand-sub { font-size: 0.7rem; color: var(--text-secondary); }
+    .nav-pills { display: flex; gap: 0.25rem; }
+    .nav-pill {
+      padding: 0.375rem 0.75rem; border-radius: 999px; font-size: 0.8125rem;
+      font-weight: 500; color: var(--text-secondary); transition: all 0.2s;
+    }
+    .nav-pill:hover { background: rgba(14,90,102,0.06); color: var(--primary); }
+    .nav-pill.active { background: var(--primary); color: var(--on-primary); }
+    .header-actions { display: flex; align-items: center; gap: 0.5rem; }
+
+    /* Layout */
+    .app-layout {
+      display: grid; grid-template-columns: 1fr 380px;
+      height: calc(100vh - 56px); margin-top: 56px;
+    }
+
+    /* Map */
+    #map { width: 100%; height: 100%; }
+
+    /* Sidebar */
+    .sidebar {
+      background: var(--surface); border-left: 1px solid var(--border-subtle);
+      overflow-y: auto; display: flex; flex-direction: column;
+    }
+    .sidebar-header {
+      padding: 1rem; border-bottom: 1px solid var(--border-subtle);
+      position: sticky; top: 0; background: var(--surface); z-index: 10;
+    }
+    .sidebar-title { font-size: 1rem; font-weight: 700; color: var(--primary); }
+    .sidebar-subtitle { font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.25rem; }
+
+    /* Layer toggles */
+    .layer-section { padding: 0.75rem 1rem; border-bottom: 1px solid var(--border-subtle); }
+    .layer-title {
+      font-size: 0.6875rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.5rem;
+    }
+    .layer-toggle {
+      display: flex; align-items: center; gap: 0.75rem;
+      padding: 0.5rem 0; cursor: pointer;
+    }
+    .layer-toggle input[type="checkbox"] { display: none; }
+    .layer-swatch {
+      width: 14px; height: 14px; border-radius: 3px;
+      border: 2px solid var(--outline-variant); transition: all 0.2s;
+    }
+    .layer-toggle input:checked + .layer-swatch {
+      border-color: currentColor; box-shadow: inset 0 0 0 3px currentColor;
+    }
+    .layer-label { font-size: 0.8125rem; font-weight: 500; flex: 1; }
+    .layer-count {
+      font-size: 0.6875rem; font-family: 'JetBrains Mono', monospace;
+      color: var(--text-muted); font-weight: 500;
+    }
+
+    /* Stats cards */
+    .stats-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 0.625rem; padding: 0.75rem 1rem;
+    }
+    .stat-card {
+      background: var(--canvas-base); border-radius: var(--radius);
+      padding: 0.75rem; border: 1px solid var(--border-subtle);
+    }
+    .stat-label {
+      font-size: 0.625rem; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.05em; color: var(--text-muted);
+    }
+    .stat-value {
+      font-size: 1.25rem; font-weight: 700; color: var(--primary);
+      font-family: 'JetBrains Mono', monospace; margin-top: 0.125rem;
+    }
+    .stat-unit { font-size: 0.6875rem; color: var(--text-secondary); }
+    .stat-source {
+      font-size: 0.5625rem; color: var(--text-muted); margin-top: 0.25rem;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* State table */
+    .state-table-section { padding: 0.75rem 1rem; flex: 1; }
+    .state-table {
+      width: 100%; border-collapse: collapse; font-size: 0.75rem;
+    }
+    .state-table th {
+      position: sticky; top: 0; background: var(--surface);
+      text-align: left; padding: 0.5rem 0.375rem; font-weight: 600;
+      color: var(--text-muted); font-size: 0.625rem; text-transform: uppercase;
+      letter-spacing: 0.04em; border-bottom: 2px solid var(--border-subtle);
+      cursor: pointer; user-select: none;
+    }
+    .state-table th:hover { color: var(--primary); }
+    .state-table td {
+      padding: 0.375rem; border-bottom: 1px solid rgba(0,0,0,0.04);
+      font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem;
+    }
+    .state-table tr:hover td { background: rgba(14,90,102,0.03); }
+    .state-name { font-family: 'Inter', sans-serif; font-weight: 500; color: var(--on-surface); }
+    .bar-cell { position: relative; }
+    .bar-fill {
+      position: absolute; left: 0; top: 2px; bottom: 2px;
+      border-radius: 2px; opacity: 0.15;
+    }
+
+    /* Map controls */
+    .map-overlay-top {
+      position: absolute; top: 12px; left: 12px; z-index: 10;
+      display: flex; flex-direction: column; gap: 0.5rem;
+    }
+    .map-chip {
+      background: rgba(255,255,255,0.92); backdrop-filter: blur(8px);
+      border-radius: var(--radius); padding: 0.5rem 0.75rem;
+      box-shadow: var(--shadow-2); border: 1px solid var(--border-subtle);
+      font-size: 0.75rem; display: flex; align-items: center; gap: 0.375rem;
+    }
+    .map-chip strong { color: var(--primary); }
+    .map-chip .mono {
+      font-family: 'JetBrains Mono', monospace; font-weight: 600;
+      color: var(--primary);
+    }
+
+    /* Legend */
+    .map-legend {
+      position: absolute; bottom: 24px; left: 12px; z-index: 10;
+      background: rgba(255,255,255,0.92); backdrop-filter: blur(8px);
+      border-radius: var(--radius); padding: 0.625rem 0.75rem;
+      box-shadow: var(--shadow-2); border: 1px solid var(--border-subtle);
+    }
+    .legend-title {
+      font-size: 0.625rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.375rem;
+    }
+    .legend-item {
+      display: flex; align-items: center; gap: 0.5rem;
+      font-size: 0.6875rem; padding: 0.125rem 0;
+    }
+    .legend-line {
+      width: 20px; height: 3px; border-radius: 1px; flex-shrink: 0;
+    }
+    .legend-dot {
+      width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+    }
+
+    /* Feature popup */
+    .maplibregl-popup-content {
+      font-family: 'Inter', sans-serif !important;
+      padding: 0.75rem !important; border-radius: 0.5rem !important;
+      box-shadow: var(--shadow-3) !important; max-width: 280px !important;
+    }
+    .popup-title { font-weight: 700; font-size: 0.8125rem; color: var(--primary); margin-bottom: 0.25rem; }
+    .popup-row {
+      display: flex; justify-content: space-between; gap: 0.5rem;
+      font-size: 0.75rem; padding: 0.125rem 0; color: var(--text-secondary);
+    }
+    .popup-row strong { color: var(--on-surface); }
+    .popup-status {
+      display: inline-block; padding: 0.125rem 0.375rem; border-radius: 3px;
+      font-size: 0.625rem; font-weight: 600; text-transform: uppercase;
+    }
+    .status-operational { background: rgba(14,90,102,0.1); color: var(--status-operational); }
+    .status-under_construction { background: rgba(217,119,6,0.1); color: var(--status-construction); }
+    .status-proposed { background: rgba(58,110,165,0.1); color: var(--status-planned); }
+
+    /* Loading */
+    .loading-overlay {
+      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(247,246,242,0.8); display: flex;
+      align-items: center; justify-content: center; z-index: 20;
+      flex-direction: column; gap: 0.75rem;
+    }
+    .loading-spinner {
+      width: 32px; height: 32px; border: 3px solid var(--border-subtle);
+      border-top-color: var(--primary); border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-text { font-size: 0.8125rem; color: var(--text-secondary); }
+
+    @media (max-width: 768px) {
+      .app-layout { grid-template-columns: 1fr; grid-template-rows: 50vh 1fr; }
+      .nav-pills { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <div style="display:flex;align-items:center;gap:1rem;">
+        <a class="brand-link" href="index.html">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" width="36" height="36" fill="none">
+            <rect width="36" height="36" rx="6" fill="#0E5A66"/>
+            <circle cx="18" cy="18" r="12" stroke="#E08A1E" stroke-width="1.5" stroke-dasharray="3 2"/>
+            <path d="M18 8V28" stroke="#FFF" stroke-width="2" stroke-linecap="round"/>
+            <path d="M8 18H28" stroke="#FFF" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="18" cy="18" r="4" fill="#E08A1E" stroke="#FFF" stroke-width="1"/>
+          </svg>
+          <div>
+            <div class="brand-name">INFRA-AI</div>
+            <div class="brand-sub">National Highways Explorer</div>
+          </div>
+        </a>
+        <nav class="nav-pills">
+          <a class="nav-pill" href="index.html">Home</a>
+          <a class="nav-pill active" href="#">NH Map</a>
+          <a class="nav-pill" href="policymaker.html">Policymaker</a>
+          <a class="nav-pill" href="methodology.html">Methodology</a>
+        </nav>
+      </div>
+      <div class="header-actions">
+        <a href="policymaker.html" style="padding:0.375rem 0.75rem;border-radius:999px;background:var(--primary);color:var(--on-primary);font-size:0.8125rem;font-weight:600;">
+          <span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;">dashboard</span>
+          Policymaker Dashboard
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <div class="app-layout">
+    <!-- MAP PANEL -->
+    <div style="position:relative;">
+      <div id="map"></div>
+
+      <div id="loading-overlay" class="loading-overlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Loading National Highway network…</div>
+      </div>
+
+      <div class="map-overlay-top">
+        <div class="map-chip">
+          <span class="material-symbols-outlined" style="font-size:16px;color:var(--primary);">verified</span>
+          <span><strong>Real data</strong> — OSM + MoRTH Annual Report 2024-25</span>
+        </div>
+        <div class="map-chip" id="feature-count-chip">
+          <span class="material-symbols-outlined" style="font-size:16px;color:var(--accent-saffron);">route</span>
+          <span>NH network: <span class="mono" id="nh-km-count">—</span> km mapped</span>
+        </div>
+      </div>
+
+      <div class="map-legend" id="map-legend">
+        <div class="legend-title">National Highway Network</div>
+        <div class="legend-item">
+          <div class="legend-line" style="background:#0E5A66;"></div>
+          <span>NH Segments (operational)</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-line" style="background:#D97706;height:3px;border-style:dashed;border-width:0 0 3px 0;background:none;border-color:#D97706;"></div>
+          <span>Under construction</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#E08A1E;"></div>
+          <span>Toll Plazas</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-line" style="background:rgba(14,90,102,0.3);height:8px;border-radius:2px;"></div>
+          <span>NH Access (population within 10 km)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-title">National Highways — India</div>
+        <div class="sidebar-subtitle">Field: national_highways · Source: OSM + MoRTH 2024-25</div>
+      </div>
+
+      <!-- National stats -->
+      <div class="stats-grid" id="national-stats">
+        <div class="stat-card">
+          <div class="stat-label">Official NH Length</div>
+          <div class="stat-value" id="stat-official-km">—</div>
+          <div class="stat-unit">kilometres</div>
+          <div class="stat-source">[MoRTH 2024-25]</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">OSM Mapped</div>
+          <div class="stat-value" id="stat-osm-km">—</div>
+          <div class="stat-unit">km (<span id="stat-osm-ratio">—</span>%)</div>
+          <div class="stat-source">[© OSM contributors]</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Under Construction</div>
+          <div class="stat-value" id="stat-uc-km">—</div>
+          <div class="stat-unit">km (NHAI)</div>
+          <div class="stat-source">[NHAI Datalake]</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Crash Deaths (NHAI)</div>
+          <div class="stat-value" id="stat-deaths">—</div>
+          <div class="stat-unit">FY 2022-23</div>
+          <div class="stat-source">[NHAI 2022-23]</div>
+        </div>
+      </div>
+
+      <!-- Layer toggles -->
+      <div class="layer-section">
+        <div class="layer-title">Map Layers</div>
+        <label class="layer-toggle" style="color:var(--status-operational);">
+          <input type="checkbox" checked id="toggle-segments"/>
+          <div class="layer-swatch" style="color:var(--status-operational);"></div>
+          <span class="layer-label">NH Segments</span>
+          <span class="layer-count" id="count-segments">—</span>
+        </label>
+        <label class="layer-toggle" style="color:var(--accent-saffron);">
+          <input type="checkbox" checked id="toggle-tolls"/>
+          <div class="layer-swatch" style="color:var(--accent-saffron);"></div>
+          <span class="layer-label">Toll Plazas</span>
+          <span class="layer-count" id="count-tolls">—</span>
+        </label>
+        <label class="layer-toggle" style="color:rgba(14,90,102,0.5);">
+          <input type="checkbox" id="toggle-access"/>
+          <div class="layer-swatch" style="color:rgba(14,90,102,0.5);"></div>
+          <span class="layer-label">NH Access (10 km)</span>
+          <span class="layer-count" id="count-access">—</span>
+        </label>
+      </div>
+
+      <!-- State table -->
+      <div class="state-table-section">
+        <div class="layer-title">State-wise NH Metrics</div>
+        <div style="overflow-x:auto;">
+          <table class="state-table" id="state-table">
+            <thead>
+              <tr>
+                <th onclick="sortTable(0)">State</th>
+                <th onclick="sortTable(1)">NH km</th>
+                <th onclick="sortTable(2)">OSM %</th>
+                <th onclick="sortTable(3)">≤10 km</th>
+                <th onclick="sortTable(4)">Deaths/100km</th>
+              </tr>
+            </thead>
+            <tbody id="state-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ========================================
+    // INFRA-AI National Highways Explorer
+    // Real data from ML pipeline fixtures
+    // ========================================
+
+    let map;
+    let nhSegmentsData = null;
+    let tollPlazasData = null;
+    let nhAccessData = null;
+    let stateMetrics = null;
+    let sortCol = 1, sortAsc = false;
+
+    // Initialize map
+    async function init() {
+      map = new maplibregl.Map({
+        container: 'map',
+        style: {
+          version: 8,
+          name: 'INFRA-AI Basemap',
+          sources: {
+            'osm-tiles': {
+              type: 'raster',
+              tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
+              tileSize: 256,
+              attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }
+          },
+          layers: [{
+            id: 'osm-base',
+            type: 'raster',
+            source: 'osm-tiles',
+            minzoom: 0,
+            maxzoom: 19
+          }]
+        },
+        center: [78.9, 22.5], // Center of India
+        zoom: 4.5,
+        maxZoom: 16,
+        minZoom: 3
+      });
+
+      map.addControl(new maplibregl.NavigationControl(), 'top-right');
+      map.addControl(new maplibregl.ScaleControl({ maxWidth: 200 }), 'bottom-right');
+
+      map.on('load', loadData);
+    }
+
+    async function loadData() {
+      try {
+        // Load all fixtures in parallel
+        const [segRes, tollRes, accessRes, metricsRes] = await Promise.all([
+          fetch('fixtures/national_highways/nh_segments.geojson'),
+          fetch('fixtures/national_highways/toll_plazas.geojson'),
+          fetch('fixtures/national_highways/nh_access.geojson'),
+          fetch('fixtures/national_highways/nh_state_metrics.json')
+        ]);
+
+        nhSegmentsData = await segRes.json();
+        tollPlazasData = await tollRes.json();
+        nhAccessData = await accessRes.json();
+        stateMetrics = await metricsRes.json();
+
+        addMapLayers();
+        hydrateStats();
+        renderStateTable();
+
+        // Hide loading
+        document.getElementById('loading-overlay').style.display = 'none';
+      } catch (err) {
+        console.error('Failed to load data:', err);
+        document.querySelector('.loading-text').textContent = 'Error loading data. Check console.';
+      }
+    }
+
+    function addMapLayers() {
+      // NH Access (heatmap-like polygons) — off by default
+      map.addSource('nh-access', { type: 'geojson', data: nhAccessData });
+      map.addLayer({
+        id: 'nh-access-fill',
+        type: 'fill',
+        source: 'nh-access',
+        paint: {
+          'fill-color': [
+            'interpolate', ['linear'],
+            ['get', 'mean_km'],
+            0, '#0E5A66',
+            5, '#3A6EA5',
+            10, '#D97706',
+            20, '#B3382C'
+          ],
+          'fill-opacity': 0.25
+        },
+        layout: { visibility: 'none' }
+      });
+
+      // NH Segments (lines)
+      map.addSource('nh-segments', { type: 'geojson', data: nhSegmentsData });
+      map.addLayer({
+        id: 'nh-segments-casing',
+        type: 'line',
+        source: 'nh-segments',
+        paint: {
+          'line-color': '#ffffff',
+          'line-width': ['interpolate', ['linear'], ['zoom'], 4, 2, 8, 5, 12, 8],
+          'line-opacity': 0.6
+        }
+      });
+      map.addLayer({
+        id: 'nh-segments-line',
+        type: 'line',
+        source: 'nh-segments',
+        paint: {
+          'line-color': [
+            'match', ['get', 'status'],
+            'under_construction', '#D97706',
+            'proposed', '#3A6EA5',
+            '#0E5A66'  // operational default
+          ],
+          'line-width': ['interpolate', ['linear'], ['zoom'], 4, 1, 8, 3, 12, 5],
+          'line-opacity': 0.85
+        }
+      });
+
+      // NH Labels at higher zoom
+      map.addLayer({
+        id: 'nh-segments-label',
+        type: 'symbol',
+        source: 'nh-segments',
+        minzoom: 7,
+        layout: {
+          'symbol-placement': 'line',
+          'text-field': ['get', 'ref'],
+          'text-size': 10,
+          'text-font': ['Open Sans Regular'],
+          'text-offset': [0, -0.8],
+          'text-max-angle': 30
+        },
+        paint: {
+          'text-color': '#0E5A66',
+          'text-halo-color': '#ffffff',
+          'text-halo-width': 2
+        }
+      });
+
+      // Toll Plazas (circles)
+      map.addSource('toll-plazas', { type: 'geojson', data: tollPlazasData });
+      map.addLayer({
+        id: 'toll-plazas-circle',
+        type: 'circle',
+        source: 'toll-plazas',
+        paint: {
+          'circle-radius': ['interpolate', ['linear'], ['zoom'], 4, 2, 8, 4, 12, 7],
+          'circle-color': '#E08A1E',
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-width': 1,
+          'circle-opacity': 0.8
+        }
+      });
+
+      // Interactions
+      setupInteractions();
+      updateCounts();
+    }
+
+    function setupInteractions() {
+      // NH Segment click
+      map.on('click', 'nh-segments-line', (e) => {
+        const f = e.features[0];
+        const p = f.properties;
+        const html = `
+          <div class="popup-title">${p.ref || p.name || 'NH Segment'}</div>
+          <div class="popup-row"><span>Status:</span><span class="popup-status status-${p.status || 'operational'}">${(p.status || 'operational').replace('_', ' ')}</span></div>
+          ${p.lanes ? `<div class="popup-row"><span>Lanes:</span><strong>${p.lanes}</strong></div>` : ''}
+          ${p.surface ? `<div class="popup-row"><span>Surface:</span><strong>${p.surface}</strong></div>` : ''}
+          ${p.length_km ? `<div class="popup-row"><span>Length:</span><strong>${Number(p.length_km).toFixed(1)} km</strong></div>` : ''}
+          ${p.source ? `<div style="font-size:0.625rem;color:var(--text-muted);margin-top:0.25rem;font-family:'JetBrains Mono',monospace;">Source: ${p.source}</div>` : ''}
+        `;
+        new maplibregl.Popup({ maxWidth: '280px' }).setLngLat(e.lngLat).setHTML(html).addTo(map);
+      });
+
+      // Toll plaza click
+      map.on('click', 'toll-plazas-circle', (e) => {
+        const f = e.features[0];
+        const p = f.properties;
+        const html = `
+          <div class="popup-title">${p.name || 'Toll Plaza'}</div>
+          ${p.ref ? `<div class="popup-row"><span>Highway:</span><strong>${p.ref}</strong></div>` : ''}
+          ${p.operator ? `<div class="popup-row"><span>Operator:</span><strong>${p.operator}</strong></div>` : ''}
+          <div style="font-size:0.625rem;color:var(--text-muted);margin-top:0.25rem;font-family:'JetBrains Mono',monospace;">Source: OSM</div>
+        `;
+        new maplibregl.Popup({ maxWidth: '260px' }).setLngLat(e.lngLat).setHTML(html).addTo(map);
+      });
+
+      // Cursors
+      ['nh-segments-line', 'toll-plazas-circle'].forEach(layer => {
+        map.on('mouseenter', layer, () => map.getCanvas().style.cursor = 'pointer');
+        map.on('mouseleave', layer, () => map.getCanvas().style.cursor = '');
+      });
+
+      // Layer toggles
+      document.getElementById('toggle-segments').addEventListener('change', (e) => {
+        const vis = e.target.checked ? 'visible' : 'none';
+        map.setLayoutProperty('nh-segments-line', 'visibility', vis);
+        map.setLayoutProperty('nh-segments-casing', 'visibility', vis);
+        if (map.getLayer('nh-segments-label')) map.setLayoutProperty('nh-segments-label', 'visibility', vis);
+      });
+      document.getElementById('toggle-tolls').addEventListener('change', (e) => {
+        map.setLayoutProperty('toll-plazas-circle', 'visibility', e.target.checked ? 'visible' : 'none');
+      });
+      document.getElementById('toggle-access').addEventListener('change', (e) => {
+        map.setLayoutProperty('nh-access-fill', 'visibility', e.target.checked ? 'visible' : 'none');
+      });
+    }
+
+    function updateCounts() {
+      if (nhSegmentsData) {
+        document.getElementById('count-segments').textContent = nhSegmentsData.features.length.toLocaleString();
+      }
+      if (tollPlazasData) {
+        document.getElementById('count-tolls').textContent = tollPlazasData.features.length.toLocaleString();
+      }
+      if (nhAccessData) {
+        document.getElementById('count-access').textContent = nhAccessData.features.length.toLocaleString();
+      }
+    }
+
+    function hydrateStats() {
+      if (!stateMetrics || !stateMetrics.states) return;
+      const india = stateMetrics.states.find(s => s.state === 'India');
+      if (!india) return;
+
+      document.getElementById('stat-official-km').textContent = india.official_km.toLocaleString('en-IN');
+      document.getElementById('stat-osm-km').textContent = Math.round(india.osm_nh_km).toLocaleString('en-IN');
+      document.getElementById('stat-osm-ratio').textContent = (india.osm_ratio * 100).toFixed(1);
+      document.getElementById('stat-uc-km').textContent = india.nhai_km_under_construction.toLocaleString('en-IN');
+      document.getElementById('stat-deaths').textContent = india.nhai_2022_23_deaths.toLocaleString('en-IN');
+      document.getElementById('nh-km-count').textContent = Math.round(india.osm_nh_km).toLocaleString('en-IN');
+    }
+
+    function renderStateTable() {
+      if (!stateMetrics || !stateMetrics.states) return;
+      const states = stateMetrics.states.filter(s => s.state !== 'India');
+
+      // Sort
+      states.sort((a, b) => {
+        let va, vb;
+        switch (sortCol) {
+          case 0: va = a.state; vb = b.state; return sortAsc ? va.localeCompare(vb) : vb.localeCompare(va);
+          case 1: va = a.official_km || 0; vb = b.official_km || 0; break;
+          case 2: va = a.osm_ratio || 0; vb = b.osm_ratio || 0; break;
+          case 3: va = a.share_within_10km_now || 0; vb = b.share_within_10km_now || 0; break;
+          case 4: va = a.nhai_2022_23_deaths_per_100km_per_year || 0; vb = b.nhai_2022_23_deaths_per_100km_per_year || 0; break;
+        }
+        return sortAsc ? va - vb : vb - va;
+      });
+
+      const maxKm = Math.max(...states.map(s => s.official_km || 0));
+      const tbody = document.getElementById('state-tbody');
+      tbody.innerHTML = states.map(s => {
+        const barW = ((s.official_km || 0) / maxKm * 100).toFixed(1);
+        const deathRate = s.nhai_2022_23_deaths_per_100km_per_year;
+        const deathColor = deathRate > 6 ? 'var(--status-stalled)' : deathRate > 3 ? 'var(--status-construction)' : 'var(--status-operational)';
+        return `<tr>
+          <td class="state-name">${s.state}</td>
+          <td class="bar-cell">
+            <div class="bar-fill" style="background:var(--primary);width:${barW}%;"></div>
+            ${(s.official_km || 0).toLocaleString('en-IN')}
+          </td>
+          <td>${s.osm_ratio ? (s.osm_ratio * 100).toFixed(0) + '%' : '—'}</td>
+          <td>${s.share_within_10km_now ? (s.share_within_10km_now * 100).toFixed(0) + '%' : '—'}</td>
+          <td style="color:${deathColor};font-weight:600;">${deathRate ? deathRate.toFixed(1) : '—'}</td>
+        </tr>`;
+      }).join('');
+    }
+
+    function sortTable(col) {
+      if (sortCol === col) sortAsc = !sortAsc;
+      else { sortCol = col; sortAsc = col === 0; }
+      renderStateTable();
+    }
+
+    // Start
+    init();
+  </script>
+</body>
+</html>
