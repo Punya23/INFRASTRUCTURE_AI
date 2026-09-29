@@ -17,7 +17,10 @@ cities:
   tiers:
     metro_min_population: 2500000 # ≈ the 15 largest urban centres — team judgment, 2026-09-29
     large_min_population: 1000000 # ten lakh — team judgment, 2026-09-29
-  name_overrides: {}              # geonameid: "Display name" — only after reviewing data/processed/invest/review_pieces.csv (spec §5)
+  name_overrides:                 # geonameid: "Display name" — only after reviewing data/processed/invest/review_pieces.csv (spec §5)
+    1253102: "Visakhapatnam"      # GeoNames files the city's 1.73 M people under the locality Rasapudipalem; anchor on the city itself — review of the 2026-09 run
+    1270642: "Gurugram"           # Haryana's NCR piece: Faridabad is larger, but investors know it as Gurugram (spec §5 example); Faridabad stays an alias — team judgment, 2026-09-29
+    1260618: "Srinagar"           # Srinagar's GeoNames point lies off the piece's dense pixels, leaving Pampur (21,680 people) as its only place — review of the 2026-09 run
 
 confidence:
   base: 0.8                       # community (OSM) and modelled (WorldPop, GHSL) sources — team judgment, 2026-09-29
