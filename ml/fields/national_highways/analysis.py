@@ -540,7 +540,7 @@ def write_fixtures() -> None:
         den[["km_per_1000_km2", "km_per_lakh_people"]], how="left").join(
         saf[["accidents", "deaths", "deaths_per_100km"]].add_prefix("rai_2024_"), how="left").join(
         pipe.filter(like="nhai_target_").sum(axis=1).rename("nhai_km_under_construction"), how="left").join(
-        tt[["tolled_km_share", "median_car_fee_inr", "traffic_count_km_share",
+        tt[["tolled_km_share", "median_car_fee_inr", "median_truck_fee_inr", "traffic_count_km_share",
             "survey_points_per_100_official_km"]], how="left")
     FIXTURES.mkdir(parents=True, exist_ok=True)
     records = json.loads(table.round(3).reset_index().rename(columns={"index": "state"}).to_json(orient="records"))

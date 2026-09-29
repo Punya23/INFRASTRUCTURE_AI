@@ -131,14 +131,14 @@
     }
     .state-table th {
       position: sticky; top: 0; background: var(--surface);
-      text-align: left; padding: 0.5rem 0.375rem; font-weight: 600;
+      text-align: left; padding: 0.5rem 0.25rem; font-weight: 600;
       color: var(--text-muted); font-size: 0.625rem; text-transform: uppercase;
       letter-spacing: 0.04em; border-bottom: 2px solid var(--border-subtle);
       cursor: pointer; user-select: none;
     }
     .state-table th:hover { color: var(--primary); }
     .state-table td {
-      padding: 0.375rem; border-bottom: 1px solid rgba(0,0,0,0.04);
+      padding: 0.375rem 0.25rem; border-bottom: 1px solid rgba(0,0,0,0.04);
       font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem;
     }
     .state-table tr:hover td { background: rgba(14,90,102,0.03); }
@@ -337,6 +337,18 @@
           <div class="stat-unit">2024 (<span id="stat-death-rate">—</span>/100km)</div>
           <div class="stat-source">[RAI 2024, Annexures 9-10]</div>
         </div>
+        <div class="stat-card" title="Share of NHAI's completed NH length with a toll (open or closed system); median single-journey fee">
+          <div class="stat-label">Tolled NH</div>
+          <div class="stat-value"><span id="stat-tolled-share">—</span>%</div>
+          <div class="stat-unit">car ₹<span id="stat-car-fee">—</span> · truck ₹<span id="stat-truck-fee">—</span></div>
+          <div class="stat-source">[NHAI Datalake, aggregates]</div>
+        </div>
+        <div class="stat-card" title="Share of NHAI's NH length with traffic counts (NHAI publishes no legend for the counts, so volumes are not shown); confirmed count points per 100 km">
+          <div class="stat-label">Traffic Counts</div>
+          <div class="stat-value"><span id="stat-traffic-share">—</span>%</div>
+          <div class="stat-unit">of length · <span id="stat-survey-density">—</span> points/100km</div>
+          <div class="stat-source">[NHAI Datalake, aggregates]</div>
+        </div>
       </div>
 
       <!-- Layer toggles -->
@@ -373,7 +385,9 @@
                 <th onclick="sortTable(1)">NH km</th>
                 <th onclick="sortTable(2)">OSM %</th>
                 <th onclick="sortTable(3)">≤10 km</th>
-                <th onclick="sortTable(4)" title="NH deaths per 100 km, RAI 2024">Deaths/100km</th>
+                <th onclick="sortTable(4)" title="NH deaths per 100 km, RAI 2024">Deaths /100km</th>
+                <th onclick="sortTable(5)" title="Tolled: share of NHAI completed NH length with a toll (hover a cell for the median car fee)">Toll</th>
+                <th onclick="sortTable(6)" title="Share of NHAI NH length with traffic counts">Counted</th>
               </tr>
             </thead>
             <tbody id="state-tbody"></tbody>
@@ -669,7 +683,15 @@
       document.getElementById('stat-deaths').textContent = india.rai_2024_deaths.toLocaleString('en-IN');
       document.getElementById('stat-death-rate').textContent = india.rai_2024_deaths_per_100km.toFixed(1);
       document.getElementById('nh-km-count').textContent = Math.round(india.osm_nh_km).toLocaleString('en-IN');
+      const setIf = (id, v, fmt) => { if (v != null) document.getElementById(id).textContent = fmt(v); };
+      setIf('stat-tolled-share', india.tolled_km_share, v => (v * 100).toFixed(1));
+      setIf('stat-car-fee', india.median_car_fee_inr, v => v.toFixed(0));
+      setIf('stat-truck-fee', india.median_truck_fee_inr, v => v.toFixed(0));
+      setIf('stat-traffic-share', india.traffic_count_km_share, v => (v * 100).toFixed(1));
+      setIf('stat-survey-density', india.survey_points_per_100_official_km, v => v.toFixed(1));
     }
+
+    const pct = v => (v == null ? '—' : (v * 100).toFixed(0) + '%');
 
     function renderConnectivity() {
       if (!corridorEffect || !cityPairs) return;
@@ -712,6 +734,8 @@
           case 2: va = a.osm_ratio || 0; vb = b.osm_ratio || 0; break;
           case 3: va = a.share_within_10km_now || 0; vb = b.share_within_10km_now || 0; break;
           case 4: va = a.rai_2024_deaths_per_100km || 0; vb = b.rai_2024_deaths_per_100km || 0; break;
+          case 5: va = a.tolled_km_share ?? -1; vb = b.tolled_km_share ?? -1; break;
+          case 6: va = a.traffic_count_km_share ?? -1; vb = b.traffic_count_km_share ?? -1; break;
         }
         return sortAsc ? va - vb : vb - va;
       });
@@ -731,6 +755,8 @@
           <td>${s.osm_ratio ? (s.osm_ratio * 100).toFixed(0) + '%' : '—'}</td>
           <td>${s.share_within_10km_now ? (s.share_within_10km_now * 100).toFixed(0) + '%' : '—'}</td>
           <td style="color:${deathColor};font-weight:600;">${deathRate ? deathRate.toFixed(1) : '—'}</td>
+          <td title="${s.median_car_fee_inr != null ? 'Median car fee ₹' + s.median_car_fee_inr.toFixed(0) : 'No fee recorded'}">${pct(s.tolled_km_share)}</td>
+          <td>${pct(s.traffic_count_km_share)}</td>
         </tr>`;
       }).join('');
     }
