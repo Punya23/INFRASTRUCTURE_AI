@@ -8,6 +8,7 @@ import { ApiError, api } from './api.js';
 import { CITY_ID, DEFAULT_PRESET, PRESET_IDS } from './config.js';
 import { explain } from './explain.js';
 import { formatCount, formatDelta, formatScore, formatValue, tt } from './format.js';
+import { loadPrefs } from './prefs.js';
 import { ASSET_SOURCE, BREAKS, RAMP, cellCentre, createMap } from './map.js';
 import { clear, errorKey, h, onLangChange, renderError, renderSkeleton, setStatus, setStatusKey } from './ui.js';
 
@@ -22,14 +23,15 @@ const MAX_ALIASES = 4;
 export const SCOPES = ['metros', 'peers', 'state', 'india'];
 
 // { id, preset } from the query string. A malformed id is null (the page shows not-found without a
-// request); an unknown preset becomes the default and the page rewrites the address to say so.
-export function readParams(search) {
+// request). A missing preset falls back to the visitor's saved one; a present but unknown one is null
+// and the page goes back to start.html, as the state page does: it is never quietly replaced.
+export function readParams(search, fallbackPreset = DEFAULT_PRESET) {
   const params = new URLSearchParams(search);
   const id = params.get('c');
-  const preset = params.get('preset');
+  const preset = params.has('preset') ? params.get('preset') : fallbackPreset;
   return {
     id: id !== null && CITY_ID.test(id) ? id : null,
-    preset: PRESET_IDS.includes(preset) ? preset : DEFAULT_PRESET,
+    preset: PRESET_IDS.includes(preset) ? preset : null,
   };
 }
 
@@ -153,7 +155,8 @@ function boot() {
     scopes: $('city-scopes'), compare: $('city-compare'), compareMsg: $('city-compare-msg'),
   };
 
-  const params = readParams(location.search);
+  const params = readParams(location.search, loadPrefs().preset);
+  if (!params.preset) return location.replace('start.html');
   const s = {
     id: params.id, preset: params.preset, scope: null,
     city: null, states: null, areas: null, places: new Map(), byId: new Map(), compare: null,

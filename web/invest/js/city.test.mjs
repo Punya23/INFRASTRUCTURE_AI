@@ -18,7 +18,10 @@ const echo = (key, params) => (params ? `${key} ${JSON.stringify(params)}` : key
 test('readParams keeps a valid id and preset, and refuses anything else without guessing', () => {
   assert.deepEqual(readParams('?c=pune&preset=commuter'), { id: 'pune', preset: 'commuter' });
   assert.deepEqual(readParams('?c=aurangabad-mh'), { id: 'aurangabad-mh', preset: 'balanced' });
-  assert.deepEqual(readParams('?c=pune&preset=returns'), { id: 'pune', preset: 'balanced' });
+  assert.deepEqual(readParams('?c=aurangabad-mh', 'growth'), { id: 'aurangabad-mh', preset: 'growth' }, 'a missing preset takes the saved one');
+  for (const bad of ['?c=pune&preset=returns', '?c=pune&preset=', '?c=pune&preset=Balanced']) {
+    assert.deepEqual(readParams(bad, 'growth'), { id: 'pune', preset: null }, `${bad}: unknown, so the page goes to start.html`);
+  }
   for (const bad of ['', '?c=', '?c=P', '?c=../../etc/passwd', '?c=%3Cscript%3E', '?c=pune%20x', `?c=${'a'.repeat(65)}`]) {
     assert.equal(readParams(bad).id, null, bad);
   }
