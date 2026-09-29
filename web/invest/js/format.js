@@ -22,7 +22,12 @@ export function formatDelta(x) {
 }
 
 // A raw value with fixed decimals. An observed zero is "0.0"; only a missing value is a dash.
-export const formatValue = (x, digits = 1) => (Number.isFinite(x) ? x.toFixed(digits) : DASH);
+// A small negative that rounds to zero is "0.0" too, never "-0.0".
+export function formatValue(x, digits = 1) {
+  if (!Number.isFinite(x)) return DASH;
+  const text = x.toFixed(digits);
+  return /^-0(\.0+)?$/.test(text) ? text.slice(1) : text;
+}
 
 // "3.1 km" in English, with the unit written in the reader's script for Hindi and Kannada.
 const KM_LOCALE = { hi: 'hi-IN', kn: 'kn-IN' };

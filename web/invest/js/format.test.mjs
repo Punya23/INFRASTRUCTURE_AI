@@ -38,6 +38,10 @@ test('an observed zero is not unknown', () => {
   assert.equal(formatValue(2.24), '2.2');
   assert.equal(formatValue(2.246, 2), '2.25');
   assert.equal(formatValue('3.1'), '—', 'a string is a contract violation, not a number');
+  assert.equal(formatValue(-0.04), '0.0', 'rounds to zero, so no minus sign');
+  assert.equal(formatValue(-0.04, 0), '0');
+  assert.equal(formatValue(-0.06), '-0.1');
+  assert.equal(formatValue(-12.34), '-12.3');
 });
 
 test('distances carry a localised unit and drop a trailing .0', () => {
