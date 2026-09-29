@@ -1,0 +1,12 @@
+system,state,city,component,geography_level,source,source_url,record_count,geometry_available,population_available,status,notes
+Mumbai Suburban,Maharashtra,Mumbai,Station Coordinates,point,BMC via OpenCity.in,https://data.opencity.in/dataset/mumbai-suburban-network-2025,106,True,False,COMPLETE,100% valid coordinates from M2
+Mumbai Suburban,Maharashtra,Mumbai,City Boundaries,polygon,NOT_FOUND,N/A,0,False,False,DATA_UNAVAILABLE,No spatial boundary polygons for Mumbai found in repository
+Mumbai Suburban,Maharashtra,Mumbai,District Boundaries,polygon,LGD (codes only),https://lgdirectory.gov.in/,N/A,False,False,CODES_ONLY_NO_GEOMETRY,LGD district codes exist but NO spatial polygons
+Mumbai Suburban,Maharashtra,Mumbai,ULB Boundaries,polygon,LGD (codes only),https://lgdirectory.gov.in/,N/A,False,False,CODES_ONLY_NO_GEOMETRY,LGD ULB codes exist but NO spatial polygons
+Mumbai Suburban,Maharashtra,Mumbai,Ward Boundaries,polygon,LGD (codes only),https://lgdirectory.gov.in/,N/A,False,False,CODES_ONLY_NO_GEOMETRY,LGD ward codes for Maharashtra exist but NO spatial polygons
+Mumbai Suburban,Maharashtra,Mumbai,Population Data,N/A,NOT_FOUND,N/A,0,False,False,DATA_UNAVAILABLE,No Census or population data found in repository
+Mumbai Suburban,Maharashtra,Mumbai,Station Catchments (500m/1km/2km),polygon,Generated from station coordinates,N/A,318,True,False,COMPLETE,Theoretical geographic buffers created (not actual transit accessibility)
+Chennai Suburban,Tamil Nadu,Chennai,All Data,N/A,NOT_FOUND,N/A,0,False,False,DATA_UNAVAILABLE,"No infrastructure data (stations, geometry, population, boundaries) available"
+Kolkata Suburban,West Bengal,Kolkata,All Data,N/A,NOT_FOUND,N/A,0,False,False,DATA_UNAVAILABLE,"No infrastructure data (stations, geometry, population, boundaries) available"
+Hyderabad MMTS,Telangana,Hyderabad,All Data,N/A,NOT_FOUND,N/A,0,False,False,DATA_UNAVAILABLE,"No infrastructure data (stations, geometry, population, boundaries) available"
+Pune Suburban,Maharashtra,Pune,All Data,N/A,NOT_FOUND,N/A,0,False,False,DATA_UNAVAILABLE,"No infrastructure data (stations, geometry, population, boundaries) available"
