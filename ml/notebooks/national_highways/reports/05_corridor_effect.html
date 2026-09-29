@@ -7815,12 +7815,17 @@ a.anchor-link {
 <div class="jp-InputPrompt jp-InputArea-prompt">In [1]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">json</span><span class="o">,</span><span class="w"> </span><span class="nn">sys</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">geopandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gpd</span><span class="o">,</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span><span class="o">,</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
 <span class="n">ML</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># ml/notebooks/national_highways -&gt; ml</span>
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">ML</span><span class="p">))</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">fields.national_highways</span><span class="w"> </span><span class="kn">import</span> <span class="n">analysis</span> <span class="k">as</span> <span class="n">nh</span>
+
 <span class="n">A</span> <span class="o">=</span> <span class="n">nh</span><span class="o">.</span><span class="n">A</span>
 <span class="n">SUMMARY</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">((</span><span class="n">A</span> <span class="o">/</span> <span class="s2">"summary.json"</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">())</span>
 <span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s2">"display.max_rows"</span><span class="p">,</span> <span class="mi">40</span><span class="p">)</span>
@@ -7854,7 +7859,7 @@ a.anchor-link {
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Difference-in-differences (opened − not yet open, near − far): -0.47 percentage points
+<pre>Difference-in-differences (opened − not yet open, near − far): 0.04 percentage points
 </pre>
 </div>
 </div>
@@ -7893,15 +7898,15 @@ a.anchor-link {
 <tbody>
 <tr>
 <th>not_yet_open</th>
-<td>1.05</td>
-<td>1.00</td>
-<td>-0.05</td>
+<td>1.07</td>
+<td>1.01</td>
+<td>-0.06</td>
 </tr>
 <tr>
 <th>opened_2001_2019</th>
-<td>3.32</td>
-<td>2.80</td>
-<td>-0.52</td>
+<td>1.94</td>
+<td>1.92</td>
+<td>-0.02</td>
 </tr>
 </tbody>
 </table>
@@ -7961,8 +7966,23 @@ a.anchor-link {
 <tbody>
 <tr>
 <th>Outer Ring Road</th>
-<td>158.00</td>
+<td>345.00</td>
 <td>2,008.00</td>
+</tr>
+<tr>
+<th>Agra - Lucknow Expressway</th>
+<td>300.00</td>
+<td>2,016.00</td>
+</tr>
+<tr>
+<th>Yamuna Expressway</th>
+<td>178.00</td>
+<td>2,012.00</td>
+</tr>
+<tr>
+<th>Mumbai - Pune Expressway</th>
+<td>91.00</td>
+<td>2,002.00</td>
 </tr>
 <tr>
 <th>Delhi-Gurugram Expressway</th>
@@ -7970,9 +7990,39 @@ a.anchor-link {
 <td>2,008.00</td>
 </tr>
 <tr>
+<th>Chennai Bypass Expressway</th>
+<td>24.00</td>
+<td>2,010.00</td>
+</tr>
+<tr>
+<th>Noida-Greater Noida Expressway</th>
+<td>23.00</td>
+<td>2,002.00</td>
+</tr>
+<tr>
+<th>Belghoria Expressway</th>
+<td>12.00</td>
+<td>2,008.00</td>
+</tr>
+<tr>
+<th>Hindon Elevated Road</th>
+<td>9.00</td>
+<td>2,018.00</td>
+</tr>
+<tr>
+<th>Chennai Bypass</th>
+<td>6.00</td>
+<td>2,010.00</td>
+</tr>
+<tr>
 <th>Mahipalpur Flyover</th>
 <td>2.00</td>
 <td>2,008.00</td>
+</tr>
+<tr>
+<th>Delhi-Noida Direct Flyway</th>
+<td>1.00</td>
+<td>2,001.00</td>
 </tr>
 </tbody>
 </table>

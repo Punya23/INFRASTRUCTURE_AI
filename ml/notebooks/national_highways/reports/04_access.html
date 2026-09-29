@@ -7815,12 +7815,18 @@ a.anchor-link {
 <div class="jp-InputPrompt jp-InputArea-prompt">In [1]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">json</span><span class="o">,</span><span class="w"> </span><span class="nn">sys</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">geopandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gpd</span><span class="o">,</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span><span class="o">,</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">geopandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gpd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
 <span class="n">ML</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># ml/notebooks/national_highways -&gt; ml</span>
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">ML</span><span class="p">))</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">fields.national_highways</span><span class="w"> </span><span class="kn">import</span> <span class="n">analysis</span> <span class="k">as</span> <span class="n">nh</span>
+
 <span class="n">A</span> <span class="o">=</span> <span class="n">nh</span><span class="o">.</span><span class="n">A</span>
 <span class="n">SUMMARY</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">((</span><span class="n">A</span> <span class="o">/</span> <span class="s2">"summary.json"</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">())</span>
 <span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s2">"display.max_rows"</span><span class="p">,</span> <span class="mi">40</span><span class="p">)</span>
@@ -8236,7 +8242,7 @@ a.anchor-link {
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>1,527 pairs; median circuity 1.31; above 1.5: 399 (of which pipeline on route: 94%); unreachable: 0
+<pre>1,543 pairs; median circuity 1.18; above 1.5: 70 (of which pipeline on route: 93%); unreachable: 0
 </pre>
 </div>
 </div>
@@ -8275,35 +8281,35 @@ a.anchor-link {
 <td>Bhavnagar</td>
 <td>Bilimora</td>
 <td>138.30</td>
-<td>1,122.12</td>
-<td>8.11</td>
+<td>376.96</td>
+<td>2.73</td>
 <td>False</td>
 </tr>
 <tr>
 <th>1</th>
-<td>Vadodara</td>
+<td>Virar</td>
 <td>Bhavnagar</td>
-<td>124.05</td>
-<td>933.88</td>
-<td>7.53</td>
+<td>264.46</td>
+<td>548.99</td>
+<td>2.08</td>
 <td>True</td>
 </tr>
 <tr>
 <th>2</th>
-<td>Ahmedabad</td>
+<td>Nashik</td>
 <td>Bhavnagar</td>
-<td>146.82</td>
-<td>1,002.69</td>
-<td>6.83</td>
+<td>259.32</td>
+<td>534.00</td>
+<td>2.06</td>
 <td>True</td>
 </tr>
 <tr>
 <th>3</th>
-<td>Nashik</td>
+<td>Bhayandar</td>
 <td>Bhavnagar</td>
-<td>259.32</td>
-<td>1,310.30</td>
-<td>5.05</td>
+<td>282.04</td>
+<td>569.69</td>
+<td>2.02</td>
 <td>True</td>
 </tr>
 <tr>
@@ -8311,143 +8317,143 @@ a.anchor-link {
 <td>Dombivali</td>
 <td>Bhavnagar</td>
 <td>298.12</td>
-<td>1,458.30</td>
-<td>4.89</td>
+<td>591.65</td>
+<td>1.98</td>
 <td>True</td>
 </tr>
 <tr>
 <th>5</th>
-<td>Kalyan</td>
+<td>Borivli</td>
 <td>Bhavnagar</td>
-<td>297.12</td>
-<td>1,450.39</td>
-<td>4.88</td>
+<td>289.40</td>
+<td>570.19</td>
+<td>1.97</td>
 <td>True</td>
 </tr>
 <tr>
 <th>6</th>
-<td>Virar</td>
+<td>Bhiwandi</td>
 <td>Bhavnagar</td>
-<td>264.46</td>
-<td>1,287.03</td>
-<td>4.87</td>
+<td>288.53</td>
+<td>566.35</td>
+<td>1.96</td>
 <td>True</td>
 </tr>
 <tr>
 <th>7</th>
+<td>Thane</td>
 <td>Bhavnagar</td>
-<td>Ulhasnagar</td>
-<td>300.45</td>
-<td>1,450.51</td>
-<td>4.83</td>
+<td>296.37</td>
+<td>579.41</td>
+<td>1.96</td>
 <td>True</td>
 </tr>
 <tr>
 <th>8</th>
-<td>Bhayandar</td>
+<td>Kalyan</td>
 <td>Bhavnagar</td>
-<td>282.04</td>
-<td>1,306.86</td>
-<td>4.63</td>
+<td>297.12</td>
+<td>580.17</td>
+<td>1.95</td>
 <td>True</td>
 </tr>
 <tr>
 <th>9</th>
 <td>Bhavnagar</td>
-<td>Malegaon</td>
-<td>281.44</td>
-<td>1,297.90</td>
-<td>4.61</td>
+<td>Ulhasnagar</td>
+<td>300.45</td>
+<td>581.48</td>
+<td>1.94</td>
 <td>True</td>
 </tr>
 <tr>
 <th>10</th>
-<td>Bhiwandi</td>
+<td>Dharavi</td>
 <td>Bhavnagar</td>
-<td>288.53</td>
-<td>1,328.28</td>
-<td>4.60</td>
+<td>309.43</td>
+<td>595.93</td>
+<td>1.93</td>
 <td>True</td>
 </tr>
 <tr>
 <th>11</th>
-<td>Thane</td>
+<td>Mumbai</td>
 <td>Bhavnagar</td>
-<td>296.37</td>
-<td>1,343.73</td>
-<td>4.53</td>
+<td>307.38</td>
+<td>590.71</td>
+<td>1.92</td>
 <td>True</td>
 </tr>
 <tr>
 <th>12</th>
-<td>Kanayannur</td>
-<td>Kozhikode</td>
-<td>151.39</td>
-<td>684.50</td>
-<td>4.52</td>
+<td>Navi Mumbai</td>
+<td>Bhavnagar</td>
+<td>314.94</td>
+<td>599.26</td>
+<td>1.90</td>
 <td>True</td>
 </tr>
 <tr>
 <th>13</th>
-<td>Borivli</td>
 <td>Bhavnagar</td>
-<td>289.40</td>
-<td>1,306.67</td>
-<td>4.52</td>
+<td>Malegaon</td>
+<td>281.44</td>
+<td>525.16</td>
+<td>1.87</td>
 <td>True</td>
 </tr>
 <tr>
 <th>14</th>
-<td>Kochi</td>
-<td>Kozhikode</td>
-<td>153.93</td>
-<td>682.26</td>
-<td>4.43</td>
+<td>Guwahati</td>
+<td>Bhatpara</td>
+<td>499.89</td>
+<td>912.21</td>
+<td>1.82</td>
 <td>True</td>
 </tr>
 <tr>
 <th>15</th>
-<td>Navi Mumbai</td>
+<td>Pimpri-Chinchwad</td>
 <td>Bhavnagar</td>
-<td>314.94</td>
-<td>1,377.57</td>
-<td>4.37</td>
+<td>388.47</td>
+<td>703.28</td>
+<td>1.81</td>
 <td>True</td>
 </tr>
 <tr>
 <th>16</th>
-<td>Mumbai</td>
+<td>Pimpri</td>
 <td>Bhavnagar</td>
-<td>307.38</td>
-<td>1,329.56</td>
-<td>4.33</td>
+<td>388.20</td>
+<td>702.69</td>
+<td>1.81</td>
 <td>True</td>
 </tr>
 <tr>
 <th>17</th>
-<td>Dharavi</td>
+<td>Shivaji Nagar</td>
 <td>Bhavnagar</td>
-<td>309.43</td>
-<td>1,330.55</td>
-<td>4.30</td>
+<td>399.54</td>
+<td>713.90</td>
+<td>1.79</td>
 <td>True</td>
 </tr>
 <tr>
 <th>18</th>
-<td>Ahmedabad</td>
-<td>Rajkot</td>
-<td>201.52</td>
-<td>814.28</td>
-<td>4.04</td>
+<td>Kolkata</td>
+<td>Guwahati</td>
+<td>527.87</td>
+<td>942.78</td>
+<td>1.79</td>
 <td>True</td>
 </tr>
 <tr>
 <th>19</th>
-<td>Kozhikode</td>
-<td>Mangaluru</td>
-<td>210.29</td>
-<td>816.10</td>
-<td>3.88</td>
+<td>Pune</td>
+<td>Bhavnagar</td>
+<td>400.72</td>
+<td>714.91</td>
+<td>1.78</td>
 <td>True</td>
 </tr>
 </tbody>
