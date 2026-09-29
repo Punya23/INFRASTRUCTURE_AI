@@ -1,0 +1,12 @@
+id: gtfs_pune_pmpml
+license: MIT-0 (github.com/croyla/pmpml-gtfs)
+attribution: croyla/pmpml-gtfs — community GTFS for PMPML buses, Pune (commit 6e64e70,
+  2026-09-09)
+used_by:
+- public_transport
+files:
+- file: data/raw/gtfs/pune_pmpml.zip
+  url: https://raw.githubusercontent.com/croyla/pmpml-gtfs/6e64e702ca5f354dd81b0631004e9191dfff57de/pmpml_gtfs.zip
+  bytes: 6344773
+  sha256: 6c848a538c3c83c82eeda0974d318e4f45ae5f01d63f9854b5f2c629b231ba40
+  fetched_at: '2026-09-29T17:05:19Z'

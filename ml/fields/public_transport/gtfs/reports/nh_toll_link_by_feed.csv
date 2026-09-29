@@ -1,0 +1,9 @@
+feed,stops,stops_within_1km_of_nh,median_stop_nh_km,routes,routes_passing_toll_plaza,toll_plazas_on_routes,share_stops_within_1km_of_nh
+bus_tgsrtc_gtfs,5028,1622,2.19,1031,246.0,15.0,0.323
+gtfs_bengaluru_bmrcl,488,276,0.3,3,0.0,0.0,0.566
+gtfs_bengaluru_bmtc,9960,3377,1.71,4416,1011.0,46.0,0.339
+gtfs_chennai_cmrl,44,12,3.19,3,0.0,0.0,0.273
+gtfs_chennai_mtc,5580,1505,2.28,3934,225.0,5.0,0.27
+gtfs_mumbai_best,10279,5112,1.01,1115,47.0,6.0,0.497
+gtfs_pune_pmpml,6713,3198,1.12,617,70.0,12.0,0.476
+metro_hyd_hmrl_gtfs,705,355,1.0,3,0.0,0.0,0.504

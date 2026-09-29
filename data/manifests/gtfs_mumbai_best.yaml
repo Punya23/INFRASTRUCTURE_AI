@@ -1,0 +1,12 @@
+id: gtfs_mumbai_best
+license: MIT-0 (github.com/croyla/mumbai-gtfs)
+attribution: croyla/mumbai-gtfs — community GTFS for BEST buses, Mumbai (commit 64f9f77,
+  2026-08-19)
+used_by:
+- public_transport
+files:
+- file: data/raw/gtfs/mumbai_best.zip
+  url: https://raw.githubusercontent.com/croyla/mumbai-gtfs/64f9f774ee1f30389b86a7c26bc0dcca497a32ef/gtfs.zip
+  bytes: 13652213
+  sha256: 497b42cbffbc24f7f11bb535e68a1edfdcbfa35323d5630ff7353fd1b09ee68f
+  fetched_at: '2026-09-29T17:05:13Z'

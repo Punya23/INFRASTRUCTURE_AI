@@ -1,0 +1,7 @@
+feed,level,check,count,detail
+gtfs_mumbai_best,warning,route_without_trips,494,
+gtfs_mumbai_best,warning,route_no_geometry,494,no trip with 2+ located stops
+gtfs_bengaluru_bmtc,warning,route_without_trips,18,
+gtfs_bengaluru_bmtc,warning,route_no_geometry,18,no trip with 2+ located stops
+gtfs_chennai_mtc,warning,route_without_trips,677,
+gtfs_chennai_mtc,warning,route_no_geometry,677,no trip with 2+ located stops

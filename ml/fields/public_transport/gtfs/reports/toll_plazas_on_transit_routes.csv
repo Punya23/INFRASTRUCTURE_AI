@@ -1,0 +1,85 @@
+node_id,ihmcl_code,name,state,transit_routes,feeds
+2130868648,,,Karnataka,187,gtfs_bengaluru_bmtc
+1632847671,118001,Bengaluru Nelamangala Tollway - Navayuga,Karnataka,186,gtfs_bengaluru_bmtc
+2431206504,,,Karnataka,179,gtfs_bengaluru_bmtc
+3673479636,,,Karnataka,162,gtfs_bengaluru_bmtc
+452480344,,Elevated Section/ Electronic City,Karnataka,148,gtfs_bengaluru_bmtc
+579900135,,,Karnataka,142,gtfs_bengaluru_bmtc
+841805690,,,Karnataka,140,gtfs_bengaluru_bmtc
+1589532577,,,Karnataka,138,gtfs_bengaluru_bmtc
+3884882305,,,Tamil Nadu,116,gtfs_chennai_mtc
+1837297621,,,Karnataka,109,gtfs_bengaluru_bmtc
+10695114857,,Kaniminke Toll Plaza,Karnataka,84,gtfs_bengaluru_bmtc
+1192534111,,BETL Two Wheeler Toll Booth,Karnataka,76,gtfs_bengaluru_bmtc
+1038401781,,Octroi Gate,Telangana,71,bus_tgsrtc_gtfs
+2611179255,,,Karnataka,69,gtfs_bengaluru_bmtc
+3730569160,,Navayuga Devanhally/Sadahalli,Karnataka,65,gtfs_bengaluru_bmtc
+10735076727,356111,Kaniminke Toll Plaza,Karnataka,64,gtfs_bengaluru_bmtc
+11514447126,536519,Somanahalli Toll Plaza,Karnataka,63,gtfs_bengaluru_bmtc
+4009677211,,,Telangana,61,bus_tgsrtc_gtfs
+256215709,,Nemili,Tamil Nadu,51,gtfs_chennai_mtc
+1727840346,,,Karnataka,48,gtfs_bengaluru_bmtc
+1462433561,,,Karnataka,46,gtfs_bengaluru_bmtc
+313028025,,,Tamil Nadu,39,gtfs_chennai_mtc
+2180951824,,Toll Booth RGI ORR Exit,Telangana,36,bus_tgsrtc_gtfs
+2180952062,,,Telangana,29,bus_tgsrtc_gtfs
+459504845,,,Karnataka,29,gtfs_bengaluru_bmtc
+1720796261,,,Karnataka,29,gtfs_bengaluru_bmtc
+2090103386,,,Telangana,28,bus_tgsrtc_gtfs
+342119953,,Toll Naka,Maharashtra,28,gtfs_mumbai_best
+2188391769,,,Telangana,27,bus_tgsrtc_gtfs
+445476273,,,Karnataka,24,gtfs_bengaluru_bmtc
+359989986,,,Tamil Nadu,18,gtfs_chennai_mtc
+2285328910,,Somatne Toll Naka,Maharashtra,18,gtfs_pune_pmpml
+1595761301,,,Karnataka,16,gtfs_bengaluru_bmtc
+571406144,,NHAI Karjeevanhalli Toll Plaza,Karnataka,16,gtfs_bengaluru_bmtc
+4308409913,,,Telangana,15,bus_tgsrtc_gtfs
+2237657474,,,Maharashtra,14,gtfs_pune_pmpml
+2215898743,,,Maharashtra,12,gtfs_pune_pmpml
+2498568368,,,Maharashtra,12,gtfs_pune_pmpml
+1942853993,,,Karnataka,11,gtfs_bengaluru_bmtc
+1927109785,,,Karnataka,11,gtfs_bengaluru_bmtc
+8507768259,,,Maharashtra,11,gtfs_mumbai_best
+841805687,,,Karnataka,10,gtfs_bengaluru_bmtc
+2535494878,,,Karnataka,9,gtfs_bengaluru_bmtc
+4310386237,,,Telangana,8,bus_tgsrtc_gtfs
+1377771727,61002,Shivapur Toll Plaza,Maharashtra,8,gtfs_pune_pmpml
+2215899617,,,Maharashtra,8,gtfs_pune_pmpml
+2954009657,,,Karnataka,8,gtfs_bengaluru_bmtc
+3693714754,,,Karnataka,7,gtfs_bengaluru_bmtc
+5177728408,,,Maharashtra,6,gtfs_mumbai_best
+571407841,,,Karnataka,5,gtfs_bengaluru_bmtc
+2090009495,,,Telangana,5,bus_tgsrtc_gtfs
+11761414005,,,Andhra Pradesh,5,gtfs_bengaluru_bmtc
+7298879733,,,Maharashtra,5,gtfs_mumbai_best
+8749660568,,,Karnataka,5,gtfs_bengaluru_bmtc
+11762266875,,,Karnataka,5,gtfs_bengaluru_bmtc
+9430225797,,,Karnataka,5,gtfs_bengaluru_bmtc
+9076069632,,,Karnataka,5,gtfs_bengaluru_bmtc
+2090009467,,,Telangana,4,bus_tgsrtc_gtfs
+514921812,,,Maharashtra,4,gtfs_pune_pmpml
+11966754784,,,Karnataka,3,gtfs_bengaluru_bmtc
+2480963126,16001,Vanageri Toll Plaza,Karnataka,3,gtfs_bengaluru_bmtc
+3893674495,,,Karnataka,3,gtfs_bengaluru_bmtc
+10736574494,,,Karnataka,3,gtfs_bengaluru_bmtc
+839113377,,,Karnataka,3,gtfs_bengaluru_bmtc
+2616359311,,,Telangana,3,bus_tgsrtc_gtfs
+1131077654,540008,Kusgaon,Maharashtra,2,gtfs_pune_pmpml
+839113210,,,Karnataka,2,gtfs_bengaluru_bmtc
+5571237719,,,Maharashtra,2,gtfs_pune_pmpml
+13438255508,,,Karnataka,2,gtfs_bengaluru_bmtc
+676755906,,,Maharashtra,2,gtfs_pune_pmpml
+2180951890,,ORR Toll Plaza Entry,Telangana,2,bus_tgsrtc_gtfs
+11283001159,,Navayuga Devanhalli,Karnataka,2,gtfs_bengaluru_bmtc
+12517796872,,,Karnataka,2,gtfs_bengaluru_bmtc
+343371732,,,Maharashtra,2,gtfs_pune_pmpml
+5613484531,,Kharghar Toll Booth,Maharashtra,2,gtfs_mumbai_best
+283138803,,,Maharashtra,2,gtfs_pune_pmpml
+5613484216,,Kharghar Toll Booth,Maharashtra,2,gtfs_mumbai_best
+5494733773,350027,Manoharabad,Telangana,1,bus_tgsrtc_gtfs
+435452961,,,Karnataka,1,gtfs_bengaluru_bmtc
+2188495337,,,Telangana,1,bus_tgsrtc_gtfs
+5506483034,,Kasaba User Fee Plaza,Karnataka,1,gtfs_bengaluru_bmtc
+5384775249,15001,Panthangi Toll Plaza,Telangana,1,bus_tgsrtc_gtfs
+5376864081,,,Tamil Nadu,1,gtfs_chennai_mtc
+5506535702,,,Karnataka,1,gtfs_bengaluru_bmtc

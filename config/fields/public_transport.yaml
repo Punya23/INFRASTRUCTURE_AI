@@ -1,0 +1,18 @@
+# Public transport GTFS integration (ml/fields/public_transport/gtfs/). Every number states its basis.
+# Feeds are keys of config/sources.yaml. tier: official = operator or government portal;
+# secondary = community-maintained (validate before use, never present as operator data).
+feeds:
+  bus_tgsrtc_gtfs:      {mode: bus,   operator: TGSRTC, city: Hyderabad, tier: official,  confidence: 0.9}
+  metro_hyd_hmrl_gtfs:  {mode: metro, operator: HMRL,   city: Hyderabad, tier: official,  confidence: 0.9}
+  gtfs_mumbai_best:     {mode: bus,   operator: BEST,   city: Mumbai,    tier: secondary, confidence: 0.7}
+  gtfs_pune_pmpml:      {mode: bus,   operator: PMPML,  city: Pune,      tier: secondary, confidence: 0.7}
+  gtfs_bengaluru_bmtc:  {mode: bus,   operator: BMTC,   city: Bengaluru, tier: secondary, confidence: 0.7}
+  gtfs_chennai_mtc:     {mode: bus,   operator: MTC,    city: Chennai,   tier: secondary, confidence: 0.7}
+  gtfs_chennai_cmrl:    {mode: metro, operator: CMRL,   city: Chennai,   tier: secondary, confidence: 0.7}
+  gtfs_bengaluru_bmrcl: {mode: metro, operator: BMRCL,  city: Bengaluru, tier: secondary, confidence: 0.7}
+# secondary confidence 0.7 vs official 0.9 — team judgment, 2026-09-29
+
+max_bad_stop_share: 0.05       # a feed with more than 5% stops lacking valid coordinates is rejected whole — team judgment
+nh_near_km: 1.0                # stop "on an NH corridor" if within 1 km of an operational NH — walkable, team judgment
+toll_route_m: 150              # bus route passes a toll plaza if within 150 m (plaza spans both carriageways) — team judgment
+route_simplify_deg: 0.0008     # ≈80 m; BMTC routes were 4.9 MB at 0.0005 — keeps margin under the 5 MB cap, 2026-09-29

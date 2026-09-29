@@ -1,0 +1,12 @@
+id: gtfs_bengaluru_bmtc
+license: ODbL-1.0 (github.com/Vonter/bmtc-gtfs) — share-alike on derived exports
+attribution: Vonter/bmtc-gtfs — community GTFS for BMTC buses, Bengaluru (commit ee945dc,
+  2026-09-08)
+used_by:
+- public_transport
+files:
+- file: data/raw/gtfs/bengaluru_bmtc.zip
+  url: https://raw.githubusercontent.com/Vonter/bmtc-gtfs/ee945dc0c21b29193f88e3e1e9af218dd24ea182/gtfs/bmtc.zip
+  bytes: 44392885
+  sha256: b5fe4a8e05495f719e4c8f16452dc6c4820f342b5414c3fb51e19687b5ea3333
+  fetched_at: '2026-09-29T17:05:47Z'

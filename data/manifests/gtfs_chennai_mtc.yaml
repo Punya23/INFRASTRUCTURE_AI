@@ -1,0 +1,12 @@
+id: gtfs_chennai_mtc
+license: MIT (github.com/ungalsoththu/ChennaiGTFS)
+attribution: ungalsoththu/ChennaiGTFS — community GTFS for MTC buses, Chennai (commit
+  3186a9b, 2026-04-27)
+used_by:
+- public_transport
+files:
+- file: data/raw/gtfs/chennai_mtc.zip
+  url: https://raw.githubusercontent.com/ungalsoththu/ChennaiGTFS/3186a9b22a59153268a0bdc4945822b6f83fcab4/data/mtc-gtfs.zip
+  bytes: 9088141
+  sha256: e4e3d8301b8cf4661c317377f10d3a6c3aa8718fa73580ad97ec22957c7e3539
+  fetched_at: '2026-09-29T17:05:55Z'

@@ -1,0 +1,12 @@
+id: gtfs_bengaluru_bmrcl
+license: ODbL-1.0 (github.com/Vonter/bmrcl-gtfs) — share-alike on derived exports
+attribution: Vonter/bmrcl-gtfs — community GTFS for Namma Metro (BMRCL), Bengaluru
+  (commit f402c4c, 2026-08-17)
+used_by:
+- public_transport
+files:
+- file: data/raw/gtfs/bengaluru_bmrcl.zip
+  url: https://raw.githubusercontent.com/Vonter/bmrcl-gtfs/f402c4c69a5d314320024f84620fa83e909c4188/gtfs/bmrcl.zip
+  bytes: 2369725
+  sha256: c19f56f32ad53525c71191125409dc8dded12dd2cebfc576ad9a4db23a62b8a7
+  fetched_at: '2026-09-29T17:05:57Z'

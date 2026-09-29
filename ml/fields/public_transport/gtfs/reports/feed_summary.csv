@@ -1,0 +1,9 @@
+feed,mode,operator,city,tier,confidence,status,stops,routes,routes_from_shapes,trips,fetched_at,license
+bus_tgsrtc_gtfs,bus,TGSRTC,Hyderabad,official,0.9,loaded,5028,1031,0,44892,2026-09-29T16:20:16Z,Terms of use on data.opencity.in — attribution required; non-commercial and research use permitted
+metro_hyd_hmrl_gtfs,metro,HMRL,Hyderabad,official,0.9,loaded,705,3,3,2820,2026-09-29T16:20:17Z,Terms of use on data.opencity.in — attribution required; non-commercial and research use permitted
+gtfs_mumbai_best,bus,BEST,Mumbai,secondary,0.7,loaded,10279,1115,0,99080,2026-09-29T17:05:13Z,MIT-0 (github.com/croyla/mumbai-gtfs)
+gtfs_pune_pmpml,bus,PMPML,Pune,secondary,0.7,loaded,6713,617,617,15236,2026-09-29T17:05:19Z,MIT-0 (github.com/croyla/pmpml-gtfs)
+gtfs_bengaluru_bmtc,bus,BMTC,Bengaluru,secondary,0.7,loaded,9960,4416,4416,57836,2026-09-29T17:05:47Z,ODbL-1.0 (github.com/Vonter/bmtc-gtfs) — share-alike on derived exports
+gtfs_chennai_mtc,bus,MTC,Chennai,secondary,0.7,loaded,5580,3934,0,47047,2026-09-29T17:05:55Z,MIT (github.com/ungalsoththu/ChennaiGTFS)
+gtfs_chennai_cmrl,metro,CMRL,Chennai,secondary,0.7,loaded,44,3,2,96,2026-09-29T17:05:55Z,MIT (github.com/ungalsoththu/ChennaiGTFS)
+gtfs_bengaluru_bmrcl,metro,BMRCL,Bengaluru,secondary,0.7,loaded,488,3,3,3279,2026-09-29T17:05:57Z,ODbL-1.0 (github.com/Vonter/bmrcl-gtfs) — share-alike on derived exports

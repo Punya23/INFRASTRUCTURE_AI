@@ -250,3 +250,57 @@ metro_chennai_cmrl_ridership_csv:
   geography: Chennai Metro (Tamil Nadu)
   reference_year: 2023-2026
   used_by: [metro]
+
+# ── PUBLIC TRANSPORT — COMMUNITY GTFS (secondary) ─────────────────────────────
+# Community-maintained feeds, not operator releases: tier "secondary" in
+# config/fields/public_transport.yaml, lower confidence, validate before use.
+# URLs are pinned to a commit so re-fetches are reproducible.
+# Not registered: justjkk/chennai-rail-gtfs — no license, last updated 2011, no feed zip.
+
+gtfs_mumbai_best:
+  url: https://raw.githubusercontent.com/croyla/mumbai-gtfs/64f9f774ee1f30389b86a7c26bc0dcca497a32ef/gtfs.zip
+  dest: gtfs/mumbai_best.zip
+  kind: zip
+  license: MIT-0 (github.com/croyla/mumbai-gtfs)
+  attribution: croyla/mumbai-gtfs — community GTFS for BEST buses, Mumbai (commit 64f9f77, 2026-08-19)
+  used_by: [public_transport]
+
+gtfs_pune_pmpml:
+  url: https://raw.githubusercontent.com/croyla/pmpml-gtfs/6e64e702ca5f354dd81b0631004e9191dfff57de/pmpml_gtfs.zip
+  dest: gtfs/pune_pmpml.zip
+  kind: zip
+  license: MIT-0 (github.com/croyla/pmpml-gtfs)
+  attribution: croyla/pmpml-gtfs — community GTFS for PMPML buses, Pune (commit 6e64e70, 2026-09-09)
+  used_by: [public_transport]
+
+gtfs_bengaluru_bmtc:
+  url: https://raw.githubusercontent.com/Vonter/bmtc-gtfs/ee945dc0c21b29193f88e3e1e9af218dd24ea182/gtfs/bmtc.zip
+  dest: gtfs/bengaluru_bmtc.zip
+  kind: zip
+  license: ODbL-1.0 (github.com/Vonter/bmtc-gtfs) — share-alike on derived exports
+  attribution: Vonter/bmtc-gtfs — community GTFS for BMTC buses, Bengaluru (commit ee945dc, 2026-09-08)
+  used_by: [public_transport]
+
+gtfs_chennai_mtc:
+  url: https://raw.githubusercontent.com/ungalsoththu/ChennaiGTFS/3186a9b22a59153268a0bdc4945822b6f83fcab4/data/mtc-gtfs.zip
+  dest: gtfs/chennai_mtc.zip
+  kind: zip
+  license: MIT (github.com/ungalsoththu/ChennaiGTFS)
+  attribution: ungalsoththu/ChennaiGTFS — community GTFS for MTC buses, Chennai (commit 3186a9b, 2026-04-27)
+  used_by: [public_transport]
+
+gtfs_chennai_cmrl:
+  url: https://raw.githubusercontent.com/ungalsoththu/ChennaiGTFS/3186a9b22a59153268a0bdc4945822b6f83fcab4/data/cmrl-gtfs.zip
+  dest: gtfs/chennai_cmrl.zip
+  kind: zip
+  license: MIT (github.com/ungalsoththu/ChennaiGTFS)
+  attribution: ungalsoththu/ChennaiGTFS — community GTFS for Chennai Metro (commit 3186a9b, 2026-04-27)
+  used_by: [public_transport]
+
+gtfs_bengaluru_bmrcl:
+  url: https://raw.githubusercontent.com/Vonter/bmrcl-gtfs/f402c4c69a5d314320024f84620fa83e909c4188/gtfs/bmrcl.zip
+  dest: gtfs/bengaluru_bmrcl.zip
+  kind: zip
+  license: ODbL-1.0 (github.com/Vonter/bmrcl-gtfs) — share-alike on derived exports
+  attribution: Vonter/bmrcl-gtfs — community GTFS for Namma Metro (BMRCL), Bengaluru (commit f402c4c, 2026-08-17)
+  used_by: [public_transport]

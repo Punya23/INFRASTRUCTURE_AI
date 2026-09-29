@@ -73,6 +73,7 @@ Python lives in `ml/` (uv project, Python 3.12):
 cd ml && uv sync                                        # environment
 cd ml && uv run python -m common.fetch                  # download every source in config/sources.yaml
 cd ml && uv run python -m fields.national_highways all  # NH field: extract → … → analyze → fixtures
+cd ml && uv run python -m fields.public_transport.gtfs all  # GTFS feeds: validate → NH/toll link → fixtures
 cd ml && uv run pytest && uv run ruff check .           # checks before every commit
 ```
 

@@ -27,6 +27,7 @@ from fields.national_highways.normalize import (
     parse_year,
     road_lanes,
 )
+from pipeline.fixtures import write_geojson
 from pipeline.shared_layers import (
     INDIA_CRS,
     RAW,
@@ -428,18 +429,6 @@ def run_all() -> dict:
 
 
 # --------------------------------------------------------------------------- fixtures
-def _write_geojson(gdf: gpd.GeoDataFrame, name: str, max_mb: float = 5.0) -> None:
-    FIXTURES.mkdir(parents=True, exist_ok=True)
-    path = FIXTURES / name
-    gdf = gdf.set_geometry(shapely.set_precision(gdf.geometry.values, 1e-4))  # ≈11 m grid
-    gdf = gdf[~gdf.geometry.is_empty]
-    path.write_text(gdf.to_json(drop_id=True, separators=(",", ":")))  # compact: no spaces
-    size = path.stat().st_size / 1e6
-    if size > max_mb:
-        raise ValueError(f"{name} is {size:.1f} MB (limit {max_mb} MB) — raise fixture_simplify_deg")
-    print(f"fixture {name}: {len(gdf):,} features, {size:.1f} MB")
-
-
 def write_fixtures() -> None:
     """Simplified samples following the shared layer contract (docs/fields/README.md)."""
     seg = segments()
@@ -458,7 +447,7 @@ def write_fixtures() -> None:
         "lanes_band": merged["band"], "owner_level": merged["owner_level"],
         "length_km": merged["eff_km"].round(1), "geometry": merged.geometry,
     }, crs="EPSG:4326")
-    _write_geojson(out, "nh_segments.geojson")
+    write_geojson(out, FIXTURES / "nh_segments.geojson")
 
     plazas = gpd.read_parquet(OUT / "osm_toll_plazas.parquet")
     # a few dozen IHMCL rows carry no code (blank in the source PDF) — never a real match target,
@@ -466,7 +455,7 @@ def write_fixtures() -> None:
     ihmcl = pd.read_csv(OUT / "ihmcl_plazas.csv", dtype={"code": str}).dropna(subset=["code"]).set_index("code")
     code = plazas["ihmcl_code"]
     matched = code.notna()
-    _write_geojson(gpd.GeoDataFrame({
+    write_geojson(gpd.GeoDataFrame({
         "id": [f"toll_plaza:osm:node/{n}" for n in plazas["node_id"]], "field": "national_highways",
         "kind": "toll_plaza",
         "name": np.where(matched, code.map(ihmcl["name"]), plazas["name"]),
@@ -474,7 +463,7 @@ def write_fixtures() -> None:
         "status": "operational", "opened_on": None, "expected_completion": None,
         "agency": np.where(matched, "NHAI", None), "source": np.where(matched, "osm+ihmcl", "osm"),
         "confidence": np.where(matched, 0.95, 0.8), "ihmcl_code": code, "booths": plazas["booths"],
-        "geometry": plazas.geometry.values}, crs="EPSG:4326"), "toll_plazas.geojson")
+        "geometry": plazas.geometry.values}, crs="EPSG:4326"), FIXTURES / "toll_plazas.geojson")
 
     pixels = pd.read_parquet(A / "access_pixels.parquet")
     target = CFG["access_target_km"]
@@ -487,14 +476,13 @@ def write_fixtures() -> None:
         "share_within_10km": g.loc[g["d_now_km"] <= target, "pop"].sum() / g["pop"].sum(),
     }), include_groups=False).reset_index()
     polys = [shapely.Polygon([(lng, lat) for lat, lng in h3.cell_to_boundary(c)]) for c in hexes["h3"]]
-    _write_geojson(gpd.GeoDataFrame({
+    write_geojson(gpd.GeoDataFrame({
         "id": "nh_access:h3:" + hexes["h3"], "field": "national_highways", "kind": "nh_access",
         "source": "osm+worldpop", "confidence": 0.9,
         "population": hexes["population"].round(0),
         "nh_distance_km": hexes["nh_distance_km"].round(2),
         "pipeline_access_gain_km": (hexes["nh_distance_km"] - hexes["nh_distance_km_with_pipeline"]).round(2),
-        "share_within_10km": hexes["share_within_10km"].round(3), "geometry": polys}, crs="EPSG:4326"),
-        "nh_access.geojson")
+        "share_within_10km": hexes["share_within_10km"].round(3), "geometry": polys}, crs="EPSG:4326"), FIXTURES / "nh_access.geojson")
 
     cov = pd.read_csv(A / "coverage_by_state.csv").set_index("state")
     acc = pd.read_csv(A / "access_by_state.csv", index_col=0)

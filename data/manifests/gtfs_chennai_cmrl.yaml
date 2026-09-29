@@ -1,0 +1,12 @@
+id: gtfs_chennai_cmrl
+license: MIT (github.com/ungalsoththu/ChennaiGTFS)
+attribution: ungalsoththu/ChennaiGTFS — community GTFS for Chennai Metro (commit 3186a9b,
+  2026-04-27)
+used_by:
+- public_transport
+files:
+- file: data/raw/gtfs/chennai_cmrl.zip
+  url: https://raw.githubusercontent.com/ungalsoththu/ChennaiGTFS/3186a9b22a59153268a0bdc4945822b6f83fcab4/data/cmrl-gtfs.zip
+  bytes: 4874
+  sha256: 48efef6005684dae9aa89f2133911c0c3cc0fb4682464fc6725d4a834c28f648
+  fetched_at: '2026-09-29T17:05:55Z'
