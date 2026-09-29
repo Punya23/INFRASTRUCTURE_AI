@@ -545,7 +545,9 @@ def build_tolls() -> pd.DataFrame:
     plazas["ihmcl_code"] = None
     taken: set[str] = set()
     for i, row in plazas[plazas["key"] != ""].iterrows():
-        cand = ihmcl[(ihmcl["state"] == row["state"]) & ~ihmcl["code"].isin(taken)]
+        # a blank code (~2% of IHMCL rows) can't be recorded as a match — exclude it from candidates
+        # so it never silently swallows a real name+state match under an unusable NaN code.
+        cand = ihmcl[(ihmcl["state"] == row["state"]) & ihmcl["code"].notna() & ~ihmcl["code"].isin(taken)]
         best = max(((plaza_name_score(row["key"], k), c) for k, c in zip(cand["key"], cand["code"], strict=True)),
                    default=(0.0, None))
         if best[0] >= _CFG["toll_name_match"]:
