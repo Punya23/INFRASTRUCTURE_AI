@@ -34,7 +34,7 @@ Found in review of the real data; none is hidden by the UI and none is a reason 
 - **Goa has no city** because its largest contiguous zone holds about 82,000 people, not because pieces were dropped. The spec's "Goa returns 2 cities" was not attainable under the city rule and has been corrected.
 - **46 % of areas have no name** (no OSM place within 2.5 km) and 12 % of city-preset best areas are unnamed; the pages say "an unnamed area in {city}" or show coordinates. An API field for the nearest named place would allow "Area near …".
 - **Hyderabad bus data is non-commercial.** The TGSRTC feed's terms permit non-commercial and research use only. Its stop counts appear in Hyderabad's assets and cards, with the licence recorded in `bus_source`, the city record and `meta.sources`. Under ADR-0012 this is a release blocker for any commercial deployment until the licence is checked with the publisher.
-- **Growth knots re-anchored.** The spec's first knots left 91.5 % of areas below the watch-out line; the shipped knots follow the measured distribution (p50 0.9, p90 3.9, p99 12.1 pp).
+- **Growth knots re-anchored.** The spec's first knots left about 94 % of areas below the watch-out line; the shipped knots follow the measured distribution (p50 0.9, p90 3.9, p99 12.1 pp).
 
 ## Sensitivity summary
 

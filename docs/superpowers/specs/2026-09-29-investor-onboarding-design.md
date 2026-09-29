@@ -71,7 +71,7 @@ Bus stops are **shown, not scored**: GTFS exists for 5 cities only and a factor 
 | `rail_access` | 0→100, 1→90, 3→65, 8→25, 15→0 |
 | `metro_access` | 0→100, 1→90, 2→70, 5→30, 10→0 |
 | `road_strength` | 0→0, 0.3→30, 1→65, 2→90, 3→100 |
-| `built_up_growth` | 0→0, 1→30, 3→60, 8→90, 15→100 (re-anchored on the measured distribution — p50 0.9, p90 3.9, p99 12.1 pp; the initial 3/10/25/40 knots put 91.5 % of areas below the watch-out line) |
+| `built_up_growth` | 0→0, 1→30, 3→60, 8→90, 15→100 (re-anchored on the measured distribution — p50 0.9, p90 3.9, p99 12.1 pp; the initial 3/10/25/40 knots put about 94 % of areas below the watch-out line) |
 
 **Presets** (weights sum to 1, checked by a test): `balanced` 0.25 / 0.15 / 0.15 / 0.15 / 0.30 · `commuter` 0.10 / 0.25 / 0.30 / 0.10 / 0.25 · `highway` 0.45 / 0.05 / 0 / 0.20 / 0.30 · `growth` 0.15 / 0.10 / 0.10 / 0.10 / 0.55 (order: nh, rail, metro, roads, growth).
 
