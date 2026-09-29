@@ -290,8 +290,8 @@ def test_load_stations_dedupes_within_150_m_keeping_named_osm_first(pt_files):
         ],
     )
     metro = pt.load_stations("metro")
-    # the OSM record outranks GTFS; an entrance or lift (location_type 2) is not a station, and a
-    # platform is one stop (kept: 2 km from the station stop here)
+    # the OSM record outranks its GTFS twin; a lift (location_type 2) is no station at all; a
+    # station (1) and a platform (0) are both stops, kept because they are 2 km apart here
     assert metro["name"].tolist() == ["Vanaz", "Ideal Colony", "Ideal Colony Platform"]
     assert metro["source"].tolist() == ["osm_india", "gtfs_test_hmrl", "gtfs_test_hmrl"]
     assert len(pt.load_stations("rail")) == 3  # GTFS joins the metro list only
