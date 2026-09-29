@@ -104,15 +104,15 @@ Bus stops are **shown, not scored**: GTFS exists for 5 cities only and a factor 
 
 ## 6. Fixture contract — `web/fixtures/invest/`
 
-Each file ≤ 5 MB, total ≤ 25 MB (if over, raise `min_population` and record why). Every record carries provenance (invariant 1): `source`, `source_ref`, `fetched_at`, `license`, `confidence`. Coordinates rounded to 4 decimals. Scores are numbers with one decimal.
+Each file ≤ 5 MB and the directory ≤ 25 MB on disk (if over, raise `min_population` and record why). `areas/` and `assets/` files are **gzip** (`.geojson.gz`, `.json.gz`, level 9); the API store also accepts the plain name, which the synthetic test data uses. Every record carries provenance (invariant 1): `source`, `source_ref`, `fetched_at`, `license`, `confidence`. In area files the provenance sits once on the FeatureCollection (`source`, `fetched_at`, `license`) with `source_ref` (= the H3 id) and `conf` per feature; the API copies the collection-level fields into every feature it serves. Coordinates rounded to 4 decimals. Scores, sub-scores and raw values are numbers with one decimal.
 
 | File | Content |
 |---|---|
 | `meta.json` | `schema_version` (1), `as_of`, `grid`, `factors` (id, group, unit, better, `headline_band_km`, `bands`), `presets` (id, weights, `default`), `tiers`, `sources` (id, name, license, attribution), `disclaimer` |
 | `states.json` | `[{code, name, city_count}]`, all 36 |
 | `cities.json` | `[city]` — see below |
-| `areas/<city>.geojson` | FeatureCollection of H3 cells |
-| `assets/<city>.json` | `stations`, `bus_stops`, `highways`, `toll_plazas` |
+| `areas/<city>.geojson.gz` | FeatureCollection of H3 cells |
+| `assets/<city>.json.gz` | `stations`, `bus_stops`, `highways`, `toll_plazas` |
 
 ```jsonc
 // cities.json[i]
@@ -126,8 +126,8 @@ Each file ≤ 5 MB, total ≤ 25 MB (if over, raise `min_population` and record 
   "scores": {                                    // one entry per preset id
     "balanced": {
       "score": 71.4, "access": 66.0, "momentum": 88.0, "coverage": 1.0, "confidence": 0.8,
-      "drivers": [{"factor": "built_up_growth", "points": 26.4, "value": 24.0, "unit": "pp"}],
-      "gaps":    [{"factor": "metro_access", "points": 0.0, "value": 3.1, "unit": "km"}],
+      "drivers": [{"factor": "built_up_growth", "points": 26.4, "value": 24.0, "unit": "pp", "share": null, "band_km": null}],
+      "gaps":    [{"factor": "metro_access", "subscore": 61.0, "value": 3.1, "unit": "km", "share": 0.22, "band_km": 2}],
       "best_area": {"id": "87…", "name": "Hinjewadi", "score": 84.2}
     }
   },
@@ -138,18 +138,18 @@ Each file ≤ 5 MB, total ≤ 25 MB (if over, raise `min_population` and record 
 ```
 
 ```jsonc
-// areas/pune.geojson — features sorted by balanced score, descending
+// areas/pune.geojson.gz — {"type": "FeatureCollection", "city": "pune", "source": "osm+worldpop2020+ghsl2020",
+//   "fetched_at": "2026-09-29", "license": "ODbL-1.0; CC-BY-4.0", "features": [...]}, sorted by balanced score
 {"type": "Feature", "geometry": {"type": "Polygon", "coordinates": [[[73.71,18.59], …]]},
  "properties": {
    "id": "8760…", "name": "Hinjewadi", "pop": 48210, "elig": true, "bus_stops": 31,
    "f": {"nh_access": 1.8, "rail_access": 9.4, "metro_access": 3.1, "road_strength": 2.2, "built_up_growth": 41.0},  // raw, null = unobserved
-   "s": {"nh_access": 88, "rail_access": 22, "metro_access": 65, "road_strength": 92, "built_up_growth": 100},        // sub-scores
+   "s": {"nh_access": 88.0, "rail_access": 22.0, "metro_access": 65.0, "road_strength": 92.0, "built_up_growth": 100.0},  // sub-scores, null = unobserved
    "sc": {"balanced": 78.1, "commuter": 70.3, "highway": 85.0, "growth": 80.2},
    "ac": {"balanced": 72.0, "commuter": 66.5, "highway": 79.0, "growth": 68.0},
    "d": {"balanced": [["built_up_growth", 30.0], ["road_strength", 13.8]]},   // drivers: factor, points (top 3)
-   "g": {"balanced": [["rail_access", 22]]},                                  // gaps: factor, sub-score (up to 2)
-   "cov": 1.0, "conf": 0.8, "source": "osm+worldpop2020+ghsl2020", "source_ref": "h3:8760…",
-   "fetched_at": "2026-09-29", "license": "ODbL-1.0; CC-BY-4.0"}}
+   "g": {"balanced": [["rail_access", 22.0]]},                                // gaps: factor, sub-score (up to 2)
+   "cov": 1.0, "conf": 0.8, "source_ref": "h3:8760…"}}
 ```
 
 `assets/<city>.json`: `{"city", "stations": FeatureCollection<Point{name, mode: metro|rail, source}>, "bus_stops": FeatureCollection<Point{name}> | null, "bus_source": {operator, tier, license, fetched_at} | null, "highways": FeatureCollection<(Multi)LineString{ref, status, kind}> (simplified, bounding box of the areas + 5 km), "toll_plazas": FeatureCollection<Point{name}>}`. NHAI-derived numbers appear **only as aggregates** (ADR-0014); geometry is OSM.
@@ -166,7 +166,7 @@ JSON over HTTP. Errors are always `{"error": {"code": "...", "message": "..."}}`
 | `GET /v1/states/{code}/cities` | `preset`, `limit` 1–20 (default 5) | `{"state","preset","total","cities":[ranked city cards]}` — card = rank, id, name, tier, population, `score`, `access`, `momentum`, `coverage`, `confidence`, `drivers`, `gaps`, `best_area`, provenance. Unknown code → 404 |
 | `GET /v1/cities` | `q` (≥ 2 chars, matches name and aliases, case-insensitive, prefix first), `limit` 1–20 (default 8) | `{"cities":[{id,name,state,tier,population,matched}]}` |
 | `GET /v1/cities/{id}` | `preset` | one city: everything in the card + `factors`, `aliases`, `lat`, `lon`, `area_km2`, `cells`, `data`, provenance |
-| `GET /v1/cities/{id}/areas` | `preset`, `limit` 1–1000 (default 500) | GeoJSON FeatureCollection sorted by that preset's score. Per feature the API adds `rank` (over all cells), `score` and `access` for the requested preset, narrows `d` and `g` to it, keeps `f`, `s`, `pop`, `elig`, `bus_stops`, provenance, and drops `sc` and `ac` |
+| `GET /v1/cities/{id}/areas` | `preset`, `limit` 1–1000 (default 500) | GeoJSON FeatureCollection sorted by that preset's score. Feature `properties` = `{id, name, pop, elig, bus_stops, rank, score, access, coverage, confidence, f, s, d, g, source, source_ref, fetched_at, license}` where `rank` runs over all cells, `score`/`access` are for the requested preset, `d` = `[{factor, points, value, unit}]` and `g` = `[{factor, subscore, value, unit}]` (values taken from `f`), and `source`, `fetched_at`, `license` are copied from the collection |
 | `GET /v1/cities/{id}/assets` | `layers` ⊆ `stations,bus_stops,highways,toll_plazas` (default all) | the requested collections, `bus_source` |
 | `GET /v1/cities/{id}/compare` | `preset`, `scope` ∈ `metros,peers,state,india`, `limit` 1–10 (default 5) | `{"base":{card},"preset","scope","total","base_rank","others":[{rank,id,name,state,tier,score,delta,better:[{factor,delta,base,other}],worse:[…]}]}` |
 
