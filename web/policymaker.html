@@ -13,7 +13,7 @@
     /* ==========================================================================
        INFRA-AI Policymaker Priority Dashboard — Design System CSS
        From Stitch: "INFRA-AI Platform Design System"
-       Palette, spacing, radii and fonts reused verbatim from index.html & explore.html
+       Palette, spacing, radii and fonts reused verbatim from index.html & nh-explorer.html
        ========================================================================== */
     :root {
       --canvas-base: #F7F6F2;
@@ -137,7 +137,7 @@
     @media (min-width: 1024px) { .container { padding: 0 3rem; } }
 
     /* ==========================================================================
-       HEADER & NAV (Matched to index.html & explore.html)
+       HEADER & NAV (Matched to index.html & nh-explorer.html)
        ========================================================================== */
     .site-header {
       position: fixed; top: 0; left: 0; right: 0; z-index: 50;
@@ -442,7 +442,7 @@
     }
 
     /* ==========================================================================
-       BUDGET SANCTION CARD LAYOUT (Matched to explore.html lines 803–812)
+       BUDGET SANCTION CARD LAYOUT (Matched to nh-explorer.html lines 803–812)
        ========================================================================== */
     .budget-sanction-grid {
       display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.75rem;
@@ -460,7 +460,7 @@
       display: block; margin: 0.125rem 0;
     }
 
-    /* Progress Track (reused from explore.html line 815) */
+    /* Progress Track (reused from nh-explorer.html line 815) */
     .progress-track {
       height: 6px; background: var(--surface-container-high);
       border-radius: var(--radius-full); overflow: hidden; display: flex; margin-top: 0.375rem;
@@ -491,7 +491,7 @@
 </head>
 <body>
   <!-- ==========================================================================
-       HEADER & NAVIGATION (Same structure as index.html / explore.html)
+       HEADER & NAVIGATION (Same structure as index.html / nh-explorer.html)
        ========================================================================== -->
   <header class="site-header">
     <div class="container header-inner">
@@ -508,7 +508,7 @@
           </div>
         </a>
         <nav class="main-nav" id="main-nav">
-          <a class="nav-link text-title-md" href="explore.html" data-i18n="navExplore">Explore</a>
+          <a class="nav-link text-title-md" href="nh-explorer.html" data-i18n="navExplore">Explore</a>
           <a class="nav-link text-title-md" href="index.html#map-section" data-i18n="navProjects">Projects</a>
           <a class="nav-link text-title-md" href="index.html#place-explorer" data-i18n="navArea">Your Area</a>
           <a class="nav-link text-title-md" href="index.html#citizen-voice-section" data-i18n="navVoice">Citizen Voice</a>
@@ -523,7 +523,7 @@
           <button class="lang-btn text-label-md" data-lang="hi">हिन्दी</button>
           <button class="lang-btn text-label-md" data-lang="kn">ಕನ್ನಡ</button>
         </div>
-        <a class="btn-primary text-body-sm" href="explore.html">
+        <a class="btn-primary text-body-sm" href="nh-explorer.html">
           <span class="material-symbols-outlined" style="font-size:16px;">map</span>
           <span>Open GIS Map</span>
         </a>
@@ -539,7 +539,7 @@
 
   <!-- Mobile Nav -->
   <div class="mobile-nav" id="mobile-nav">
-    <a class="nav-link text-title-md" href="explore.html" data-i18n="navExplore">Explore</a>
+    <a class="nav-link text-title-md" href="nh-explorer.html" data-i18n="navExplore">Explore</a>
     <a class="nav-link text-title-md" href="index.html#map-section" data-i18n="navProjects">Projects</a>
     <a class="nav-link text-title-md" href="index.html#place-explorer" data-i18n="navArea">Your Area</a>
     <a class="nav-link text-title-md" href="index.html#citizen-voice-section" data-i18n="navVoice">Citizen Voice</a>
@@ -978,7 +978,7 @@
                       Step Calculation: (${item.complaint_volume} complaints × ${item.population_affected.toLocaleString('en-IN')} pop × ${item.infra_gap}) ÷ (₹${item.existing_budget.toFixed(2)} Cr + 1) = <strong>${score.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong>
                     </div>
 
-                    <!-- Funding Gap Visual: Budget Sanction card layout from explore.html -->
+                    <!-- Funding Gap Visual: Budget Sanction card layout from nh-explorer.html -->
                     <div style="margin-top:var(--space-md);padding-top:var(--space-sm);border-top:1px solid var(--border-subtle);">
                       <div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em;font-weight:700;color:var(--primary);margin-bottom:0.25rem;">
                         Funding Gap Visual: Allocated vs Needed
@@ -1020,7 +1020,7 @@
 
                     <!-- Action Row -->
                     <div class="action-row">
-                      <a class="btn-action-ghost" href="explore.html">
+                      <a class="btn-action-ghost" href="nh-explorer.html">
                         <span class="material-symbols-outlined" style="font-size:14px;">map</span>
                         <span>Inspect in GIS Explore</span>
                       </a>
