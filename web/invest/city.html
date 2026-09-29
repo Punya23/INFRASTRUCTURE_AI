@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title data-i18n="inv.title.suffix">INFRA-AI Invest</title>
+  <meta name="description" content="A city's areas on a map, scored on highways, metro and rail, main roads and built-up growth, with the best areas listed and the city compared with others.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
+  <link rel="stylesheet" href="invest.css">
+  <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js" defer></script>
+  <script src="../i18n.js"></script>
+  <script type="module" src="js/city.js"></script>
+</head>
+<body>
+  <a class="inv-skip" href="#main" data-i18n="inv.skip">Skip to main content</a>
+  <header id="inv-header"></header>
+
+  <main id="main" class="inv-section">
+    <div class="inv-container inv-stack inv-stack--loose">
+      <div class="inv-cityhead">
+        <h1 id="page-title" tabindex="-1"></h1>
+        <div class="inv-cluster" id="city-badges"></div>
+        <div class="inv-facts-row" id="city-facts"></div>
+        <span class="inv-visually-hidden" id="preset-label" data-i18n="inv.preset.label">What matters most</span>
+        <div class="inv-preset-bar" id="preset-bar" role="group" aria-labelledby="preset-label"></div>
+        <p class="inv-small inv-muted" id="preset-desc"></p>
+      </div>
+      <p class="inv-visually-hidden" id="city-status"></p>
+
+      <div class="inv-split">
+        <div class="inv-stack inv-stack--loose">
+          <section id="summary"></section>
+
+          <section class="inv-stack" aria-labelledby="map-title">
+            <h2 id="map-title" style="font-size: var(--fs-lg)"></h2>
+            <div class="inv-map">
+              <div class="inv-map__canvas" id="map"></div>
+              <div class="inv-legend" id="legend"></div>
+              <span class="inv-visually-hidden" id="toggles-label" data-i18n="inv.city.layers">Show on the map</span>
+              <div class="inv-toggles" id="toggles" role="group" aria-labelledby="toggles-label"></div>
+            </div>
+            <p class="inv-small inv-muted" id="layer-note" role="status"></p>
+          </section>
+
+          <section class="inv-stack" aria-labelledby="best-title">
+            <h2 id="best-title" style="font-size: var(--fs-lg)" data-i18n="inv.city.best">Best areas</h2>
+            <p class="inv-small inv-muted" data-i18n="inv.city.best.hint">The best-scoring area for each place name. Choose one to see it on the map.</p>
+            <div id="best"></div>
+          </section>
+
+          <details class="inv-details">
+            <summary data-i18n="inv.city.how">How to read this</summary>
+            <p class="inv-muted" data-i18n="inv.city.how.body">Growth favours the fringe and access favours the core, so the best area depends on the view you choose. Scores compare areas of about 5 km² with each other.</p>
+            <p class="inv-small inv-muted" data-i18n="inv.factor.road_strength.note">We measure road network capacity, not pavement condition.</p>
+          </details>
+        </div>
+
+        <aside class="inv-stack" aria-labelledby="compare-title">
+          <h2 id="compare-title" style="font-size: var(--fs-lg)" data-i18n="inv.city.compare">Compare with other cities</h2>
+          <span class="inv-visually-hidden" id="scope-label" data-i18n="inv.city.scope">Compare with</span>
+          <div class="inv-scope" id="scope" role="group" aria-labelledby="scope-label"></div>
+          <div id="compare"></div>
+        </aside>
+      </div>
+      <noscript><p class="inv-disclaimer" data-i18n="inv.noscript">This page needs JavaScript to load live scores. INFRA-AI Invest compares Indian cities on highways, metro and rail, main roads and built-up growth, using open data.</p></noscript>
+    </div>
+  </main>
+
+  <footer id="inv-footer"></footer>
+</body>
+</html>

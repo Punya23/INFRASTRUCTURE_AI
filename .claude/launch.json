@@ -24,6 +24,23 @@
         "web"
       ],
       "port": 8766
+    },
+    {
+      "name": "api-main",
+      "runtimeExecutable": "env",
+      "runtimeArgs": [
+        "INVEST_CORS_ORIGINS=http://localhost:8766",
+        "go",
+        "-C",
+        "api",
+        "run",
+        "./cmd/api",
+        "-addr",
+        ":8081",
+        "-data",
+        "../web/fixtures/invest"
+      ],
+      "port": 8081
     }
   ]
 }

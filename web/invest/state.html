@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title data-i18n="inv.title.suffix">INFRA-AI Invest</title>
+  <meta name="description" content="The top cities of a state ranked on highways, metro and rail, main roads and built-up growth, with the numbers behind each score.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+  <link rel="stylesheet" href="invest.css">
+  <script src="../i18n.js"></script>
+  <script type="module" src="js/state.js"></script>
+</head>
+<body>
+  <a class="inv-skip" href="#main" data-i18n="inv.skip">Skip to main content</a>
+  <header id="inv-header"></header>
+
+  <main id="main" class="inv-section">
+    <div class="inv-container inv-stack inv-stack--loose">
+      <div class="inv-stack inv-stack--tight">
+        <h1 id="page-title" tabindex="-1"></h1>
+        <p class="inv-muted" id="page-sub"></p>
+      </div>
+      <div class="inv-stack inv-stack--tight">
+        <span class="inv-visually-hidden" id="preset-label" data-i18n="inv.preset.label">What matters most</span>
+        <div class="inv-preset-bar" id="preset-bar" role="group" aria-labelledby="preset-label"></div>
+        <p class="inv-small inv-muted" id="preset-desc"></p>
+      </div>
+      <p class="inv-visually-hidden" id="list-status"></p>
+      <div class="inv-split">
+        <div id="cities" class="inv-stack"></div>
+        <aside id="aside" class="inv-stack" aria-labelledby="aside-title" hidden>
+          <h2 id="aside-title" style="font-size: var(--fs-lg)" data-i18n="inv.state.metros">Other metros to compare</h2>
+          <p class="inv-small inv-muted" data-i18n="inv.state.metros.hint">Cities scoring differently under the same view.</p>
+          <div id="aside-body"></div>
+        </aside>
+      </div>
+      <noscript><p class="inv-disclaimer" data-i18n="inv.noscript">This page needs JavaScript to load live scores. INFRA-AI Invest compares Indian cities on highways, metro and rail, main roads and built-up growth, using open data.</p></noscript>
+    </div>
+  </main>
+
+  <footer id="inv-footer"></footer>
+</body>
+</html>
