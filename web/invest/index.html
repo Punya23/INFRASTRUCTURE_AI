@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Invest where infrastructure already delivers | INFRA-AI</title>
+  <meta name="description" content="Rank cities and neighbourhoods across India on the highways, metro and rail, roads and built-up growth already on the ground. Every score shows its reasons. Not a forecast and not financial advice.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+  <link rel="stylesheet" href="invest.css">
+  <link rel="stylesheet" href="landing.css">
+  <script src="../i18n.js"></script>
+  <script type="module" src="js/landing.js"></script>
+</head>
+<body>
+  <a class="inv-skip" href="#main" data-i18n="inv.skip">Skip to main content</a>
+
+  <header class="inv-header">
+    <div class="inv-container inv-header__inner">
+      <a class="inv-brand" href="./">INFRA-AI <span class="inv-brand__product" data-i18n="inv.nav">Invest</span></a>
+      <nav class="inv-nav" aria-label="Main" data-i18n-aria-label="inv.landing.nav.label">
+        <a href="../index.html" data-i18n="inv.nav.explore">Explore my area</a>
+      </nav>
+      <div class="lang-switcher"></div>
+      <a class="inv-btn inv-btn--primary landing-header-cta" href="start.html" data-i18n="inv.cta.start">Find where to invest</a>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <section class="landing-hero" aria-labelledby="hero-title">
+      <div class="inv-container landing-hero__grid">
+        <div class="landing-hero__copy">
+          <h1 id="hero-title" class="inv-display landing-hero__title" data-i18n="inv.landing.headline">Invest where infrastructure already delivers</h1>
+          <p class="inv-lead" data-i18n="inv.landing.lead">We rank cities and neighbourhoods across India on what is already on the ground: national highways, metro and rail stations, the main-road network, and how much built-up land has grown since 2000. Every score shows the numbers behind it.</p>
+          <div class="inv-cluster landing-hero__actions">
+            <a class="inv-btn inv-btn--primary inv-btn--lg" href="start.html" data-i18n="inv.cta.start">Find where to invest</a>
+            <a class="inv-btn inv-btn--secondary inv-btn--lg" href="#how" data-i18n="inv.landing.cta.how">How it works</a>
+          </div>
+          <p class="inv-small inv-muted" data-i18n="inv.landing.trust">No account, and we never ask who you are.</p>
+        </div>
+
+        <div class="landing-hero__visual">
+          <!-- A honeycomb of scored areas, as on the city map. The saffron cell is the pinned place. -->
+          <div class="hive" aria-hidden="true">
+            <div class="hive__row"><i></i><i class="l1"></i><i class="l1"></i><i class="l2"></i><i class="l1"></i><i></i><i></i></div>
+            <div class="hive__row"><i class="l1"></i><i class="l2"></i><i class="l3"></i><i class="pin"></i><i class="l3"></i><i class="l1"></i><i></i></div>
+            <div class="hive__row"><i class="l1"></i><i class="l3"></i><i class="l4"></i><i class="l4"></i><i class="l3"></i><i class="l2"></i><i class="l1"></i></div>
+            <div class="hive__row"><i></i><i class="l2"></i><i class="l3"></i><i class="l3"></i><i class="l2"></i><i class="l1"></i><i></i></div>
+            <div class="hive__row"><i></i><i class="l1"></i><i class="l2"></i><i class="l2"></i><i class="l1"></i><i class="l1"></i><i></i></div>
+          </div>
+
+          <section class="inv-card landing-sample" aria-labelledby="sample-title">
+            <h2 id="sample-title" class="landing-sample__title" data-i18n="inv.landing.sample.title">Top cities in Maharashtra</h2>
+            <p class="inv-small inv-muted" data-i18n="inv.landing.sample.sub">Live from the data, on the Balanced preset. Scores are out of 100.</p>
+            <p id="sample-status" class="inv-visually-hidden" role="status" aria-live="polite"></p>
+            <div id="sample-body" class="landing-sample__body">
+              <noscript><p class="inv-small">The live sample needs JavaScript. How the ranking works and what it measures are described below, <a href="#how">starting here</a>.</p></noscript>
+            </div>
+            <a class="landing-sample__more" href="state.html?s=MH&amp;preset=balanced" data-i18n="inv.landing.sample.more">See the full Maharashtra list</a>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <section id="how" class="inv-section landing-how" aria-labelledby="how-title">
+      <div class="inv-container">
+        <h2 id="how-title" data-i18n="inv.landing.how.title">How it works</h2>
+        <ol class="landing-steps" role="list">
+          <li class="landing-step">
+            <span class="landing-step__num" aria-hidden="true">1</span>
+            <h3 data-i18n="inv.landing.how.1.title">Pick where you are looking</h3>
+            <p data-i18n="inv.landing.how.1.body">Choose a state, or search for a city by name. Nothing personal is asked.</p>
+          </li>
+          <li class="landing-step">
+            <span class="landing-step__num" aria-hidden="true">2</span>
+            <h3 data-i18n="inv.landing.how.2.title">Say what matters most</h3>
+            <p data-i18n="inv.landing.how.2.body">Daily commute, highway access or growth so far. Each preset is a set of weights you can read.</p>
+          </li>
+          <li class="landing-step">
+            <span class="landing-step__num" aria-hidden="true">3</span>
+            <h3 data-i18n="inv.landing.how.3.title">Compare with the reasons</h3>
+            <p data-i18n="inv.landing.how.3.body">See the top five cities, then the best areas of each on a hexagon map, with the facts behind every score.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="inv-section landing-measure" aria-labelledby="measure-title">
+      <div class="inv-container">
+        <div class="landing-heading">
+          <h2 id="measure-title" data-i18n="inv.landing.measure.title">What we measure</h2>
+          <p class="inv-lead" data-i18n="inv.landing.measure.lead">Five factors from open data that covers every city in India, in two groups.</p>
+        </div>
+        <div class="landing-groups">
+          <div class="landing-group">
+            <h3 class="landing-group__title" data-i18n="inv.group.access">Access</h3>
+            <p class="inv-muted" data-i18n="inv.landing.measure.access.body">How easily people and goods get in and out.</p>
+            <dl class="landing-factors">
+              <div>
+                <dt data-i18n="inv.landing.measure.highways">Highways</dt>
+                <dd data-i18n="inv.landing.measure.highways.desc">Distance to the nearest national highway or expressway.</dd>
+              </div>
+              <div>
+                <dt data-i18n="inv.landing.measure.transit">Metro and rail</dt>
+                <dd data-i18n="inv.landing.measure.transit.desc">Distance to the nearest metro station and the nearest railway station.</dd>
+              </div>
+              <div>
+                <dt data-i18n="inv.factor.road_strength">Road network</dt>
+                <dd>
+                  <span data-i18n="inv.landing.measure.roads.desc">Kilometres of main road per square kilometre.</span>
+                  <span class="landing-note" data-i18n="inv.factor.road_strength.note">We measure road network capacity, not pavement condition.</span>
+                </dd>
+              </div>
+            </dl>
+          </div>
+          <div class="landing-group">
+            <h3 class="landing-group__title" data-i18n="inv.group.momentum">Momentum</h3>
+            <p class="inv-muted" data-i18n="inv.landing.measure.momentum.body">How much the place has already grown.</p>
+            <dl class="landing-factors">
+              <div>
+                <dt data-i18n="inv.factor.built_up_growth">Built-up growth</dt>
+                <dd data-i18n="inv.landing.measure.growth.desc">Change in the share of built-up land from 2000 to 2020, measured from satellite data.</dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+        <p class="inv-small inv-muted landing-unit" data-i18n="inv.landing.measure.unit">Each area is a hexagon of about 5 km². A factor we could not measure is left out and shown as a dash, never counted as zero.</p>
+      </div>
+    </section>
+
+    <section class="landing-not" aria-labelledby="not-title">
+      <div class="inv-container inv-section">
+        <h2 id="not-title" data-i18n="inv.landing.not.title">What this is not</h2>
+        <ul class="landing-not__list" role="list">
+          <li>
+            <h3 data-i18n="inv.landing.not.forecast.title">Not a forecast</h3>
+            <p data-i18n="inv.landing.not.forecast.body">We describe what exists today and what has already changed. We do not predict what happens next.</p>
+          </li>
+          <li>
+            <h3 data-i18n="inv.landing.not.price.title">Not a price guide</h3>
+            <p data-i18n="inv.landing.not.price.body">There are no prices, rents or valuations here, because no open source covers them for every city.</p>
+          </li>
+          <li>
+            <h3 data-i18n="inv.landing.not.advice.title">Not financial advice</h3>
+            <p data-i18n="inv.landing.not.advice.body">Use it to shortlist places to visit and check for yourself. Speak to a registered adviser before you commit money.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="inv-section" aria-labelledby="sources-title">
+      <div class="inv-container">
+        <div class="landing-heading">
+          <h2 id="sources-title" data-i18n="inv.landing.sources.title">Sources and licenses</h2>
+          <p class="inv-lead" data-i18n="inv.landing.sources.lead">Open data only. Every score keeps the source, date and license of the facts behind it.</p>
+          <p id="sources-asof" class="inv-small inv-muted"></p>
+        </div>
+        <div id="sources-body"></div>
+      </div>
+    </section>
+
+    <section class="inv-section landing-final" aria-labelledby="final-title">
+      <div class="inv-container">
+        <div class="landing-final__inner">
+          <div class="inv-stack--tight">
+            <h2 id="final-title" data-i18n="inv.landing.final.title">Start with a state you know</h2>
+            <p data-i18n="inv.landing.final.body">Three short questions, then a ranked list with reasons.</p>
+          </div>
+          <a class="inv-btn inv-btn--primary inv-btn--lg" href="start.html" data-i18n="inv.cta.start">Find where to invest</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="inv-footer">
+    <div class="inv-container inv-stack">
+      <p class="inv-disclaimer" data-i18n="inv.disclaimer">Scores describe existing infrastructure and past growth. They are not forecasts, price predictions or financial advice.</p>
+      <p data-i18n="inv.footer.attribution">Map data © OpenStreetMap contributors, ODbL. Population from WorldPop 2020, built-up area from GHSL 2020, place names from GeoNames.</p>
+      <p data-i18n="inv.footer.dpg">INFRA-AI is built as a Digital Public Good for India.</p>
+    </div>
+  </footer>
+</body>
+</html>
