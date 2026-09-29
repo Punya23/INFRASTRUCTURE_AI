@@ -457,6 +457,8 @@
         style: {
           version: 8,
           name: 'INFRA-AI Basemap',
+          // symbol (text) layers need a glyph server; OpenFreeMap per README §11
+          glyphs: 'https://tiles.openfreemap.org/fonts/{fontstack}/{range}.pbf',
           sources: {
             'osm-tiles': {
               type: 'raster',
@@ -576,7 +578,7 @@
           'symbol-placement': 'line',
           'text-field': ['get', 'ref'],
           'text-size': 10,
-          'text-font': ['Open Sans Regular'],
+          'text-font': ['Noto Sans Regular'],  // a fontstack the glyph server has
           'text-offset': [0, -0.8],
           'text-max-angle': 30
         },
