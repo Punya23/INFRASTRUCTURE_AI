@@ -1,0 +1,13 @@
+indicator,status,reason,required_data,current_source,use_case
+population_per_station,BLOCKED,No population data available,Census population data + spatial boundaries,UNAVAILABLE,Calculate average population served per station
+stations_per_100k_population,BLOCKED,No population data available,Census population data + catchment boundaries,UNAVAILABLE,Normalize station count by population
+population_within_500m,BLOCKED,No population data + no spatial boundaries,Census population data + ward/ULB polygons,UNAVAILABLE,Calculate population within 500m catchment
+population_within_1km,BLOCKED,No population data + no spatial boundaries,Census population data + ward/ULB polygons,UNAVAILABLE,Calculate population within 1km catchment
+population_within_2km,BLOCKED,No population data + no spatial boundaries,Census population data + ward/ULB polygons,UNAVAILABLE,Calculate population within 2km catchment
+underserved_population,BLOCKED,No population data + no service data,Census population + service frequency + catchment analysis,UNAVAILABLE,Identify high-population areas with poor rail access
+ridership_per_station,BLOCKED,No ridership data available,Station-level daily/annual ridership counts,UNAVAILABLE,Calculate demand per station
+peak_frequency,BLOCKED,No service frequency data available,Train timetables or frequency data,UNAVAILABLE,Calculate trains per hour during peak times
+off_peak_frequency,BLOCKED,No service frequency data available,Train timetables or frequency data,UNAVAILABLE,Calculate trains per hour during off-peak times
+first_last_train_times,BLOCKED,No timetable data available,Station-level timetables,UNAVAILABLE,Determine service operating hours
+actual_transit_accessibility,BLOCKED,No service frequency data available,Service frequency + operating hours,UNAVAILABLE,Calculate actual accessibility (vs. geographic proximity)
+demand_supply_gap,BLOCKED,No ridership + no capacity data,Ridership + train capacity + frequency,UNAVAILABLE,Identify overcrowded vs. underutilized stations

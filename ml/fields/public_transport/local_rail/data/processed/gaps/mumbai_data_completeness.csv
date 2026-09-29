@@ -1,0 +1,12 @@
+indicator,available,status,source,required_for_gap_analysis,limitation
+Station Coordinates,True,COMPLETE,BMC via OpenCity.in,Essential,None
+Network Geometry,True,COMPLETE,BMC via OpenCity.in,Essential,Line segments may not match exact track layout
+Station Spacing,True,COMPLETE,Derived from coordinates (M2),Essential,Nearest-neighbor may not reflect route sequence
+Geographic Catchments (500m/1km/2km),True,COMPLETE,Generated from coordinates (M3),Essential,"Theoretical geographic only, not actual transit accessibility"
+LGD Boundaries (Spatial Polygons),False,DATA_UNAVAILABLE,N/A,High,Cannot perform station-to-geography joins without polygons
+Population Data,False,DATA_UNAVAILABLE,N/A,High,Cannot calculate catchment population or underserved areas
+Service Frequency,False,DATA_UNAVAILABLE,N/A,High,Cannot assess actual transit accessibility (only geographic proximity)
+Ridership,False,DATA_UNAVAILABLE,N/A,Medium,Cannot validate demand or identify overcrowding
+Timetable,False,DATA_UNAVAILABLE,N/A,Medium,Cannot determine operating hours or first/last trains
+Station-Line Mapping,False,PARTIAL,Line names in KML but no station assignments,Low,Cannot analyze gaps by specific line (Western vs Central vs Harbour)
+Interchange Information,False,DATA_UNAVAILABLE,N/A,Low,Cannot identify multimodal transfer stations
