@@ -228,3 +228,17 @@ func TestPopulationIsWholePeople(t *testing.T) {
 		t.Errorf("a card's population = %d, want 1235", got)
 	}
 }
+
+// The order of a search answer is a property of the matches, not of the order the store lists the cities in.
+func TestSearchCities_independentOfInputOrder(t *testing.T) {
+	prefix := mkCity("prefix", "MH", "mid", 10, 50, nil)
+	prefix.Name = "Banda" // starts with "ba"
+	inside := mkCity("inside", "MH", "mid", 999, 50, nil)
+	inside.Name = "Mumba" // only contains it, and is the larger city
+	for _, in := range [][]*store.City{{prefix, inside}, {inside, prefix}} {
+		hits := searchCities(in, "ba")
+		if len(hits) != 2 || hits[0].ID != "prefix" || hits[1].ID != "inside" {
+			t.Errorf("input %v: %+v, want the prefix match first", idsOf(in), hits)
+		}
+	}
+}
