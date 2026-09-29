@@ -1,0 +1,12 @@
+city,metric,value,unit
+Hyderabad,Total stations,57,stations
+Hyderabad,Total platforms,117,platforms
+Hyderabad,Routes/corridors,3,routes
+Hyderabad,Total trips,2820,trips
+Hyderabad,Stop times,61236,records
+Hyderabad,Shape points,2450,points
+Bengaluru,Total stations,63,stations
+Chennai,Ridership months,39,months
+Chennai,Total ridership (period),345333510,passengers
+Chennai,Average monthly ridership,8854705,passengers/month
+Chennai,Peak monthly ridership,10468732,passengers/month

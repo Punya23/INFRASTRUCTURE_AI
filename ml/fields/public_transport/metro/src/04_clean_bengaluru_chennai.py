@@ -92,7 +92,7 @@ def clean_bengaluru_station_list() -> pd.DataFrame:
     
     print("\nPhase 6: Cleaning Bengaluru station list...")
     
-    df = pd.read_csv(RAW_BLR / "bmrcl_station_ridership.csv")
+    df = pd.read_csv(RAW_BLR / "bmrcl_station_ridership.csv", on_bad_lines='skip')
     
     # Remove duplicates
     df = df.drop_duplicates()

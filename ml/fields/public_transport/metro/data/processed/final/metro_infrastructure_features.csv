@@ -1,0 +1,4 @@
+metro_system_id,city,state,station_count,data_level,network_available,schedule_available,geometry_available
+HYD,Hyderabad,Telangana,57.0,NETWORK_LEVEL,True,True,True
+BLR,Bengaluru,Karnataka,63.0,STATION_LEVEL,False,False,True
+CHN,Chennai,Tamil Nadu,,CITY_LEVEL,False,False,False
