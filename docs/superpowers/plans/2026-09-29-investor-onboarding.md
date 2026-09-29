@@ -43,7 +43,7 @@ Worktree root: `/Users/punyasurana/Documents/INFRA_AI/.claude/worktrees/investme
 
 Layout (no `__init__.py`, like the rest of `ml/`): `ml/pipeline/invest/{scores,cities,osm,geo,facts,export,__main__}.py`, `ml/fields/national_highways/cell_facts.py`, `ml/fields/public_transport/cell_facts.py`, tests `ml/tests/test_invest_*.py`. CLI: `cd ml && uv run python -m pipeline.invest osm|cities|facts|export|sensitivity|all`.
 
-### Task D1: scoring config and pure scoring
+### Task 1 (D1): scoring config and pure scoring
 
 **Files:**
 - Create: `config/scoring.yaml`, `config/states.yaml`, `ml/pipeline/invest/scores.py`
@@ -508,7 +508,7 @@ def aggregate_city(
 - [ ] **Step 6: Run tests and lint.** `cd ml && uv run pytest tests/test_invest_scores.py -q && uv run ruff check pipeline tests` → all pass.
 - [ ] **Step 7: Commit.** `git add config/scoring.yaml config/states.yaml ml/pipeline/invest/scores.py ml/tests/test_invest_scores.py && git commit` — message `feat(invest): explainable area and city scoring with config-weighted presets`.
 
-### Task D2: urban centres, naming, slugs, tiers
+### Task 2 (D2): urban centres, naming, slugs, tiers
 
 **Files:**
 - Create: `ml/pipeline/invest/cities.py`
@@ -784,7 +784,7 @@ def tier_of(population: float, metro_min: float, large_min: float) -> str:
 
 - [ ] **Step 4: Run tests and lint** → pass. **Step 5: Commit** `feat(invest): urban-centre labelling, piece naming, slugs and tiers`.
 
-### Task D3: OSM nodes — stations and place names
+### Task 3 (D3): OSM nodes — stations and place names
 
 **Files:**
 - Create: `ml/pipeline/invest/osm.py`
@@ -825,7 +825,7 @@ def test_place_rank_orders_localities_and_ignores_the_rest():
 - [ ] **Step 4: Run unit tests → pass. Then run the extraction once:** `cd ml && uv run python -c "from pipeline.invest.osm import extract; extract()"` (a few minutes; run it in the background while doing D4). Print counts by mode and 10 sample metro station names near Pune (lat 18.5, lon 73.85, within 0.3°) to eyeball.
 - [ ] **Step 5: Commit** `feat(invest): extract OSM stations and place names for area facts`.
 
-### Task D4: cell facts
+### Task 4 (D4): cell facts
 
 **Files:**
 - Create: `ml/pipeline/invest/geo.py`, `ml/pipeline/invest/facts.py`, `ml/fields/national_highways/cell_facts.py`, `ml/fields/public_transport/cell_facts.py`
@@ -924,7 +924,7 @@ def test_name_cells_prefers_inside_then_rank_then_nearest_then_none():
 - [ ] **Step 4: Run tests and lint → pass. Smoke test on real data:** load the Pune centre cell set and print `nh_access_km`, `station_access_km(…, "rail"/"metro")` and `arterial_km_by_cell` for 5 cells; values must be plausible (Pune centre: rail < 3 km; NH within 15 km).
 - [ ] **Step 5: Commit** `feat(invest): per-cell access, growth, road and naming facts` (one commit per module if preferred).
 
-### Task D5: build, score, export, verify
+### Task 5 (D5): build, score, export, verify
 
 **Files:**
 - Create: `ml/pipeline/invest/export.py`, `ml/pipeline/invest/__main__.py`, `ml/tests/test_invest_export.py`, `ml/tests/test_invest_contract.py`, `ml/tests/test_invest_spotchecks.py`, `web/fixtures/invest/**` (generated)
@@ -1065,7 +1065,7 @@ Never shipped and never served in production; every record has `"source": "synth
 
 States: MH, DL, KA, GA (`city_count` 0). Resulting scores (compute exactly, round to 1 decimal): **balanced** pune 70.5 › delhi 69.3 › bengaluru 65.0 › mumbai 63.0 › nashik 55.0; **commuter** delhi 73.8 › mumbai 69.5 › pune 63.5 › bengaluru 61.8 › nashik 40.5; **highway** pune 76.8 › nashik 70.3 › bengaluru 67.5 › delhi 66.0 › mumbai 57.5; **growth** pune 77.3 › bengaluru 70.3 › delhi 60.8 › nashik 59.8 › mumbai 55.0. Pune has 6 areas (one non-eligible, `pop` 1,200; one with `bus_stops` 31; one with `name: null`), Nashik 4, the rest 2. Pune has a bus feed (`PMPML`, secondary, 6,713 stops); the others `null`.
 
-### Task A1: contract, store and testdata
+### Task 6 (A1): contract, store and testdata
 
 **Files:**
 - Create: `api/go.mod`, `api/openapi.yaml`, `api/internal/store/{types.go,store.go,store_test.go}`, `api/testdata/invest/**`
@@ -1080,7 +1080,7 @@ States: MH, DL, KA, GA (`city_count` 0). Resulting scores (compute exactly, roun
 - [ ] **Step 5: Implement `store`.** `Load` reads `meta.json`, `states.json`, `cities.json`, then `areas/<id>.geojson[.gz]` and `assets/<id>.json[.gz]` for every city (gzip via `compress/gzip`), validates (rules above, id patterns from the Global Constraints, presets in `meta` cover every `scores` key, every factor id referenced exists), builds indexes (`map[string]*City`, `map[string][]*City` by state sorted by population descending, then id), and returns the first error wrapped with `%w` and the file path. Types use `*float64` for nullable numbers. `AreaFeature.Properties.D`/`G` decode from the fixture's `[["factor", number]]` pairs via a small `FactorPoint` type with `UnmarshalJSON`.
 - [ ] **Step 6: Run** `go -C api vet ./... && go -C api test ./...` → pass. **Commit** `feat(api): OpenAPI contract, fixture store with fail-closed validation and synthetic test data`.
 
-### Task A2: handlers and middleware
+### Task 7 (A2): handlers and middleware
 
 **Files:**
 - Create: `api/internal/http/{server.go,handlers.go,compare.go,middleware.go,errors.go}`, tests `api/internal/http/{handlers_test.go,compare_test.go,middleware_test.go}`
@@ -1144,7 +1144,7 @@ func TestCompare(t *testing.T) {
 - [ ] **Step 4: Run to confirm failure. Step 5: Implement.** `server.go`: Go 1.22 mux patterns (`mux.HandleFunc("GET /v1/states/{code}/cities", …)`), middleware chain recover → security headers → CORS → rate limit → `http.TimeoutHandler` (JSON body). `errors.go`: `writeError(w, status, code, msg)`. `handlers.go`: parse helpers `parsePreset`, `parseLimit(min, max, default)` (out of range → error, never clamp), id/code validators with the two regexes, search normalisation (`strings.ToLower`, trim, collapse spaces; `q` 2–64 runes), ranking helper (score desc, population desc, id asc). `compare.go`: `compare(...)` per spec §7 (`delta` and per-factor differences rounded to 1 decimal with `math.Round(x*10)/10`; `better`/`worse` sorted by |delta| desc then factor id, at most 2 each; `base_rank` = 1 + count of candidates scoring higher). Rate limiter: fixed window per `RemoteAddr` host, map guarded by a mutex, map reset when it exceeds 10,000 keys. Never write `err.Error()` of internal errors to the client; log with `slog`.
 - [ ] **Step 6: Run** `go -C api vet ./... && go -C api test ./... -race` → pass. **Commit** `feat(api): investor endpoints, compare logic, CORS, rate limit and timeouts`.
 
-### Task A3: server binary, launch config, docs
+### Task 8 (A3): server binary, launch config, docs
 
 **Files:**
 - Create: `api/cmd/api/main.go`, `api/README.md`
@@ -1161,7 +1161,7 @@ func TestCompare(t *testing.T) {
 
 Design direction (spec §8): warm neutral canvas, teal and saffron from `web/index.html`, generous type, real data on the landing page, a hex/tile motif instead of an India outline, calm and credible rather than salesy. Load the `frontend-design:frontend-design` skill before writing CSS/markup. Pages are static HTML with ES modules; the language switcher comes from `../i18n.js` (`window.InfraI18n`, `t(key)` returns a string or `null`, no interpolation; dynamic text must re-render on the `infra-ai-lang-change` event). Node ≥ 22 runs unit tests with `node --test web/invest/js/`.
 
-### Task W1: foundation — tokens, modules, i18n plumbing
+### Task 9 (W1): foundation — tokens, modules, i18n plumbing
 
 **Files:**
 - Create: `web/invest/invest.css`, `web/invest/js/{config,api,prefs,format,explain,ui}.js`, tests `web/invest/js/{api,prefs,format,explain}.test.mjs`
@@ -1220,35 +1220,35 @@ test('growth and roads', () => {
   `api.test.mjs` (inject `fetchImpl`): 200 → parsed JSON; 400 with `{"error":{"code":"bad_request","message":"…"}}` → rejects `ApiError` with `status 400`, `code 'bad_request'`; a fetch that never resolves → rejects `code 'timeout'` after `timeoutMs` (use 20 ms); a rejected fetch → `code 'network'`; a 200 with invalid JSON → `ApiError` `code 'bad_response'`; `api.stateCities('MH', {preset:'commuter', limit:3})` requests `/v1/states/MH/cities?preset=commuter&limit=3`; `api.searchCities('पुणे')` URL-encodes the query. `prefs.test.mjs`: round trip; a storage whose `getItem` throws → defaults; stored garbage (`homeState: '<x>'`, `preset: 'moon'`) → sanitised defaults; `savePrefs` with a throwing storage does not throw. `format.test.mjs`: `formatCount(6100000,'en') === '61,00,000'`; `formatScore(71.44) === '71'`; `formatScore(null) === '—'`; `formatDelta(7.4) === '+7'`, `formatDelta(-11.2) === '−11'`; `formatValue(undefined) === '—'`, `formatValue(NaN) === '—'`, `formatValue(0) === '0.0'` (an observed zero is not "unknown"); `tt('a {n} b', {n: 3}, {'a {n} b': 'x {n} y'}) === 'x 3 y'` and an unknown key returns the key.
 - [ ] **Step 2: Run** `node --test web/invest/js/` → FAIL (modules missing). **Step 3: Implement the modules** to pass (pure, no DOM in `api/prefs/format/explain`). **Step 4: `invest.css`** — tokens mirroring `web/index.html` (`--canvas-base:#F7F6F2; --surface:#FFFFFF; --text-primary:#14202B; --text-secondary:#5B6773; --border-subtle:#E3E1DA; --brand-teal:#0E5A66; --accent-saffron:#E08A1E`), an 8 px spacing scale, type scale (Inter, Noto Sans Devanagari/Kannada via the existing font loading), components: button/CTA, chip, card, score ring (SVG-free `conic-gradient`), meter bar, skeleton shimmer (disabled under `prefers-reduced-motion`), error state, visually-hidden, focus-visible ring, layout containers with a 16 px gutter at 360 px. AA contrast on every text/background pair. **Step 5: Add the shared `inv.*` keys** (nav, footer, disclaimer, error, retry, loading, preset labels and one-line meanings, factor names, every `inv.why.*` and `inv.gap.*` key from the explain mapping — 5 factors × up to 4 variants × 2) to `web/locales/en.json`. **Step 6:** `node --test web/invest/js/` → pass. **Commit** `feat(web): investor foundation — API client, prefs, formatting, explanations, design tokens`.
 
-### Task W2: landing page
+### Task 10 (W2): landing page
 
 **Files:** Create `web/invest/index.html`; Modify `web/index.html` (one nav link `<a class="nav-link text-title-md" href="invest/" data-i18n="inv.nav">Invest</a>` next to "Policymaker View"), `web/locales/en.json`.
 
 - [ ] **Behaviour (all text via `data-i18n`/`tt`, English first):** header (brand, "Explore my area" link to `../index.html`, language switcher from `i18n.js`, primary CTA); hero — headline "Invest where infrastructure already delivers", sub-line naming the evidence (highways, metro and rail, roads, built-up growth), CTA "Find where to invest" → `start.html`, secondary "How it works" (anchor); a **live sample card** calling `api.stateCities('MH', {limit: 3})` showing rank, name, score and one why-chip per city, with skeleton while loading and an inline error with Retry (the page still reads well without it); "How it works" in three steps; "What we measure" (Access: highways, metro and rail, road network — Momentum: built-up growth — with the honest note "We measure road network capacity, not pavement condition"); "What this is not" (no forecasts, no price predictions, no financial advice); sources with licenses read from `api.meta()` (`sources[].name/license/attribution`); footer with the disclaimer line and OSM attribution. A CSS hex/tile grid motif (no India outline). Add a `<noscript>` line pointing to the static description.
 - [ ] **Verify** (Browser pane or, if unavailable, report clearly): `preview_start` `web` and `api`; load `http://localhost:8765/invest/`; no console errors; sample card shows 3 MH cities from the API; CTA reaches `start.html`; 360 px and 1280 px screenshots; keyboard tab order reaches CTA and language switcher; stop the API → the card shows the error state with Retry and the rest of the page still renders (Review Focus 5). **Commit** `feat(web): investor landing page with live sample and nav link`.
 
-### Task W3: start (onboarding)
+### Task 11 (W3): start (onboarding)
 
 **Files:** Create `web/invest/start.html`, `web/invest/js/start.js`; Modify `web/locales/en.json`.
 
 - [ ] **Behaviour:** a three-step wizard on one page with a progress indicator and Back/Next/Skip, focus moved to each step's heading, `aria-live` status. **Step 1** "Which state do you belong to?" — searchable grid of all 36 states/UTs from `api.states()`, each tile showing the name and "N cities" (0 → "No city above 1 lakh people yet"), plus "Skip". **Step 2** "Where are you planning to invest?" — three big choices: "In {home state}" (hidden if step 1 was skipped), "Another state" (reveals the same grid), "A specific city" (search input with 250 ms debounce → `api.searchCities`, results show name, state and tier; keyboard operable listbox; no match → "No city found. Try a state instead."). **Step 3** "What matters most?" — four preset chips (balanced default, commuter, highway, growth) with one-line meanings, then "Show me". On finish `savePrefs` and navigate: a state → `state.html?s=<CODE>&preset=<id>`, a city → `city.html?c=<id>&preset=<id>`. If saved prefs exist, pre-fill and show "Continue where you left off". No personal data is asked or stored.
 - [ ] **Verify:** walk the wizard with the keyboard only and with the mouse; pick Maharashtra → Maharashtra → Balanced → lands on `state.html?s=MH&preset=balanced`; search "thane" → Mumbai (alias) selectable; search `<script>alert(1)</script>` → "No city found" and no script runs (Review Focus 4); Back keeps answers; reload restores prefs; storage disabled (`localStorage` throwing) still works. **Commit** `feat(web): three-step investor onboarding`.
 
-### Task W4: state result
+### Task 12 (W4): state result
 
 **Files:** Create `web/invest/state.html`, `web/invest/js/state.js`; Modify `web/locales/en.json`.
 
 - [ ] **Behaviour:** reads `s` and `preset` from the URL (invalid → redirect to `start.html`); fetches `api.stateCities(code, {preset, limit: 5})` and `api.states()` for the name; preset chips re-fetch and update the URL with `history.replaceState`. Each card: rank, city name with state, tier badge, score ring (`formatScore`), Access and Momentum meters, up to three why-chips from `explain('why', driver, meta)`, one watch-out from `explain('gap', gap, meta)` (hidden when none), best-area line ("Best area: {name}" or "Area near …" when the name is null), coverage note when `coverage < 1` ("Based on N of M factors"), and "Explore {city}" → `city.html?c=<id>&preset=<preset>`. **Fewer than five:** "Only {n} cities above 1 lakh people in {state}" (n ≥ 1); **none:** an empty state with a link to pick another state (Review Focus 1). Aside "Other metros to compare": top 3 from `api.compare(topCityId, {preset, limit: 3})` (skipped when the state has no city). Persistent disclaimer line. Loading skeletons, error state with Retry.
 - [ ] **Verify:** MH → 3 cards on the synthetic data (5 on real data) in the correct order per preset; `?s=GA` → empty state; `?s=ZZ` → friendly not-found with a link back; switching preset reorders; 360 px layout stacks aside below cards; stop the API → error state, Retry recovers after restart. **Commit** `feat(web): state result page with top cities, reasons and metro comparison`.
 
-### Task W5: city page
+### Task 13 (W5): city page
 
 **Files:** Create `web/invest/city.html`, `web/invest/js/city.js`, `web/invest/js/map.js`; Modify `web/locales/en.json`.
 
 - [ ] **Behaviour:** reads `c` and `preset`; fetches `api.city`, `api.areas(id, {preset, limit: 1000})`, `api.compare(id, {preset})` in parallel (each with its own skeleton and error/retry). **Header:** name, state, tier, population (`formatCount`), built-up growth, data flags ("Bus data: {operator}" or "No bus feed for this city — bus stops are shown only where a feed exists and are not scored"), preset chips. **Map** (`map.js`, MapLibre GL 4.7.1 from unpkg as in `nh-explorer.html`): OpenFreeMap positron style (`https://tiles.openfreemap.org/styles/positron`), falling back to a plain background style if the style request errors; the `areas` GeoJSON as a fill layer coloured by `score` on a 5-step sequential teal ramp with a legend, thin outline, non-eligible cells at reduced opacity; click and hover popups (name, score, top drivers, gaps, bus stops, "Area near …" when unnamed) built with DOM APIs; `fitBounds` to the areas; layer toggles (stations by mode, bus stops, highways by status, tolls) that lazy-load `api.assets(id, layers)` once and show/hide; attribution "© OpenStreetMap contributors" always visible. **Best areas list:** top 10 features with `elig`, best cell per name, rank/name/score/why-chips, a `<button>` per row that flies the map to the cell and opens its popup — the keyboard and screen-reader path. **Compare panel** (right column; stacked under the map below 900 px): scope switch (Metros / Similar-size / This state / All India) re-calling `api.compare`; rows with name, score, `formatDelta(delta)` chip (green above, neutral below), and reasons "{Better factor} +50 · {Worse factor} −45" from `better`/`worse`; each row links to `city.html?c=<id>&preset=<preset>`; text "You are here: rank {base_rank} of {total + 1}"; when `others` is empty: "No comparable cities for this filter." Disclaimer line and methodology note ("Growth favours the fringe, access favours the core") in a collapsible "How to read this".
 - [ ] **Verify** (Browser pane): `city.html?c=pune&preset=commuter` — map draws hexes, popup works, layers toggle, list button focuses the map cell, compare shows Delhi first with the "+50 metro access" reason (synthetic data) and clicking it opens Delhi with the same preset; unnamed cell shows "Area near …"; `?c=zzz` → not-found state; API stopped → each section shows an error with Retry while the others stay; keyboard-only path; 360 px layout; console clean. **Commit** `feat(web): city page with hex heat map, best areas, layers and compare panel`.
 
-### Task W6: languages, guards, polish
+### Task 14 (W6): languages, guards, polish
 
 **Files:** Modify `web/locales/{en,hi,kn}.json`; Create `ml/tests/test_invest_copy.py` (this single test lives in `ml/tests/` so `uv run pytest` guards it — allowed exception to the track boundary).
 
@@ -1308,21 +1308,21 @@ def test_pages_use_no_inline_script_and_no_inner_html():
 
 # Integration (lead)
 
-### Task I1: real-data integration
+### Task 15 (I1): real-data integration
 
 - [ ] Point the API at the real fixtures (`-data ../web/fixtures/invest` in `.claude/launch.json`); start `api` and `web`; run `ml/tests/test_invest_contract.py` (golden vs real skeleton) and `test_invest_spotchecks.py`; walk the whole flow in the browser on real Maharashtra, Delhi and Haryana data; fix name overrides, copy and layout issues found; confirm the API loads in under 3 s and every `/v1/*` route answers under 100 ms locally.
 - [ ] Review the pipeline output like a sceptical user: is any top-5 list embarrassing (a village, a duplicate metro region, a wrong state)? Fix at the source (config, override, threshold) — never patch the fixtures by hand.
 
-### Task I2: ADR, README, AGENTS, methodology
+### Task 16 (I2): ADR, README, AGENTS, methodology
 
 - [ ] Write `docs/adr/0015-investor-onboarding-scores-and-api.md` (Status Proposed): the decisions of spec §2, the score definition, "Go API before Postgres", the no-returns stance, the sensitivity table from `data/processed/invest/sensitivity.md`; add its row to `docs/adr/README.md`.
 - [ ] README §9 (product surface 6: investor flow), §10 (the new endpoints), §12 (`web/invest/`, `api/`, `config/scoring.yaml`, `config/states.yaml`, `ml/pipeline/invest/`), §13 status; AGENTS.md: Status line, Commands (`cd ml && uv run python -m pipeline.invest all`, `go -C api run ./cmd/api`, `node --test web/invest/js/`); note in `docs/fields/README.md` that fixtures under `web/fixtures/invest/` are cross-field.
 
-### Task I3: whole-branch review and fixes
+### Task 17 (I3): whole-branch review and fixes
 
 - [ ] Run `/code-review` style review on the diff against `main` (correctness → robustness → security → contracts → dead weight → tests), verify each finding against the code, fix, rerun `cd ml && uv run pytest && uv run ruff check .`, `go -C api vet ./... && go -C api test ./... -race`, `node --test web/invest/js/`.
 
-### Task I4: merge and push
+### Task 18 (I4): merge and push
 
 - [ ] `git fetch origin`; merge `origin/main` into the branch (resolve conflicts for real; regenerate fixtures if they conflict); rerun all checks; fast-forward merge into `main` and `git push origin main` (push as Punya23; no PR — standing user rule); delete the merged remote branch except the checked-out worktree branch, and say so.
 
