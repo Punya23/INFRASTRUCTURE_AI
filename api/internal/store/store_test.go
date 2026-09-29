@@ -344,6 +344,9 @@ func TestLoad_failsClosed(t *testing.T) {
 		{"driver names an unknown factor", edit("cities.json", func(r any) {
 			obj(arr(obj(obj(obj(arr(r)[0])["scores"])["balanced"])["drivers"])[0])["factor"] = "vibes"
 		}), `"vibes"`, nil},
+		{"area geometry is a point", edit("areas/pune.geojson", func(r any) {
+			obj(arr(obj(r)["features"])[0])["geometry"] = map[string]any{"type": "Point", "coordinates": []any{73.8, 18.5}}
+		}), `geometry type "Point"`, nil},
 		{"area lacks a preset score", edit("areas/pune.geojson", func(r any) { delete(feature(r, 0)["sc"].(map[string]any), "growth") }), `sc: missing preset "growth"`, nil},
 		{"gap names an unknown factor", edit("areas/pune.geojson", func(r any) {
 			feature(r, 0)["g"].(map[string]any)["balanced"] = []any{[]any{"vibes", 10.0}}
@@ -423,6 +426,7 @@ func TestLoad_failsClosed(t *testing.T) {
 		{"city area_km2 zero", city(set("area_km2", 0.0)), "area_km2 0 must be positive", nil},
 		{"city population null", city(set("population", nil)), "$[0].population: null", nil},
 		{"city tier not metro, large or mid", city(set("tier", "huge")), `tier "huge"`, nil},
+		{"city tier disagrees with its population", city(set("tier", "mid")), `but population`, nil},
 		{"city aliases omitted", city(del("aliases")), "$[0].aliases: missing", nil},
 		{"city data null", city(set("data", nil)), "$[0].data: want an object", nil},
 		{"city best_area null", preset(set("best_area", nil)), "$[0].scores.balanced.best_area: want an object", nil},
@@ -565,16 +569,15 @@ const (
 	covTol  = 0.05 // coverage may be stored to one decimal
 )
 
-// TestParity ties what is served to the exported sub-scores and weights (spec §7, last bullet). It always
-// checks the synthetic world and, once the pipeline has produced them, the real fixtures.
+// TestParity ties what is served to the exported sub-scores and weights (spec §7, last bullet). It checks
+// the synthetic world and the committed real fixtures; both must exist.
 func TestParity(t *testing.T) {
 	for _, d := range []struct {
 		name, dir string
-		optional  bool
-	}{{"testdata", testdata, false}, {"web fixtures", realFixtures, true}} {
+	}{{"testdata", testdata}, {"web fixtures", realFixtures}} {
 		t.Run(d.name, func(t *testing.T) {
-			if _, err := os.Stat(filepath.Join(d.dir, "meta.json")); d.optional && err != nil {
-				t.Skipf("no fixtures in %s", d.dir)
+			if _, err := os.Stat(filepath.Join(d.dir, "meta.json")); err != nil {
+				t.Fatalf("no fixtures in %s: run `cd ml && uv run python -m pipeline.invest all`", d.dir)
 			}
 			for _, p := range parityProblems(mustLoad(t, d.dir)) {
 				t.Error(p)

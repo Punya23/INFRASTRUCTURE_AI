@@ -98,7 +98,7 @@ func (s *Store) Meta() Meta {
 // States returns a copy of states.json, in file order.
 func (s *Store) States() []State { return slices.Clone(s.states) }
 
-// Cities returns a copy of the cities in cities.json order (population, descending). Each City is a copy
+// Cities returns a copy of the cities in cities.json order (the exporter writes population, descending; Load does not enforce it). Each City is a copy
 // too, but the maps and slices inside it are shared with the Store: read them, never modify them.
 func (s *Store) Cities() []City { return slices.Clone(s.cities) }
 

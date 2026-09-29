@@ -165,6 +165,10 @@ func (s *Store) checkCity(c *City) error {
 	if !slices.Contains([]string{"metro", "large", "mid"}, c.Tier) {
 		return fmt.Errorf("tier %q is not metro, large or mid", c.Tier)
 	}
+	// compare's default scope keys on tier, so it must follow the population thresholds in meta.json.
+	if want := s.tierOf(c.Population); c.Tier != want {
+		return fmt.Errorf("tier %q, but population %g and meta.tiers make it %q", c.Tier, c.Population, want)
+	}
 	if _, ok := s.byState[c.State]; !ok {
 		return fmt.Errorf("state %q is not in states.json", c.State)
 	}
@@ -253,6 +257,12 @@ func (s *Store) checkFeature(ft *AreaFeature) error {
 	}
 	if len(ft.Geometry) == 0 || string(ft.Geometry) == "null" {
 		return errors.New("geometry is missing")
+	}
+	var g struct {
+		Type string `json:"type"`
+	}
+	if err := json.Unmarshal(ft.Geometry, &g); err != nil || (g.Type != "Polygon" && g.Type != "MultiPolygon") {
+		return fmt.Errorf("geometry type %q, want Polygon or MultiPolygon", g.Type)
 	}
 	if err := requireText([2]string{"id", p.ID}, [2]string{"source_ref", p.SourceRef}); err != nil {
 		return err
@@ -361,4 +371,16 @@ func nonNil[T any](s []T) []T {
 		return []T{}
 	}
 	return s
+}
+
+// tierOf classifies a city by population with the thresholds in meta.json (already checked to be ordered).
+func (s *Store) tierOf(population float64) string {
+	switch t := s.meta.Tiers; {
+	case population >= float64(t.MetroMinPopulation):
+		return "metro"
+	case population >= float64(t.LargeMinPopulation):
+		return "large"
+	default:
+		return "mid"
+	}
 }
