@@ -48,7 +48,13 @@ def _skeleton(root):
 )
 @pytest.mark.parametrize(
     "part",
-    ["meta.json", "states.json[0]", "cities.json[0]", "first area feature properties", "assets keys"],
+    [
+        "meta.json",
+        "states.json[0]",
+        "cities.json[0]",
+        "first area feature properties",
+        "assets keys",
+    ],
 )
 def test_fixtures_match_the_go_golden_skeleton(part):
     golden, ours = _skeleton(GOLDEN)[part], _skeleton(FIXTURES)[part]

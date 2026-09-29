@@ -275,6 +275,8 @@ def _publish(out_dir: Path, files: dict[str, bytes], max_file: float, max_dir: f
         path = tmp / rel
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_bytes(data)
+    # two renames: between them out_dir is briefly absent, so the API must not (re)start mid-swap;
+    # a reader never sees a half-written tree
     if out_dir.exists():
         out_dir.rename(old)
     tmp.rename(out_dir)
