@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { destination, filterStates, initialAnswers, moveIndex, resolveTarget, searchText, toPrefs } from './start.js';
+import { cityKeyAction, destination, filterStates, initialAnswers, moveIndex, resolveTarget, searchText, toPrefs } from './start.js';
 
 test('searchText: trims, collapses spaces and counts characters, not bytes', () => {
   assert.deepEqual(searchText('  thane  '), { text: 'thane' });
@@ -53,6 +53,24 @@ test('moveIndex: arrows, Home and End clamp at the ends; other keys are not ours
   assert.equal(moveIndex(-1, 'ArrowDown', 5, 1), 0); // a list with nothing active yet starts at the top
   assert.equal(moveIndex(2, 'Enter', 5, 3), null);
   assert.equal(moveIndex(0, 'ArrowDown', 0, 1), null); // nothing to move to
+});
+
+test('cityKeyAction: with nothing listed (a query just changed) no key does anything', () => {
+  for (const key of ['Enter', 'ArrowDown', 'ArrowUp', 'Escape']) {
+    assert.equal(cityKeyAction(key, 0, -1), null, key);
+    assert.equal(cityKeyAction(key, 0, 0), null, key); // even with a stale highlight
+  }
+});
+
+test('cityKeyAction: arrows move, Enter picks the highlighted row or the only row, Escape closes', () => {
+  assert.deepEqual(cityKeyAction('ArrowDown', 2, -1), { type: 'move', index: 0 });
+  assert.deepEqual(cityKeyAction('ArrowDown', 2, 0), { type: 'move', index: 1 });
+  assert.deepEqual(cityKeyAction('ArrowUp', 2, -1), { type: 'move', index: 1 });
+  assert.deepEqual(cityKeyAction('Enter', 2, 1), { type: 'pick', index: 1 });
+  assert.deepEqual(cityKeyAction('Enter', 1, -1), { type: 'pick', index: 0 });
+  assert.equal(cityKeyAction('Enter', 2, -1), null); // two rows and none highlighted: not a choice yet
+  assert.deepEqual(cityKeyAction('Escape', 2, -1), { type: 'close' });
+  assert.equal(cityKeyAction('a', 2, 0), null);
 });
 
 test('resolveTarget: the choice decides which answer counts', () => {

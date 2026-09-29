@@ -72,7 +72,7 @@
 .start-states > * + *, .start-city > * + * { margin-block-start: var(--space-1); }
 .start-reveal { padding-block-start: var(--space-1); border-block-start: 1px solid var(--border-subtle); }
 .start-reveal > * + * { margin-block-start: var(--space-1); }
-.start-hint:empty { display: none; }
+.start-city > .start-hint:empty { margin-block: 0; } /* stays in the tree (it is a live region) but takes no room */
 .start-selected { font-weight: 600; color: var(--brand-teal-hover); }
 
 /* ---------- Tiles: states, the three places, the four presets ---------- */
@@ -127,6 +127,16 @@
 .start-result__meta { color: var(--text-secondary); font-size: var(--fs-sm); }
 
 /* ---------- Back / Skip / Next ---------- */
+
+.start-message {
+  padding: var(--space-1) var(--space-2);
+  border-inline-start: 4px solid var(--accent-saffron);
+  border-radius: var(--radius-control);
+  background: var(--saffron-tint);
+  color: var(--saffron-ink);
+  font-weight: 600;
+}
+
 
 .start-nav { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-1); padding-block-start: var(--space-2); }
 .start-nav__forward { display: flex; flex-wrap: wrap; gap: var(--space-1); margin-inline-start: auto; }

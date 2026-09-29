@@ -50,6 +50,20 @@ export function moveIndex(index, key, count, cols) {
   }
 }
 
+// What a key does in the city box, given how many results are listed and which one is highlighted:
+// { type: 'move' | 'pick', index }, { type: 'close' }, or null when the key is not ours. With nothing
+// listed no key does anything, so Enter can never pick a row the visitor cannot see.
+export function cityKeyAction(key, count, active) {
+  if (count < 1) return null;
+  if (key === 'Escape') return { type: 'close' };
+  if (key === 'ArrowDown' || key === 'ArrowUp') return { type: 'move', index: moveIndex(active, key, count, 1) };
+  if (key === 'Enter') {
+    const index = active >= 0 ? active : (count === 1 ? 0 : -1);
+    return index >= 0 ? { type: 'pick', index } : null;
+  }
+  return null;
+}
+
 // answers = { homeState, choice: 'home' | 'state' | 'city' | null, stateCode, city: {id, name, state}, preset }.
 // The choice says which answer is the destination, so going Back and changing the home state
 // cannot leave a stale destination behind.
@@ -108,12 +122,14 @@ const model = {
   resumeCityName: null,
   ready: false,        // the dictionary has arrived, so tt() gives words and not keys
   pendingFocus: null,
+  message: null,       // a key for a one-time warning shown above the buttons on the next render
   nodes: {},           // parts of the city box that change without rebuilding the step
 };
 let root;
 let status;
 let debounceTimer;
 let searchToken = 0;
+let shownMessage = null; // the warning this render carries, for nav() to draw
 
 const stateName = (code) => model.states?.find((s) => s.code === code)?.name ?? code;
 const canNext = () => model.step !== 1 || resolveTarget(model.answers) !== null;
@@ -125,7 +141,8 @@ function cityCountText(n) {
 }
 
 // A group of choices as radio buttons with one tab stop and arrow keys, so a keyboard visitor does not
-// tab through 36 states. Arrows move focus; Enter or Space (a button click) picks.
+// tab through 36 states. As in the ARIA radio pattern, an arrow key moves focus and picks; onPick's second
+// argument says it came from the keyboard, so a pick that would move focus elsewhere can leave it here.
 function radioGroup({ labelledby, items, selected, onPick, className, itemClass, focusPrefix }) {
   const start = Math.max(0, items.findIndex((item) => item.value === selected));
   const buttons = items.map((item, i) => h('button', {
@@ -135,7 +152,7 @@ function radioGroup({ labelledby, items, selected, onPick, className, itemClass,
     'aria-checked': item.value === selected,
     tabindex: i === start ? 0 : -1,
     dataset: { focus: `${focusPrefix}-${item.value}` },
-    onclick: () => onPick(item.value),
+    onclick: () => onPick(item.value, false),
   }, item.children));
   const group = h('div', { role: 'radiogroup', 'aria-labelledby': labelledby, class: className }, buttons);
   group.addEventListener('keydown', (event) => {
@@ -144,8 +161,7 @@ function radioGroup({ labelledby, items, selected, onPick, className, itemClass,
     const to = from < 0 ? null : moveIndex(from, event.key, buttons.length, cols);
     if (to === null) return;
     event.preventDefault();
-    buttons.forEach((b, i) => { b.tabIndex = i === to ? 0 : -1; });
-    buttons[to].focus();
+    if (to !== from) onPick(items[to].value, true); // rebuilds the step and puts focus back on this item
   });
   return group;
 }
@@ -181,6 +197,7 @@ function stateGrid({ selected, onPick, labelledby }) {
   const input = h('input', {
     id: 'state-filter',
     class: 'start-input',
+    dataset: { focus: 'state-filter' },
     type: 'text',
     autocomplete: 'off',
     spellcheck: 'false',
@@ -203,6 +220,7 @@ function stateGrid({ selected, onPick, labelledby }) {
 function onQuery(value) {
   const a = model.answers;
   model.query = value;
+  model.results = []; // the rows on screen belong to the old text; no key may act on them
   model.active = -1;
   if (a.city && value !== a.city.name) a.city = null; // typing over a chosen city un-chooses it
   clearTimeout(debounceTimer);
@@ -238,8 +256,9 @@ async function runSearch(text) {
 }
 
 function setActive(i) {
-  model.active = i;
   const { input, list } = model.nodes;
+  if (i === null || i >= list.children.length) return;
+  model.active = i;
   [...list.children].forEach((li, n) => {
     li.classList.toggle('is-active', n === i);
     li.setAttribute('aria-selected', String(n === i));
@@ -331,22 +350,19 @@ function citySearch() {
     dataset: { focus: 'city-input' },
     oninput: (event) => onQuery(event.target.value),
     onkeydown: (event) => {
-      const n = model.results.length;
-      if (event.key === 'Enter') {
-        const i = model.active >= 0 ? model.active : (n === 1 ? 0 : -1);
-        if (i >= 0) { event.preventDefault(); pickCity(i); }
-      } else if (event.key === 'Escape' && !model.nodes.list.hidden) {
-        event.preventDefault();
+      const action = cityKeyAction(event.key, model.results.length, model.active);
+      if (!action) return;
+      event.preventDefault();
+      if (action.type === 'pick') pickCity(action.index);
+      else if (action.type === 'move') setActive(action.index);
+      else {
         model.search = { kind: 'idle' };
         model.results = [];
         paintSearch();
-      } else if ((event.key === 'ArrowDown' || event.key === 'ArrowUp') && n > 0) {
-        event.preventDefault();
-        setActive(moveIndex(model.active, event.key, n, 1));
       }
     },
   });
-  const hint = h('p', { id: 'city-hint', class: 'start-hint inv-small' });
+  const hint = h('p', { id: 'city-hint', class: 'start-hint inv-small', role: 'status', 'aria-live': 'polite' });
   const list = h('ul', { id: 'city-listbox', class: 'start-results inv-list', role: 'listbox', 'aria-label': tt('inv.start.city.results'), hidden: true });
   const errorSlot = h('div');
   const selected = h('p', { class: 'start-selected', hidden: true });
@@ -363,14 +379,24 @@ function nav({ onNext, onSkip, nextKey = 'inv.start.next', needKey }) {
     type: 'button',
     class: 'inv-btn inv-btn--primary',
     'aria-disabled': !canNext(),
-    onclick: () => (canNext() ? onNext() : setStatus(status, tt(needKey))),
+    dataset: { focus: 'next' },
+    onclick: () => (canNext() ? onNext() : warn(needKey)),
   }, tt(nextKey));
   model.nodes.next = next;
-  return h('div', { class: 'start-nav' },
+  return [
+    shownMessage ? h('p', { class: 'start-message', role: 'alert' }, tt(shownMessage)) : null,
+    h('div', { class: 'start-nav' },
     model.step > 0 ? h('button', { type: 'button', class: 'inv-btn inv-btn--ghost', onclick: () => goTo(model.step - 1) }, tt('inv.start.back')) : null,
     h('div', { class: 'start-nav__forward' },
       onSkip ? h('button', { type: 'button', class: 'inv-btn inv-btn--ghost', onclick: onSkip }, tt('inv.start.skip')) : null,
-      next));
+      next)),
+  ];
+}
+
+// Shows a warning above the buttons; it is visible and also announced (role="alert").
+function warn(key) {
+  model.message = key;
+  render();
 }
 
 const heading = (key) => h('h2', { id: 'step-heading', tabindex: -1, dataset: { focus: 'heading' } }, tt(key));
@@ -408,9 +434,9 @@ function stepPlace() {
       className: 'start-options',
       itemClass: 'start-tile start-tile--large',
       focusPrefix: 'choice',
-      onPick: (choice) => {
+      onPick: (choice, byArrow) => {
         a.choice = choice;
-        model.pendingFocus = choice === 'city' ? 'city-input' : `choice-${choice}`;
+        model.pendingFocus = choice === 'city' && !byArrow ? 'city-input' : `choice-${choice}`;
         render();
       },
     }),
@@ -469,15 +495,23 @@ function resumeBanner() {
 
 function render() {
   if (!model.ready) return renderSkeleton(root, 4);
-  const focusKey = model.pendingFocus ?? document.activeElement?.dataset?.focus;
+  const active = document.activeElement;
+  const focusKey = model.pendingFocus ?? active?.dataset?.focus;
+  // a rebuild while the visitor types (states arrive, language changes) must not move their caret
+  const caret = model.pendingFocus === null && active?.selectionStart != null ? [active.selectionStart, active.selectionEnd] : null;
   model.pendingFocus = null;
+  shownMessage = model.message;
+  model.message = null;
   model.nodes = {};
   clear(root);
   const step = [stepState, stepPlace, stepPreset][model.step]();
   root.append(...[progress(), resumeBanner(), h('section', { class: 'start-panel' }, step)].filter(Boolean));
   if (model.step === 1 && model.answers.choice === 'city') paintSearch();
   const target = focusKey && [...root.querySelectorAll('[data-focus]')].find((el) => el.dataset.focus === focusKey);
-  if (target) target.focus();
+  if (target) {
+    target.focus();
+    if (target.tagName === 'INPUT') target.setSelectionRange(...(caret ?? [target.value.length, target.value.length]));
+  }
 }
 
 function goTo(step) {
@@ -485,12 +519,17 @@ function goTo(step) {
   model.stateFilter = '';
   model.pendingFocus = 'heading';
   render();
-  setStatus(status, `${tt('inv.start.progress', { n: step + 1, total: TOTAL })}. ${tt(STEP_HEADING[step])}`);
+  // focus moving to the heading already reads the heading aloud; the status adds only the position
+  setStatus(status, tt('inv.start.progress', { n: step + 1, total: TOTAL }));
 }
 
 function finish() {
   const url = destination(model.answers);
-  if (!url) return;
+  if (!url) { // the destination went stale (for example a saved state the API no longer lists)
+    model.message = 'inv.start.need.place';
+    goTo(1);
+    return;
+  }
   savePrefs(toPrefs(model.answers)); // a blocked or full storage only means the choices are not remembered
   location.assign(url);
 }
@@ -511,6 +550,8 @@ async function loadStates() {
     if (a.homeState && !known(a.homeState)) a.homeState = null;
     if (a.stateCode && !known(a.stateCode)) a.stateCode = null;
     if (!resolveTarget(a)) a.choice = null;
+    // the resume link must not point at a state the answers above just dropped
+    if (model.resumeTarget?.type === 'state' && !known(model.resumeTarget.code)) model.resume = model.resumeTarget = null;
   } catch (error) {
     if (error?.code === 'aborted') return;
     model.statesError = error;
