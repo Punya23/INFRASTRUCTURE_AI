@@ -126,6 +126,7 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 body {
   margin: 0;
   min-block-size: 100vh;
+  min-block-size: 100dvh;
   display: flex;
   flex-direction: column;
   background: var(--canvas-base);
