@@ -1,0 +1,66 @@
+# Investor onboarding scores — docs/superpowers/specs/2026-09-29-investor-onboarding-design.md.
+# Every number states its basis. Scores describe observed infrastructure and past growth;
+# nothing here is a forecast (ADR-0003).
+
+grid:
+  h3_res: 7                       # ≈5.2 km²; matches the 1 km WorldPop and GHSL rasters, so no false precision — spec §5
+  buffer_rings: 3                 # rings of cells kept around the urban centre (≈6 km): the fringe where growth spills over — team judgment, 2026-09-29
+  min_area_population: 1000       # people; below this a cell is empty farmland, not an "area" — team judgment, 2026-09-29
+  best_area_min_population: 5000  # ≈1,000 people/km²: a built-up neighbourhood — team judgment, 2026-09-29
+
+cities:
+  min_population: 100000          # one lakh: keep urban-centre pieces of at least this size (spec §5) — team judgment, 2026-09-29
+  urban_centre:
+    min_density_per_km2: 1500     # UN Degree of Urbanisation (2020), urban-centre density threshold
+    connectivity: 8               # 8-connected cells; the UN method uses 4-connectivity plus gap filling — team judgment, 2026-09-29
+  tiers:
+    metro_min_population: 2500000 # ≈ the 15 largest urban centres — team judgment, 2026-09-29
+    large_min_population: 1000000 # ten lakh — team judgment, 2026-09-29
+  name_overrides: {}              # geonameid: "Display name" — only after reviewing data/processed/invest/review_pieces.csv (spec §5)
+
+confidence:
+  base: 0.8                       # community (OSM) and modelled (WorldPop, GHSL) sources — team judgment, 2026-09-29
+
+drivers:
+  max_drivers: 3                  # three "why" chips fit a card — UI judgment, 2026-09-29
+  min_subscore: 50                # a driver must score at least middling — team judgment, 2026-09-29
+  max_gaps: 2                     # one or two watch-outs are readable — UI judgment, 2026-09-29
+  gap_max_subscore: 40            # below this a factor is a watch-out — team judgment, 2026-09-29
+
+factors:
+  nh_access:
+    group: access
+    unit: km
+    better: lower
+    headline_band_km: 10          # config/fields/national_highways.yaml access_target_km
+    bands: [[0, 100], [2, 90], [5, 70], [10, 40], [25, 0]]   # 2 km = local access, 10 km ≈ 20-minute drive, 25 km = out of reach — team judgment, 2026-09-29
+  rail_access:
+    group: access
+    unit: km
+    better: lower
+    headline_band_km: 2           # walk or short auto ride to a suburban or main-line station — team judgment, 2026-09-29
+    bands: [[0, 100], [1, 90], [3, 65], [8, 25], [15, 0]]    # team judgment, 2026-09-29
+  metro_access:
+    group: access
+    unit: km
+    better: lower
+    headline_band_km: 2           # 800 m walk to ≈2 km by feeder: transit-oriented-development catchments
+    bands: [[0, 100], [1, 90], [2, 70], [5, 30], [10, 0]]    # team judgment, 2026-09-29
+  road_strength:
+    group: access
+    unit: km_per_km2
+    better: higher
+    headline_band_km: null
+    bands: [[0, 0], [0.3, 30], [1, 65], [2, 90], [3, 100]]   # trunk + primary + secondary km per km²; measured national percentiles to be recorded here after the first run — team judgment, 2026-09-29
+  built_up_growth:
+    group: momentum
+    unit: pp
+    better: higher
+    headline_band_km: null
+    bands: [[0, 0], [3, 30], [10, 60], [25, 90], [40, 100]]  # percentage-point change in built-up share 2000→2020 (GHSL); measured percentiles to be recorded here after the first run — team judgment, 2026-09-29
+
+presets:                          # weights order: nh, rail, metro, roads, growth; each row sums to 1 — team judgment, 2026-09-29
+  balanced: {default: true, weights: {nh_access: 0.25, rail_access: 0.15, metro_access: 0.15, road_strength: 0.15, built_up_growth: 0.30}}
+  commuter: {weights: {nh_access: 0.10, rail_access: 0.25, metro_access: 0.30, road_strength: 0.10, built_up_growth: 0.25}}
+  highway:  {weights: {nh_access: 0.45, rail_access: 0.05, metro_access: 0.00, road_strength: 0.20, built_up_growth: 0.30}}
+  growth:   {weights: {nh_access: 0.15, rail_access: 0.10, metro_access: 0.10, road_strength: 0.10, built_up_growth: 0.55}}
