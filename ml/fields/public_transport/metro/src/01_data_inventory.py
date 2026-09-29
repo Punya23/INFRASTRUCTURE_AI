@@ -6,8 +6,6 @@ row counts, column information, and quality indicators.
 
 from __future__ import annotations
 
-import csv
-import os
 from pathlib import Path
 from typing import Any
 
@@ -35,7 +33,7 @@ def inspect_csv(path: Path) -> dict[str, Any]:
             "missing_pct": round(df.isnull().sum().sum() / (len(df) * len(df.columns)) * 100, 2),
             "duplicate_pct": round((df.duplicated().sum() / len(df)) * 100, 2) if len(df) > 0 else 0,
         }
-    except Exception as e:
+    except (OSError, ValueError) as e:  # pandas parse errors subclass ValueError
         # Try with error_bad_lines=False or inspect manually
         try:
             with open(path, 'r', encoding='utf-8') as f:
@@ -49,11 +47,11 @@ def inspect_csv(path: Path) -> dict[str, Any]:
                 "missing_pct": 0,
                 "duplicate_pct": 0,
             }
-        except:
+        except (OSError, ValueError, IndexError):  # unreadable, undecodable or empty file
             return {
                 "row_count": 0,
                 "column_count": 0,
-                "columns": f"ERROR: {str(e)}",
+                "columns": f"ERROR: {e!s}",
                 "missing_pct": 0,
                 "duplicate_pct": 0,
             }
@@ -202,7 +200,7 @@ def create_inventory() -> None:
     print(f"✓ Metro data inventory created: {output_path.relative_to(ROOT)}")
     print(f"  Total datasets: {len(inventory)}")
     print(f"  Cities: {', '.join(sorted(df_inventory['city'].unique()))}")
-    print(f"\nDataset summary:")
+    print("\nDataset summary:")
     for _, row in df_inventory.iterrows():
         print(f"  {row['dataset_id']}: {row['row_count']} rows, {row['column_count']} columns")
 

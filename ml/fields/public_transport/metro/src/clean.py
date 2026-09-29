@@ -6,10 +6,13 @@ Cleans all Metro raw data and produces:
   - data/processed/chennai/*.csv
   - data/processed/metro_*.csv  (common model)
 """
-import zipfile, csv, io, json, re, os
-from pathlib import Path
-import pandas as pd
+import io
+import json
 import xml.etree.ElementTree as ET
+import zipfile
+from pathlib import Path
+
+import pandas as pd
 
 RAW_DIR = Path("data/raw/metro")
 PROCESSED = Path("ml/fields/public_transport/metro/data/processed")
@@ -295,8 +298,8 @@ def clean_bengaluru_ridership():
     df = df.drop_duplicates()
 
     print(f"  Station codes extracted: {len(df)}")
-    print(f"  IMPORTANT: This dataset is a station code→name lookup, NOT ridership data.")
-    print(f"  Despite being named 'ridership', it contains no ridership figures.")
+    print("  IMPORTANT: This dataset is a station code→name lookup, NOT ridership data.")
+    print("  Despite being named 'ridership', it contains no ridership figures.")
 
     df.to_csv(out_dir / "bengaluru_metro_ridership_clean.csv", index=False)
 

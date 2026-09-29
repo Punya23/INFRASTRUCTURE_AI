@@ -14,16 +14,14 @@ This script performs:
 Data integrity: NO fabrication, explicit BLOCKED status for unavailable data.
 """
 
-import pandas as pd
-import geopandas as gpd
-import json
-from pathlib import Path
-from shapely.geometry import Point
-import numpy as np
-from typing import Dict, List, Tuple, Optional
 
 # Paths
-import sys
+from pathlib import Path
+
+import geopandas as gpd
+import pandas as pd
+from shapely.geometry import Point
+
 REPO_ROOT = Path(__file__).resolve().parents[5]
 LOCAL_RAIL_BASE = REPO_ROOT / "ml/fields/public_transport/local_rail"
 GEOGRAPHY_BASE = REPO_ROOT / "ml/fields/geography"
@@ -42,7 +40,7 @@ print(f"Repository root: {REPO_ROOT}")
 print(f"Local rail base: {LOCAL_RAIL_BASE}")
 
 
-def investigate_lgd_geography() -> Dict:
+def investigate_lgd_geography() -> dict:
     """
     Phase 1: Investigate LGD geography data for spatial boundaries.
     
@@ -129,11 +127,11 @@ def investigate_lgd_geography() -> Dict:
     geo_df = pd.DataFrame(geography_status)
     geo_df.to_csv(GEOGRAPHY_DIR / "lgd_geography_investigation.csv", index=False)
     
-    print(f"\n✓ Geography investigation complete")
+    print("\n✓ Geography investigation complete")
     print(f"  - Files checked: {len(geography_files)}")
     print(f"  - Files found: {geo_df['exists'].sum()}")
     print(f"  - Files with geometry: {geo_df['geometry_available'].sum()}")
-    print(f"  - **CRITICAL FINDING: NO SPATIAL GEOMETRY AVAILABLE**")
+    print("  - **CRITICAL FINDING: NO SPATIAL GEOMETRY AVAILABLE**")
     
     return {
         'geometry_available': geo_df['geometry_available'].any(),
@@ -141,7 +139,7 @@ def investigate_lgd_geography() -> Dict:
     }
 
 
-def investigate_population_data() -> Dict:
+def investigate_population_data() -> dict:
     """
     Phase 2: Investigate population data availability.
     """
@@ -183,9 +181,9 @@ def investigate_population_data() -> Dict:
     pop_df = pd.DataFrame(population_status)
     pop_df.to_csv(GEOGRAPHY_DIR / "population_data_investigation.csv", index=False)
     
-    print(f"✓ Population investigation complete")
+    print("✓ Population investigation complete")
     print(f"  - Population files found: {len(population_status) if population_status[0]['exists'] else 0}")
-    print(f"  - **FINDING: NO POPULATION DATA AVAILABLE**")
+    print("  - **FINDING: NO POPULATION DATA AVAILABLE**")
     
     return {
         'population_available': False,
@@ -266,15 +264,15 @@ def create_station_geographic_accessibility() -> gpd.GeoDataFrame:
     accessibility_df = pd.DataFrame(accessibility_summary)
     accessibility_df.to_csv(GEOGRAPHY_DIR / "mumbai_accessibility_summary.csv", index=False)
     
-    print(f"\n✓ Accessibility analysis complete")
-    print(f"  - Catchment buffers: 500m, 1km, 2km")
+    print("\n✓ Accessibility analysis complete")
+    print("  - Catchment buffers: 500m, 1km, 2km")
     print(f"  - Stations covered: {len(stations_df)}")
-    print(f"  - **IMPORTANT: Theoretical geographic accessibility only (not actual service)**")
+    print("  - **IMPORTANT: Theoretical geographic accessibility only (not actual service)**")
     
     return gdf
 
 
-def create_station_features_with_geography(geo_investigation: Dict, pop_investigation: Dict):
+def create_station_features_with_geography(geo_investigation: dict, pop_investigation: dict):
     """
     Phase 4: Create station features with geography metadata.
     
@@ -302,10 +300,10 @@ def create_station_features_with_geography(geo_investigation: Dict, pop_investig
     # Save updated features
     station_features.to_csv(FEATURES_DIR / "mumbai_station_geography.csv", index=False)
     
-    print(f"✓ Station geography features created")
+    print("✓ Station geography features created")
     print(f"  - Stations: {len(station_features)}")
-    print(f"  - Geography join: BLOCKED (no boundary geometry)")
-    print(f"  - Catchments: Available (theoretical buffers)")
+    print("  - Geography join: BLOCKED (no boundary geometry)")
+    print("  - Catchments: Available (theoretical buffers)")
     
     return station_features
 
@@ -444,10 +442,10 @@ def create_m3_data_matrix():
     matrix_df = pd.DataFrame(systems)
     matrix_df.to_csv(DATA_DIR / "local_rail_m3_data_matrix.csv", index=False)
     
-    print(f"✓ M3 data matrix created")
+    print("✓ M3 data matrix created")
     print(f"  - Components documented: {len(systems)}")
-    print(f"  - Mumbai: PARTIAL (coordinates + catchments only)")
-    print(f"  - Other systems: DATA_UNAVAILABLE")
+    print("  - Mumbai: PARTIAL (coordinates + catchments only)")
+    print("  - Other systems: DATA_UNAVAILABLE")
     
     return matrix_df
 
@@ -466,21 +464,21 @@ def main():
     pop_investigation = investigate_population_data()
     
     # Phase 3: Accessibility analysis (theoretical geographic only)
-    station_gdf = create_station_geographic_accessibility()
+    create_station_geographic_accessibility()
     
     # Phase 4: Station features with geography
-    station_geography = create_station_features_with_geography(geo_investigation, pop_investigation)
+    create_station_features_with_geography(geo_investigation, pop_investigation)
     
     # Phase 5: M3 data matrix
-    m3_matrix = create_m3_data_matrix()
+    create_m3_data_matrix()
     
     print("\n" + "=" * 60)
     print("M3 PIPELINE COMPLETE")
     print("=" * 60)
-    print(f"Mumbai: Geographic catchments created (500m, 1km, 2km)")
-    print(f"Boundary joins: BLOCKED (no spatial geometry)")
-    print(f"Population analysis: BLOCKED (no population data)")
-    print(f"Other cities: DATA_UNAVAILABLE")
+    print("Mumbai: Geographic catchments created (500m, 1km, 2km)")
+    print("Boundary joins: BLOCKED (no spatial geometry)")
+    print("Population analysis: BLOCKED (no population data)")
+    print("Other cities: DATA_UNAVAILABLE")
     print("\n**CRITICAL FINDINGS:**")
     print("  1. LGD geography data contains CODES ONLY (no spatial polygons)")
     print("  2. NO population data found in repository")

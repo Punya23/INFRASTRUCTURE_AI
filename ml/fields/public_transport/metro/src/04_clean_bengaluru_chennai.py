@@ -5,11 +5,10 @@ Phases 5-7: Clean Bengaluru KML stations, station list, and Chennai ridership.
 
 from __future__ import annotations
 
-import pandas as pd
-import re
 from pathlib import Path
+
+import pandas as pd
 from lxml import etree
-from datetime import datetime
 
 ROOT = Path(__file__).resolve().parents[5]
 RAW_BLR = ROOT / "data" / "raw" / "metro" / "bengaluru"

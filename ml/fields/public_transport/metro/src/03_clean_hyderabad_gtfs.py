@@ -5,9 +5,9 @@ Phases 3-4: Clean all GTFS files and validate referential integrity.
 
 from __future__ import annotations
 
-import pandas as pd
 from pathlib import Path
-from typing import Dict, List, Tuple
+
+import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[5]
 RAW_HYD = ROOT / "data" / "raw" / "metro" / "hyderabad"
@@ -15,7 +15,7 @@ PROCESSED_HYD = ROOT / "ml" / "fields" / "public_transport" / "metro" / "data" /
 REPORTS = ROOT / "ml" / "fields" / "public_transport" / "metro" / "reports"
 
 
-def clean_gtfs_files() -> Dict[str, pd.DataFrame]:
+def clean_gtfs_files() -> dict[str, pd.DataFrame]:
     """Clean all Hyderabad GTFS files."""
     
     PROCESSED_HYD.mkdir(parents=True, exist_ok=True)
@@ -92,7 +92,7 @@ def clean_gtfs_files() -> Dict[str, pd.DataFrame]:
     return cleaned
 
 
-def validate_referential_integrity(cleaned: Dict[str, pd.DataFrame]) -> List[Dict]:
+def validate_referential_integrity(cleaned: dict[str, pd.DataFrame]) -> list[dict]:
     """Validate foreign key relationships in GTFS."""
     
     validation_results = []
@@ -259,7 +259,7 @@ def main():
     for r in validation_results:
         report += f"| {r['check']} | {r['status']} | {r['count']} | {r['details']} |\n"
     
-    report += f"""
+    report += """
 
 ## Data Quality Summary
 

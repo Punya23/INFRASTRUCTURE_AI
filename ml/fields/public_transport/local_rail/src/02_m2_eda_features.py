@@ -14,17 +14,14 @@ This script performs:
 Data integrity: NO fabrication, fail closed, provenance maintained.
 """
 
-import pandas as pd
-import geopandas as gpd
-import json
-from pathlib import Path
-from shapely.geometry import Point, LineString, shape
-from shapely.ops import nearest_points
-import numpy as np
-from typing import Dict, List, Tuple
 
 # Paths (absolute from script location)
-import sys
+from pathlib import Path
+
+import geopandas as gpd
+import pandas as pd
+from shapely.geometry import Point
+
 REPO_ROOT = Path(__file__).resolve().parents[5]  # Navigate up to repo root
 BASE_DIR = REPO_ROOT / "ml/fields/public_transport/local_rail"
 DATA_DIR = BASE_DIR / "data/processed"
@@ -164,7 +161,7 @@ def investigate_coordinate_quality() -> pd.DataFrame:
     return investigation_df
 
 
-def perform_station_eda(investigation_df: pd.DataFrame) -> Dict:
+def perform_station_eda(investigation_df: pd.DataFrame) -> dict:
     """
     Phase 2: Deep station EDA.
     """
@@ -234,7 +231,7 @@ def perform_station_eda(investigation_df: pd.DataFrame) -> Dict:
     
     eda_df.to_csv(EDA_DIR / "mumbai_station_eda.csv", index=False)
     
-    print(f"✓ Station EDA complete")
+    print("✓ Station EDA complete")
     print(f"  - Total stations: {total_stations}")
     print(f"  - Valid coordinates: {valid_coords} ({valid_coords/total_stations*100:.1f}%)")
     print(f"  - Flagged coordinates: {flagged_coords}")
@@ -243,7 +240,7 @@ def perform_station_eda(investigation_df: pd.DataFrame) -> Dict:
     return eda_results
 
 
-def perform_line_eda() -> Dict:
+def perform_line_eda() -> dict:
     """
     Phase 3: Rail line/network EDA.
     
@@ -302,7 +299,7 @@ def perform_line_eda() -> Dict:
     # Save line name distribution
     line_name_counts.to_csv(EDA_DIR / "mumbai_line_name_distribution.csv", header=['count'])
     
-    print(f"✓ Line EDA complete")
+    print("✓ Line EDA complete")
     print(f"  - Total segments: {total_segments}")
     print(f"  - Network length: {total_length_km:.2f} km")
     print(f"  - Segment length range: {min_length_m:.0f} - {max_length_m:.0f} m")
@@ -377,7 +374,7 @@ def analyze_station_spacing(investigation_df: pd.DataFrame) -> pd.DataFrame:
     # Flag unusually close stations (< 500m)
     close_stations = spacing_df[spacing_df['nearest_distance_m'] < 500]
     
-    print(f"✓ Station spacing analysis complete")
+    print("✓ Station spacing analysis complete")
     print(f"  - Stations analyzed: {len(spacing_df)}")
     print(f"  - Spacing range: {min_spacing:.0f} - {max_spacing:.0f} m")
     print(f"  - Median spacing: {median_spacing:.0f} m")
@@ -449,16 +446,16 @@ def create_infrastructure_features(investigation_df: pd.DataFrame, spacing_df: p
     # Save features
     final_features.to_csv(FEATURES_DIR / "mumbai_station_features.csv", index=False)
     
-    print(f"✓ Infrastructure features created")
+    print("✓ Infrastructure features created")
     print(f"  - Features: {len(feature_cols)} columns")
     print(f"  - Stations: {len(final_features)}")
-    print(f"  - Available features: station_id, name, coords, validity, spacing")
-    print(f"  - Unavailable features: line association, service data, ridership")
+    print("  - Available features: station_id, name, coords, validity, spacing")
+    print("  - Unavailable features: line association, service data, ridership")
     
     return final_features
 
 
-def create_network_features(line_eda: Dict) -> pd.DataFrame:
+def create_network_features(line_eda: dict) -> pd.DataFrame:
     """
     Phase 6: Create network-level features.
     """
@@ -496,7 +493,7 @@ def create_network_features(line_eda: Dict) -> pd.DataFrame:
     network_df = pd.DataFrame([network_features])
     network_df.to_csv(FEATURES_DIR / "mumbai_network_features.csv", index=False)
     
-    print(f"✓ Network features created")
+    print("✓ Network features created")
     print(f"  - Network length: {network_features['network_length_km']} km")
     print(f"  - Station density: {network_features['station_density_per_km']:.2f} stations/km")
     print(f"  - Median spacing: {network_features['median_station_spacing_m']} m")
@@ -603,10 +600,10 @@ def create_data_availability_matrix():
     matrix_df = pd.DataFrame(systems)
     matrix_df.to_csv(DATA_DIR / "local_rail_m2_data_matrix.csv", index=False)
     
-    print(f"✓ Data availability matrix created")
+    print("✓ Data availability matrix created")
     print(f"  - Systems documented: {len(systems)}")
-    print(f"  - Mumbai: PARTIAL (stations + geometry, no service/ridership)")
-    print(f"  - Others: DATA_UNAVAILABLE")
+    print("  - Mumbai: PARTIAL (stations + geometry, no service/ridership)")
+    print("  - Others: DATA_UNAVAILABLE")
     
     return matrix_df
 
@@ -631,13 +628,13 @@ def main():
     spacing_df = analyze_station_spacing(investigation_df)
     
     # Phase 5: Station features
-    station_features = create_infrastructure_features(investigation_df, spacing_df)
+    create_infrastructure_features(investigation_df, spacing_df)
     
     # Phase 6: Network features
-    network_features = create_network_features(line_eda)
+    create_network_features(line_eda)
     
     # Phase 7: Data availability matrix
-    availability_matrix = create_data_availability_matrix()
+    create_data_availability_matrix()
     
     print("\n" + "=" * 60)
     print("M2 PIPELINE COMPLETE")

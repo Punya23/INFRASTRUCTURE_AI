@@ -15,16 +15,12 @@ Phases:
 
 from __future__ import annotations
 
-import csv
-import json
 from pathlib import Path
-from typing import Dict, List, Any
-from collections import defaultdict
 
-import pandas as pd
 import geopandas as gpd
+import pandas as pd
 from lxml import etree
-from shapely.geometry import Point, LineString
+from shapely.geometry import LineString, Point
 
 ROOT = Path(__file__).resolve().parents[5]
 RAW = ROOT / "data" / "raw" / "local_rail"
@@ -166,14 +162,14 @@ def phase2_validate_mumbai_kml():
             
             print(f"  ✓ Valid: {result['placemark_count']} placemarks, type: {result['geometry_type']}")
             
-        except Exception as e:
+        except (OSError, etree.XMLSyntaxError) as e:
             result["issues"].append(str(e))
             print(f"  ✗ Error: {e}")
         
         validation_results.append(result)
     
     # Write validation report
-    report = f"""# Local Rail Raw Data Validation Report
+    report = """# Local Rail Raw Data Validation Report
 
 **Date**: 2026-09-29  
 **Status**: PARTIAL
@@ -229,7 +225,7 @@ Therefore: **Chennai suburban rail cannot be analyzed** with current data.
 """
     
     (REPORTS / "local_rail_validation_report.md").write_text(report)
-    print(f"✓ Validation report created")
+    print("✓ Validation report created")
     
     return validation_results
 
@@ -592,10 +588,10 @@ def main():
     print("="*60)
     
     # Phase 1: Inventory
-    inventory = phase1_raw_inventory()
+    phase1_raw_inventory()
     
     # Phase 2: Validation
-    validation = phase2_validate_mumbai_kml()
+    phase2_validate_mumbai_kml()
     
     # Phase 3: Cleaning
     stations_df, lines_df = phase3_clean_mumbai()
@@ -604,26 +600,26 @@ def main():
     coord_val = phase4_validate_coordinates(stations_df)
     
     # Phase 5: Geospatial
-    gdf_stations, gdf_lines = phase5_create_geospatial(
+    _gdf_stations, _gdf_lines = phase5_create_geospatial(
         stations_df,
         RAW / "mumbai" / "mumbai_suburban_lines.kml"
     )
     
     # Phase 6: EDA
-    eda_stats = phase6_eda(stations_df, lines_df, coord_val)
+    phase6_eda(stations_df, lines_df, coord_val)
     
     # Phase 7: Data availability
-    availability = phase7_data_availability()
+    phase7_data_availability()
     
     # Phase 8: Final dataset
-    master = phase8_final_dataset(stations_df)
+    phase8_final_dataset(stations_df)
     
     print("\n" + "="*60)
     print("PIPELINE COMPLETE")
     print("="*60)
     print(f"Mumbai: {len(stations_df)} stations, {len(lines_df)} lines")
-    print(f"Other cities: DATA_UNAVAILABLE")
-    print(f"Files created: Check ml/fields/public_transport/local_rail/")
+    print("Other cities: DATA_UNAVAILABLE")
+    print("Files created: Check ml/fields/public_transport/local_rail/")
 
 
 if __name__ == "__main__":

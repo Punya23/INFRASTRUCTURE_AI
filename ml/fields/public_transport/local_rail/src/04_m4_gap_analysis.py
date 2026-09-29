@@ -12,13 +12,12 @@ Key Principles:
 - Population/service conclusions BLOCKED without data
 """
 
-import pandas as pd
-import numpy as np
-from pathlib import Path
-from typing import Dict, List, Tuple
-
 # Paths
-import sys
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
+
 REPO_ROOT = Path(__file__).resolve().parents[5]
 LOCAL_RAIL_BASE = REPO_ROOT / "ml/fields/public_transport/local_rail"
 
@@ -36,7 +35,7 @@ print(f"Repository root: {REPO_ROOT}")
 print(f"Local rail base: {LOCAL_RAIL_BASE}")
 
 
-def load_verified_data() -> Dict:
+def load_verified_data() -> dict:
     """
     Phase 1: Load all verified M1/M2/M3 outputs.
     """
@@ -59,7 +58,7 @@ def load_verified_data() -> Dict:
     data['accessibility'] = pd.read_csv(GEOGRAPHY_DIR / "mumbai_accessibility_summary.csv")
     data['station_geography'] = pd.read_csv(FEATURES_DIR / "mumbai_station_geography.csv")
     
-    print(f"✓ Loaded verified data:")
+    print("✓ Loaded verified data:")
     print(f"  - Stations: {len(data['stations'])}")
     print(f"  - Station spacing records: {len(data['station_spacing'])}")
     print(f"  - Network features: {len(data['network_features'])} records")
@@ -68,7 +67,7 @@ def load_verified_data() -> Dict:
     return data
 
 
-def calculate_spacing_distribution(station_spacing: pd.DataFrame) -> Dict:
+def calculate_spacing_distribution(station_spacing: pd.DataFrame) -> dict:
     """
     Phase 2: Calculate station spacing distribution and thresholds.
     """
@@ -91,7 +90,7 @@ def calculate_spacing_distribution(station_spacing: pd.DataFrame) -> Dict:
         'std': spacings.std()
     }
     
-    print(f"✓ Station spacing distribution:")
+    print("✓ Station spacing distribution:")
     print(f"  - Min: {distribution['min']:.0f} m")
     print(f"  - P25: {distribution['p25']:.0f} m")
     print(f"  - Median: {distribution['median']:.0f} m")
@@ -103,7 +102,7 @@ def calculate_spacing_distribution(station_spacing: pd.DataFrame) -> Dict:
     return distribution
 
 
-def create_infrastructure_indicators(data: Dict, spacing_dist: Dict) -> pd.DataFrame:
+def create_infrastructure_indicators(data: dict, spacing_dist: dict) -> pd.DataFrame:
     """
     Phase 3: Create infrastructure indicator framework.
     """
@@ -233,7 +232,7 @@ def create_infrastructure_indicators(data: Dict, spacing_dist: Dict) -> pd.DataF
     indicators_df = pd.DataFrame(indicators)
     indicators_df.to_csv(GAPS_DIR / "mumbai_infrastructure_indicators.csv", index=False)
     
-    print(f"✓ Infrastructure indicators created:")
+    print("✓ Infrastructure indicators created:")
     print(f"  - Total indicators: {len(indicators_df)}")
     print(f"  - OBSERVED: {(indicators_df['data_status'] == 'OBSERVED').sum()}")
     print(f"  - DERIVED: {(indicators_df['data_status'] == 'DERIVED').sum()}")
@@ -241,7 +240,7 @@ def create_infrastructure_indicators(data: Dict, spacing_dist: Dict) -> pd.DataF
     return indicators_df
 
 
-def identify_potential_spacing_gaps(data: Dict, spacing_dist: Dict) -> pd.DataFrame:
+def identify_potential_spacing_gaps(data: dict, spacing_dist: dict) -> pd.DataFrame:
     """
     Phase 4: Identify potential geographic spacing gaps.
     """
@@ -303,7 +302,7 @@ def identify_potential_spacing_gaps(data: Dict, spacing_dist: Dict) -> pd.DataFr
     gap_df = pd.DataFrame(gap_evidence)
     gap_df.to_csv(GAPS_DIR / "mumbai_potential_spacing_gaps.csv", index=False)
     
-    print(f"✓ Potential spacing gaps identified:")
+    print("✓ Potential spacing gaps identified:")
     print(f"  - P90 threshold: {p90_threshold:.0f} m")
     print(f"  - P95 threshold: {p95_threshold:.0f} m")
     print(f"  - Large spacing (P90+): {(gap_df['gap_type'] == 'LARGE_STATION_SPACING').sum()}")
@@ -313,7 +312,7 @@ def identify_potential_spacing_gaps(data: Dict, spacing_dist: Dict) -> pd.DataFr
     return gap_df
 
 
-def create_station_level_indicators(data: Dict, spacing_dist: Dict, gap_evidence: pd.DataFrame) -> pd.DataFrame:
+def create_station_level_indicators(data: dict, spacing_dist: dict, gap_evidence: pd.DataFrame) -> pd.DataFrame:
     """
     Phase 5: Create station-level indicator dataset.
     """
@@ -400,7 +399,7 @@ def create_station_level_indicators(data: Dict, spacing_dist: Dict, gap_evidence
     station_indicators = station_indicators[final_cols]
     station_indicators.to_csv(GAPS_DIR / "mumbai_station_level_indicators.csv", index=False)
     
-    print(f"✓ Station-level indicators created:")
+    print("✓ Station-level indicators created:")
     print(f"  - Stations: {len(station_indicators)}")
     print(f"  - Very large spacing: {(station_indicators['station_spacing_status'] == 'VERY_LARGE_SPACING').sum()}")
     print(f"  - Large spacing: {(station_indicators['station_spacing_status'] == 'LARGE_SPACING').sum()}")
@@ -520,7 +519,7 @@ def create_blocked_indicators_table() -> pd.DataFrame:
     blocked_df = pd.DataFrame(blocked)
     blocked_df.to_csv(GAPS_DIR / "mumbai_blocked_indicators.csv", index=False)
     
-    print(f"✓ Blocked indicators documented:")
+    print("✓ Blocked indicators documented:")
     print(f"  - Total blocked: {len(blocked_df)}")
     print(f"  - Population-related: {blocked_df['indicator'].str.contains('population').sum()}")
     print(f"  - Service-related: {blocked_df['indicator'].str.contains('frequency|transit|timetable').sum()}")
@@ -529,7 +528,7 @@ def create_blocked_indicators_table() -> pd.DataFrame:
     return blocked_df
 
 
-def create_data_completeness_matrix(data: Dict) -> pd.DataFrame:
+def create_data_completeness_matrix(data: dict) -> pd.DataFrame:
     """
     Phase 7: Create data completeness matrix.
     """
@@ -631,7 +630,7 @@ def create_data_completeness_matrix(data: Dict) -> pd.DataFrame:
     completeness_df = pd.DataFrame(completeness)
     completeness_df.to_csv(GAPS_DIR / "mumbai_data_completeness.csv", index=False)
     
-    print(f"✓ Data completeness matrix created:")
+    print("✓ Data completeness matrix created:")
     print(f"  - Total components: {len(completeness_df)}")
     print(f"  - Available (COMPLETE): {(completeness_df['status'] == 'COMPLETE').sum()}")
     print(f"  - Unavailable: {(completeness_df['status'] == 'DATA_UNAVAILABLE').sum()}")
@@ -640,7 +639,7 @@ def create_data_completeness_matrix(data: Dict) -> pd.DataFrame:
     return completeness_df
 
 
-def create_network_gap_summary(data: Dict, spacing_dist: Dict, gap_evidence: pd.DataFrame) -> pd.DataFrame:
+def create_network_gap_summary(data: dict, spacing_dist: dict, gap_evidence: pd.DataFrame) -> pd.DataFrame:
     """
     Phase 8: Create network-level gap summary.
     """
@@ -674,13 +673,13 @@ def create_network_gap_summary(data: Dict, spacing_dist: Dict, gap_evidence: pd.
         'service_analysis_status': 'BLOCKED',
         'ridership_analysis_status': 'BLOCKED',
         'boundary_join_status': 'BLOCKED',
-        'data_completeness_score': f'4/11 components available',
+        'data_completeness_score': '4/11 components available',
     }
     
     summary_df = pd.DataFrame([summary])
     summary_df.to_csv(GAPS_DIR / "mumbai_network_gap_summary.csv", index=False)
     
-    print(f"✓ Network-level gap summary created")
+    print("✓ Network-level gap summary created")
     print(f"  - Network length: {summary['network_length_km']} km")
     print(f"  - Median spacing: {summary['median_spacing_m']:.0f} m")
     print(f"  - P90 spacing: {summary['p90_spacing_m']:.0f} m")
@@ -709,16 +708,16 @@ def main():
     gap_evidence = identify_potential_spacing_gaps(data, spacing_dist)
     
     # Phase 5: Create station-level indicators
-    station_indicators = create_station_level_indicators(data, spacing_dist, gap_evidence)
+    create_station_level_indicators(data, spacing_dist, gap_evidence)
     
     # Phase 6: Document blocked indicators
     blocked_indicators = create_blocked_indicators_table()
     
     # Phase 7: Create data completeness matrix
-    completeness_matrix = create_data_completeness_matrix(data)
+    create_data_completeness_matrix(data)
     
     # Phase 8: Create network-level gap summary
-    network_summary = create_network_gap_summary(data, spacing_dist, gap_evidence)
+    create_network_gap_summary(data, spacing_dist, gap_evidence)
     
     print("\n" + "=" * 60)
     print("M4 PIPELINE COMPLETE")
@@ -726,13 +725,13 @@ def main():
     print(f"Infrastructure indicators: {len(indicators)}")
     print(f"Potential spacing gaps: {len(gap_evidence)}")
     print(f"Blocked indicators: {len(blocked_indicators)}")
-    print(f"Data completeness: 4/11 components available")
-    print(f"\n**KEY FINDINGS:**")
+    print("Data completeness: 4/11 components available")
+    print("\n**KEY FINDINGS:**")
     print(f"  - P90 spacing threshold: {spacing_dist['p90']:.0f} m")
     print(f"  - P95 spacing threshold: {spacing_dist['p95']:.0f} m")
     print(f"  - Stations with large spacing (P90+): {len(gap_evidence)}")
-    print(f"  - Population/service analysis: BLOCKED")
-    print(f"\nExit Code: 0")
+    print("  - Population/service analysis: BLOCKED")
+    print("\nExit Code: 0")
 
 
 if __name__ == "__main__":

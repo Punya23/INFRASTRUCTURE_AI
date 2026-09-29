@@ -1,6 +1,8 @@
-import pandas as pd
-from pathlib import Path
 import sys
+from pathlib import Path
+
+import pandas as pd
+
 
 def check_file(path, required_cols):
     if not path.exists():
@@ -24,30 +26,27 @@ def main():
     # Check states
     st_ok, df_states = check_file(proc_dir / "states_clean.csv", ["state_code", "state_name"])
     success &= st_ok
-    if st_ok:
-        if df_states['state_code'].isna().any():
-            print("FAIL: states_clean.csv has null state_code.")
-            success = False
+    if st_ok and df_states['state_code'].isna().any():
+        print("FAIL: states_clean.csv has null state_code.")
+        success = False
             
     # Check districts
     dt_ok, df_dist = check_file(proc_dir / "districts_clean.csv", ["state_code", "district_code", "district_name"])
     success &= dt_ok
-    if dt_ok:
-        if df_dist['district_code'].isna().any():
-            print("FAIL: districts_clean.csv has null district_code.")
-            success = False
+    if dt_ok and df_dist['district_code'].isna().any():
+        print("FAIL: districts_clean.csv has null district_code.")
+        success = False
             
     # Check subdistricts
-    sdt_ok, df_subdist = check_file(proc_dir / "subdistricts_clean.csv", ["district_code", "subdistrict_code"])
+    sdt_ok, _df_subdist = check_file(proc_dir / "subdistricts_clean.csv", ["district_code", "subdistrict_code"])
     success &= sdt_ok
     
     # Check ulbs
     ulb_ok, df_ulbs = check_file(proc_dir / "ulbs_clean.csv", ["state_code", "local_body_code"])
     success &= ulb_ok
-    if ulb_ok:
-        if df_ulbs['local_body_code'].isna().any():
-            print("FAIL: ulbs_clean.csv has null local_body_code.")
-            success = False
+    if ulb_ok and df_ulbs['local_body_code'].isna().any():
+        print("FAIL: ulbs_clean.csv has null local_body_code.")
+        success = False
             
     # Check wards
     wd_ok, df_wards = check_file(proc_dir / "wards_all_available_clean.csv", ["local_body_code", "ward_code", "ward_number", "ward_source_state"])

@@ -1,5 +1,7 @@
-import pandas as pd
 from pathlib import Path
+
+import pandas as pd
+
 
 def main():
     proc_dir = Path("ml/fields/geography/data/processed")
@@ -55,7 +57,6 @@ def main():
     # 3. Validation: Ward -> ULB mapping
     ward_ulb_codes = wards['local_body_code'].dropna().unique()
     ulb_codes = ulbs['local_body_code'].dropna().unique()
-    matched = set(ward_ulb_codes).intersection(set(ulb_codes))
     unmatched = set(ward_ulb_codes) - set(ulb_codes)
     
     val_data = pd.DataFrame({

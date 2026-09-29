@@ -1,7 +1,9 @@
-import os
 import shutil
-import pandas as pd
+import zipfile
 from pathlib import Path
+
+import pandas as pd
+
 
 def get_state_from_title(title_str):
     if not isinstance(title_str, str):
@@ -99,7 +101,7 @@ def main():
             
             print(f"Processed {fname} -> {target_path}")
             
-        except Exception as e:
+        except (OSError, ValueError, KeyError, zipfile.BadZipFile) as e:  # unreadable or malformed workbook
             print(f"Error processing {fname}: {e}")
             
     df_inv = pd.DataFrame(inventory)

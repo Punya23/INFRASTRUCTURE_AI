@@ -1,6 +1,8 @@
-import pandas as pd
 from pathlib import Path
+
+import pandas as pd
 from utils import load_lgd_excel, safely_convert_to_int
+
 
 def main():
     raw_wards_dir = Path("ml/fields/geography/data/raw/wards")
