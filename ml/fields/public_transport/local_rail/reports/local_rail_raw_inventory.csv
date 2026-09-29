@@ -1,0 +1,7 @@
+system,state,city,file_name,file_path,format,file_size,source,source_url,publisher,coverage,machine_readable,official,status,notes
+Mumbai Suburban,Maharashtra,Mumbai,mumbai_suburban_lines.kml,data/raw/local_rail/mumbai/mumbai_suburban_lines.kml,KML,185829,BMC via OpenCity.in,https://data.opencity.in/dataset/mumbai-suburban-network-2025,BMC,All Mumbai suburban railway,Yes,Civic Open Data,VERIFIED,Contains lines
+Mumbai Suburban,Maharashtra,Mumbai,mumbai_suburban_stations.kml,data/raw/local_rail/mumbai/mumbai_suburban_stations.kml,KML,55061,BMC via OpenCity.in,https://data.opencity.in/dataset/mumbai-suburban-network-2025,BMC,All Mumbai suburban railway,Yes,Civic Open Data,VERIFIED,Contains stations
+Chennai Suburban,Tamil Nadu,Chennai,chennai_suburban_gtfs_community.zip,data/raw/local_rail/chennai/chennai_suburban_gtfs_community.zip,GTFS ZIP,9091816,UngalSoththu Community,https://github.com/ungalsoththu/ChennaiGTFS,UngalSoththu,MTC + CMRL ONLY (excludes suburban rail),Yes,COMMUNITY_SECONDARY,NOT_SUBURBAN_RAIL,GTFS contains MTC buses and CMRL metro. Does NOT contain Chennai suburban railway.
+Kolkata Suburban,West Bengal,Kolkata,N/A,N/A,N/A,0,N/A,N/A,N/A,N/A,N/A,N/A,DATA_UNAVAILABLE,No machine-readable suburban railway data found
+Hyderabad MMTS,Telangana,Hyderabad,N/A,N/A,N/A,0,N/A,N/A,N/A,N/A,N/A,N/A,DATA_UNAVAILABLE,No machine-readable suburban railway data found
+Pune Suburban,Maharashtra,Pune,N/A,N/A,N/A,0,N/A,N/A,N/A,N/A,N/A,N/A,DATA_UNAVAILABLE,No machine-readable suburban railway data found

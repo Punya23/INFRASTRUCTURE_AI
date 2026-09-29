@@ -1,0 +1,8 @@
+metric,value,unit,system
+Total stations,106,stations,Mumbai
+Stations with valid coordinates,72,stations,Mumbai
+Invalid coordinates,34,stations,Mumbai
+Total railway line segments,106,segments,Mumbai
+Latitude range,18.7896 to 19.5194,degrees,Mumbai
+Longitude range,72.8119 to 73.3449,degrees,Mumbai
+Station name completeness,100.0,%,Mumbai
