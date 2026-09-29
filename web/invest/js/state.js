@@ -274,9 +274,11 @@ function boot() {
   }
   view.code = params.code;
   view.preset = params.preset;
-  for (const button of $('presets').querySelectorAll('button')) {
-    button.addEventListener('click', () => load(button.dataset.preset));
-  }
+  // one list of presets for every page (config.js); data-i18n fills the labels if the dictionary is late
+  $('presets').replaceChildren(...PRESET_IDS.map((id) => h('button', {
+    type: 'button', class: 'inv-chip inv-chip--choice', 'aria-pressed': 'false',
+    dataset: { preset: id, i18n: `inv.preset.${id}` }, onclick: () => load(id),
+  }, tt(`inv.preset.${id}`))));
   onLangChange(paint);
   load(params.preset);
 }
