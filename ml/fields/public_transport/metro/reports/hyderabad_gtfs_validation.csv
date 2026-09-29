@@ -1,0 +1,11 @@
+check,status,count,percentage,details
+routes.agency_id -> agency.agency_id,PASS,0,0.0,All valid
+trips.route_id -> routes.route_id,PASS,0,0.0,All valid
+trips.service_id -> calendar.service_id,PASS,0,0.0,All valid
+stop_times.trip_id -> trips.trip_id,PASS,0,0.0,All valid
+stop_times.stop_id -> stops.stop_id,PASS,0,0.0,All valid
+fare_rules.fare_id -> fare_attributes.fare_id,PASS,0,0.0,All valid
+agency.agency_id uniqueness,PASS,0,0.0,Unique
+routes.route_id uniqueness,PASS,0,0.0,Unique
+trips.trip_id uniqueness,PASS,0,0.0,Unique
+stops.stop_id uniqueness,PASS,0,0.0,Unique
