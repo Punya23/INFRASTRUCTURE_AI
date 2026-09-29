@@ -1,0 +1,2 @@
+system,state,city,total_stations,valid_stations,network_length_km,total_line_segments,median_station_spacing_m,mean_station_spacing_m,station_density_per_km,coordinate_coverage_pct
+Mumbai Suburban,Maharashtra,Mumbai,106,106,307.46,106,1758.68,2129.41,0.34,100.0

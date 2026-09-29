@@ -1,0 +1,107 @@
+station_id,station_name,latitude,longitude,coordinate_valid,nearest_distance_m,line_id,line_name,source,source_file,source_url
+MUM_RAIL_STN_001,Churchgate,18.9352961818815,72.8271919878514,True,1114.1,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_002,Marine Lines,18.9457881977143,72.8238144822946,True,909.73,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_003,Charni Road,18.9517165867492,72.8185706836947,True,909.73,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_004,Grant Road,18.9637045605152,72.8161783832855,True,784.71,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_005,Mumbai Central,18.9698932713685,72.8187988036057,True,784.71,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_006,Mahalaxmi,18.9822737979282,72.8241537111258,True,1124.27,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_007,Lower Parel,18.9953187079519,72.830172471783,True,345.28,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_008,Prabhadevi,19.0075631386431,72.8361132046624,True,259.85,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_009,Dadar,19.0195608762157,72.8431374888969,True,175.78,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_010,Matunga Road,19.028368597856,72.8469289503764,True,379.25,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_011,Mahim Junction,19.040716517382,72.8469183881933,True,1454.07,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_012,Bandra,19.0555892333471,72.8403282370921,True,1685.07,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_013,Khar Road,19.0698951076843,72.8401277252267,True,1507.58,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_014,Santacruz,19.0825985273727,72.8417807673674,True,1507.58,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_015,Vile Parle,19.0997393565481,72.8439996742096,True,2034.22,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_016,Andheri,19.1171747947178,72.8465039707666,True,2072.91,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_017,Jogeshwari,19.1365326519053,72.8489736708461,True,1791.91,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_018,Goregaon,19.1648702815213,72.8496282479856,True,1553.65,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_019,Malad,19.1868335617006,72.8489362808279,True,2114.8,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_020,Kandivali,19.2045320761638,72.8520512299794,True,2114.8,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_021,Borivali,19.2290634217488,72.8566489030573,True,2486.68,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_022,Dahisar,19.2500070403722,72.8592814710169,True,2486.68,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_023,CSMT,18.9402720285738,72.8357059779256,True,1114.1,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_024,Masjid Bunder,18.9520915390942,72.8381997658401,True,1045.59,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_025,Sandhurst Road,18.9608785429075,72.8395788297954,True,851.61,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_026,Byculla,18.976692518895,72.8327690068053,True,1162.52,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_027,Chinchpokali,18.9870469487976,72.8329013428044,True,831.64,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_028,Currey Road,18.994110482723,72.8329987665172,True,345.28,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_029,Parel,19.0092440178425,72.8376259004038,True,259.85,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_030,Dadar,19.0181435365389,72.843633420996,True,175.78,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_031,Matunga,19.0274961050905,72.8502084014804,True,379.25,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_032,Sion,19.0477097291027,72.8640037012676,True,724.08,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_033,Kurla,19.0654774786936,72.8793543303778,True,1182.96,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_034,Vidyavihar,19.0796208736982,72.8975799791421,True,1425.19,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_035,Ghatkopar,19.0859890642817,72.9084657878744,True,1425.19,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_036,Vikhroli,19.1119177689733,72.9281450869539,True,1914.39,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_037,Kanjur Marg,19.128166320162,72.9281511337221,True,1914.39,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_038,Bhandup,19.1424351550521,72.9376513107349,True,1758.68,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_039,Nahur,19.1546251377825,72.946766137471,True,1758.68,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_040,Mulund,19.1718662666882,72.9565534048963,True,2305.54,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_041,Dockyard Road,18.9665629111886,72.8443114850277,True,851.61,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_042,Ray Road,18.9773683482474,72.8442481797541,True,1079.57,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_043,Cotton Green,18.9864939574943,72.8432893293482,True,1079.57,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_044,Sewri,18.9989313752645,72.854579130035,True,1929.63,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_045,Wadala Road,19.016006309249,72.8589424803244,True,1666.04,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_046,Guru Tej Bahadur Nagar,19.0380290585816,72.8643611543405,True,1049.52,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_047,Chunna Bhatti,19.0517072445659,72.8689456446498,True,724.08,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_048,Tilak Nagar,19.0657803013233,72.8899762020043,True,1182.96,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_049,Chembur,19.0625976174705,72.9012441362589,True,1309.15,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_050,Govandi,19.0550932243739,72.9153943027253,True,1806.21,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_051,Mankhurd,19.0481650219614,72.9317241491866,True,1992.55,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_052,Kings Circle,19.032266486955,72.8571690397359,True,957.05,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_053,Mira Road,19.2797406943242,72.8560972045312,True,3524.15,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_054,Bhayandar,19.3114392227109,72.8525704477226,True,3759.24,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_055,Naigaon,19.3513074099099,72.8462832948645,True,3989.96,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_056,Vasai Road,19.3823802721053,72.8321461041926,True,3989.96,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_057,Nallasopara,19.4176755166077,72.8189145644195,True,4418.3,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_058,Virar,19.4549995182516,72.8119284863236,True,4474.08,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_059,Vashi,19.0631172207064,72.9988965632495,True,1215.98,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_060,Sanpada,19.0661147788721,73.0093493142319,True,1215.98,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_061,Juinagar,19.0556163409323,73.0183903439259,True,1594.3,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_062,Nerul,19.0334707818177,73.0182107815982,True,1361.29,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_063,Seawoods,19.0219438755159,73.0191424206458,True,1361.29,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_064,CBD Belapur,19.0190456436135,73.0390873339028,True,1896.6,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_065,Kharghar,19.0261194215454,73.0593969394587,True,2409.41,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_066,Mansarovar,19.0166539817185,73.0804701854415,True,1923.59,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_067,Khandeshwar,19.0074679867507,73.0947598188553,True,1923.59,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_068,Panvel,18.9905700254378,73.1213414488358,True,3565.66,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_069,Turbhe,19.0760002886039,73.0177166307423,True,1491.08,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_070,Kopar Kharine,19.1032160096145,73.011342315056,True,1639.46,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_071,Ghansoli,19.1164805906164,73.0068894698697,True,1639.46,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_072,Rabale,19.1370192081831,73.0027166938337,True,2464.12,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_073,Airoli,19.1585309448508,72.9993795687864,True,2561.99,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_074,Thane,19.1861152574207,72.9759337290526,True,2734.01,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_075,Kalwa,19.1969032812792,72.9986747366214,True,2832.93,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_076,Mumbra,19.1902742542868,73.0231397296511,True,2210.95,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_077,Diva,19.1889502669907,73.0429514521207,True,2210.95,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_078,Lower Kopar,19.2106220863616,73.0769788440469,True,1421.99,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_079,Dombivili,19.218286062568,73.0868430181902,True,1421.99,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_080,Thakurli,19.2260018478666,73.0979322946715,True,1533.39,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_081,Kalyan,19.2351909402425,73.1299711282289,True,2296.63,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_082,Vithalwadi,19.2282722390585,73.1492569841108,True,1953.68,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_083,Ulhas Nagar,19.21808971954,73.1631032188065,True,1953.68,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_084,Ambernath,19.2101305480555,73.1844317400222,True,2552.95,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_085,Badlapur,19.1668331363957,73.2388025511903,True,7916.92,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_086,Vangani,19.094393395304,73.3007405284918,True,4113.61,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_087,Shelu,19.0634147978046,73.3178011533358,True,4113.61,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_088,Neral,19.0268065536976,73.3185595294996,True,4312.02,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_089,Bhivpuri Road,18.9700072031662,73.3314774682455,True,6840.01,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_090,Karjat,18.9088351428397,73.3206443228044,True,2887.76,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_091,Palasdhari,18.8842927108596,73.3208308318587,True,2887.76,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_092,Kelavali,18.8456945832501,73.3187810452539,True,1352.06,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_093,Dolavali,18.8342636565215,73.3200621813635,True,1352.06,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_094,Lowjee,18.8086214214537,73.3354354701634,True,2469.38,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_095,Khopoli,18.7896170591886,73.3448726092399,True,2469.38,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_096,Shahad,19.2443452121886,73.1583231567416,True,2147.03,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_097,Ambivili,19.267809303216,73.1717128739798,True,3142.75,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_098,Titwala,19.296877134864,73.203247161913,True,4906.61,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_099,Khadawali,19.3568495922065,73.2189216499799,True,7286.79,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_100,Vasind,19.4068464515156,73.2676652674631,True,8015.77,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_101,Ram Mandir,19.1516968179908,72.8501779534613,True,1553.65,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_102,Vaitarna,19.5194475908323,72.8502717197307,True,8725.54,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_103,Sagar Sangam,19.0102840709078,73.0247906779553,True,1510.02,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_104,Targhar,18.9904507628536,73.0347210107422,True,2210.61,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_105,Bamandongri,18.974619535869,73.0240407796519,True,2080.75,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
+MUM_RAIL_STN_106,Kharkopar,18.9596615707448,73.0140802808399,True,2080.75,,,BMC via OpenCity.in,mumbai_suburban_stations.kml,https://data.opencity.in/dataset/mumbai-suburban-network-2025
