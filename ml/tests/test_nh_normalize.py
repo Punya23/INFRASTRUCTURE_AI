@@ -7,12 +7,17 @@ from common.fetch import matches_kind
 from fields.national_highways.normalize import (
     classify_osm,
     dual_carriageway_weights,
+    expressway_key,
     lane_band,
     nhai_status,
+    ocr_int,
     parse_indian_number,
     parse_lanes,
+    parse_rai_annexure,
     parse_refs,
     parse_year,
+    plaza_key,
+    plaza_name_score,
     road_lanes,
 )
 from pipeline.shared_layers import CANONICAL_STATES, INDIA_CRS, normalize_state
@@ -193,3 +198,38 @@ def test_gap_edges_joins_dead_ends_that_nearly_touch():
     gaps = gap_edges(graph, xy, snap_m=50)
     assert sorted(map(tuple, gaps[["u", "v"]].to_numpy().tolist())) == [(2, 3), (3, 2)]
     assert gaps["km"].round(3).tolist() == [0.01, 0.01]
+
+
+def test_parse_rai_annexure_fixes_ocr_digits():
+    text = """Number of Persons Killed in Road Accidents on National Highways*: 2021 to 2024
+Il Karnataka 3,487 4,164 4,383 4,278 6
+29 Andaman & Nicobar Islands 4] 11 6 14 33
+31 D & N Haveli and Daman & Diu 0 9 2 1 35
+Total 3,528 4,184 4,391 4,293"""
+    years, rows, totals = parse_rai_annexure(text)
+    assert years == [2021, 2022, 2023, 2024]
+    assert [r["name"] for r in rows] == ["Karnataka", "Andaman & Nicobar Islands", "D & N Haveli and Daman & Diu"]
+    assert rows[1]["values"] == [41, 11, 6, 14]
+    assert totals == [3528, 4184, 4391, 4293]
+    assert ocr_int("1,2x") is None
+    assert normalize_state("D & N Haveli and Daman & Diu") == "Dadra and Nagar Haveli and Daman and Diu"
+
+
+def test_plaza_key():
+    assert plaza_key("Bharthana Toll Plaza") == plaza_key("BHARTHANA FEE PLAZA (NH-48)") == "bharthana"
+    assert plaza_key("Ahmedabad (Ring Road) Toll Plaza") == "ahmedabad ring road"
+    assert plaza_key(None) == ""
+
+
+def test_expressway_key():
+    assert expressway_key("Delhi–Meerut Expressway") == expressway_key("DELHI-MEERUT EXPRESSWAY") == "delhi meerut"
+    assert expressway_key("Yamuna Expressway") == "yamuna"
+    assert expressway_key(None) == ""
+    assert normalize_state("Panjab") == "Punjab"
+
+
+def test_plaza_name_score():
+    assert plaza_name_score("lakhanpur", "lakhanpur rajbagh") == 1.0
+    assert plaza_name_score("aganampudi", "agnampadi") >= 0.82
+    assert plaza_name_score("khalapur", "kelapur") < 0.82  # two different Maharashtra plazas
+    assert plaza_name_score("ivr", "ivr chennai") < 1.0  # too short to trust containment

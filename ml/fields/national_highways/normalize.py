@@ -199,3 +199,59 @@ def dual_carriageway_weights(
     paired[left[opposite]] = True
     weights[idx[paired]] = 0.5
     return weights
+
+
+_OCR_DIGITS = str.maketrans({"]": "1", "l": "1", "I": "1", "|": "1", "O": "0", "o": "0"})
+_NUM = r"([\d,\]lIO|o]+)"
+_ANNEX_ROW = re.compile(rf"^\S{{1,3}}\s+([A-Za-z&.() ]+?)\s+{_NUM}\s+{_NUM}\s+{_NUM}\s+{_NUM}\s+\S+$")
+
+
+def ocr_int(token: str) -> int | None:
+    """Integer from an OCR'd table cell, fixing digit look-alikes ('4]' -> 41, 'Il' -> 11)."""
+    text = token.translate(_OCR_DIGITS).replace(",", "")
+    return int(text) if text.isdigit() else None
+
+
+def parse_rai_annexure(text: str) -> tuple[list[int], list[dict], list[int | None] | None]:
+    """OCR text of a Road Accidents in India state annexure ('<serial> <State> <y1..y4> <rank>' rows
+    and a 'Total' row) -> (years, rows [{name, values}], totals). Validation is the caller's job."""
+    years_m = re.search(r"(\d{4}) to (\d{4})", text)
+    years = list(range(int(years_m.group(1)), int(years_m.group(2)) + 1)) if years_m else []
+    rows, totals = [], None
+    for line in (ln.strip() for ln in text.splitlines()):
+        if m := re.match(r"^Total\s+(.+)$", line):
+            totals = [ocr_int(t) for t in m.group(1).split()]
+        elif m := _ANNEX_ROW.match(line):
+            rows.append({"name": m.group(1).strip(), "values": [ocr_int(v) for v in m.groups()[1:]]})
+    return years, rows, totals
+
+
+_PLAZA_NOISE = re.compile(r"\b(toll|tollgate|gate|naka|fee|plaza|plazza|booth|nh|no|new|old|km|ch)\b|[^a-z ]")
+_EXPRESSWAY_NOISE = re.compile(r"\b(expressway|corridor|elevated|freeway|flyway|road|bypass)\b|[^a-z ]")
+
+
+def expressway_key(name: object) -> str:
+    """Comparable expressway name: 'Delhi–Meerut Expressway' and 'DELHI-MEERUT EXPY' -> 'delhi meerut'."""
+    if not isinstance(name, str):
+        return ""
+    name = name.replace("–", "-").replace("—", "-").replace("-", " ")
+    return " ".join(_EXPRESSWAY_NOISE.sub(" ", name.lower()).split())
+
+
+def plaza_key(name: object) -> str:
+    """Comparable toll-plaza name: 'Bharthana Toll Plaza' and 'BHARTHANA FEE PLAZA (NH-48)' -> 'bharthana'."""
+    if not isinstance(name, str):
+        return ""
+    return " ".join(_PLAZA_NOISE.sub(" ", name.lower()).split())
+
+
+def plaza_name_score(a: str, b: str) -> float:
+    """Similarity of two plaza_key names: 1.0 when every token of one appears in the other
+    ('lakhanpur' vs 'lakhanpur rajbagh'), else the difflib ratio."""
+    import difflib
+
+    ta, tb = set(a.split()), set(b.split())
+    short = ta if len(ta) <= len(tb) else tb
+    if short and (short <= ta & tb) and max(map(len, short)) >= 4:
+        return 1.0
+    return difflib.SequenceMatcher(None, a, b).ratio()

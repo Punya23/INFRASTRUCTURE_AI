@@ -1,0 +1,12 @@
+id: wikipedia_expressways_of_india
+license: CC BY-SA 4.0 — Wikipedia contributors; stored as metadata + short quote per
+  ADR-0012
+attribution: Wikipedia, "Expressways of India" (retrieved 2026-09-29)
+used_by:
+- national_highways
+files:
+- file: data/raw/wikipedia/expressways_of_india.html
+  url: https://en.wikipedia.org/wiki/Expressways_of_India
+  bytes: 892476
+  sha256: 75c35f6a3e0572a8f2e6cf8819cabbf0a821314f3d885ff09bb0f64aeca77843
+  fetched_at: '2026-09-29T12:26:29Z'

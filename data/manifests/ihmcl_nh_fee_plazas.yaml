@@ -1,0 +1,12 @@
+id: ihmcl_nh_fee_plazas
+license: none stated — published by IHMCL (NHAI's tolling company); list only, no
+  coordinates
+attribution: Indian Highways Management Company Ltd, NH Fee Plazas (Aug 2025)
+used_by:
+- national_highways
+files:
+- file: data/raw/ihmcl/nh-fee-plazas.pdf
+  url: https://ihmcl.co.in/wp-content/uploads/2025/08/NH-Fee-Plazas-1.pdf
+  bytes: 623625
+  sha256: 2a5add5c3d73a04d31bf7f13d174884ab9e765316f4877693d0a443b2a22995f
+  fetched_at: '2026-09-28T19:30:39Z'

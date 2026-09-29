@@ -10,9 +10,14 @@ city_pairs:
   min_km: 100                        # straight-line distance band for circuity
   max_km: 600
   snap_max_km: 25                    # cities farther than this from the NH graph are skipped
+routing_road_classes: [primary, primary_link, secondary, secondary_link]  # context roads for city-pair routing
+                                     #   only; NH-only routing broke where NHs cross cities on untagged roads — 2026-09-29
 graph_snap_m: 50                     # dead end → nearest NH graph node: OSM ways that meet without a
                                      #   shared node (5,408 such ends in the 2026-09 extract) — team judgment
 circuity_flag: 1.5                   # network km ÷ straight km above this = candidate missing link
 toll_booth_snap_m: 50                # OSM toll booth → NH way; plaza nodes sit between carriageways — field plan
+toll_cluster_m: 500                  # OSM booths closer than this form one plaza (a plaza spans both
+                                     #   carriageways and many lanes) — team judgment, 2026-09-29
+toll_name_match: 0.82                # name score (0.8 wrongly pairs Khalapur–Kelapur) (token containment or difflib ratio) for IHMCL ↔ OSM plaza names within a state — team judgment
 crash_snap_m: 200                    # crash point → nearest NHAI segment for lane-band rates
 fixture_simplify_deg: 0.005          # ≈500 m after merging way pieces; keeps the national segment fixture under 5 MB (measured 2026-09-29)

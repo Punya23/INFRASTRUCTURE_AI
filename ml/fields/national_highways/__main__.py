@@ -16,6 +16,8 @@ STEPS = {
     "graph": build.build_graph,
     "nhai": build.build_nhai,
     "official": build.build_official,
+    "rai": build.build_rai,
+    "tolls": build.build_tolls,
     "analyze": analysis.run_all,
     "fixtures": analysis.write_fixtures,
 }

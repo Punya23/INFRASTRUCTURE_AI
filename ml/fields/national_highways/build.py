@@ -18,6 +18,7 @@ import numpy as np
 import pandas as pd
 import pyproj
 import shapely
+import yaml
 
 from fields.national_highways.normalize import (
     classify_osm,
@@ -33,11 +34,13 @@ from pipeline.shared_layers import (
     INDIA_CRS,
     PROCESSED,
     RAW,
+    ROOT,
     load_states,
     normalize_state,
 )
 
 OUT = PROCESSED / "national_highways"
+_CFG = yaml.safe_load((ROOT / "config" / "fields" / "national_highways.yaml").read_text())
 _GEOD = pyproj.Geod(ellps="WGS84")
 _ROAD = "('motorway','trunk','primary','secondary','tertiary')"
 
@@ -53,14 +56,15 @@ def geodesic_km(geoms) -> np.ndarray:
 
 
 def state_at_midpoint(lines: gpd.GeoSeries) -> np.ndarray:
-    """State/UT containing each line's midpoint (nearest within 5 km for coastal/border lines).
+    """State/UT containing each point or line midpoint (nearest within 5 km for coastal/border lines).
 
     Used for OSM and NHAI alike, so both are split by the same boundaries — NHAI's own state_ut
     field mixes combined names like 'Gujarat, Daman and Diu and Dadra and Nagar Haveli'.
     """
     states = load_states()
-    mids = gpd.GeoDataFrame(geometry=lines.to_crs(INDIA_CRS).interpolate(0.5, normalized=True)
-                            .to_crs(lines.crs).values, crs=lines.crs)
+    mids = lines if (lines.geom_type == "Point").all() else (
+        lines.to_crs(INDIA_CRS).interpolate(0.5, normalized=True).to_crs(lines.crs))
+    mids = gpd.GeoDataFrame(geometry=mids.values, crs=lines.crs)
     hit = gpd.sjoin(mids, states, how="left", predicate="within")["state"]
     hit = hit[~hit.index.duplicated()]
     missing = hit.isna()
@@ -74,7 +78,8 @@ def state_at_midpoint(lines: gpd.GeoSeries) -> np.ndarray:
 # --------------------------------------------------------------------------- extract
 def extract_osm() -> None:
     """Three streaming passes over the PBF: (1) IN:NH route relations, (2) candidate ways plus every
-    way those relations use, (3) only the nodes those ways use plus toll booths. Keeps memory and
+    way those relations use, plus context roads for routing, (3) only the nodes those ways use plus
+    toll booths. Keeps memory and
     disk low on a laptop."""
     pbf = _require(RAW / "osm" / "india-latest.osm.pbf")
     OUT.mkdir(parents=True, exist_ok=True)
@@ -92,26 +97,37 @@ def extract_osm() -> None:
                                                    unnest(CAST(ref_types AS VARCHAR[])) AS t FROM rels)
                    WHERE t = 'way'""")
     # relation members catch NH stretches tagged primary/secondary without a ref (city sections)
-    con.execute(rf"""
-        CREATE TABLE ways AS
-        SELECT id AS way_id, tags, refs
-        FROM ST_ReadOSM('{pbf}')
-        WHERE kind = 'way' AND (
+    field_way = rf"""(
                    tags['highway'] IN ('motorway', 'trunk', 'motorway_link', 'trunk_link')
                 OR (tags['highway'] IN ('primary', 'secondary', 'tertiary')
                     AND regexp_matches(coalesce(tags['ref'], ''), '(?i)(^|[;,/ ])(N\.?H|NE)'))
                 OR (tags['highway'] IN ('construction', 'proposed')
                     AND coalesce(tags['construction'], tags['proposed']) IN {_ROAD})
-                OR (id IN (SELECT id FROM member_ways) AND tags['highway'] IS NOT NULL))
+                OR (id IN (SELECT id FROM member_ways) AND tags['highway'] IS NOT NULL))"""
+    routing = "(" + ", ".join(f"'{c}'" for c in _CFG["routing_road_classes"]) + ")"
+    con.execute(f"""
+        CREATE TABLE scan AS
+        SELECT id, tags, refs, coalesce({field_way}, false) AS is_field
+        FROM ST_ReadOSM('{pbf}')
+        WHERE kind = 'way' AND ({field_way} OR tags['highway'] IN {routing})
     """)
+    con.execute("CREATE TABLE ways AS SELECT id AS way_id, tags, refs FROM scan WHERE is_field")
+    # context roads: not part of the field, only used to route city pairs (circuity)
+    con.execute("CREATE TABLE ctx_ways AS SELECT id AS way_id, refs FROM scan WHERE NOT is_field")
+    con.execute("DROP TABLE scan")
     con.execute("""CREATE TABLE way_nodes AS
                    SELECT way_id, unnest(refs) AS node_id, unnest(generate_series(1, len(refs))) AS pos
                    FROM ways""")
+    con.execute("""CREATE TABLE ctx_way_nodes AS
+                   SELECT way_id, unnest(refs) AS node_id, unnest(generate_series(1, len(refs))) AS pos
+                   FROM ctx_ways""")
     con.execute(f"""
         CREATE TABLE nodes AS
         SELECT id AS node_id, lat, lon, tags
         FROM ST_ReadOSM('{pbf}')
-        WHERE kind = 'node' AND (id IN (SELECT node_id FROM way_nodes) OR tags['barrier'] = 'toll_booth')
+        WHERE kind = 'node' AND (id IN (SELECT node_id FROM way_nodes)
+                                 OR id IN (SELECT node_id FROM ctx_way_nodes)
+                                 OR tags['barrier'] = 'toll_booth')
     """)
     con.execute(f"""
         COPY (
@@ -132,6 +148,11 @@ def extract_osm() -> None:
         TO '{OUT / "osm_way_nodes.parquet"}' (FORMAT PARQUET)
     """)
     con.execute(f"""
+        COPY (SELECT wn.way_id, wn.pos, wn.node_id, n.lon, n.lat
+              FROM ctx_way_nodes wn JOIN nodes n USING (node_id))
+        TO '{OUT / "osm_context_way_nodes.parquet"}' (FORMAT PARQUET)
+    """)
+    con.execute(f"""
         COPY (SELECT node_id, lat, lon, to_json(tags) AS tags FROM nodes WHERE tags['barrier'] = 'toll_booth')
         TO '{OUT / "osm_toll_booths.parquet"}' (FORMAT PARQUET)
     """)
@@ -140,13 +161,40 @@ def extract_osm() -> None:
               FROM rels)
         TO '{OUT / "osm_nh_relations.parquet"}' (FORMAT PARQUET)
     """)
-    counts = {t: con.sql(f"SELECT count(*) FROM {t}").fetchone()[0] for t in ("rels", "member_ways", "ways")}
+    counts = {t: con.sql(f"SELECT count(*) FROM {t}").fetchone()[0] for t in ("rels", "member_ways", "ways", "ctx_ways")}
     con.close()
     shutil.rmtree(tmp, ignore_errors=True)
     print(f"extract: {counts}")
 
 
 # --------------------------------------------------------------------------- segments
+def parse_wikipedia_expressway_openings(html_path) -> pd.DataFrame:
+    """Named expressways with a reported opening year, from the 'Expressway' + 'Opening' tables on
+    Wikipedia's 'Expressways of India' (operational and partially-opened corridors only; OSM rarely
+    tags opening_date so this backfills the corridor-effect analysis). Carries provenance per ADR-0012:
+    a secondary, community-edited source, so confidence is lower than a primary-agency date."""
+    from fields.national_highways.normalize import expressway_key, parse_year
+
+    tables = pd.read_html(html_path)
+    rows = []
+    for t in tables:
+        # tables for under-construction/proposed corridors give a target date and have no Status
+        # column at all — skip them so a "planned" date is never mistaken for a real opening.
+        if not {"Expressway", "Opening", "Status"} <= set(t.columns):
+            continue
+        live = t["Status"].astype(str).str.contains("Operational|Partially opened", case=False, na=False)
+        for name, opening in zip(t.loc[live, "Expressway"], t.loc[live, "Opening"], strict=True):
+            year = parse_year(opening)
+            key = expressway_key(name)
+            if year and key:
+                rows.append({"name": name, "key": key, "opened_year": year})
+    df = pd.DataFrame(rows).drop_duplicates("key").assign(
+        source="wikipedia_expressways_of_india",
+        source_ref="https://en.wikipedia.org/wiki/Expressways_of_India",
+        license="CC BY-SA 4.0", confidence=0.7)
+    return df.groupby("key", as_index=False).first()
+
+
 def _relation_refs() -> dict[int, str]:
     """way_id -> NH ref from IN:NH route relations (they carry a bare ref such as '48')."""
     rels = pd.read_parquet(_require(OUT / "osm_nh_relations.parquet"))
@@ -202,6 +250,17 @@ def build_segments() -> gpd.GeoDataFrame:
     errors += [{"way_id": w, "reason": "invalid_or_outside_india", "value": ""} for w in gdf.loc[bad, "way_id"]]
     gdf = gdf.loc[~bad].reset_index(drop=True)
 
+    gdf["opening_source"] = np.where(gdf["opening"].notna(), "osm", None)
+    wiki_path = RAW / "wikipedia" / "expressways_of_india.html"
+    if wiki_path.exists():
+        from fields.national_highways.normalize import expressway_key
+
+        openings = parse_wikipedia_expressway_openings(wiki_path).set_index("key")["opened_year"]
+        missing = (gdf["kind"] == "expressway_segment") & gdf["opening"].isna()
+        matched = gdf.loc[missing, "name"].map(expressway_key).map(openings).dropna()
+        gdf.loc[matched.index, "opening"] = matched.astype(int).astype(str)
+        gdf.loc[matched.index, "opening_source"] = "wikipedia_expressways_of_india"
+
     gdf["length_km"] = geodesic_km(gdf.geometry)
     metric = gdf.geometry.to_crs(INDIA_CRS)
     gdf["weight"] = dual_carriageway_weights(metric.values, gdf["oneway"].values, gdf["reversed"].values)
@@ -226,14 +285,10 @@ def _haversine_km(lon1, lat1, lon2, lat2):
     return 2 * 6371.0088 * np.arcsin(np.sqrt(a))
 
 
-def build_graph() -> pd.DataFrame:
-    """Junction-to-junction edges of the operational NH network (links included so grade-separated
-    interchanges connect). A node splits ways where it is shared by 2+ ways or ends a way."""
-    seg = pd.read_parquet(_require(OUT / "nh_segments.parquet"), columns=["way_id", "status"])
-    links = pd.read_parquet(OUT / "osm_link_ways.parquet")["way_id"]
-    keep = pd.Index(seg.loc[seg["status"] == "operational", "way_id"]).union(pd.Index(links))
-    wn = pd.read_parquet(_require(OUT / "osm_way_nodes.parquet"))
-    wn = wn[wn["way_id"].isin(keep)].sort_values(["way_id", "pos"]).reset_index(drop=True)
+def _junction_edges(wn: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Way node sequences -> junction-to-junction edges (u, v, km) and their nodes. A node splits
+    ways where it is shared by 2+ ways or ends a way."""
+    wn = wn.sort_values(["way_id", "pos"]).reset_index(drop=True)
     same = wn["way_id"].eq(wn["way_id"].shift())
     step = np.where(same, _haversine_km(wn["lon"].shift(), wn["lat"].shift(), wn["lon"], wn["lat"]), 0.0)
     wn["cum_km"] = pd.Series(step).groupby(wn["way_id"]).cumsum()
@@ -245,12 +300,28 @@ def build_graph() -> pd.DataFrame:
     edges = pd.DataFrame({
         "way_id": splits["way_id"], "u": splits["node_id"], "v": nxt["node_id"],
         "km": nxt["cum_km"] - splits["cum_km"],
-    }).dropna()
-    edges = edges.astype({"v": "int64"})
-    nodes = splits.drop_duplicates("node_id")[["node_id", "lon", "lat"]]
+    }).dropna().astype({"v": "int64"})
+    return edges, splits.drop_duplicates("node_id")[["node_id", "lon", "lat"]]
+
+
+def build_graph() -> pd.DataFrame:
+    """Two routable graphs: the operational NH network (links included so grade-separated
+    interchanges connect) -> nh_graph_*; the same plus context roads -> road_graph_* for city pairs."""
+    seg = pd.read_parquet(_require(OUT / "nh_segments.parquet"), columns=["way_id", "status"])
+    links = pd.read_parquet(OUT / "osm_link_ways.parquet")["way_id"]
+    keep = pd.Index(seg.loc[seg["status"] == "operational", "way_id"]).union(pd.Index(links))
+    wn = pd.read_parquet(_require(OUT / "osm_way_nodes.parquet"))
+    wn = wn[wn["way_id"].isin(keep)]
+    edges, nodes = _junction_edges(wn)
     edges.to_parquet(OUT / "nh_graph_edges.parquet")
     nodes.to_parquet(OUT / "nh_graph_nodes.parquet")
     print(f"graph: {len(edges):,} edges, {len(nodes):,} junction nodes, {edges['km'].sum():,.0f} km")
+
+    ctx = pd.read_parquet(_require(OUT / "osm_context_way_nodes.parquet"))
+    road_edges, road_nodes = _junction_edges(pd.concat([wn, ctx], ignore_index=True))
+    road_edges.to_parquet(OUT / "road_graph_edges.parquet")
+    road_nodes.to_parquet(OUT / "road_graph_nodes.parquet")
+    print(f"road graph: {len(road_edges):,} edges, {len(road_nodes):,} junction nodes")
     return edges
 
 
@@ -326,6 +397,160 @@ def build_official() -> pd.DataFrame:
     official.to_csv(OUT / "official_state_nh_length.csv", index=False)
     print(f"official: {len(official)} states/UTs, {official['length_km'].sum():,} km (as on 31.12.2024)")
     return official
+
+
+# --------------------------------------------------------------------------- rai (state NH safety)
+def _ocr(image, psm: int = 6) -> str:
+    """Tesseract on a grayscale PIL image after erasing table gridlines (long dark rows/columns),
+    which otherwise wreck the digits. Needs the `tesseract` binary (brew/apt install tesseract)."""
+    import subprocess
+    import tempfile
+
+    from PIL import Image
+
+    if shutil.which("tesseract") is None:
+        raise RuntimeError("tesseract not found — install it (brew install tesseract / apt install tesseract-ocr)")
+    a = np.array(image.convert("L"))
+    dark = a < 160
+    a[dark.mean(axis=1) > 0.4, :] = 255
+    a[:, dark.mean(axis=0) > 0.4] = 255
+    with tempfile.NamedTemporaryFile(suffix=".png") as f:
+        Image.fromarray(a).save(f.name)
+        out = subprocess.run(["tesseract", f.name, "-", "--psm", str(psm)], capture_output=True,
+                             text=True, check=True, timeout=120)
+    return out.stdout
+
+
+def parse_rai_state_annexures(pdf_path, annexures: dict[str, int]) -> pd.DataFrame:
+    """State-wise NH accidents and deaths from Road Accidents in India annexures, which are drawn as
+    outlines (no text layer), so they are OCR'd. Raises unless every row maps to a distinct state
+    and every year column adds up exactly to the printed Total."""
+    import re
+
+    import pdfplumber
+
+    from fields.national_highways.normalize import parse_rai_annexure
+
+    found: dict[str, str] = {}
+    with pdfplumber.open(pdf_path) as pdf:
+        texts = [page.extract_text() or "" for page in pdf.pages]
+        listing = "\n".join(t for t in texts if "List of Annexures" in t)
+        # text pages end with their printed page number; annexure pages have no text layer
+        numbered = [(i, int(t.strip().splitlines()[-1])) for i, t in enumerate(texts)
+                    if t.strip() and t.strip().splitlines()[-1].strip().isdigit()]
+        for measure, number in annexures.items():
+            m = re.search(rf"^{number}\s.*?(\d{{2,3}})\s*$", listing, re.MULTILINE)
+            if not m:
+                continue
+            printed = int(m.group(1))
+            i0, p0 = max(((i, p) for i, p in numbered if p <= printed), key=lambda x: x[1])
+            guess = i0 + printed - p0  # blank pages shift this a little, so search around it
+            for i in sorted(range(guess - 2, guess + 9), key=lambda j: abs(j - guess)):
+                if 0 <= i < len(pdf.pages) and not texts[i].strip():
+                    text = _ocr(pdf.pages[i].to_image(resolution=400).original)
+                    if re.search(rf"Annexure\s+{number}\b", text[:300]):
+                        found[measure] = text
+                        break
+    missing = set(annexures) - set(found)
+    if missing:
+        raise ValueError(f"RAI annexures not found: {sorted(missing)}")
+    frames = []
+    for measure, text in found.items():
+        years, rows, totals = parse_rai_annexure(text)
+        states = [normalize_state(r["name"]) for r in rows]
+        bad = [r["name"] for r, st in zip(rows, states, strict=True) if st is None]
+        if bad or len(set(states)) != len(states) or not years:
+            raise ValueError(f"RAI {measure}: unmapped or duplicate states {bad}, years {years}")
+        values = np.array([r["values"] for r in rows], dtype=object)
+        if None in values or totals is None or None in totals or len(totals) != len(years):
+            raise ValueError(f"RAI {measure}: unreadable cells or Total row")
+        sums = values.astype(int).sum(axis=0).tolist()
+        if sums != totals:
+            raise ValueError(f"RAI {measure}: columns sum to {sums}, printed Total is {totals}")
+        df = pd.DataFrame(values.astype(int), columns=years, index=states)
+        frames.append(df.stack().rename(measure))
+    out = pd.concat(frames, axis=1).rename_axis(["state", "year"]).reset_index()
+    return out
+
+
+def build_rai() -> pd.DataFrame:
+    rai = parse_rai_state_annexures(_require(RAW / "rai" / "road-accidents-in-india-2024.pdf"),
+                                    {"accidents": 9, "deaths": 10})
+    rai.to_csv(OUT / "rai_state_nh.csv", index=False)
+    latest = rai[rai["year"] == rai["year"].max()]
+    print(f"rai: {rai['state'].nunique()} states, {rai['year'].min()}–{rai['year'].max()}; "
+          f"{latest['year'].iloc[0]}: {latest['accidents'].sum():,} accidents, {latest['deaths'].sum():,} deaths")
+    return rai
+
+
+# --------------------------------------------------------------------------- toll plazas
+def parse_ihmcl_plazas(pdf_path) -> pd.DataFrame:
+    """IHMCL 'NH Fee Plazas' list: code, name, state, district, section, NH (no coordinates).
+    Raises unless serial numbers run 1..n without gaps and every state is recognized."""
+    import pdfplumber
+
+    rows = []
+    with pdfplumber.open(pdf_path) as pdf:
+        for page in pdf.pages:
+            for table in page.extract_tables():
+                rows += [r[:7] for r in table if r and r[0] and r[0].strip().isdigit()]
+    df = pd.DataFrame(rows, columns=["serial", "code", "name", "state_raw", "district", "section", "nh"])
+    serial = df["serial"].astype(int)
+    if serial.tolist() != list(range(1, len(df) + 1)):
+        raise ValueError("IHMCL list: serial numbers are not contiguous — table parse broke")
+    df["state"] = df["state_raw"].map(normalize_state)
+    if df["state"].isna().any():
+        raise ValueError(f"IHMCL list: unknown states {sorted(df.loc[df['state'].isna(), 'state_raw'].unique())}")
+    return df.drop(columns="serial")
+
+
+def build_tolls() -> pd.DataFrame:
+    """Cluster OSM toll booths near NH ways into plazas and match them to the IHMCL list by name
+    within the same state (names only — IHMCL gives no coordinates)."""
+    import networkx as nx
+
+    from fields.national_highways.normalize import plaza_key, plaza_name_score
+
+    ihmcl = parse_ihmcl_plazas(_require(RAW / "ihmcl" / "nh-fee-plazas.pdf"))
+    booths = pd.read_parquet(_require(OUT / "osm_toll_booths.parquet"))
+    pts = gpd.GeoDataFrame(booths, geometry=gpd.points_from_xy(booths["lon"], booths["lat"]),
+                           crs="EPSG:4326").to_crs(INDIA_CRS)
+    seg = gpd.read_parquet(_require(OUT / "nh_segments.parquet"), columns=["geometry"]).to_crs(INDIA_CRS)
+    near = shapely.STRtree(seg.geometry.values).query(pts.geometry.values, predicate="dwithin",
+                                                      distance=_CFG["toll_booth_snap_m"])
+    pts = pts.iloc[np.unique(near[0])].reset_index(drop=True)
+    pairs = shapely.STRtree(pts.geometry.values).query(pts.geometry.values, predicate="dwithin",
+                                                       distance=_CFG["toll_cluster_m"])
+    g = nx.Graph()
+    g.add_nodes_from(range(len(pts)))
+    g.add_edges_from(zip(pairs[0], pairs[1], strict=True))
+    pts["plaza"] = 0
+    for k, comp in enumerate(nx.connected_components(g)):
+        pts.loc[list(comp), "plaza"] = k
+    pts["name"] = [json.loads(t).get("name") for t in pts["tags"]]
+    plazas = pts.dissolve(by="plaza", aggfunc={"node_id": "first", "name": "first"}).centroid.to_frame("geometry")
+    plazas = gpd.GeoDataFrame(plazas, crs=INDIA_CRS).join(
+        pts.groupby("plaza").agg(node_id=("node_id", "min"), booths=("node_id", "size"),
+                                 name=("name", lambda s: s.dropna().iloc[0] if s.notna().any() else None)))
+    plazas = plazas.to_crs("EPSG:4326").reset_index()
+    plazas["state"] = state_at_midpoint(plazas.geometry)
+
+    ihmcl["key"] = ihmcl["name"].map(plaza_key)
+    plazas["key"] = plazas["name"].map(plaza_key)
+    plazas["ihmcl_code"] = None
+    taken: set[str] = set()
+    for i, row in plazas[plazas["key"] != ""].iterrows():
+        cand = ihmcl[(ihmcl["state"] == row["state"]) & ~ihmcl["code"].isin(taken)]
+        best = max(((plaza_name_score(row["key"], k), c) for k, c in zip(cand["key"], cand["code"], strict=True)),
+                   default=(0.0, None))
+        if best[0] >= _CFG["toll_name_match"]:
+            plazas.at[i, "ihmcl_code"] = best[1]
+            taken.add(best[1])
+    ihmcl.to_csv(OUT / "ihmcl_plazas.csv", index=False)
+    plazas.to_parquet(OUT / "osm_toll_plazas.parquet")
+    print(f"tolls: IHMCL {len(ihmcl):,} plazas; OSM {len(plazas):,} plazas from {len(pts):,} booths; "
+          f"{plazas['ihmcl_code'].notna().sum():,} matched by name")
+    return plazas
 
 
 # --------------------------------------------------------------------------- nhai

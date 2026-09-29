@@ -155,3 +155,20 @@ rai_2020_2024_annual:
   license: Public domain (OpenCity); publisher MoRTH
   attribution: MoRTH, Road Accidents in India 2024 (via OpenCity)
   used_by: [national_highways]
+
+ihmcl_nh_fee_plazas:
+  url: https://ihmcl.co.in/wp-content/uploads/2025/08/NH-Fee-Plazas-1.pdf
+  dest: ihmcl/nh-fee-plazas.pdf
+  kind: pdf
+  license: none stated — published by IHMCL (NHAI's tolling company); list only, no coordinates
+  attribution: Indian Highways Management Company Ltd, NH Fee Plazas (Aug 2025)
+  used_by: [national_highways]
+
+wikipedia_expressways_of_india:
+  url: https://en.wikipedia.org/wiki/Expressways_of_India
+  dest: wikipedia/expressways_of_india.html
+  kind: html
+  license: CC BY-SA 4.0 — Wikipedia contributors; stored as metadata + short quote per ADR-0012
+  attribution: Wikipedia, "Expressways of India" (retrieved 2026-09-29)
+  used_by: [national_highways]
+  used_by: [national_highways]

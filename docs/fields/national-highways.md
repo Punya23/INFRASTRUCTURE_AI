@@ -39,6 +39,7 @@ Verified on 2026-09-28 (links, access, license); re-check before loading.
 | [PIB Year End Review 2025](https://pib.gov.in/PressReleasePage.aspx?PRID=2209837) · [Parliament questions](https://sansad.in/rs/questions/questions-and-answers) | NH 1,46,560 km, 3,052 km access-controlled, 43,512 km with 4+ lanes; the freshest figures, and the source of most data.gov.in tables | HTML / PDF · public record | Latest totals — keep the as-of date |
 | MoRTH Road Accidents in India 2023 and 2024 ([2024 CSVs on OpenCity](https://data.opencity.in/dataset/road-accidents-in-india-2024)) | State-wise NH accidents, deaths and injuries, 2021–24 | PDF; the CSVs lack the NH annexures · none stated | Safety rates |
 | [IHMCL NH fee plazas](https://ihmcl.co.in/wp-content/uploads/2025/08/NH-Fee-Plazas-1.pdf) (Aug 2025) | ~1,159 plazas: state, district, section, NH — no coordinates | PDF · none stated | Toll list, matched to OSM toll booths |
+| [Wikipedia — Expressways of India](https://en.wikipedia.org/wiki/Expressways_of_India) | Named expressways with reported opening dates (operational and partially-opened only) | HTML · CC BY-SA 4.0 | Corridor-effect opening dates where OSM has none (secondary source — lower confidence) |
 | [NHAI Datalake — Projects under Execution](https://datalakeg.nhai.gov.in/nhai/mISC/DataLakeGISDashboard) | Project code, NH, lanes, cost, progress %, dates | Web map · none stated | Pipeline stages |
 | [Bhoomi Rashi](https://bhoomirashi.gov.in) | Project search with 3a/3A/3D dates and land-acquisition cost; Highway Land Register with Excel export | Web forms behind a CAPTCHA — manual exports only · none stated | Land-acquisition timeline |
 | [eGazette](https://egazette.gov.in) | Section 3A/3D notifications: NH, chainage, village, survey numbers, area, owner names | Individual PDFs, search UI · government publication | Earliest pipeline signal — keep NH, chainage, village and date; drop survey numbers and owner names at ingest |
@@ -79,7 +80,7 @@ Notebooks in `ml/notebooks/national_highways/`; logic in `ml/fields/national_hig
 | `03_growth_timeline` | Official NH km by year and state; lane mix over time; expressway opening timeline |
 | `04_access` | Distance to the nearest NH for every populated 1 km pixel, rolled up to H3 and state (district once LGD boundaries land); population within 5, 10 and 25 km; density; city-pair circuity |
 | `05_corridor_effect` | Built-up growth (GHSL 2000→2020) within 0–2 km vs 2–10 km of expressways opened 2001–2019, against corridors not yet open; night lights next |
-| `06_safety` | National NH totals (Road Accidents in India 2024 — its state NH table is an image, so state rates use NHAI crash points 2022–23 over NHAI NH length); crash density by lane band; black-spot status |
+| `06_safety` | National and state NH totals from Road Accidents in India 2024's Annexures 9–10 (OCR'd, gridlines stripped, verified against the printed Table 2.5 total) over official state NH km; crash density by lane band from NHAI's 2022–23 crash points; black-spot status |
 | `07_pipeline` | Pipeline km by state and target year; NHAI project stages; access gain once the pipeline completes; land-acquisition notifications at M3 |
 
 Reproduce: `cd ml && uv run python -m common.fetch && uv run python -m fields.national_highways all` (about 10 minutes on a laptop), then run the notebooks. HTML exports are in `ml/notebooks/national_highways/reports/`.
@@ -96,9 +97,9 @@ Reproduce: `cd ml && uv run python -m common.fetch && uv run python -m fields.na
 | `circuity` | ratio, per city pair | NH network distance ÷ straight-line distance for city pairs 100–600 km apart; high values flag missing links |
 | `pipeline_access_gain_km` | km, per H3 cell | Today's `nh_distance_km` minus the same distance with approved and under-construction projects added — what the pipeline changes, not a forecast |
 | `corridor_growth` | percentage points | Near-minus-far growth difference around dated openings (descriptive event study) |
-| `death_rate` | deaths per 100 km per year, per state | NHAI crash points 2022–23 ÷ NHAI completed NH length (Road Accidents in India gives national totals only in text form) |
+| `death_rate` | deaths per 100 km per year, per state | RAI 2024 state NH deaths (OCR'd Annexures 9–10) ÷ official state NH km |
 
-`circuity` routes on a networkx graph of operational NH ways and links (README §11); dead ends within `graph_snap_m` of another NH node are joined, because OSM ways often meet without sharing a node.
+`circuity` routes on a networkx graph of operational roads (trunk to tertiary, not NH-only — NHs alone break where they cross cities on untagged roads) and links (README §11); dead ends within `graph_snap_m` of another node are joined, because OSM ways often meet without sharing a node.
 
 Every threshold lives in [`config/fields/national_highways.yaml`](../../config/fields/national_highways.yaml), each with its basis.
 
@@ -127,10 +128,10 @@ Every recommendation carries drivers and evidence (README §8.3).
 
 ## Milestones and done checklist
 
-- [x] **M1 — data:** OSM NH network with normalized refs and single-counted length; official state totals with as-of dates; coverage report by state. _Open: match OSM toll booths to the IHMCL list._
+- [x] **M1 — data:** OSM NH network with normalized refs and single-counted length; official state totals with as-of dates; coverage report by state; OSM toll booths matched to the IHMCL list (90.1% national coverage).
 - [x] **M1 — fixtures (first two days):** `web/fixtures/national_highways/nh_segments.geojson` and `toll_plazas.geojson`, simplified, ≤ 5 MB each.
-- [x] **M2 — analysis:** notebooks 01–04 and 06; `nh_access` metrics; first findings. _Open: fix city-pair routing._
-- [ ] **M2 — corridor effect:** notebook 05 with at least five dated openings. _Blocked: OSM has three dated corridors; needs official opening dates._
+- [x] **M2 — analysis:** notebooks 01–04 and 06; `nh_access` metrics; first findings; city-pair routing on the full road graph (trunk to tertiary).
+- [x] **M2 — corridor effect:** notebook 05 with 12 dated openings (2001–2019) from Wikipedia's "Expressways of India".
 - [ ] **M3 — pipeline:** projects and cited events (press releases, news, tenders, 3A/3D notifications); notebook 07; delay flags.
 - [ ] **M4 — recommendations:** crossings and upgrades with drivers; the area-profile section is live.
 - [ ] **Done bar:** every item in [`README.md`](README.md#the-done-bar--every-field-delivers-all-of-this); 5–10 findings below.
@@ -146,10 +147,10 @@ As of 2026-09-29, from the OSM extract of 2026-09-28. Notebooks are in `ml/noteb
 5. **The pipeline moves 10-km access from 79.0% to 80.6%, about 2.14 crore people.** The largest gains are in Uttar Pradesh (46 lakh), Karnataka (25 lakh) and West Bengal (20 lakh); Rajasthan and MP barely change (+0.3 pp). The pipeline counts OSM construction/proposed ways and NHAI stretches with an FY23–26 target (11,392 km, almost all greenfield). — `04_access`, `07_pipeline`
 6. **NHAI's crash layer is a partial record.** It has 49,992 crash points for 2023, against 1,08,240 accidents on NHAI roads in Road Accidents in India 2024 (Table 2.10). Its deaths (6,274 in 2023) are about 13% of the 49,675 RAI reports for NHAI roads. So the layer shows where crashes cluster, not death rates. Crash points per km rise with width (6+ lanes: 128 per 100 km per year; 2 lanes: 9.5), but that mixes traffic volume with the layer's better coverage of NHAI-run corridors. — `06_safety`
 7. **NH road deaths rose every year, 2020–2024:** from 50,251 to 64,772. That is 36.6% of all road deaths on about 2% of road length. 77% of NH deaths in 2024 were on NHAI-managed NHs. — `06_safety` (RAI 2024, Tables 2.5 and 2.10)
-8. **Two results are not reliable yet.**
-   - **City-pair circuity:** the median is 1.31 over 1,527 pairs, but some pairs are clearly wrong (Mumbai–Pune 2.76, Ahmedabad–Rajkot 4.04). The NH-only graph still breaks where NHs cross cities on untagged roads. Do not cite individual pairs until routing runs on the full road graph.
-   - **Corridor effect:** only three expressways have OSM opening dates in 2001–2019 (all 2008, Delhi and Hyderabad), which is too few for the event study. It needs official opening dates.
-   — `04_access`, `05_corridor_effect`
+8. **City-pair circuity drops once routing uses the full road graph.** Median 1.18 over 1,543 pairs (was 1.31 on the NH-only graph, which broke where NHs cross cities on untagged roads). — `04_access`
+9. **Corridor effect, now with dated openings:** 12 expressways opened 2001–2019 (999 eff-km — Outer Ring Road, Agra–Lucknow, Yamuna, Mumbai–Pune among the largest), matched by name to Wikipedia's "Expressways of India" since OSM tags `opening_date`/`start_date` on only 5,218 of 32,302 expressway segments. Built-up growth near (0–2 km) vs far (2–10 km) is 4.4 pp higher for these corridors than for ones not yet open (a descriptive difference, not causal). — `05_corridor_effect`
+10. **Toll coverage: OSM has 90.1% of the IHMCL plaza count nationally**, with 150 of 1,044 OSM plazas matched to an IHMCL code by name; Bihar (56%) and Odisha (69%) lag. — toll_coverage_by_state
+11. **State NH death rates, now from RAI's own annexures, not NHAI's partial crash layer.** Delhi (164/100 km) and Puducherry (164/100 km) are the highest; the state annexures were OCR'd (gridlines stripped) and verified against RAI's printed Table 2.5 total. — `06_safety`
 
 ## Open questions
 
@@ -158,5 +159,3 @@ As of 2026-09-29, from the OSM extract of 2026-09-28. Notebooks are in `ml/noteb
 - Lanes: OSM tags lanes on 48.7% of NH length; NHAI's layer covers every completed stretch. Use NHAI bands for analysis and OSM only for display — or wait for the data.gov.in state lane table?
 - Traffic volumes are not public — which proxies for capacity analysis (night lights, population, toll density)?
 - State-built expressways: inside this field with `owner_level` (default), or a separate field?
-- State NH deaths: RAI Annexures 9–11 have no text layer (outlined glyphs), and OCR of the gridded tables failed. Ask MoRTH for the CSV, or use data.gov.in (needs a login)?
-- City-pair circuity: route on all roads (trunk to tertiary), or keep NH-only and repair the city gaps?

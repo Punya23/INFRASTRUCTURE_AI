@@ -114,6 +114,21 @@ def lane_mix_by_state() -> pd.DataFrame:
     return out.round(0)
 
 
+def toll_coverage_by_state() -> pd.DataFrame:
+    """IHMCL plazas vs OSM plazas (booth clusters near an NH) per state, and how many match by name."""
+    ihmcl = pd.read_csv(OUT / "ihmcl_plazas.csv", dtype={"code": str})
+    plazas = gpd.read_parquet(OUT / "osm_toll_plazas.parquet")
+    df = pd.DataFrame({
+        "ihmcl_plazas": ihmcl.groupby("state").size(),
+        "osm_plazas": plazas.groupby("state").size(),
+        "osm_named": plazas[plazas["key"].fillna("") != ""].groupby("state").size(),
+        "matched_by_name": plazas[plazas["ihmcl_code"].notna()].groupby("state").size(),
+    }).fillna(0).astype(int)
+    df.loc["India"] = df.sum()
+    df["osm_to_ihmcl"] = (df["osm_plazas"] / df["ihmcl_plazas"].replace(0, np.nan)).round(3)
+    return df.sort_values("ihmcl_plazas", ascending=False)
+
+
 # --------------------------------------------------------------------------- 04 access
 def _nearest_km(points_m: np.ndarray, lines_m: np.ndarray) -> np.ndarray:
     tree = shapely.STRtree(lines_m)
@@ -169,15 +184,15 @@ def density_by_state(access_by_state: pd.DataFrame) -> pd.DataFrame:
 
 
 # --------------------------------------------------------------------------- connectivity
-def _graph() -> nx.Graph:
-    """NH graph plus gap edges: each dead end joins the nearest other node within graph_snap_m, since
+def _graph(name: str = "nh") -> nx.Graph:
+    """The `nh` or `road` graph plus gap edges: each dead end joins the nearest other node within graph_snap_m, since
     OSM ways often meet without sharing a node. graph.graph["gap_edges"] counts them."""
-    edges = pd.read_parquet(OUT / "nh_graph_edges.parquet").sort_values("km", ascending=False)
+    edges = pd.read_parquet(OUT / f"{name}_graph_edges.parquet").sort_values("km", ascending=False)
     graph = nx.Graph()
     graph.add_weighted_edges_from(zip(edges["u"], edges["v"], edges["km"], strict=True), weight="km")
     # parallel edges: the shortest is added last and wins
 
-    nodes = pd.read_parquet(OUT / "nh_graph_nodes.parquet").set_index("node_id")
+    nodes = pd.read_parquet(OUT / f"{name}_graph_nodes.parquet").set_index("node_id")
     to_m = pyproj.Transformer.from_crs("EPSG:4326", INDIA_CRS, always_xy=True)
     x, y = to_m.transform(nodes["lon"].values, nodes["lat"].values)
     gaps = gap_edges(graph, pd.DataFrame({"x": x, "y": y}, index=nodes.index), CFG["graph_snap_m"])
@@ -216,6 +231,11 @@ def connectivity() -> tuple[pd.DataFrame, pd.DataFrame]:
     islands.attrs["n_components"] = len(comps)
     islands.attrs["gap_edges"] = graph.graph["gap_edges"]
 
+    # city pairs route on NH + context roads: NH-only routing breaks where NHs cross cities on roads
+    # tagged without an NH ref, which made e.g. Mumbai–Pune look 2.8x the straight line
+    graph = _graph("road")
+    nodes = pd.read_parquet(OUT / "road_graph_nodes.parquet").set_index("node_id")
+    comps = [max(nx.connected_components(graph), key=len)]
     cfg = CFG["city_pairs"]
     cities = load_cities(cfg["min_population"]).head(cfg["top_cities"]).reset_index(drop=True)
     main = nodes.loc[list(comps[0])]
@@ -294,14 +314,20 @@ def safety_by_state() -> tuple[pd.DataFrame, pd.DataFrame]:
     crashes = gpd.read_parquet(OUT / "nhai_crashes.parquet")
     crashes = crashes[crashes["date"].dt.year.isin([2022, 2023])]  # full reporting years only
     net = nhai_network().query("status == 'operational' and road_type == 'National Highway'")
-    km = net.groupby("state")["length_km"].sum()
-    by_state = crashes.groupby("state").agg(crashes=("date", "size"), deaths=("deaths", "sum"),
-                                            fatal_crashes=("deaths", lambda d: (d > 0).sum()))
-    by_state["nhai_nh_km"] = km
-    by_state["deaths_per_100km_per_year"] = by_state["deaths"] / by_state["nhai_nh_km"] * 100 / 2
-    by_state.loc["India"] = by_state.sum(numeric_only=True)
-    by_state.loc["India", "deaths_per_100km_per_year"] = (
-        by_state.loc["India", "deaths"] / by_state.loc["India", "nhai_nh_km"] * 100 / 2)
+    # state rates: Road Accidents in India (all NH crashes, OCR'd annexures checked against totals)
+    # over the official NH length; the NHAI layer only adds where its points cluster
+    rai = pd.read_csv(OUT / "rai_state_nh.csv")
+    latest = rai["year"].max()
+    by_state = rai[rai["year"] == latest].set_index("state")[["accidents", "deaths"]]
+    first = rai[rai["year"] == rai["year"].min()].set_index("state")["deaths"]
+    by_state["official_km"] = official().set_index("state")["length_km"]
+    by_state.loc["India"] = by_state.sum()
+    first.loc["India"] = first.sum()
+    by_state["deaths_per_100km"] = by_state["deaths"] / by_state["official_km"] * 100
+    by_state["deaths_change_since_first_year"] = by_state["deaths"] / first - 1
+    by_state["nhai_layer_crashes_2022_23"] = crashes.groupby("state").size()
+    by_state.loc["India", "nhai_layer_crashes_2022_23"] = len(crashes)
+    by_state.attrs["year"] = int(latest)
 
     # crash density by lane band: snap crashes to the nearest completed NHAI stretch
     lines = net[["lane_statu", "geometry"]].explode(index_parts=False).to_crs(INDIA_CRS).reset_index(drop=True)
@@ -318,7 +344,7 @@ def safety_by_state() -> tuple[pd.DataFrame, pd.DataFrame]:
     by_band["crashes_per_100km_per_year"] = by_band["crashes"] / by_band["km"] * 100 / 2
     by_band["deaths_per_100km_per_year"] = by_band["deaths"] / by_band["km"] * 100 / 2
     by_band.attrs["snapped_share"] = float(near.mean())
-    return by_state.sort_values("deaths_per_100km_per_year", ascending=False), by_band
+    return by_state.sort_values("deaths_per_100km", ascending=False), by_band
 
 
 # --------------------------------------------------------------------------- 05 corridor effect
@@ -372,6 +398,7 @@ def run_all() -> dict:
     coverage_by_state().to_csv(A / "coverage_by_state.csv", index=False)
     completeness_by_state().to_csv(A / "completeness_by_state.csv")
     lane_mix_by_state().to_csv(A / "lane_mix_by_state.csv")
+    toll_coverage_by_state().to_csv(A / "toll_coverage_by_state.csv")
     pixels, acc = access()
     pixels.to_parquet(A / "access_pixels.parquet")
     acc.to_csv(A / "access_by_state.csv")
@@ -433,17 +460,19 @@ def write_fixtures() -> None:
     }, crs="EPSG:4326")
     _write_geojson(out, "nh_segments.geojson")
 
-    booths = pd.read_parquet(OUT / "osm_toll_booths.parquet")
-    pts = gpd.GeoDataFrame(booths, geometry=gpd.points_from_xy(booths["lon"], booths["lat"]), crs="EPSG:4326")
-    near = shapely.STRtree(seg.to_crs(INDIA_CRS).geometry.values).query(
-        pts.to_crs(INDIA_CRS).geometry.values, predicate="dwithin", distance=CFG["toll_booth_snap_m"])
-    pts = pts.iloc[np.unique(near[0])]
-    names = [json.loads(t).get("name") for t in pts["tags"]]
+    plazas = gpd.read_parquet(OUT / "osm_toll_plazas.parquet")
+    ihmcl = pd.read_csv(OUT / "ihmcl_plazas.csv", dtype={"code": str}).set_index("code")
+    code = plazas["ihmcl_code"]
+    matched = code.notna()
     _write_geojson(gpd.GeoDataFrame({
-        "id": [f"toll_plaza:osm:node/{n}" for n in pts["node_id"]], "field": "national_highways",
-        "kind": "toll_plaza", "name": names, "ref": None, "status": "operational", "opened_on": None,
-        "expected_completion": None, "agency": None, "source": "osm", "confidence": 0.9,
-        "geometry": pts.geometry.values}, crs="EPSG:4326"), "toll_plazas.geojson")
+        "id": [f"toll_plaza:osm:node/{n}" for n in plazas["node_id"]], "field": "national_highways",
+        "kind": "toll_plaza",
+        "name": np.where(matched, code.map(ihmcl["name"]), plazas["name"]),
+        "ref": np.where(matched, "NH" + code.map(ihmcl["nh"]).fillna("").str.extract(r"(\d+[A-Z]*)")[0], None),
+        "status": "operational", "opened_on": None, "expected_completion": None,
+        "agency": np.where(matched, "NHAI", None), "source": np.where(matched, "osm+ihmcl", "osm"),
+        "confidence": np.where(matched, 0.95, 0.8), "ihmcl_code": code, "booths": plazas["booths"],
+        "geometry": plazas.geometry.values}, crs="EPSG:4326"), "toll_plazas.geojson")
 
     pixels = pd.read_parquet(A / "access_pixels.parquet")
     target = CFG["access_target_km"]
@@ -473,13 +502,13 @@ def write_fixtures() -> None:
     table = cov[["official_km", "osm_nh_km", "osm_ratio"]].join(
         acc[["population", "mean_km_now", "share_within_10km_now", "share_within_10km_future"]], how="left").join(
         den[["km_per_1000_km2", "km_per_lakh_people"]], how="left").join(
-        saf[["crashes", "deaths", "deaths_per_100km_per_year"]].add_prefix("nhai_2022_23_"), how="left").join(
+        saf[["accidents", "deaths", "deaths_per_100km"]].add_prefix("rai_2024_"), how="left").join(
         pipe.filter(like="nhai_target_").sum(axis=1).rename("nhai_km_under_construction"), how="left")
     FIXTURES.mkdir(parents=True, exist_ok=True)
     records = json.loads(table.round(3).reset_index().rename(columns={"index": "state"}).to_json(orient="records"))
     (FIXTURES / "nh_state_metrics.json").write_text(json.dumps({
         "field": "national_highways",
         "sources": ["MoRTH Annual Report 2024-25 (Appendix-2, as on 31.12.2024)", "© OpenStreetMap contributors",
-                    "WorldPop 2020 1 km", "NHAI Datalake (aggregates only, ADR-0014)"],
+                    "WorldPop 2020 1 km", "MoRTH Road Accidents in India 2024 (Annexures 9-10)", "NHAI Datalake (aggregates only, ADR-0014)"],
         "states": records}, indent=1))
     print(f"fixture nh_state_metrics.json: {len(records)} rows")
