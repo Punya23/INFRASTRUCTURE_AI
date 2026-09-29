@@ -1,0 +1,13 @@
+id: metro_hyd_hmrl_gtfs
+license: Terms of use on data.opencity.in — attribution required; non-commercial and
+  research use permitted
+attribution: HMRL (Hyderabad Metro Rail Limited), via OpenCity.in — GTFS static feed,
+  July 2026
+used_by:
+- metro
+files:
+- file: data/raw/metro/hyderabad/telangana_opendata_gtfs_hmrl_03_july_2026.zip
+  url: https://data.opencity.in/dataset/4e72c202-4cdb-4437-a629-ffcbe9519f73/resource/5fa250e1-3104-4ca7-ad31-4fa3321f6255/download/telangana_opendata_gtfs_hmrl_03_july_2026.zip
+  bytes: 2928005
+  sha256: 64e645477f40c11d7a971be363b6d6aec0a4274941ecc7dee4c60baf60013d4b
+  fetched_at: '2026-09-29T08:05:39Z'

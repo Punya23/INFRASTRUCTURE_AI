@@ -189,3 +189,48 @@ bus_smartcities_fleet_csv:
   geography: India — Smart Cities (multiple cities, partial coverage)
   reference_year: 2015-2018
   used_by: [bus]
+
+# ── PUBLIC TRANSPORT — METRO ──────────────────────────────────────────────────
+# Fetch: cd ml && uv run python -m common.fetch <source_id>
+# Only sources with verified direct GET download URLs are registered here.
+# CSRF-gated or form-only portals are documented as MANUAL in the source inventory.
+
+metro_hyd_hmrl_gtfs:
+  url: https://data.opencity.in/dataset/4e72c202-4cdb-4437-a629-ffcbe9519f73/resource/5fa250e1-3104-4ca7-ad31-4fa3321f6255/download/telangana_opendata_gtfs_hmrl_03_july_2026.zip
+  dest: metro/hyderabad/telangana_opendata_gtfs_hmrl_03_july_2026.zip
+  kind: zip
+  license: Terms of use on data.opencity.in — attribution required; non-commercial and research use permitted
+  attribution: HMRL (Hyderabad Metro Rail Limited), via OpenCity.in — GTFS static feed, July 2026
+  geography: Hyderabad Metro Rail (Telangana)
+  reference_year: 2026-07-03
+  used_by: [metro]
+
+metro_bengaluru_stations_kml:
+  url: https://data.opencity.in/dataset/746940cd-cca7-45f5-a3bc-8b0034663605/resource/86e5641c-496c-43fa-8143-bae5f255afc4/download/e13b04fa-bcd8-4fb9-930b-d67ed31bc782.kml
+  dest: metro/bengaluru/bengaluru_metro_stations.kml
+  kind: html
+  license: Terms of use on data.opencity.in — attribution required
+  attribution: BMRCL (Bangalore Metro Rail Corporation Limited), via OpenCity.in — Metro station locations, KML
+  geography: Bengaluru Metro (Karnataka)
+  reference_year: 2024
+  used_by: [metro]
+
+metro_bengaluru_bmrcl_ridership_csv:
+  url: https://data.opencity.in/dataset/369f18e0-4342-4809-b380-44f1d21d904f/resource/1ec4f39a-eede-44d4-8e1d-e8658cb89762/download/c47d24a2-8c27-4c3a-a9cd-05c0beafc83d.csv
+  dest: metro/bengaluru/bmrcl_station_ridership.csv
+  kind: text
+  license: Terms of use on data.opencity.in — attribution required
+  attribution: BMRCL (Bangalore Metro Rail Corporation Limited), via OpenCity.in — Station-wise ridership data
+  geography: Bengaluru Metro (Karnataka)
+  reference_year: 2024
+  used_by: [metro]
+
+metro_chennai_cmrl_ridership_csv:
+  url: https://data.opencity.in/dataset/118434fe-dd69-4dd3-a6a8-4c577326cc34/resource/c63ef5a0-e7d2-49b3-9c88-5ca5ce309fcf/download/cmrl-metro-ridership-2023-26.csv
+  dest: metro/chennai/cmrl_metro_ridership_2023_26.csv
+  kind: text
+  license: Terms of use on data.opencity.in — attribution required
+  attribution: CMRL (Chennai Metro Rail Limited), via OpenCity.in — Monthly ridership 2023–2026
+  geography: Chennai Metro (Tamil Nadu)
+  reference_year: 2023-2026
+  used_by: [metro]
