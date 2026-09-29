@@ -256,9 +256,34 @@ def test_make_slugs_are_ascii_and_api_safe():
     assert slug == "sao-paulo"
 
 
-def test_make_slugs_rejects_mismatched_lengths():
-    with pytest.raises(ValueError):  # zip would silently drop a city
-        make_slugs(["Pune", "Nashik"], ["MH"])
+def test_make_slugs_numbers_three_same_state_duplicates():
+    assert make_slugs(["Pune"] * 3, ["MH"] * 3) == ["pune-mh", "pune-mh-2", "pune-mh-3"]
+
+
+def test_make_slugs_rejects_a_name_that_slugifies_to_an_existing_suffixed_id():
+    with pytest.raises(ValueError, match=re.escape("duplicate city ids: ['pune-mh-2']")):
+        make_slugs(["Pune", "Pune", "Pune Mh 2"], ["MH", "MH", "MH"])
+
+
+def test_make_slugs_accepts_64_characters_and_rejects_more():
+    assert make_slugs(["a" * 64], ["MH"]) == ["a" * 64]
+    for length in (65, 70):
+        with pytest.raises(ValueError, match="outside the API pattern"):
+            make_slugs(["a" * length], ["MH"])
+
+
+@pytest.mark.parametrize("short", ["पुणे", "X"])  # no ASCII at all; a single character
+def test_make_slugs_rejects_a_name_under_two_characters_and_names_only_that_one(short):
+    with pytest.raises(ValueError, match=re.escape(f"fewer than 2 characters: ['{short}']")):
+        make_slugs(["Pune", short], ["MH", "MH"])
+
+
+@pytest.mark.parametrize(
+    ("names", "states"), [(["Pune", "Nashik"], ["MH"]), (["Pune"], ["MH", "MH"])]
+)
+def test_make_slugs_rejects_mismatched_lengths(names, states):
+    with pytest.raises(ValueError, match="shorter|longer"):  # zip would silently drop a city
+        make_slugs(names, states)
 
 
 @pytest.mark.parametrize(

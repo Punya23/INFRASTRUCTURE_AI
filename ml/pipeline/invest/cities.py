@@ -22,6 +22,7 @@ _OFFSETS = {
 # (team judgment, 2026-09-29). A cap on the algorithm, not a tunable threshold, so not in config.
 _STATE_FILL_ROUNDS = 3
 _NAMING_COLUMNS = ["name", "geonameid", "lat", "lon", "aliases", "review"]
+_CITY_ID = re.compile(r"[a-z0-9-]{2,64}")  # the API's city id contract, api/openapi.yaml
 
 
 def _fill_unknown_state(state_ids, mask, offsets):
@@ -172,10 +173,16 @@ def _slug(name: str) -> str:
 
 
 def make_slugs(names: list[str], state_codes: list[str]) -> list[str]:
-    """Deterministic ids: the slug; on a collision every colliding city gets `-<state>`; then `-2`, `-3`."""
+    """Deterministic ids: the slug; on a collision every colliding city gets `-<state>`; then `-2`,
+    `-3` in input order, so the caller must pass a stable order.
+
+    Raises ValueError rather than return an id the API would reject or one id for two cities: a
+    name with fewer than 2 ASCII characters, a duplicate id, or an id outside the API's pattern.
+    """
     base = [_slug(n) for n in names]
-    if any(len(b) < 2 for b in base):
-        raise ValueError(f"names that slugify to fewer than 2 characters: {names}")
+    short = [n for n, b in zip(names, base) if len(b) < 2]
+    if short:
+        raise ValueError(f"names that slugify to fewer than 2 characters: {short}")
     counts = Counter(base)
     slugs = [
         b if counts[b] == 1 else f"{b}-{s.lower()}" for b, s in zip(base, state_codes, strict=True)
@@ -185,6 +192,12 @@ def make_slugs(names: list[str], state_codes: list[str]) -> list[str]:
     for s in slugs:
         seen[s] += 1
         out.append(s if seen[s] == 1 else f"{s}-{seen[s]}")
+    duplicates = sorted(s for s, k in Counter(out).items() if k > 1)  # a city named "Pune Mh 2"
+    if duplicates:
+        raise ValueError(f"duplicate city ids: {duplicates}")
+    invalid = [s for s in out if not _CITY_ID.fullmatch(s)]
+    if invalid:
+        raise ValueError(f"city ids outside the API pattern {_CITY_ID.pattern}: {invalid}")
     return out
 
 
