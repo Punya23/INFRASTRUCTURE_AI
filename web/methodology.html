@@ -281,6 +281,7 @@
       padding: var(--space-lg) 0; margin-top: auto;
     }
   </style>
+  <script src="i18n.js"></script>
 </head>
 <body>
   <!-- Header -->
@@ -795,31 +796,7 @@
       });
     }
 
-    // Language switcher
-    const translations = {
-      en: {
-        navExplore: "Explore", navProjects: "Projects", navArea: "Your Area", navVoice: "Citizen Voice", navAbout: "About", navPolicymaker: "Policymaker View", navMethodology: "Methodology"
-      },
-      hi: {
-        navExplore: "अन्वेषण", navProjects: "परियोजनाएं", navArea: "आपका क्षेत्र", navVoice: "नागरिक आवाज़", navAbout: "जानकारी", navPolicymaker: "नीति निर्माता दृश्य", navMethodology: "पद्धति"
-      },
-      kn: {
-        navExplore: "ಅನ್ವೇಷಿಸಿ", navProjects: "ಯೋಜನೆಗಳು", navArea: "ನಿಮ್ಮ ಪ್ರದೇಶ", navVoice: "ನಾಗರಿಕ ಧ್ವನಿ", navAbout: "ಕುರಿತು", navPolicymaker: "ನೀತಿ ನಿರೂಪಕರ ನೋಟ", navMethodology: "ವಿಧಾನ"
-      }
-    };
-
-    document.querySelectorAll('.lang-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const lang = btn.dataset.lang;
-        document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
-        const dict = translations[lang] || translations.en;
-        document.querySelectorAll('[data-i18n]').forEach(el => {
-          const key = el.getAttribute('data-i18n');
-          if (dict[key]) el.textContent = dict[key];
-        });
-        document.documentElement.lang = lang;
-      });
-    });
+    // === Language switcher — now handled by shared i18n.js ===
   </script>
 </body>
 </html>

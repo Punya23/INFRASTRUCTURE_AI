@@ -472,6 +472,7 @@
     @keyframes ping { 75%, 100% { transform: scale(2); opacity: 0; } }
     .animate-ping { animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite; }
   </style>
+  <script src="i18n.js"></script>
 </head>
 <body>
   <!-- === HEADER === -->
@@ -1240,10 +1241,7 @@
     document.getElementById('report-form').addEventListener('submit', (e) => { e.preventDefault(); document.getElementById('report-form-container').style.display = 'none'; document.getElementById('report-success').classList.add('show'); });
     document.getElementById('report-another-btn').addEventListener('click', () => { document.getElementById('report-form-container').style.display = 'block'; document.getElementById('report-success').classList.remove('show'); document.getElementById('report-form').reset(); });
 
-    // === Language Switcher ===
-    document.querySelectorAll('.lang-btn').forEach(btn => {
-      btn.addEventListener('click', () => { document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); });
-    });
+    // === Language Switcher — now handled by shared i18n.js ===
 
     // === Header Search ===
     document.getElementById('header-search-btn').addEventListener('click', () => { searchInput.focus(); searchDropdown.classList.add('open'); document.getElementById('map-viewport').scrollIntoView(); });
