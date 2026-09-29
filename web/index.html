@@ -1605,11 +1605,13 @@
       const request = {
         id: 'INFRA-' + Date.now().toString(36).toUpperCase(),
         timestamp: new Date().toISOString(),
-        location: form.querySelector('[name="location"], #need-location, input[placeholder*="location" i], input[placeholder*="Hebbal" i]')?.value || '',
-        category: form.querySelector('select')?.value || '',
-        description: form.querySelector('textarea')?.value || '',
+        location: document.getElementById('need-location').value || '',
+        category: document.getElementById('need-category').value || '',
+        description: document.getElementById('need-description').value || '',
+        urgency: document.getElementById('need-urgency').value || 'moderate',
+        inputMethod: document.getElementById('need-description').dataset.speechUsed === 'true' ? 'voice' : 'text',
         status: 'submitted',
-        language: document.documentElement.lang || 'en'
+        language: (window.InfraI18n && window.InfraI18n.getCurrentLang()) || document.documentElement.lang || 'en'
       };
       // Store in localStorage
       const existing = JSON.parse(localStorage.getItem('infra_ai_requests') || '[]');
@@ -1723,7 +1725,7 @@
           container: micContainer,
           targetInput: descField,
           onTranscript: function(text) {
-            console.log('[INFRA-AI STT] Final transcript:', text.substring(0, 50) + '…');
+            descField.dataset.speechUsed = 'true';
           }
         });
       }

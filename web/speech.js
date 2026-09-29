@@ -12,8 +12,10 @@
  *   - Uses speechLocale from LANGUAGES registry for provider codes
  *   - Syncs when language changes via INFRA_I18N events
  *
- * Privacy (ADR-0011): No raw audio stored. Browser API processes locally.
- * When using cloud providers, audio is sent to the configured endpoint only.
+ * Privacy (ADR-0011): No raw audio stored by INFRA-AI. Web Speech API
+ * in Chrome sends audio to Google servers for recognition; other browsers
+ * may process differently. When using cloud providers, audio is sent to
+ * the configured endpoint only. No recordings are persisted.
  * =============================================================================
  */
 (function (root) {
@@ -46,17 +48,17 @@
   }
 
   function getSpeechLocale(langCode) {
-    // Try i18n.js LANGUAGES registry first
-    if (root.INFRA_I18N && root.INFRA_I18N.getLanguageConfig) {
-      var config = root.INFRA_I18N.getLanguageConfig(langCode);
+    // Try i18n.js LANGUAGES registry first (exposed as root.InfraI18n)
+    if (root.InfraI18n && root.InfraI18n.getLanguageConfig) {
+      var config = root.InfraI18n.getLanguageConfig(langCode);
       if (config && config.speechLocale) return config.speechLocale;
     }
     return SPEECH_LOCALES[langCode] || 'en-IN';
   }
 
   function getCurrentLang() {
-    if (root.INFRA_I18N && root.INFRA_I18N.getCurrentLang) {
-      return root.INFRA_I18N.getCurrentLang();
+    if (root.InfraI18n && root.InfraI18n.getCurrentLang) {
+      return root.InfraI18n.getCurrentLang();
     }
     return document.documentElement.lang || 'en';
   }

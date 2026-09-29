@@ -134,5 +134,20 @@
   "bricsInternational": "بريكس / دولي",
   "policyTitle": "لوحة أولويات صانع السياسات",
   "methodologyTitle": "المنهجية ومصادر البيانات",
-  "explorePageTitle": "استكشاف البنية التحتية"
+  "explorePageTitle": "استكشاف البنية التحتية",
+  "speechVoiceHint": "أو انقر على الميكروفون لتتحدث عن حاجتك",
+  "speechRecording": "جارٍ التسجيل…",
+  "speechProcessing": "جارٍ المعالجة…",
+  "speechListen": "استمع",
+  "speechPause": "إيقاف مؤقت",
+  "speechResume": "استئناف",
+  "speechStop": "إيقاف",
+  "speechMicPermDenied": "تم رفض إذن الميكروفون. يرجى السماح بالوصول إلى الميكروفون في إعدادات المتصفح.",
+  "speechNoSpeech": "لم يتم اكتشاف أي كلام. يرجى التحدث بوضوح والمحاولة مرة أخرى.",
+  "speechNoMic": "لم يتم العثور على ميكروفون. يرجى توصيل ميكروفون.",
+  "speechNetworkError": "خطأ في الشبكة أثناء التعرف على الكلام. يرجى التحقق من اتصالك.",
+  "speechLangUnsupported": "التعرف على الكلام غير متاح للغة المحددة. يرجى تجربة اللغة الإنجليزية.",
+  "speechNotSupported": "الكلام غير مدعوم في هذا المتصفح. يرجى استخدام Chrome أو Edge أو Safari.",
+  "speechListenNH": "استمع إلى ملخص الطرق السريعة الوطنية",
+  "speechTimeout": "وصل التسجيل إلى الحد الأقصى وهو دقيقتان."
 }

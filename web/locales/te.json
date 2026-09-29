@@ -134,5 +134,20 @@
   "bricsInternational": "బ్రిక్స్ / అంతర్జాతీయ",
   "policyTitle": "విధాన నిర్ణేత ప్రాధాన్యత డాష్‌బోర్డ్",
   "methodologyTitle": "పద్ధతి & డేటా మూలాలు",
-  "explorePageTitle": "మౌలిక సదుపాయాలను అన్వేషించండి"
+  "explorePageTitle": "మౌలిక సదుపాయాలను అన్వేషించండి",
+  "speechVoiceHint": "లేదా మైక్ నొక్కి మీ అవసరాన్ని చెప్పండి",
+  "speechRecording": "రికార్డింగ్…",
+  "speechProcessing": "ప్రాసెస్ చేస్తోంది…",
+  "speechListen": "వినండి",
+  "speechPause": "ఆపు",
+  "speechResume": "కొనసాగించు",
+  "speechStop": "ఆపు",
+  "speechMicPermDenied": "మైక్రోఫోన్ అనుమతి తిరస్కరించబడింది.",
+  "speechNoSpeech": "ఏ మాట గుర్తించబడలేదు.",
+  "speechNoMic": "మైక్రోఫోన్ కనుగొనబడలేదు.",
+  "speechNetworkError": "స్పీచ్ గుర్తింపు సమయంలో నెట్‌వర్క్ లోపం.",
+  "speechLangUnsupported": "ఎంచుకున్న భాషకు స్పీచ్ గుర్తింపు అందుబాటులో లేదు.",
+  "speechNotSupported": "ఈ బ్రౌజర్‌లో స్పీచ్ మద్దతు లేదు.",
+  "speechListenNH": "NH సారాంశం వినండి",
+  "speechTimeout": "రికార్డింగ్ 2 నిమిషాల పరిమితిని చేరుకుంది."
 }
