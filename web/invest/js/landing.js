@@ -136,6 +136,7 @@ function boot(doc) {
 
   // Text built with tt() is rebuilt in the new language; elements with data-i18n are handled by i18n.js.
   onLangChange(() => {
+    doc.title = `${tt('inv.landing.headline')} | INFRA-AI`; // the static <title> stays English, so it is rebuilt like the rest
     renderSample();
     renderSources();
   });

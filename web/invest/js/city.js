@@ -400,6 +400,8 @@ function boot() {
     s.fitted = true;
   }
 
+  const areasStatus = () => setStatus(el.status, tt('inv.city.areas_loaded', { n: formatCount(s.areas.length) }));
+
   const loadAreas = section({
     body: el.best, skeleton: el.bestLoading, msg: el.areasMsg, rows: 5,
     load: () => api.areas(s.id, { preset: s.preset, limit: 1000 }),
@@ -410,7 +412,7 @@ function boot() {
       renderBest();
       renderLegend();
       applyAreasToMap();
-      setStatus(el.status, tt('inv.city.areas_loaded', { n: formatCount(s.areas.length) }));
+      areasStatus();
     },
   });
 
@@ -538,6 +540,7 @@ function boot() {
 
   createMap(el.map, { popupContent, strings: () => mapStrings() }).then((ctl) => {
     s.map = ctl;
+    ctl.relabel(); // the language may have been applied while the map was still loading
     el.mapNote.hidden = true;
     el.layers.hidden = false;
     renderBusToggle();
@@ -557,7 +560,7 @@ function boot() {
     s.map?.closePopups();
     s.map?.relabel();
     if (s.city) renderHead();
-    if (s.areas) renderBest();
+    if (s.areas) { renderBest(); areasStatus(); }
     if (s.compare) renderCompare();
   });
 }

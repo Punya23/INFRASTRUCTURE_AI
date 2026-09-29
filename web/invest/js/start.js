@@ -590,7 +590,11 @@ function init() {
   model.resumeTarget = resolveTarget(model.answers);
   model.ready = globalThis.InfraI18n?.t('inv.start.title') != null;
   // i18n.js announces once its dictionary has loaded; if it never does, show the page anyway after 2 s
-  onLangChange(() => { model.ready = true; render(); });
+  onLangChange(() => {
+    document.title = `${tt('inv.cta.start')} · INFRA-AI`; // the static <title> stays English
+    model.ready = true;
+    render();
+  });
   setTimeout(() => { if (!model.ready) { model.ready = true; render(); } }, 2000);
   render();
   loadStates();
