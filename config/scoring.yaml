@@ -75,3 +75,8 @@ pipeline:                         # how the fixtures are built; nothing here cha
   highway_simplify_deg: 0.001     # ≈100 m; a highway line at city zoom needs no finer detail — spec §6
   max_file_mb: 5                  # per fixture file, MB of 10^6 bytes — spec §6
   max_dir_mb: 25                  # web/fixtures/invest on disk, MB of 10^6 bytes — spec §6
+
+facts:                            # how the per-area facts are derived (ml/pipeline/invest/facts.py, ml/fields/*/cell_facts.py)
+  station_dedupe_m: 150           # OSM and GTFS list one interchange as several nodes; stations closer than this are one — team judgment, 2026-09-29
+  station_name_merge_m: 700       # a GTFS stop with the same normalised name as an OSM station within this distance is the same station; measured twins sit 160-680 m apart (Chennai, Hyderabad) — measured 2026-09-29
+  place_name_max_km: 2.5          # spec §5: the nearest OSM place within this distance names a cell
