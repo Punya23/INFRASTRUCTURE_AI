@@ -108,7 +108,7 @@ Each file ≤ 5 MB and the directory ≤ 25 MB on disk (if over, raise `min_popu
 
 | File | Content |
 |---|---|
-| `meta.json` | `schema_version` (1), `as_of`, `grid`, `factors` (id, group, unit, better, `headline_band_km`, `bands`), `presets` (id, weights, `default`), `tiers`, `sources` (id, name, license, attribution), `disclaimer` |
+| `meta.json` | `schema_version` (1), `as_of`, `grid` (copy of `config/scoring.yaml` `grid`: `h3_res`, `buffer_rings`, `min_area_population`, `best_area_min_population`), `factors` (id, group, unit, better, `headline_band_km`, `bands`), `presets` (id, weights, `default`), `tiers` (copy of `cities.tiers`: `metro_min_population`, `large_min_population`), `sources` (id, name, license, attribution), `disclaimer` |
 | `states.json` | `[{code, name, city_count}]`, all 36 |
 | `cities.json` | `[city]` — see below |
 | `areas/<city>.geojson.gz` | FeatureCollection of H3 cells |
@@ -120,14 +120,14 @@ Each file ≤ 5 MB and the directory ≤ 25 MB on disk (if over, raise `min_popu
   "id": "pune", "name": "Pune", "state": "MH", "aliases": ["Pimpri-Chinchwad"],
   "lat": 18.5196, "lon": 73.8553, "population": 6100000, "area_km2": 850.0, "tier": "metro", "cells": 143,
   "factors": {                                   // city summary, all five factors
-    "metro_access": {"value": 3.1, "unit": "km", "share": 0.22, "band_km": 2, "subscore": 61.0},
+    "metro_access": {"value": 6.5, "unit": "km", "share": 0.22, "band_km": 2, "subscore": 30.0},
     "built_up_growth": {"value": 24.0, "unit": "pp", "share": null, "band_km": null, "subscore": 88.0}
   },
   "scores": {                                    // one entry per preset id
     "balanced": {
       "score": 71.4, "access": 66.0, "momentum": 88.0, "coverage": 1.0, "confidence": 0.8,
       "drivers": [{"factor": "built_up_growth", "points": 26.4, "value": 24.0, "unit": "pp", "share": null, "band_km": null}],
-      "gaps":    [{"factor": "metro_access", "subscore": 61.0, "value": 3.1, "unit": "km", "share": 0.22, "band_km": 2}],
+      "gaps":    [{"factor": "metro_access", "subscore": 30.0, "value": 6.5, "unit": "km", "share": 0.22, "band_km": 2}],
       "best_area": {"id": "87…", "name": "Hinjewadi", "score": 84.2}
     }
   },
@@ -156,7 +156,7 @@ Each file ≤ 5 MB and the directory ≤ 25 MB on disk (if over, raise `min_popu
 
 ## 7. API contract — `api/openapi.yaml` is the source of truth
 
-JSON over HTTP. Errors are always `{"error": {"code": "...", "message": "..."}}` with codes `bad_request` (400), `not_found` (404), `rate_limited` (429), `internal` (500); no internal detail leaks. `preset` ∈ `meta.presets` (default = the preset marked `default`); unknown value → 400. `limit` bounds are enforced per endpoint (out of range → 400, never clamped silently).
+JSON over HTTP. Errors are always `{"error": {"code": "...", "message": "..."}}` with codes `bad_request` (400), `not_found` (404), `rate_limited` (429), `timeout` (503), `internal` (500); no internal detail leaks. `preset` ∈ `meta.presets` (default = the preset marked `default`); unknown value → 400. `limit` bounds are enforced per endpoint (out of range → 400, never clamped silently).
 
 | Method · path | Query | Returns |
 |---|---|---|
