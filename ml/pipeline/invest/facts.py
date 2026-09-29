@@ -48,9 +48,13 @@ def _grouped(
 
 
 def cell_centres(cells: list[str]) -> pd.DataFrame:
-    """DataFrame[cell, lat, lon]: the centre of each H3 cell."""
+    """DataFrame[cell, lat, lon]: the centre of each H3 cell, indexed by cell id, so that a Series
+    by cell id (mean_by_cell, arterial_km_by_cell, ...) lines up with it instead of aligning to NaN
+    against a RangeIndex. The index has no name: "cell" stays one ordinary column, since an index
+    also called "cell" makes merge, groupby and sort_values on it ambiguous errors."""
     latlng = np.array([h3.cell_to_latlng(c) for c in cells], dtype=float).reshape(-1, 2)
-    return pd.DataFrame({"cell": cells, "lat": latlng[:, 0], "lon": latlng[:, 1]})
+    frame = pd.DataFrame({"cell": cells, "lat": latlng[:, 0], "lon": latlng[:, 1]})
+    return frame.set_index("cell", drop=False).rename_axis(None)
 
 
 def mean_by_cell(lons: ArrayLike, lats: ArrayLike, values: ArrayLike, res: int) -> pd.Series:
@@ -89,6 +93,7 @@ def name_cells(cells: pd.DataFrame, places: pd.DataFrame, max_km: float | None =
     holds cell ids of one H3 resolution and their centres (cell, lat, lon); `places` is lon, lat,
     name, place.
     """
+    cells = cells.reset_index(drop=True)  # whatever the index is, "cell" is the column
     if cells.empty:
         return pd.Series([], index=pd.Index([], name="cell"), dtype=object)
     resolutions = {h3.get_resolution(c) for c in cells["cell"]}

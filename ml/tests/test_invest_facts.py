@@ -100,6 +100,23 @@ def test_cell_centres_are_the_lat_lon_of_each_cell():
     assert h3.latlng_to_cell(centre["lat"], centre["lon"], RES) == cell
 
 
+def test_cell_centres_are_indexed_by_cell_so_per_cell_series_line_up():
+    a, b = h3.latlng_to_cell(18.5, 73.8, RES), h3.latlng_to_cell(19.0, 75.0, RES)
+    centres = cell_centres([b, a])  # deliberately not in sorted order
+    assert centres.index.tolist() == [b, a] and centres["cell"].tolist() == [b, a]
+    lat, lon = h3.cell_to_latlng(a)
+    pop = sum_by_cell([lon], [lat], [7.0], RES)  # indexed by cell id, and only `a` has people
+    near = nearest_km(centres, gpd.GeoSeries([Point(lon, lat)], crs="EPSG:4326"))  # like centres
+    joined = centres.assign(pop=pop, near=near)  # a RangeIndex here would turn every value to NaN
+    assert joined.loc[a, "pop"] == 7.0 and np.isnan(joined.loc[b, "pop"])
+    assert joined.loc[a, "near"] == pytest.approx(0.0, abs=0.01) and joined.loc[b, "near"] > 100
+    # the index has no name, so "cell" is one ordinary column: these would raise as ambiguous if
+    # the index were called "cell" too
+    assert centres.merge(pd.DataFrame({"cell": [a], "x": [1]}), on="cell")["x"].tolist() == [1]
+    assert centres.sort_values("cell")["cell"].tolist() == sorted([a, b])
+    assert centres.groupby("cell")["lat"].first().index.tolist() == sorted([a, b])
+
+
 def test_unobserved_stays_unobserved_through_the_aggregations():
     cell = h3.latlng_to_cell(18.5, 73.8, RES)
     lons, lats, nans = [73.8, 73.8001], [18.5, 18.5001], [float("nan")] * 2
@@ -146,6 +163,8 @@ def test_name_cells_ignores_non_names_and_rejects_mixed_resolutions():
     )
     # inside the cell only the farm and the unnamed suburb; the nearer outside place is a farm too
     assert name_cells(cells, places)[cell] == "Ward Nine"
+    named_index = cells.set_index("cell", drop=False)  # an index called "cell" must not break it
+    assert name_cells(named_index, places)[cell] == "Ward Nine"
     assert name_cells(cells, places.iloc[:0])[cell] is None  # a region with no places at all
     assert name_cells(cells.iloc[:0], places).empty
     finer_cell = h3.latlng_to_cell(lat, lon, RES + 1)
