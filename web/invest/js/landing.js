@@ -6,7 +6,7 @@ import { api } from './api.js';
 import { CITY_ID, DEFAULT_PRESET } from './config.js';
 import { explain } from './explain.js';
 import { formatCount, formatScore, tt } from './format.js';
-import { clear, h, onLangChange, renderError, renderSkeleton, setStatus } from './ui.js';
+import { clear, h, onLangChange, renderError, renderSkeleton, setStatus, setStatusKey } from './ui.js';
 
 // The state the sample shows. Its name is in the locale strings inv.landing.sample.title and .more.
 const SAMPLE_STATE = 'MH';
@@ -98,7 +98,7 @@ function boot(doc) {
   async function loadSample() {
     sample = null;
     renderSkeleton(sampleBody, SAMPLE_SIZE);
-    setStatus(sampleStatus, tt('inv.loading'));
+    setStatusKey(sampleStatus, 'inv.loading');
     try {
       const data = await api.stateCities(SAMPLE_STATE, { limit: SAMPLE_SIZE });
       if (!Array.isArray(data?.cities)) throw new Error('unexpected state cities response');

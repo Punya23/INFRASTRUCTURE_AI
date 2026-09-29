@@ -92,8 +92,19 @@ export function onLangChange(cb) {
 
 // A polite live region for screen readers: "Loading…", "Showing 5 cities". Put the node in the HTML
 // (visually hidden is fine) so it exists before its text changes.
+// tt() gives the key itself while the dictionary has not loaded; a screen reader must never announce
+// "inv.loading", so a text that is only a key is dropped (the page renders again on the language event).
+const RAW_KEY = /^inv\.[\w.]+$/;
 export function setStatus(node, text) {
+  node.removeAttribute('data-i18n'); // a status set from data must not be overwritten by an old key
   node.setAttribute('role', 'status');
   node.setAttribute('aria-live', 'polite');
-  node.textContent = text ?? '';
+  node.textContent = RAW_KEY.test(text ?? '') ? '' : text ?? '';
+}
+
+// A status whose wording is a key with no {tokens} ("Loading…", an error message): data-i18n lets
+// i18n.js fill the wording in when its dictionary arrives, even if this ran before it loaded.
+export function setStatusKey(node, key) {
+  setStatus(node, tt(key));
+  node.dataset.i18n = key;
 }

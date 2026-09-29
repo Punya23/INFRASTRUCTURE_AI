@@ -9,7 +9,7 @@ import { CITY_ID, DEFAULT_PRESET, PRESET_IDS } from './config.js';
 import { explain } from './explain.js';
 import { formatCount, formatDelta, formatScore, formatValue, tt } from './format.js';
 import { ASSET_SOURCE, BREAKS, RAMP, cellCentre, createMap } from './map.js';
-import { clear, h, onLangChange, renderError, renderSkeleton, setStatus } from './ui.js';
+import { clear, errorKey, h, onLangChange, renderError, renderSkeleton, setStatus, setStatusKey } from './ui.js';
 
 // ---------- Pure ----------
 
@@ -207,6 +207,7 @@ function boot() {
         if (error?.code === 'not_found' || error?.code === 'bad_request') { showNotFound(); return false; }
         onError?.();
         renderError(msg, error, run);
+        setStatusKey(el.status, errorKey(error)); // else a "Loading…" set by a preset switch stays announced
         return false;
       }
     };
@@ -304,7 +305,7 @@ function boot() {
     s.preset = id;
     syncUrl();
     renderPresets();
-    setStatus(el.status, tt('inv.loading'));
+    setStatusKey(el.status, 'inv.loading');
     const loaders = [loadHead, loadAreas, loadCompare];
     const done = await Promise.all(loaders.map((load) => load()));
     if (s.preset !== id || !done.includes(false)) return; // a newer choice took over, or all is shown
@@ -384,7 +385,7 @@ function boot() {
   function showOnMap(feature) {
     const name = placeText(s.places.get(feature.properties.id));
     if (!s.map) {
-      setStatus(el.status, tt('inv.city.map.unavailable'));
+      setStatusKey(el.status, 'inv.city.map.unavailable');
       return;
     }
     if (outOfView(el.map.getBoundingClientRect(), innerHeight)) {
@@ -451,7 +452,7 @@ function boot() {
     clearLayerError(layer);
     if (!s.map) { input.checked = false; return; } // the toggles are hidden until the map is ready
     if (!input.checked) return s.map.setVisible(layer, false);
-    if (!s.map.hasAssets(ASSET_SOURCE[layer])) setStatus(el.status, tt('inv.loading'));
+    if (!s.map.hasAssets(ASSET_SOURCE[layer])) setStatusKey(el.status, 'inv.loading');
     let collection;
     try {
       collection = await ensureAssets(ASSET_SOURCE[layer]);

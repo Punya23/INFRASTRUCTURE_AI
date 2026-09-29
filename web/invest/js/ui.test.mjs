@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { ApiError } from './api.js';
-import { clear, errorKey, h, onLangChange, renderError, renderSkeleton, setStatus } from './ui.js';
+import { clear, errorKey, h, onLangChange, renderError, renderSkeleton, setStatus, setStatusKey } from './ui.js';
+import { tt } from './format.js';
 
 // Node has no DOM and this project takes no test dependency, so this is a minimal stand-in: enough to
 // see what h() does. Elements REFUSE direct property assignment, so h() reaching for a markup setter
@@ -191,17 +192,47 @@ test('renderError given the error itself lets i18n.js fill the wording in when i
 });
 
 test('setStatus makes the node a polite live region and sets its text', () => {
-  const node = {
-    attrs: {},
-    textContent: 'old',
-    setAttribute(name, value) { this.attrs[name] = value; },
-  };
+  const node = statusNode();
   setStatus(node, 'Showing 5 cities');
   assert.equal(node.attrs['aria-live'], 'polite');
   assert.equal(node.attrs.role, 'status');
   assert.equal(node.textContent, 'Showing 5 cities');
   setStatus(node, undefined);
   assert.equal(node.textContent, '');
+});
+
+function statusNode() {
+  return {
+    attrs: { 'data-i18n': 'inv.loading' },
+    dataset: {},
+    textContent: 'old',
+    setAttribute(name, value) { this.attrs[name] = value; },
+    removeAttribute(name) { delete this.attrs[name]; },
+  };
+}
+
+test('setStatus never announces a raw key: before the dictionary loads the status stays empty', (t) => {
+  t.after(() => { delete globalThis.InfraI18n; });
+  globalThis.InfraI18n = { t: () => null };
+  const node = statusNode();
+  setStatus(node, tt('inv.state.status', { n: 5 })); // no tokens in the key, so tt() returns the bare key
+  assert.equal(node.textContent, '');
+  setStatus(node, 'Cities listed: 5');
+  assert.equal(node.textContent, 'Cities listed: 5');
+});
+
+test('setStatusKey lets i18n.js fill the wording in, and a later setStatus takes the key away', (t) => {
+  t.after(() => { delete globalThis.InfraI18n; });
+  globalThis.InfraI18n = { t: () => null };
+  const node = statusNode();
+  setStatusKey(node, 'inv.error.timeout');
+  assert.equal(node.textContent, '', 'not the key');
+  assert.equal(node.dataset.i18n, 'inv.error.timeout');
+  globalThis.InfraI18n = { t: () => 'The server took too long.' };
+  setStatusKey(node, 'inv.error.timeout');
+  assert.equal(node.textContent, 'The server took too long.');
+  setStatus(node, 'Cities listed: 5');
+  assert.equal(node.attrs['data-i18n'], undefined, 'a stale key must not overwrite this text on a language change');
 });
 
 test('onLangChange calls back with the new language and can unsubscribe', (t) => {

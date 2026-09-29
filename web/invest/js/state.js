@@ -7,7 +7,7 @@ import { api } from './api.js';
 import { explain } from './explain.js';
 import { formatCount, formatDelta, formatScore, tt } from './format.js';
 import { loadPrefs } from './prefs.js';
-import { clear, h, onLangChange, renderError, renderSkeleton, setStatus } from './ui.js';
+import { clear, errorKey, h, onLangChange, renderError, renderSkeleton, setStatus, setStatusKey } from './ui.js';
 
 const TOP_N = 5;       // cards asked for; a state with fewer cities shows fewer
 const COMPARE_N = 3;   // rows in "Other metros to compare"
@@ -163,7 +163,7 @@ function paintResults() {
 
   if (mode === 'notfound') {
     box.append(h('div', { class: 'inv-empty inv-stack' }, h('p', null, tt('inv.error.not_found')), chooser));
-    setStatus($('state-status'), tt('inv.error.not_found'));
+    setStatusKey($('state-status'), 'inv.error.not_found');
   } else if (mode === 'empty') {
     box.append(h('div', { class: 'inv-empty inv-stack' },
       h('h2', null, tt('inv.state.empty.title', params)),
@@ -239,7 +239,7 @@ async function load(preset) {
   $('presets').querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.preset === preset)));
   if (view.data) results.setAttribute('aria-busy', 'true'); // keep the last good cards on screen
   else renderSkeleton(results, 3);
-  setStatus($('state-status'), tt('inv.loading'));
+  setStatusKey($('state-status'), 'inv.loading');
   try {
     const [, data] = await Promise.all([ensureRef(), api.stateCities(view.code, { preset, limit: TOP_N })]);
     if (!loads.isCurrent(mine)) return;
@@ -262,6 +262,7 @@ async function load(preset) {
     if (!view.data) clear(results);
     paint(); // puts the chips back on the preset that is still on screen
     renderError($('state-error'), error, () => load(preset));
+    setStatusKey($('state-status'), errorKey(error)); // else the "Loading…" set above would stay announced
   }
 }
 
