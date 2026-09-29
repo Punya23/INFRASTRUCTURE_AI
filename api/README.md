@@ -38,11 +38,11 @@ All `GET`. Presets are the ids in `/v1/meta`; omitted means the default (`balanc
 | `/v1/meta` | The scoring model: factors, presets, tiers, sources, disclaimer. |
 | `/v1/states` | Every state and union territory with its city count. |
 | `/v1/states/{code}/cities?preset&limit` | Top cities of a state (limit 1-20, default 5). Fewer than `limit`, or none, is 200; `total` is the state's count. |
-| `/v1/cities?q&limit` | City search by name or alias (Devanagari works). |
+| `/v1/cities?q&limit` | City search by name or alias (Devanagari works); `q` 2-64 characters, limit 1-20, default 8. |
 | `/v1/cities/{id}` | One city with its factor summary, flags and drivers. |
 | `/v1/cities/{id}/areas?preset&limit` | H3 cells as GeoJSON, ranked (limit 1-1000, default 500). |
 | `/v1/cities/{id}/assets?layers` | Stations, bus stops, highways, toll plazas. |
-| `/v1/cities/{id}/compare?preset&scope&limit` | The city against others (`metros`, `peers`, `state`, `india`), with reasons for each difference. |
+| `/v1/cities/{id}/compare?preset&scope&limit` | The city against others (`metros`, `peers`, `state`, `india`), with reasons for each difference; limit 1-10, default 5. |
 
 Data routes send `Cache-Control: public, max-age=300`; every response sends `X-Content-Type-Options: nosniff`.
 

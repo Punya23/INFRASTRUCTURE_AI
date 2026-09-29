@@ -261,8 +261,8 @@ func (s *Store) checkFeature(ft *AreaFeature) error {
 	var g struct {
 		Type string `json:"type"`
 	}
-	if err := json.Unmarshal(ft.Geometry, &g); err != nil || (g.Type != "Polygon" && g.Type != "MultiPolygon") {
-		return fmt.Errorf("geometry type %q, want Polygon or MultiPolygon", g.Type)
+	if err := json.Unmarshal(ft.Geometry, &g); err != nil || g.Type != "Polygon" {
+		return fmt.Errorf("geometry type %q, want Polygon (an H3 cell; the map reads the first ring)", g.Type)
 	}
 	if err := requireText([2]string{"id", p.ID}, [2]string{"source_ref", p.SourceRef}); err != nil {
 		return err
