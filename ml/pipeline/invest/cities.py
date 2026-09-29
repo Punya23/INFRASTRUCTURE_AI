@@ -25,34 +25,45 @@ _NAMING_COLUMNS = ["name", "geonameid", "lat", "lon", "aliases", "review"]
 _CITY_ID = re.compile(r"[a-z0-9-]{2,64}")  # the API's city id contract, api/openapi.yaml
 
 
-def _fill_unknown_state(state_ids, mask, offsets):
-    """Cells with state id 0 (coastline or simplified border) inherit the state of a neighbour."""
+def _fill_unknown_state(
+    state_ids: np.ndarray, mask: np.ndarray, offsets: list[tuple[int, int]]
+) -> np.ndarray:
+    """Urban cells with state id 0 (coastline or simplified border) take the state their urban
+    neighbours agree on, for up to _STATE_FILL_ROUNDS rounds. Neighbours that are not urban give
+    nothing, and neighbours that disagree leave the cell at 0: unknown, never a guess.
+    """
     state = state_ids.copy()
-    h, w = state.shape
     for _ in range(_STATE_FILL_ROUNDS):
-        unknown = mask & (state == 0)
-        if not unknown.any():
+        rows, cols = np.nonzero(mask & (state == 0))
+        if not len(rows):
             break
-        padded = np.pad(state, 1)
+        voters = np.pad(np.where(mask, state, 0), 1)  # only urban cells with a known state vote
+        vote = np.zeros(len(rows), dtype=state.dtype)
+        disagree = np.zeros(len(rows), dtype=bool)
         for dr, dc in offsets:
-            shifted = padded[1 + dr : 1 + dr + h, 1 + dc : 1 + dc + w]
-            take = unknown & (state == 0) & (shifted != 0)
-            state[take] = shifted[take]
+            neighbour = voters[rows + 1 + dr, cols + 1 + dc]
+            disagree |= (neighbour != 0) & (vote != 0) & (neighbour != vote)
+            vote = np.where(vote == 0, neighbour, vote)
+        take = (vote != 0) & ~disagree
+        state[rows[take], cols[take]] = vote[take]
     return state
 
 
-def label_urban_centres(density, state_ids, min_density, connectivity=8):
+def label_urban_centres(
+    density: np.ndarray, state_ids: np.ndarray, min_density: float, connectivity: int = 8
+) -> tuple[np.ndarray, dict[int, int]]:
     """Label contiguous cells with density >= min_density; never let a label cross a state border.
 
-    Returns (labels, label_state): labels are 1.. (0 = background), label_state maps label -> state id.
-    State id 0 means the centre lies outside every state polygon even after borrowing from its
-    neighbours: unknown, so the caller must route it to review, never guess a state.
+    NaN density is background, even when min_density is 0. Returns (labels, label_state): labels
+    are 1.. (0 = background), label_state maps label -> state id. State id 0 means unknown: no
+    state polygon covers the centre, or the states around it disagree (see _fill_unknown_state).
+    The cities step routes such pieces to review; it never guesses a state.
     """
     if density.shape != state_ids.shape:
         raise ValueError("density and state_ids must have the same shape")
     if connectivity not in _OFFSETS:
         raise ValueError("connectivity must be 4 or 8")
-    mask = np.nan_to_num(density, nan=0.0) >= min_density
+    mask = density >= min_density  # NaN >= x is False, so NaN is background
     offsets = _OFFSETS[connectivity]
     height, width = mask.shape
     component = np.zeros(mask.shape, dtype=np.int32)

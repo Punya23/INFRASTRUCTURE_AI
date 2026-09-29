@@ -49,6 +49,58 @@ def test_cells_outside_every_state_polygon_inherit_the_neighbour_state():
     assert set(label_state.values()) == {7}
 
 
+def test_nan_density_is_background_even_at_a_zero_threshold():
+    density = np.array([[np.nan, 0.0, 10.0]])
+    labels, _ = label_urban_centres(density, np.ones((1, 3), int), 0)
+    assert labels.tolist() == [[0, 1, 1]]
+
+
+@pytest.mark.parametrize("density", [[[2000.0, 0.0, 2000.0]], [[2000.0], [0.0], [2000.0]]])
+def test_cells_on_opposite_edges_of_the_grid_are_not_connected(density):
+    density = np.array(density)
+    labels, _ = label_urban_centres(density, np.ones(density.shape, int), 1500)
+    assert labels.max() == 2  # a negative index must not wrap one edge onto the other
+
+
+def test_shape_mismatch_is_rejected():
+    with pytest.raises(ValueError, match="same shape"):
+        label_urban_centres(np.zeros((2, 2)), np.zeros((2, 3), int), 1500)
+
+
+def test_connectivity_other_than_4_or_8_is_rejected():
+    with pytest.raises(ValueError, match="4 or 8"):
+        label_urban_centres(np.zeros((2, 2)), np.zeros((2, 2), int), 1500, connectivity=6)
+
+
+def test_a_blob_outside_every_state_polygon_is_state_0_for_review():
+    labels, label_state = label_urban_centres(np.full((2, 2), 2000.0), np.zeros((2, 2), int), 1500)
+    assert labels.max() == 1 and label_state == {1: 0}
+
+
+def test_an_unknown_cell_borrows_only_from_urban_neighbours():
+    density = np.array([[0, 0, 0], [2000, 2000, 0]], dtype=float)
+    # the state-0 urban cell (1,1) touches state-2 land above it that is not urban, and an urban
+    # cell of state 1 on its left: only the urban neighbour counts
+    state = np.array([[0, 2, 0], [1, 0, 0]])
+    labels, label_state = label_urban_centres(density, state, 1500)
+    assert labels[1, 0] == labels[1, 1] and label_state == {1: 1}
+
+
+def test_an_unknown_cell_between_urban_neighbours_of_two_states_stays_unknown():
+    labels, label_state = label_urban_centres(np.full((1, 3), 2000.0), np.array([[1, 0, 2]]), 1500)
+    assert sorted(label_state.values()) == [0, 1, 2] and len(set(labels[0])) == 3
+
+
+def test_state_borrowing_reaches_three_cells_and_no_further():
+    density = np.zeros((1, 9))
+    density[0, 1:8] = 2000
+    state = np.zeros((1, 9), dtype=int)
+    state[0, 1:4] = 7  # cells 4-7 fall outside every polygon
+    labels, label_state = label_urban_centres(density, state, 1500)
+    assert labels[0, 1] == labels[0, 6] != labels[0, 7]  # three rounds reach cell 6, not cell 7
+    assert sorted(label_state.values()) == [0, 7]
+
+
 # A 2x2 grid of 0.1-degree cells: pixel (0,0) spans lon 73.0-73.1, lat 18.9-19.0.
 GRID = Affine(0.1, 0, 73.0, 0, -0.1, 19.0)
 
