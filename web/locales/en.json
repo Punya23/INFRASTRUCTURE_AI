@@ -398,5 +398,6 @@
   "inv.city.how.bus": "Bus stops are shown where a city publishes a bus feed. They are not part of any score, so cities with and without a feed stay comparable.",
   "inv.city.notfound.title": "We could not find that city",
   "inv.city.notfound.body": "The link may be out of date or mistyped. Choose a city again.",
-  "inv.city.notfound.cta": "Choose a city"
+  "inv.city.notfound.cta": "Choose a city",
+  "inv.city.aliases_more": "Also covers {names} and {n} more"
 }

@@ -1,0 +1,209 @@
+/* City page (city.html). Links after invest.css; colours come only from its tokens.
+   The map is the one bold element: tall, edge to edge in its column, framed by nothing but a hairline.
+   Everything around it (header facts, list, compare panel) stays quiet. */
+
+/* ---------- Header ---------- */
+
+.city-top { padding-block: var(--space-3) var(--space-4); }
+.city-top > * + * { margin-block-start: var(--space-3); }
+
+.city-crumb { display: inline-block; margin-block-end: var(--space-2); font-size: var(--fs-sm); font-weight: 500; }
+
+.city-head__grid {
+  display: grid;
+  gap: var(--space-3);
+  grid-template-columns: minmax(0, 1fr);
+  align-items: end;
+}
+@media (min-width: 48rem) { .city-head__grid { grid-template-columns: minmax(0, 1fr) minmax(0, 24rem); } }
+
+.city-head__title h1 { font-size: var(--fs-3xl); line-height: var(--leading-display); letter-spacing: var(--tracking-display); }
+.city-head__title .inv-cluster { gap: var(--space-2); }
+
+.city-score { display: flex; align-items: center; gap: var(--space-3); }
+.city-score__text { flex: 1; min-inline-size: 0; }
+.city-score__label { font-weight: 600; }
+
+.city-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+  gap: var(--space-2) var(--space-3);
+  margin: var(--space-3) 0 0;
+  padding-block-start: var(--space-3);
+  border-block-start: 1px solid var(--border-subtle);
+}
+.city-fact dt { color: var(--text-secondary); font-size: var(--fs-sm); }
+.city-fact dd { margin: 0; font-weight: 600; font-variant-numeric: tabular-nums; }
+
+.city-presets > * + * { margin-block-start: var(--space-1); }
+
+/* ---------- Map ---------- */
+
+.city-body { padding-block-end: var(--space-5); }
+.city-primary > * + * { margin-block-start: var(--space-5); }
+.city-areas > * + * { margin-block-start: var(--space-2); }
+
+.city-map-wrap { position: relative; }
+.city-map {
+  block-size: min(64vh, 38rem);
+  min-block-size: 20rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  background: var(--surface-sunken);
+}
+.city-map__note {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: var(--space-3);
+  margin: 0;
+  max-inline-size: none;
+  color: var(--text-secondary);
+  text-align: center;
+}
+/* keep the attribution legible over the hexagons */
+.city-map .maplibregl-ctrl-attrib { background: var(--surface); color: var(--text-primary); font-size: 0.75rem; }
+.city-map .maplibregl-ctrl-attrib a { color: var(--text-primary); }
+
+.city-popup .maplibregl-popup-content {
+  padding: var(--space-2);
+  border-radius: var(--radius-control);
+  box-shadow: var(--shadow-lift);
+  font-family: var(--font);
+  color: var(--text-primary);
+}
+.city-popup .maplibregl-popup-close-button { inline-size: 2rem; block-size: 2rem; font-size: 1.25rem; }
+.city-pop__title { padding-inline-end: var(--space-3); font-weight: 700; line-height: var(--leading-tight); }
+.city-pop__score { font-size: var(--fs-sm); color: var(--text-secondary); }
+.city-pop__score .inv-num { font-size: var(--fs-lg); font-weight: 700; color: var(--text-primary); }
+
+/* ---------- Legend and layer toggles ---------- */
+
+.city-mapbar {
+  display: grid;
+  gap: var(--space-3);
+  grid-template-columns: minmax(0, 1fr);
+}
+@media (min-width: 40rem) { .city-mapbar { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
+
+.city-legend { font-size: var(--fs-sm); }
+.city-legend > * + * { margin-block-start: var(--space-1); }
+.city-legend__title { font-weight: 600; }
+.city-legend__ramp { display: flex; margin: 0; padding: 0; list-style: none; }
+.city-legend__ramp li {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-half);
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+.city-legend__swatch { display: block; block-size: 0.75rem; }
+.city-legend__ramp .city-legend__swatch { inline-size: 100%; }
+.city-legend__ramp li:first-child .city-legend__swatch { border-start-start-radius: var(--radius-pill); border-end-start-radius: var(--radius-pill); }
+.city-legend__ramp li:last-child .city-legend__swatch { border-start-end-radius: var(--radius-pill); border-end-end-radius: var(--radius-pill); }
+.city-legend__note { display: flex; align-items: center; gap: var(--space-1); color: var(--text-secondary); }
+.city-legend__swatch--faded {
+  flex: none;
+  inline-size: 0.9rem;
+  block-size: 1rem;
+  clip-path: var(--hex-clip);
+  opacity: 0.3;
+}
+
+.city-layers { margin: 0; padding: 0; border: 0; font-size: var(--fs-sm); }
+.city-layers legend { padding: 0; margin-block-end: var(--space-1); font-weight: 600; }
+.city-layers label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-block-size: 2.25rem;
+  cursor: pointer;
+}
+.city-layers input { inline-size: 1.125rem; block-size: 1.125rem; margin: 0; accent-color: var(--brand-teal); }
+.city-layers input:disabled + .city-key, .city-layers label:has(input:disabled) { opacity: 0.5; cursor: not-allowed; }
+.city-layers__note { margin-block-end: var(--space-1); padding-inline-start: calc(1.125rem + var(--space-1)); }
+
+/* Map keys drawn to match the layers in js/map.js */
+.city-key { flex: none; display: inline-block; inline-size: 0.875rem; block-size: 0.875rem; border-radius: 50%; }
+.city-key--metro { background: var(--text-primary); box-shadow: 0 0 0 1.5px var(--surface) inset; border: 1px solid var(--text-primary); }
+.city-key--rail { background: var(--surface); border: 2.5px solid var(--text-primary); }
+.city-key--bus { inline-size: 0.4rem; block-size: 0.4rem; margin-inline: 0.2375rem; background: var(--text-primary); }
+.city-key--toll { background: var(--accent-saffron); border: 1.5px solid var(--text-primary); }
+.city-key--nh, .city-key--nh-building { inline-size: 1.25rem; block-size: 0; border-radius: 0; border-block-start: 3px solid var(--brand-teal); }
+.city-key--nh-building { border-block-start: 3px dashed var(--accent-saffron); }
+
+/* ---------- Best areas ---------- */
+
+.city-best-section > * + * { margin-block-start: var(--space-2); }
+.city-best { margin: 0; padding: 0; list-style: none; border-block-start: 1px solid var(--border-subtle); }
+.city-best__item { padding-block: var(--space-2); border-block-end: 1px solid var(--border-subtle); }
+.city-best__item > * + * { margin-block-start: var(--space-1); }
+.city-best__btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  inline-size: 100%;
+  min-block-size: 2.75rem;
+  padding: var(--space-half) var(--space-1);
+  border: 0;
+  border-radius: var(--radius-control);
+  background: none;
+  text-align: start;
+  cursor: pointer;
+}
+.city-best__btn:hover { background: var(--surface-hover); }
+.city-best__name { flex: 1; min-inline-size: 0; font-size: var(--fs-md); font-weight: 600; }
+.city-best__score { font-size: var(--fs-lg); font-weight: 700; }
+@media (min-width: 40rem) { .city-best__item .city-reasons { padding-inline-start: calc(2.25rem + var(--space-2) + var(--space-1)); } }
+
+.city-reasons { display: flex; flex-wrap: wrap; gap: var(--space-1); margin: 0; padding: 0; list-style: none; }
+
+/* A watch-out differs from a why-chip by shape, not only colour: square corners, an outline, a hollow
+   hexagon and a visible "Watch-out" label. */
+.city-gap {
+  border-color: var(--saffron-ink);
+  border-radius: var(--space-half);
+}
+.city-gap::before {
+  inline-size: 0.8rem;
+  block-size: 0.9rem;
+  clip-path: polygon(evenodd, 50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%, 50% 0,
+    50% 24%, 78% 38%, 78% 62%, 50% 76%, 22% 62%, 22% 38%, 50% 24%);
+}
+.city-gap__label { font-weight: 700; white-space: nowrap; }
+
+/* ---------- Compare panel ---------- */
+
+@media (min-width: 56.25rem) { .city-compare { position: sticky; inset-block-start: var(--space-2); } }
+.city-compare > * + * { margin-block-start: var(--space-2); }
+.city-compare h2 { font-size: var(--fs-lg); }
+.city-compare__body > * + * { margin-block-start: var(--space-2); }
+.city-cmp__here { font-weight: 600; }
+.city-cmp__list { margin: 0; padding: 0; list-style: none; }
+.city-cmp__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: baseline;
+  gap: var(--space-half) var(--space-1);
+  padding: var(--space-1);
+  margin-inline: calc(-1 * var(--space-1));
+  border-radius: var(--radius-control);
+  color: var(--text-primary);
+  text-decoration: none;
+}
+.city-cmp__list li + li { margin-block-start: var(--space-half); padding-block-start: var(--space-half); border-block-start: 1px solid var(--border-subtle); }
+.city-cmp__row:hover { background: var(--surface-hover); color: var(--text-primary); }
+.city-cmp__name { font-weight: 600; text-decoration: underline; text-decoration-color: var(--border-strong); text-underline-offset: 0.2em; }
+.city-cmp__score { font-weight: 700; }
+.city-cmp__why { grid-column: 1 / -1; color: var(--text-secondary); }
+.city-compare .inv-empty { padding: var(--space-3); color: var(--text-secondary); }
+
+/* ---------- How to read this ---------- */
+
+.city-how { padding-block-end: var(--space-2); }
+.city-how details { padding: var(--space-2) var(--space-3); border: 1px solid var(--border-subtle); border-radius: var(--radius-card); background: var(--surface); }
+.city-how summary { padding-block: 0.625rem; font-weight: 600; cursor: pointer; }
+.city-how details[open] summary { margin-block-end: var(--space-2); }

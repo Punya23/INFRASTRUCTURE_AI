@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>City – INFRA-AI Invest</title>
+  <meta name="description" content="Areas of an Indian city scored on existing infrastructure and past built-up growth, with the reasons behind each score and a comparison with similar cities.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
+  <link rel="stylesheet" href="invest.css">
+  <link rel="stylesheet" href="city.css">
+  <script src="../i18n.js"></script>
+  <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+  <script type="module" src="js/city.js"></script>
+</head>
+<body>
+  <a class="inv-skip" href="#main" data-i18n="inv.skip">Skip to main content</a>
+  <header class="inv-header">
+    <div class="inv-container inv-header__inner">
+      <a class="inv-brand" href="index.html">INFRA-AI <span class="inv-brand__product" data-i18n="inv.nav">Invest</span></a>
+      <nav class="inv-nav" aria-label="Main">
+        <a href="start.html" data-i18n="inv.cta.start">Find where to invest</a>
+      </nav>
+      <div class="lang-switcher"></div>
+    </div>
+  </header>
+
+  <main id="main">
+    <div id="city-main">
+      <section class="inv-container city-top" aria-labelledby="city-name">
+        <div id="city-head" class="city-head"></div>
+        <div id="city-head-msg"></div>
+        <div class="city-presets">
+          <p class="inv-small inv-muted" id="city-preset-label" data-i18n="inv.preset.label">What matters most</p>
+          <div id="city-presets" class="inv-cluster" role="group" aria-labelledby="city-preset-label"></div>
+          <p id="city-preset-desc" class="inv-small inv-muted"></p>
+        </div>
+        <p class="inv-disclaimer" data-i18n="inv.disclaimer">Scores describe existing infrastructure and past growth. They are not forecasts, price predictions or financial advice.</p>
+      </section>
+
+      <div class="inv-container inv-split city-body">
+        <div class="city-primary">
+          <section class="city-areas" aria-labelledby="city-map-heading">
+            <h2 id="city-map-heading" data-i18n="inv.city.map.heading">Areas by score</h2>
+            <div id="city-areas-msg"></div>
+            <div class="city-map-wrap">
+              <div id="city-map" class="city-map" role="region" aria-label="Map of areas"></div>
+              <p id="city-map-note" class="city-map__note" data-i18n="inv.loading">Loading…</p>
+            </div>
+            <div class="city-mapbar">
+              <div id="city-legend" class="city-legend"></div>
+              <fieldset id="city-layers" class="city-layers" hidden>
+                <legend data-i18n="inv.city.layers.title">Show on map</legend>
+                <label><input type="checkbox" value="stations-metro"> <span class="city-key city-key--metro" aria-hidden="true"></span> <span data-i18n="inv.city.layer.metro">Metro stations</span></label>
+                <label><input type="checkbox" value="stations-rail"> <span class="city-key city-key--rail" aria-hidden="true"></span> <span data-i18n="inv.city.layer.rail">Railway stations</span></label>
+                <label><input type="checkbox" value="bus_stops"> <span class="city-key city-key--bus" aria-hidden="true"></span> <span data-i18n="inv.city.layer.bus">Bus stops</span></label>
+                <p id="city-bus-note" class="inv-small inv-muted city-layers__note" data-i18n="inv.city.layer.bus_none" hidden>No bus feed for this city</p>
+                <label><input type="checkbox" value="highways-open"> <span class="city-key city-key--nh" aria-hidden="true"></span> <span data-i18n="inv.city.layer.nh_open">National highways, open</span></label>
+                <label><input type="checkbox" value="highways-building"> <span class="city-key city-key--nh-building" aria-hidden="true"></span> <span data-i18n="inv.city.layer.nh_building">National highways, under construction</span></label>
+                <label><input type="checkbox" value="toll_plazas"> <span class="city-key city-key--toll" aria-hidden="true"></span> <span data-i18n="inv.city.layer.tolls">Toll plazas</span></label>
+                <div id="city-layer-msg"></div>
+              </fieldset>
+            </div>
+          </section>
+
+          <section class="city-best-section" aria-labelledby="city-best-heading">
+            <h2 id="city-best-heading" data-i18n="inv.city.best.heading">Best areas</h2>
+            <p class="inv-muted" data-i18n="inv.city.best.intro">The ten highest-scoring areas with enough residents to rank, one per neighbourhood. Choose one to see it on the map.</p>
+            <ol id="city-best" class="city-best" role="list"></ol>
+          </section>
+        </div>
+
+        <aside class="inv-card city-compare" aria-labelledby="city-compare-heading">
+          <h2 id="city-compare-heading" data-i18n="inv.city.compare.heading">Compare with other cities</h2>
+          <p class="inv-small inv-muted" id="city-scope-label" data-i18n="inv.city.compare.scope_label">Compare with</p>
+          <div id="city-scopes" class="inv-cluster" role="group" aria-labelledby="city-scope-label"></div>
+          <div id="city-compare-msg"></div>
+          <div id="city-compare" class="city-compare__body"></div>
+        </aside>
+      </div>
+
+      <section class="inv-container city-how">
+        <details>
+          <summary data-i18n="inv.city.how.title">How to read this</summary>
+          <div class="inv-stack">
+            <p data-i18n="inv.city.how.score">Each hexagon is an area of about 5 km². Its score, from 0 to 100, combines highway, rail and metro access, the main-road network and built-up growth since 2000, weighted by the preset you choose.</p>
+            <p data-i18n="inv.city.how.fringe">Growth favours the fringe, access favours the core. The highest scores often sit in the middle ring, between an established centre and fast-growing edges.</p>
+            <p data-i18n="inv.city.how.missing">When a factor could not be measured in an area it is left out of that area's score, never counted as zero, and shows as a dash.</p>
+            <p data-i18n="inv.city.how.faded">Faded hexagons have too few residents to rank. They stay on the map but not in the list.</p>
+            <p data-i18n="inv.city.how.bus">Bus stops are shown where a city publishes a bus feed. They are not part of any score, so cities with and without a feed stay comparable.</p>
+            <p data-i18n="inv.factor.road_strength.note">We measure road network capacity, not pavement condition.</p>
+          </div>
+        </details>
+      </section>
+    </div>
+
+    <section id="not-found" class="inv-container inv-section" hidden>
+      <div class="inv-empty inv-stack">
+        <h1 data-i18n="inv.city.notfound.title">We could not find that city</h1>
+        <p data-i18n="inv.city.notfound.body">The link may be out of date or mistyped. Choose a city again.</p>
+        <p><a class="inv-btn inv-btn--primary" href="start.html" data-i18n="inv.city.notfound.cta">Choose a city</a></p>
+      </div>
+    </section>
+
+    <p id="city-status" class="inv-visually-hidden" role="status" aria-live="polite"></p>
+  </main>
+
+  <footer class="inv-footer">
+    <div class="inv-container inv-stack--tight">
+      <p data-i18n="inv.footer.attribution">Map data © OpenStreetMap contributors, ODbL. Population from WorldPop 2020, built-up area from GHSL 2020, place names from GeoNames.</p>
+      <p data-i18n="inv.footer.dpg">INFRA-AI is built as a Digital Public Good for India.</p>
+    </div>
+  </footer>
+</body>
+</html>
