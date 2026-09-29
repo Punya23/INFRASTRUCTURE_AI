@@ -26,15 +26,25 @@ func TestRateFromEnv(t *testing.T) {
 
 func TestOriginsFromEnv(t *testing.T) {
 	for _, tc := range []struct {
-		in   string
-		want []string
+		in      string
+		want    []string
+		wantErr bool
 	}{
-		{"", []string{"http://localhost:8765"}},
-		{" , ", []string{"http://localhost:8765"}},
-		{"https://a.example, https://b.example,,", []string{"https://a.example", "https://b.example"}},
+		{"", []string{"http://localhost:8765"}, false},
+		{" , ", []string{"http://localhost:8765"}, false},
+		{"https://a.example, https://b.example,,", []string{"https://a.example", "https://b.example"}, false},
+		{"http://localhost:8765", []string{"http://localhost:8765"}, false},
+		{"*", nil, true},
+		{"https://a.example/", nil, true},
+		{"a.example", nil, true},
+		{"ftp://a.example", nil, true},
+		{"https://a.example/x", nil, true},
+		{"https://user@a.example", nil, true},
+		{"https://ok.example,https://bad.example/", nil, true},
 	} {
-		if got := originsFromEnv(tc.in); !reflect.DeepEqual(got, tc.want) {
-			t.Errorf("originsFromEnv(%q) = %v; want %v", tc.in, got, tc.want)
+		got, err := originsFromEnv(tc.in)
+		if (err != nil) != tc.wantErr || !reflect.DeepEqual(got, tc.want) {
+			t.Errorf("originsFromEnv(%q) = %v, %v; want %v, err=%v", tc.in, got, err, tc.want, tc.wantErr)
 		}
 	}
 }

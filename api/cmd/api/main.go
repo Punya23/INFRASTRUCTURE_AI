@@ -7,7 +7,9 @@ import (
 	"flag"
 	"fmt"
 	"log/slog"
+	"net"
 	"net/http"
+	"net/url"
 	"os"
 	"os/signal"
 	"strconv"
@@ -41,7 +43,10 @@ func run() error {
 	if err != nil {
 		return err
 	}
-	origins := originsFromEnv(os.Getenv("INVEST_CORS_ORIGINS"))
+	origins, err := originsFromEnv(os.Getenv("INVEST_CORS_ORIGINS"))
+	if err != nil {
+		return err
+	}
 
 	// Loading parses every fixture (and validates it), which takes several seconds on the full dataset.
 	slog.Info("loading fixtures", "dir", *data)
@@ -71,9 +76,13 @@ func run() error {
 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
 
+	ln, err := net.Listen("tcp", *addr)
+	if err != nil {
+		return fmt.Errorf("listen: %w", err)
+	}
+	slog.Info("listening", "addr", ln.Addr().String(), "cors_origins", origins, "rate_per_minute", rate)
 	serveErr := make(chan error, 1)
-	go func() { serveErr <- srv.ListenAndServe() }()
-	slog.Info("listening", "addr", *addr, "cors_origins", origins, "rate_per_minute", rate)
+	go func() { serveErr <- srv.Serve(ln) }()
 
 	select {
 	case err := <-serveErr: // never ErrServerClosed here: Shutdown has not been called yet
@@ -108,16 +117,25 @@ func rateFromEnv(v string) (int, error) {
 }
 
 // originsFromEnv splits INVEST_CORS_ORIGINS on commas, dropping blanks. Unset or all blank means the dev web
-// server.
-func originsFromEnv(v string) []string {
+// server. The browser sends `scheme://host[:port]` with no path, and the CORS check is an exact match, so an
+// entry of any other shape (a `*`, a trailing slash, a bare host) could never match and would fail every request
+// without a log line: it is an error instead.
+func originsFromEnv(v string) ([]string, error) {
 	var out []string
 	for _, o := range strings.Split(v, ",") {
-		if o = strings.TrimSpace(o); o != "" {
-			out = append(out, o)
+		o = strings.TrimSpace(o)
+		if o == "" {
+			continue
 		}
+		u, err := url.Parse(o)
+		if err != nil || (u.Scheme != "http" && u.Scheme != "https") || u.Host == "" || u.Path != "" ||
+			u.RawQuery != "" || u.Fragment != "" || u.User != nil {
+			return nil, fmt.Errorf("INVEST_CORS_ORIGINS %q: want scheme://host[:port] exactly as the browser sends it (no *, no path, no trailing slash)", o)
+		}
+		out = append(out, o)
 	}
 	if len(out) == 0 {
-		return []string{defaultCORSOrigin}
+		return []string{defaultCORSOrigin}, nil
 	}
-	return out
+	return out, nil
 }

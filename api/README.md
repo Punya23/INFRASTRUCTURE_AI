@@ -23,7 +23,7 @@ Flags and environment:
 |---|---|---|
 | `-addr` | `:8080` | Listen address. |
 | `-data` | `../web/fixtures/invest` | Fixture directory. Any load or validation error is logged and the process exits 1. |
-| `INVEST_CORS_ORIGINS` | `http://localhost:8765` | Comma-separated exact origins allowed to read responses. |
+| `INVEST_CORS_ORIGINS` | `http://localhost:8765` | Comma-separated exact origins allowed to read responses, written as the browser sends them: `scheme://host[:port]`, no `*`, no path, no trailing slash (anything else: exit 1). Blank means the default. |
 | `INVEST_RATE_LIMIT` | `120` | Requests per client per minute. Not a positive integer: exit 1. |
 
 SIGINT/SIGTERM drain in-flight requests for up to 10 s, then exit.
@@ -65,5 +65,5 @@ Always `{"error":{"code","message"}}`; the message is safe to show and carries n
 - **Responses are not compressed.** The largest real body is about 1.3 MB (Mumbai `/assets`); let the proxy or
   CDN gzip.
 - **Start-up is slow on the full dataset.** Every fixture is parsed twice (about 4-7 s for 381 cities). The log
-  says `loading fixtures`, then `fixtures loaded` with `cities`, `areas`, `as_of` and `took`; do not route
-  traffic to `/healthz` before the second line.
+  says `loading fixtures`, then `fixtures loaded` with `cities`, `areas`, `as_of` and `took`, then `listening`.
+  The port opens only after loading, so readiness is simply "port open" (a probe before that is refused).
