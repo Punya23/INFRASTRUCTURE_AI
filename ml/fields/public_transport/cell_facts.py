@@ -13,7 +13,7 @@ import pandas as pd
 import shapely
 
 from pipeline.invest import osm
-from pipeline.invest.facts import sum_by_cell
+from pipeline.invest.facts import facts_config, sum_by_cell
 from pipeline.invest.geo import nearest_km
 from pipeline.shared_layers import INDIA_CRS, PROCESSED
 
@@ -24,22 +24,18 @@ _MODES = ("rail", "metro")
 # GTFS location_type of a row that is a stop, platform or station: blank or 0 (stop or platform) and
 # 1 (station). 2 (entrance, exit, staircase, lift), 3 (generic node) and 4 (boarding area) are not.
 _STOP_TYPES = ("", "0", "1")
-# OSM maps one interchange as several nodes (four "District Court" nodes within 200 m in Pune) and
-# GTFS lists a stop per platform or entrance; stations closer than this are one — team judgment,
-# 2026-09-29 (a station building is under 150 m across; adjacent stations are 400 m apart or more).
-DEDUP_M = 150
 
 
 def _points(stations: pd.DataFrame) -> gpd.GeoSeries:
     return gpd.GeoSeries(gpd.points_from_xy(stations["lon"], stations["lat"]), crs="EPSG:4326")
 
 
-def _keep_one_per_cluster(stations: pd.DataFrame) -> np.ndarray:
+def _keep_one_per_cluster(stations: pd.DataFrame, within_m: float) -> np.ndarray:
     """Boolean mask over `stations`: walking them best first (OSM before GTFS, named before
-    unnamed, then file order), a station stays unless one already kept lies within DEDUP_M."""
+    unnamed, then file order), a station stays unless one already kept lies within `within_m`."""
     n = len(stations)
     points = _points(stations).to_crs(INDIA_CRS).to_numpy()
-    left, right = shapely.STRtree(points).query(points, predicate="dwithin", distance=DEDUP_M)
+    left, right = shapely.STRtree(points).query(points, predicate="dwithin", distance=within_m)
     other = left != right
     left, right = left[other], right[other]
     by_left = np.argsort(left, kind="stable")
@@ -63,9 +59,9 @@ def load_stations(mode: str) -> pd.DataFrame:
     """Operating stations of `mode` ("rail" or "metro") as DataFrame[lon, lat, name, source].
 
     The OSM stations of that mode, plus the GTFS metro stops and stations when `mode` is "metro"
-    (not their entrances or lifts), with near-duplicates removed (DEDUP_M). `source` is the registry
-    id of the feed the survivor came from; `name` is None where it has none (a NaN would not
-    survive JSON).
+    (not their entrances or lifts), with near-duplicates removed: stations within the configured
+    `station_dedupe_m` of one already kept are one station. `source` is the registry id of the feed
+    the survivor came from; `name` is None where it has none (a NaN would not survive JSON).
     """
     if mode not in _MODES:
         raise ValueError(f"mode must be one of {_MODES}, got {mode!r}")
@@ -82,7 +78,8 @@ def load_stations(mode: str) -> pd.DataFrame:
             )
         )
     stations = pd.concat(parts, ignore_index=True)[["lon", "lat", "name", "source"]]
-    stations = stations[_keep_one_per_cluster(stations)].reset_index(drop=True)
+    stations = stations[_keep_one_per_cluster(stations, facts_config()["station_dedupe_m"])]
+    stations = stations.reset_index(drop=True)
     stations["name"] = stations["name"].astype(object).where(stations["name"].notna(), None)
     return stations
 

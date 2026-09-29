@@ -20,10 +20,11 @@ from pipeline.invest.geo import nearest_km
 from pipeline.shared_layers import INDIA_CRS
 
 _KINDS = ("nh_segment", "expressway_segment")
-# Spacing of the points a highway is cut into when its km are spread over the cells it crosses;
-# about a seventh of a res-7 cell's 1.4 km edge, so no cell is credited more than one spacing
-# too much or too little per crossing — team judgment, 2026-09-29.
-SAMPLE_M = 200
+# Spacing of the points a highway is cut into when its km are spread over the cells it crosses. A
+# discretisation step, not a policy number: a segment's km always add up to its `eff_km` whatever
+# the step; a finer step only places them more exactly (a cell gains or loses at most one step of
+# km per crossing).
+_SAMPLE_M = 200
 _GEOD = pyproj.Geod(ellps="WGS84")  # the same ellipsoid that gave nh_segments its length_km
 
 
@@ -41,11 +42,11 @@ def nh_access_km(centres: pd.DataFrame) -> pd.Series:
 
 def _nh_km_by_cell(res: int) -> pd.Series:
     """Operational NH `eff_km` (a divided road drawn as two ways counts once) spread over the cells
-    each segment crosses: the segment is cut into equal parts of about SAMPLE_M, and each part's
+    each segment crosses: the segment is cut into equal parts of about `_SAMPLE_M`, and each part's
     midpoint carries its share. A segment of any length keeps its full km."""
     seg = _open_segments()
     lines = seg.geometry.to_crs(INDIA_CRS).to_numpy()
-    parts = np.maximum(1, np.ceil(shapely.length(lines) / SAMPLE_M)).astype(int)
+    parts = np.maximum(1, np.ceil(shapely.length(lines) / _SAMPLE_M)).astype(int)
     owner = np.repeat(np.arange(len(lines)), parts)  # the segment each point belongs to
     k = np.arange(parts.sum()) - np.repeat(np.cumsum(parts) - parts, parts)  # part number in it
     mid = shapely.line_interpolate_point(lines[owner], (k + 0.5) / parts[owner], normalized=True)

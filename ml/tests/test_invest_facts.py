@@ -7,8 +7,11 @@ from shapely.geometry import LineString, Point
 
 from fields.national_highways import cell_facts as nh
 from fields.public_transport import cell_facts as pt
+from pipeline.invest import facts as facts_module
 from pipeline.invest.facts import (
+    _check_facts_config,
     cell_centres,
+    facts_config,
     growth_pp,
     km_per_km2,
     mean_by_cell,
@@ -151,6 +154,34 @@ def test_name_cells_ignores_non_names_and_rejects_mixed_resolutions():
         name_cells(pd.concat([cells, finer]), places)
 
 
+def test_facts_config_is_read_from_scoring_yaml_and_rejects_bad_numbers():
+    cfg = facts_config()
+    assert set(cfg) == {"station_dedupe_m", "station_name_merge_m", "place_name_max_km"}
+    bad_configs = (
+        {},  # a missing section
+        {**cfg, "station_dedupe_m": 0},
+        {**cfg, "place_name_max_km": "2.5 km"},
+        {**cfg, "station_name_merge_m": -1},
+    )
+    for bad in bad_configs:
+        with pytest.raises(ValueError, match="facts"):
+            _check_facts_config(bad)
+
+
+def test_name_cells_radius_comes_from_config_unless_given(monkeypatch):
+    cell, (lat, lon), cells = _one_cell()
+    km = 1 / 111.19
+    places = pd.DataFrame(  # 1.9 km from the centre: outside the cell, so only the radius decides
+        {"lon": [lon], "lat": [lat + 1.9 * km], "name": ["Hamletpur"], "place": ["hamlet"]}
+    )
+    cfg = facts_config()
+    monkeypatch.setattr(facts_module, "facts_config", lambda: {**cfg, "place_name_max_km": 1.0})
+    assert name_cells(cells, places)[cell] is None  # the configured radius is 1 km
+    assert name_cells(cells, places, max_km=3.0)[cell] == "Hamletpur"  # an explicit radius wins
+    monkeypatch.setattr(facts_module, "facts_config", lambda: {**cfg, "place_name_max_km": 3.0})
+    assert name_cells(cells, places)[cell] == "Hamletpur"
+
+
 # --- national highways: OSM-derived, open roads only (ADR-0014) -----------------------------------
 
 
@@ -262,31 +293,39 @@ def _write_gtfs(directory, rows):
     df.to_parquet(directory / "gtfs_stops.parquet")
 
 
-def test_load_stations_dedupes_within_150_m_keeping_named_osm_first(pt_files):
+def test_load_stations_dedupes_within_the_configured_distance_keeping_named_osm_first(
+    pt_files, monkeypatch
+):
+    cfg = facts_config()
+    d = cfg["station_dedupe_m"]  # every distance below is a multiple of it
     _write_osm(
         pt_files,
         [
             (_east(0), None, "rail"),  # unnamed node beside the named ones
-            (_east(60), "District Court", "rail"),  # named, first in order: wins the cluster
-            (_east(120), "District Court", "rail"),  # 60 m from the winner
-            (_east(1000), "Swargate", "rail"),
-            (_east(5000), None, "rail"),  # alone: kept, and its name is None (not NaN)
-            (_east(30), "Vanaz", "metro"),
+            (_east(0.4 * d), "District Court", "rail"),  # named, first in order: wins the cluster
+            (_east(0.8 * d), "District Court", "rail"),  # 0.4 d from the winner
+            (_east(6 * d), "Swargate", "rail"),
+            (_east(30 * d), None, "rail"),  # alone: kept, and its name is None (not NaN)
+            (_east(0.2 * d), "Vanaz", "metro"),
         ],
     )
     rail = pt.load_stations("rail")
     assert rail["name"].tolist() == ["District Court", "Swargate", None]
     assert rail["name"].iloc[2] is None and set(rail["source"]) == {"osm_india"}
     assert list(rail.columns) == ["lon", "lat", "name", "source"]
+    # the distance is read from config at call time, not fixed in the module
+    with monkeypatch.context() as patch:
+        patch.setattr(pt, "facts_config", lambda: {**cfg, "station_dedupe_m": 0.01 * d})
+        assert len(pt.load_stations("rail")) == 5  # a 1% distance merges none of the five nodes
 
     _write_gtfs(
         pt_files,
         [
-            (_east(30), 18.5, "Vanaz Platform 1", "metro", "gtfs_test_hmrl"),  # same station as OSM
-            (_east(2000), 18.5, "Ideal Colony", "metro", "gtfs_test_hmrl", "1"),  # a station
-            (_east(3000), 18.5, "Ideal Colony Arm A Lift", "metro", "gtfs_test_hmrl", "2"),
-            (_east(4000), 18.5, "Ideal Colony Platform", "metro", "gtfs_test_hmrl", "0"),
-            (_east(2000), 18.5, "Ideal Colony bus bay", "bus", "gtfs_test_best"),
+            (_east(0.2 * d), 18.5, "Vanaz Platform 1", "metro", "gtfs_test_hmrl"),  # OSM's station
+            (_east(20 * d), 18.5, "Ideal Colony", "metro", "gtfs_test_hmrl", "1"),  # a station
+            (_east(30 * d), 18.5, "Ideal Colony Arm A Lift", "metro", "gtfs_test_hmrl", "2"),
+            (_east(40 * d), 18.5, "Ideal Colony Platform", "metro", "gtfs_test_hmrl", "0"),
+            (_east(20 * d), 18.5, "Ideal Colony bus bay", "bus", "gtfs_test_best"),
         ],
     )
     metro = pt.load_stations("metro")
@@ -300,10 +339,11 @@ def test_load_stations_dedupes_within_150_m_keeping_named_osm_first(pt_files):
 
 
 def test_station_access_uses_the_deduplicated_stations(pt_files):
-    _write_osm(pt_files, [(_east(1000), "Swargate", "rail"), (_east(1060), "Swargate", "rail")])
-    centres = pd.DataFrame({"lat": [18.5], "lon": [_east(1100)]})
-    # the first of the two nodes survives, so 100 m; measured to the raw file it would be 40 m
-    assert pt.station_access_km(centres, "rail").iloc[0] == pytest.approx(0.1, abs=0.01)
+    d = facts_config()["station_dedupe_m"]
+    _write_osm(pt_files, [(_east(6 * d), "Swargate", "rail"), (_east(6.4 * d), "Swargate", "rail")])
+    centres = pd.DataFrame({"lat": [18.5], "lon": [_east(7.3 * d)]})
+    # the first of the two nodes survives, so 1.3 d away; measured to the raw file it would be 0.9 d
+    assert pt.station_access_km(centres, "rail").iloc[0] == pytest.approx(1.3 * d / 1000, abs=0.01)
     assert len(pt.load_stations("rail")) == 1
 
 

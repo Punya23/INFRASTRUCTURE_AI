@@ -3,6 +3,9 @@ road density and area names. Field-specific inputs live in ml/fields/<field>/cel
 
 from __future__ import annotations
 
+from collections.abc import Mapping
+from functools import cache
+
 import geopandas as gpd
 import h3
 import numpy as np
@@ -11,6 +14,26 @@ from numpy.typing import ArrayLike
 
 from pipeline.invest.geo import nearest
 from pipeline.invest.osm import place_rank
+from pipeline.invest.scores import load_config
+
+_FACT_KEYS = ("station_dedupe_m", "station_name_merge_m", "place_name_max_km")
+
+
+def _check_facts_config(section: Mapping[str, object]) -> dict[str, float]:
+    """The numbers of the `facts:` section of config/scoring.yaml; each must be a positive number."""
+    bad = [
+        k for k in _FACT_KEYS if not (isinstance(section.get(k), int | float) and section[k] > 0)
+    ]
+    if bad:
+        raise ValueError(f"config/scoring.yaml facts: {bad} missing or not a positive number")
+    return {k: float(section[k]) for k in _FACT_KEYS}
+
+
+@cache
+def facts_config() -> dict[str, float]:
+    """The thresholds of the per-area facts: the `facts:` section of config/scoring.yaml, where each
+    number carries its basis. The one place these numbers come from (AGENTS invariant 8)."""
+    return _check_facts_config(load_config().raw.get("facts") or {})
 
 
 def _cells_of(lons: ArrayLike, lats: ArrayLike, res: int) -> list[str]:
@@ -56,14 +79,15 @@ def km_per_km2(km_by_cell: pd.Series) -> pd.Series:
     return km_by_cell / area
 
 
-def name_cells(cells: pd.DataFrame, places: pd.DataFrame, max_km: float = 2.5) -> pd.Series:
+def name_cells(cells: pd.DataFrame, places: pd.DataFrame, max_km: float | None = None) -> pd.Series:
     """Area name per cell (spec §5): an object Series by cell id, None when no place is near.
 
     A place inside the cell wins: best `place_rank` (suburb, neighbourhood, quarter, village, town,
     hamlet, city), then closest to the cell centre, then name. With none inside, the nearest place
-    within `max_km` of the centre; with none there either, None. Places with an unranked `place`
-    value or no name are never an area name. `cells` holds cell ids of one H3 resolution and their
-    centres (cell, lat, lon); `places` is lon, lat, name, place.
+    within `max_km` of the centre (default: the configured `place_name_max_km`); with none there
+    either, None. Places with an unranked `place` value or no name are never an area name. `cells`
+    holds cell ids of one H3 resolution and their centres (cell, lat, lon); `places` is lon, lat,
+    name, place.
     """
     if cells.empty:
         return pd.Series([], index=pd.Index([], name="cell"), dtype=object)
@@ -88,7 +112,8 @@ def name_cells(cells: pd.DataFrame, places: pd.DataFrame, max_km: float = 2.5) -
     bare = cells[~cells["cell"].isin(set(names))].drop_duplicates("cell").reset_index(drop=True)
     if len(bare):
         points = gpd.GeoSeries(gpd.points_from_xy(places["lon"], places["lat"]), crs="EPSG:4326")
-        pos = nearest(bare, points, max_km)["pos"].dropna().astype(int)
+        radius = facts_config()["place_name_max_km"] if max_km is None else max_km
+        pos = nearest(bare, points, radius)["pos"].dropna().astype(int)
         names.update(zip(bare.loc[pos.index, "cell"], places["name"].to_numpy()[pos], strict=True))
     return pd.Series(
         [names.get(c) for c in cells["cell"]], index=pd.Index(cells["cell"]), dtype=object
