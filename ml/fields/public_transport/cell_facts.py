@@ -132,7 +132,9 @@ def bus_stop_counts(cells: list[str], res: int) -> pd.Series:
     """GTFS bus stops inside each of `cells` (H3 resolution `res`), as floats.
 
     NaN where no stop is recorded: no feed for the city, or none in that cell. It is never 0 by
-    default (unknown is not zero); a caller that knows the city has a feed decides to fill 0.
+    default (unknown is not zero). Fill 0 only for the cells of a city that has a feed, meaning
+    `bus_feeds_by_cell(the city's cells, res)` is non-empty (after any minimum-stops rule of the
+    caller): there a cell without a stop really has none. Leave NaN for every other city.
     """
     stops = _bus_stops()
     per_cell = sum_by_cell(stops["stop_lon"], stops["stop_lat"], np.ones(len(stops)), res)
