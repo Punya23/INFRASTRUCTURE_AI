@@ -134,5 +134,20 @@
   "bricsInternational": "பிரிக்ஸ் / சர்வதேசம்",
   "policyTitle": "கொள்கை வகுப்பாளர் முன்னுரிமை டாஷ்போர்டு",
   "methodologyTitle": "முறையியல் மற்றும் தரவு ஆதாரங்கள்",
-  "explorePageTitle": "உள்கட்டமைப்பை ஆராயுங்கள்"
+  "explorePageTitle": "உள்கட்டமைப்பை ஆராயுங்கள்",
+  "speechVoiceHint": "அல்லது மைக்கை தட்டி உங்கள் தேவையைச் சொல்லுங்கள்",
+  "speechRecording": "பதிவு செய்கிறது…",
+  "speechProcessing": "செயலாக்குகிறது…",
+  "speechListen": "கேளுங்கள்",
+  "speechPause": "இடைநிறுத்தம்",
+  "speechResume": "தொடரவும்",
+  "speechStop": "நிறுத்தவும்",
+  "speechMicPermDenied": "மைக்ரோஃபோன் அனுமதி மறுக்கப்பட்டது.",
+  "speechNoSpeech": "எந்த பேச்சும் கண்டறியப்படவில்லை.",
+  "speechNoMic": "மைக்ரோஃபோன் கிடைக்கவில்லை.",
+  "speechNetworkError": "பேச்சு அங்கீகாரத்தின் போது நெட்வொர்க் பிழை.",
+  "speechLangUnsupported": "தேர்ந்தெடுக்கப்பட்ட மொழிக்கு பேச்சு அங்கீகாரம் கிடைக்கவில்லை.",
+  "speechNotSupported": "இந்த உலாவியில் பேச்சு ஆதரிக்கப்படவில்லை.",
+  "speechListenNH": "NH சுருக்கம் கேளுங்கள்",
+  "speechTimeout": "பதிவு 2 நிமிட வரம்பை எட்டியது."
 }
