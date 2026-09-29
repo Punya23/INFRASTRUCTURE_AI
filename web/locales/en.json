@@ -414,5 +414,7 @@
   "inv.city.map.gesture_cmd": "Hold ⌘ and scroll to zoom the map",
   "inv.city.map.gesture_touch": "Use two fingers to move the map",
   "inv.why.built_up_growth.one": "Built-up share up {pp} percentage point, 2000 to 2020",
-  "inv.gap.built_up_growth.one": "Little built-up growth: share up only {pp} percentage point, 2000 to 2020"
+  "inv.gap.built_up_growth.one": "Little built-up growth: share up only {pp} percentage point, 2000 to 2020",
+  "inv.city.license": "Data licenses for {name}: {license}",
+  "inv.city.bus_source": "Bus stops: {operator}, {license}, as of {date}"
 }

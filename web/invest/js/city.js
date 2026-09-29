@@ -126,6 +126,13 @@ export function assetCollection(data, source) {
   return collection;
 }
 
+// Attribution lines from the API's provenance (invariant 7: a licence is shown wherever its data is). Text
+// only, null when the API sent nothing to show.
+export const licenseLine = (city, t = tt) => (city?.license ? t('inv.city.license', { name: city.name, license: city.license }) : null);
+export const busSourceLine = (source, t = tt) => (source?.operator && source.license
+  ? t('inv.city.bus_source', { operator: source.operator, license: source.license, date: source.fetched_at })
+  : null);
+
 // Compare rows the page can link to: an id that fails the pattern is left out, never put in a link.
 export const linkableCities = (others) => (others ?? []).filter((o) => typeof o?.id === 'string' && CITY_ID.test(o.id));
 
@@ -153,6 +160,7 @@ function boot() {
     map: $('city-map'), mapNote: $('city-map-note'), legend: $('city-legend'), layers: $('city-layers'),
     layerMsg: $('city-layer-msg'), areasMsg: $('city-areas-msg'), best: $('city-best'), bestLoading: $('city-best-loading'),
     scopes: $('city-scopes'), compare: $('city-compare'), compareMsg: $('city-compare-msg'),
+    license: $('city-license'), busSource: $('city-bus-source'),
   };
 
   const params = readParams(location.search, loadPrefs().preset);
@@ -160,7 +168,7 @@ function boot() {
   const s = {
     id: params.id, preset: params.preset, scope: null,
     city: null, states: null, areas: null, places: new Map(), byId: new Map(), compare: null,
-    map: null, fitted: false,
+    map: null, fitted: false, busSource: null,
   };
   if (!s.id) return showNotFound();
   syncUrl();
@@ -287,6 +295,16 @@ function boot() {
         fact('inv.city.fact.stations', tt('inv.city.stations_value', { metro: formatCount(c.data?.metro_stations), rail: formatCount(c.data?.rail_stations) })),
         fact('inv.city.fact.bus', bus ? tt('inv.city.bus.yes', { operator: bus.operator }) : tt('inv.city.bus.no'))));
     el.map.setAttribute('aria-label', tt('inv.city.map.label', { name: c.name }));
+    const license = licenseLine(c);
+    el.license.textContent = license ?? '';
+    el.license.hidden = !license;
+  }
+
+  // The bus stops' own operator and licence, once the layer's data has arrived (the header only knows the operator).
+  function renderBusSource() {
+    const line = busSourceLine(s.busSource);
+    el.busSource.textContent = line ?? '';
+    el.busSource.hidden = !line;
   }
 
   // ----- Presets -----
@@ -427,6 +445,7 @@ function boot() {
       const load = api.assets(s.id, [source]).then((data) => {
         const collection = assetCollection(data, source);
         if (collection) s.map.addAssets(source, collection);
+        if (source === 'bus_stops') { s.busSource = data.bus_source ?? null; renderBusSource(); }
         return collection;
       });
       load.catch(() => assetLoads.delete(source)); // a later toggle tries again
@@ -564,6 +583,7 @@ function boot() {
     s.map?.closePopups();
     s.map?.relabel();
     if (s.city) renderHead();
+    renderBusSource();
     if (s.areas) { renderBest(); areasStatus(); }
     if (s.compare) renderCompare();
   });

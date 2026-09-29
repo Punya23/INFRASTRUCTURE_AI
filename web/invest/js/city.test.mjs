@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { areaPlaces, assetCollection, assetText, bestAreas, cityHref, compareReason, linkableCities, mapStrings, outOfView, placeText, readParams } from './city.js';
+import { areaPlaces, assetCollection, assetText, bestAreas, busSourceLine, cityHref, compareReason, licenseLine, linkableCities, mapStrings, outOfView, placeText, readParams } from './city.js';
 import { ASSET_SOURCE, BREAKS, RAMP, baseLayers, bounds, cellCentre, clickAction } from './map.js';
 
 // A hexagon-ish ring around (lon, lat), closed like the API sends it.
@@ -187,4 +187,15 @@ test('every inv.city key the map strings use is in the English dictionary', asyn
   const { readFileSync } = await import('node:fs');
   const en = JSON.parse(readFileSync(new URL('../../locales/en.json', import.meta.url), 'utf8'));
   for (const key of Object.values(mapStrings((k) => k))) assert.equal(typeof en[key], 'string', key);
+});
+
+test('attribution lines carry the licence text from the API and are null when there is none', () => {
+  const city = { name: 'Hyderabad', license: 'ODbL-1.0; Terms of use on data.opencity.in — attribution required' };
+  assert.equal(licenseLine(city, echo), `inv.city.license ${JSON.stringify({ name: 'Hyderabad', license: city.license })}`);
+  assert.equal(licenseLine({ name: 'X', license: '' }, echo), null);
+  assert.equal(licenseLine(null, echo), null);
+  const source = { operator: 'TGSRTC', tier: 'official', license: 'Terms of use', fetched_at: '2026-09-29' };
+  assert.equal(busSourceLine(source, echo), `inv.city.bus_source ${JSON.stringify({ operator: 'TGSRTC', license: 'Terms of use', date: '2026-09-29' })}`);
+  assert.equal(busSourceLine(null, echo), null);
+  assert.equal(busSourceLine({ operator: 'PMPML', license: '' }, echo), null, 'no licence text, nothing to state');
 });
