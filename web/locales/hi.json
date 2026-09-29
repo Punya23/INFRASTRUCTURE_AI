@@ -218,7 +218,7 @@
   "inv.gap.built_up_growth.unknown": "यहां निर्मित क्षेत्र की वृद्धि मापी नहीं जा सकी",
   "inv.start.title": "तीन छोटे सवाल",
   "inv.start.lead": "बताइए कि आप कहां देख रहे हैं और आपके लिए क्या ज़रूरी है। आपके जवाब इसी ब्राउज़र में रहते हैं और कोई निजी जानकारी नहीं मांगी जाती।",
-  "inv.start.progress": "चरण {total} में से {n}",
+  "inv.start.progress": "चरण {n} / {total}",
   "inv.start.progress.label": "प्रगति",
   "inv.start.step1.short": "आपका राज्य",
   "inv.start.step2.short": "जगह",
