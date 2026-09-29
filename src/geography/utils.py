@@ -16,6 +16,7 @@ def standardize_col_name(col):
     col = '_'.join(col.split())
     # Custom fixes if needed
     col = col.replace("localbody_", "local_body_")
+    col = col.replace("sub_district_", "subdistrict_")
     if col == "s_no":
         col = "s_no"
     return col
