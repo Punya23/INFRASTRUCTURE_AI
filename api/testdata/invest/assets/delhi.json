@@ -1,5 +1,8 @@
 {
   "city": "delhi",
+  "source": "synthetic-test",
+  "fetched_at": "2026-09-29",
+  "license": "synthetic-test",
   "stations": {
     "type": "FeatureCollection",
     "features": [

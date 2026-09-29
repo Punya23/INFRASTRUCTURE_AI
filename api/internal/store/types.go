@@ -5,8 +5,10 @@ import (
 	"fmt"
 )
 
-// The types below mirror the fixture contract (spec §6) field for field. A nullable JSON value is a pointer
-// (nil = "not observed", never 0). Everything a caller receives is shared with the Store: do not modify it.
+// The types below mirror the fixture contract (spec §6) field for field. Every field is present in every
+// fixture. Only a pointer (nil = "not observed", never 0), a list or a map may be null; Load rejects a missing
+// field, or a null anywhere else, instead of reading it as 0. Everything a caller receives is shared with the
+// Store: do not modify it.
 
 // Provenance is embedded inline in every city record (AGENTS invariant 1: no anonymous data).
 type Provenance struct {
@@ -215,10 +217,14 @@ func (p *FactorPoint) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
-// AssetSet is assets/<city>.json: the map layers. BusStops and BusSource are both nil for a city without a
-// bus feed. Features are served verbatim.
+// AssetSet is assets/<city>.json: the map layers. Source, FetchedAt and License are the provenance of the
+// stations, highways and toll plazas; BusSource is the provenance of BusStops, and both are nil for a city
+// without a bus feed. Features are served verbatim.
 type AssetSet struct {
 	City       string             `json:"city"`
+	Source     string             `json:"source"`
+	FetchedAt  string             `json:"fetched_at"`
+	License    string             `json:"license"`
 	Stations   FeatureCollection  `json:"stations"`
 	BusStops   *FeatureCollection `json:"bus_stops"`
 	BusSource  *BusSource         `json:"bus_source"`
