@@ -16,15 +16,18 @@ _OFFSETS = {
     4: [(-1, 0), (0, -1), (0, 1), (1, 0)],
     8: [(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)],
 }
-BIG_PLACE = 100_000  # GeoNames places at least this big are listed as aliases and trigger a review
+# Cells outside every state polygon borrow a state from their neighbours for at most this many
+# rounds: coastline/border slivers are at most 2 cells wide at 1 km and 3 rounds reach 3 cells
+# (team judgment, 2026-09-29). A cap on the algorithm, not a tunable threshold, so not in config.
+_STATE_FILL_ROUNDS = 3
 _NAMING_COLUMNS = ["name", "geonameid", "lat", "lon", "aliases", "review"]
 
 
-def _fill_unknown_state(state_ids, mask, offsets, rounds=3):
+def _fill_unknown_state(state_ids, mask, offsets):
     """Cells with state id 0 (coastline or simplified border) inherit the state of a neighbour."""
     state = state_ids.copy()
     h, w = state.shape
-    for _ in range(rounds):
+    for _ in range(_STATE_FILL_ROUNDS):
         unknown = mask & (state == 0)
         if not unknown.any():
             break
@@ -90,12 +93,15 @@ def assign_places(places: pd.DataFrame, labels: np.ndarray, transform) -> pd.Dat
 
 
 def name_pieces(
-    pieces: pd.DataFrame, places: pd.DataFrame, overrides: dict[int, str]
+    pieces: pd.DataFrame, places: pd.DataFrame, overrides: dict[int, str], big_place: int
 ) -> pd.DataFrame:
     """Name each piece after its anchor place: the largest GeoNames place inside it, or the place an
-    override names. Adds name, geonameid, lat, lon, aliases (other places >= 100,000) and review
-    (two or more such places). A piece with no place gets name None, geonameid <NA> and lat/lon
-    NaN — the caller reviews and skips it."""
+    override names. Adds name, geonameid, lat, lon, aliases (other places with at least `big_place`
+    people) and review (two or more such places). A piece with no place gets name None, geonameid
+    <NA> and lat/lon NaN — the caller reviews and skips it.
+
+    `big_place` has no default: it is config (cities.alias_min_population), never a constant here.
+    """
     rows = []
     for piece in pieces.itertuples():
         inside = places[places["label"] == piece.label].sort_values(
@@ -113,7 +119,7 @@ def name_pieces(
             forced = inside[inside["geonameid"].isin(list(overrides))]
             anchor = (forced if len(forced) else inside).iloc[0]
             big = inside[
-                (inside["population"] >= BIG_PLACE) & (inside["geonameid"] != anchor["geonameid"])
+                (inside["population"] >= big_place) & (inside["geonameid"] != anchor["geonameid"])
             ]
             row.update(
                 name=overrides.get(int(anchor["geonameid"]), anchor["name"]),
@@ -121,7 +127,7 @@ def name_pieces(
                 lat=float(anchor["lat"]),
                 lon=float(anchor["lon"]),
                 aliases=[str(n) for n in big["name"]],
-                review=bool((inside["population"] >= BIG_PLACE).sum() >= 2),
+                review=bool((inside["population"] >= big_place).sum() >= 2),
             )
         rows.append(row)
     # object dtype keeps a missing name None (pandas 3 would make it NaN); the other columns get

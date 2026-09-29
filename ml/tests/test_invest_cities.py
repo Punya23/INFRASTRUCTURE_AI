@@ -69,7 +69,7 @@ def test_name_pieces_uses_largest_place_and_lists_big_aliases():
             "label": [1, 1, 2],
         }
     )
-    out = name_pieces(pieces, places, overrides={}).set_index("label")
+    out = name_pieces(pieces, places, overrides={}, big_place=100_000).set_index("label")
     assert out.loc[1, "name"] == "Faridabad" and out.loc[1, "aliases"] == ["Gurugram"]
     assert bool(out.loc[1, "review"]) is True  # two places ≥ 100,000 in one piece: a human looks
     assert out.loc[2, "name"] == "Kotputli" and bool(out.loc[2, "review"]) is False
@@ -87,7 +87,7 @@ def test_override_promotes_the_named_place_to_anchor():
             "label": [1, 1],
         }
     )
-    out = name_pieces(pieces, places, overrides={11: "Gurugram"}).iloc[0]
+    out = name_pieces(pieces, places, overrides={11: "Gurugram"}, big_place=100_000).iloc[0]
     assert out["name"] == "Gurugram" and out["aliases"] == ["Faridabad"]
     assert (out["lat"], out["lon"]) == (28.46, 77.03)
 
@@ -99,6 +99,7 @@ def test_piece_without_a_place_gets_no_name():
             {"geonameid": [], "name": [], "lat": [], "lon": [], "population": [], "label": []}
         ),
         overrides={},
+        big_place=100_000,
     )
     assert out.iloc[0]["name"] is None
 
@@ -115,10 +116,26 @@ def test_unnamed_piece_beside_a_named_one_keeps_none_and_integer_ids():
             "label": [1],
         }
     )
-    out = name_pieces(pieces, places, overrides={})
+    out = name_pieces(pieces, places, overrides={}, big_place=100_000)
     assert out.loc[1, "name"] is None  # not NaN: callers test for None
     assert str(out.loc[0, "geonameid"]) == "10"  # not "10.0": it becomes a source_ref
     assert out.loc[1, ["geonameid", "lat", "lon"]].isna().all()
+
+
+def test_big_place_is_required_because_it_is_config():
+    pieces = pd.DataFrame({"label": [1], "population": [900_000]})
+    places = pd.DataFrame(
+        {
+            "geonameid": [10],
+            "name": ["A"],
+            "lat": [1.0],
+            "lon": [1.0],
+            "population": [5],
+            "label": [1],
+        }
+    )
+    with pytest.raises(TypeError, match="big_place"):
+        name_pieces(pieces, places, overrides={})
 
 
 def test_make_slugs_disambiguates_by_state_then_counter():
