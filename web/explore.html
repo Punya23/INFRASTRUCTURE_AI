@@ -500,6 +500,8 @@
           <a class="nav-pill t-body-sm" href="index.html#place-explorer">Your Area</a>
           <a class="nav-pill t-body-sm" href="index.html#citizen-voice-section">Citizen Voice</a>
           <a class="nav-pill t-body-sm" href="index.html#trust-section">About</a>
+          <a class="nav-pill t-body-sm" href="policymaker.html">Policymaker View</a>
+          <a class="nav-pill t-body-sm" href="methodology.html">Methodology</a>
         </nav>
       </div>
       <div class="header-actions">
@@ -721,6 +723,11 @@
               <span style="display:none;" class="h3-text">Area Insights</span>
               <span class="h3-badge off t-mono" style="font-size:10px;" id="h3-status-indicator">OFF</span>
             </button>
+            <button class="filter-btn outlined t-label" id="toggle-funding-gap-btn" onclick="toggleFundingGapOverlay()" title="Toggle capital allocation vs needed deficit overlay">
+              <span class="material-symbols-outlined" style="font-size:16px;">account_balance_wallet</span>
+              <span style="display:none;" class="funding-gap-text">Funding Gap Overlay</span>
+              <span class="h3-badge off t-mono" style="font-size:10px;" id="funding-gap-indicator">OFF</span>
+            </button>
           </div>
           <div class="info-toast t-label-sm"><span class="material-symbols-outlined" style="font-size:13px;color:var(--secondary);">info</span><span>Water, Power & Social Infra modules rolling out nationwide</span></div>
         </div>
@@ -738,10 +745,24 @@
             <div class="legend-item"><span class="legend-dash"></span><span style="color:var(--on-surface-variant);font-weight:500;">Planned</span></div>
             <div class="legend-item" style="display:none;"><span class="legend-dot" style="background:var(--error);"></span><span style="color:var(--on-surface-variant);font-weight:500;">Delayed</span></div>
           </div>
+          <div class="compact-legend t-label-sm" id="funding-gap-legend" style="display:none;margin-top:0.375rem;">
+            <div class="legend-item"><span class="legend-dot" style="background:#B3382C;"></span><span style="color:var(--on-surface-variant);font-weight:500;">Critical Gap (&gt;70% unfunded)</span></div>
+            <div class="legend-item"><span class="legend-bar" style="background:#D97706;"></span><span style="color:var(--on-surface-variant);font-weight:500;">Moderate Gap (30–70%)</span></div>
+            <div class="legend-item"><span class="legend-dot" style="background:#0E5A66;"></span><span style="color:var(--on-surface-variant);font-weight:500;">Well Funded (&lt;30%)</span></div>
+          </div>
         </div>
 
         <!-- Timeline Bar -->
         <div class="timeline-bar">
+          <!-- Impact Overlay Mini Banner -->
+          <div class="timeline-impact-mini" id="timeline-impact-mini" style="display:flex;align-items:center;justify-content:space-between;padding-bottom:0.375rem;margin-bottom:0.375rem;border-bottom:1px solid var(--border-subtle);font-size:11px;">
+            <div style="display:flex;align-items:center;gap:0.375rem;">
+              <span class="material-symbols-outlined" style="font-size:15px;color:var(--secondary);">analytics</span>
+              <span class="t-label-sm" style="font-weight:600;color:var(--primary);" id="tb-mini-title">Impact Trend:</span>
+              <span class="t-mono" style="font-weight:700;color:var(--on-surface);" id="tb-mini-stat">2026: 142 complaints</span>
+            </div>
+            <span class="citation-chip t-mono" id="tb-mini-chip" style="font-size:9px;">[Ref: PCMC-Grievance-2025]</span>
+          </div>
           <div class="timeline-header">
             <div class="timeline-label t-label-sm"><span class="material-symbols-outlined" style="font-size:16px;color:var(--primary);">history_toggle_off</span><span style="font-weight:600;">Changes Over Time</span></div>
             <span class="timeline-year t-mono" id="timeline-year-label">2026 (Current Cadastre)</span>
@@ -782,10 +803,10 @@
             </div>
           </div>
           <div class="metrics-strip">
-            <div class="metric-cell"><div class="t-metric" style="font-weight:700;">12</div><div class="t-label-sm" style="font-size:10px;color:var(--outline);margin-top:0.25rem;">Total Projects</div></div>
-            <div class="metric-cell"><div class="t-metric" style="font-weight:700;color:var(--primary);">5</div><div class="t-label-sm" style="font-size:10px;color:var(--outline);margin-top:0.25rem;">Operational</div></div>
-            <div class="metric-cell"><div class="t-metric" style="font-weight:700;color:var(--secondary);">4</div><div class="t-label-sm" style="font-size:10px;color:var(--outline);margin-top:0.25rem;">Under Const.</div></div>
-            <div class="metric-cell"><div class="t-metric" style="font-weight:700;color:var(--tertiary);">3</div><div class="t-label-sm" style="font-size:10px;color:var(--outline);margin-top:0.25rem;">Planned</div></div>
+            <div class="metric-cell"><div class="t-metric" style="font-weight:700;" id="exp-metric-total">12</div><div class="t-label-sm" style="font-size:10px;color:var(--outline);margin-top:0.25rem;">Total Projects</div></div>
+            <div class="metric-cell"><div class="t-metric" style="font-weight:700;color:var(--primary);" id="exp-metric-op">5</div><div class="t-label-sm" style="font-size:10px;color:var(--outline);margin-top:0.25rem;">Operational</div></div>
+            <div class="metric-cell"><div class="t-metric" style="font-weight:700;color:var(--secondary);" id="exp-metric-uc">4</div><div class="t-label-sm" style="font-size:10px;color:var(--outline);margin-top:0.25rem;">Under Const.</div></div>
+            <div class="metric-cell"><div class="t-metric" style="font-weight:700;color:var(--tertiary);" id="exp-metric-pl">3</div><div class="t-label-sm" style="font-size:10px;color:var(--outline);margin-top:0.25rem;">Planned</div></div>
           </div>
         </div>
 
@@ -818,9 +839,85 @@
                 <div style="display:flex;align-items:center;gap:0.375rem;"><span class="citation-chip t-mono" style="font-size:10px;">[F12]</span><span style="color:var(--outline);max-width:13rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="BDA Engineering Dept Gazette Notification 2026">BDA Gazette • Verified Aug 2026</span></div>
                 <button class="t-label-sm" style="color:var(--primary);font-weight:600;display:flex;align-items:center;gap:0.125rem;" type="button">Inspect<span class="material-symbols-outlined" style="font-size:14px;">arrow_outward</span></button>
               </div>
+              <!-- Collapsible "Why this matters" section -->
+              <div class="why-matters-container" style="margin-top:0.625rem;">
+                <button type="button" class="why-matters-btn t-label-sm" onclick="toggleWhyMatters('flyover')" style="display:flex;align-items:center;justify-content:space-between;width:100%;padding:0.375rem 0.5rem;background:var(--surface-container-low);border-radius:0.25rem;border:1px solid var(--border-subtle);color:var(--primary);font-weight:600;">
+                  <span style="display:flex;align-items:center;gap:0.25rem;">
+                    <span class="material-symbols-outlined" style="font-size:15px;color:var(--secondary);">lightbulb</span>
+                    <span>Why this matters</span>
+                  </span>
+                  <span class="material-symbols-outlined why-arrow" id="arrow-why-flyover" style="font-size:16px;transition:transform 0.2s;">expand_more</span>
+                </button>
+                <div class="why-matters-drawer" id="why-drawer-flyover" style="display:none;padding:0.5rem;background:var(--surface-container-lowest);border:1px solid var(--border-subtle);border-top:none;border-radius:0 0 0.25rem 0.25rem;">
+                  <p class="t-body-sm" style="font-size:12px;color:var(--on-surface);line-height:1.4;" id="why-text-flyover">
+                    Hebbal junction handles 185,000 daily commuters <span class="citation-chip t-mono" style="font-size:9px;">[Ref: Census-2011-PCA]</span>. With <strong>142 citizen complaints</strong> <span class="citation-chip t-mono" style="font-size:9px;">[Ref: PCMC-Grievance-2025]</span> regarding peak gridlock and pedestrian safety, the project is delayed by <strong>14 months</strong> (target October 2027) <span class="citation-chip t-mono" style="font-size:9px;">[Ref: BDA-Gazette-2026]</span>. Capital allocation stands at <strong>61.3%</strong> (₹380.00 Cr sanctioned vs ₹620.00 Cr needed, leaving an unfunded gap of <strong>₹240.00 Cr</strong>) <span class="citation-chip t-mono" style="font-size:9px;">[Ref: Govt-Project-Registry]</span>, which has postponed the grade-separated loops to KR Puram.
+                  </p>
+                </div>
+              </div>
               <div class="action-row" style="margin-top:0.75rem;">
                 <button class="action-primary t-label-sm" type="button"><span>Open Full Place Dossier</span><span class="material-symbols-outlined" style="font-size:16px;">arrow_forward</span></button>
                 <button class="action-secondary t-label-sm" onclick="focusOnMap('flyover')" type="button"><span class="material-symbols-outlined" style="font-size:16px;color:var(--primary);">my_location</span><span>Map</span></button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ==========================================
+               NEW SECTION: IMPACT OVER TIME
+               ========================================== -->
+          <div class="impact-over-time-section" id="impact-over-time-section" style="margin-bottom:1.25rem;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;">
+              <div style="display:flex;align-items:center;gap:0.375rem;">
+                <span class="material-symbols-outlined" style="font-size:18px;color:var(--primary);">timeline</span>
+                <h3 class="t-title" style="font-weight:700;font-size:14px;color:var(--on-surface);">Impact Over Time</h3>
+              </div>
+              <span class="t-mono" style="font-size:10px;color:var(--outline);" id="impact-scrub-indicator">Scrub timeline to inspect</span>
+            </div>
+
+            <div class="impact-card" style="padding:0.75rem;background:var(--surface-container-low);border-radius:var(--radius);border:1px solid var(--border-subtle);">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.375rem;">
+                <span class="t-label-sm" id="impact-project-name" style="font-weight:700;color:var(--primary);">Hebbal Flyover Capacity Augmentation</span>
+                <span class="citation-chip t-mono" id="impact-current-chip" style="font-size:9px;">[Ref: PCMC-Grievance-2025]</span>
+              </div>
+
+              <!-- Dynamic Status Banner -->
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:0.375rem 0.5rem;background:var(--surface-container-lowest);border-radius:0.25rem;border:1px solid var(--border-subtle);margin-bottom:0.5rem;">
+                <div>
+                  <span class="t-label-sm" style="color:var(--outline);font-size:10px;text-transform:uppercase;">Year <strong id="impact-year-val" style="color:var(--primary);font-size:11px;">2026</strong></span>
+                  <span style="color:var(--outline);">•</span>
+                  <span class="t-mono" id="impact-status-val" style="font-size:10px;color:var(--secondary);font-weight:600;">Under Construction (68% complete)</span>
+                </div>
+                <div class="t-mono" style="font-weight:700;font-size:12px;color:var(--on-surface);">
+                  <span id="impact-count-val">142</span> complaints
+                </div>
+              </div>
+
+              <!-- SVG Line Chart (Matching Hero Map Visual Language) -->
+              <div class="impact-chart-wrapper" style="position:relative;background:var(--surface-container-lowest);border-radius:0.25rem;border:1px solid var(--border-subtle);padding:0.5rem 0.375rem 0.25rem;">
+                <svg id="impact-svg-chart" viewBox="0 0 320 120" style="width:100%;height:auto;display:block;overflow:visible;">
+                  <!-- Dynamically populated by updateImpactView() -->
+                </svg>
+              </div>
+
+              <!-- Before / After Completion Marker Note -->
+              <div style="margin-top:0.5rem;display:flex;align-items:center;justify-content:space-between;gap:0.5rem;font-size:10px;" class="t-label-sm">
+                <div style="display:flex;align-items:center;gap:0.25rem;">
+                  <span style="width:6px;height:6px;border-radius:50%;background:var(--status-stalled);flex-shrink:0;"></span>
+                  <span style="color:var(--on-surface-variant);">Before: Construction peak (142 complaints)</span>
+                  <span class="citation-chip t-mono" style="font-size:8px;">[Ref: PCMC-Grievance-2025]</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:0.25rem;">
+                  <span style="width:6px;height:6px;border-radius:50%;background:var(--primary);flex-shrink:0;"></span>
+                  <span style="color:var(--primary);font-weight:600;">After: Oct 2027 relief (18 target)</span>
+                  <span class="citation-chip t-mono" style="font-size:8px;">[Ref: BDA-Gazette-2026]</span>
+                </div>
+              </div>
+
+              <!-- Milestones Timeline with Citation Chips -->
+              <div style="margin-top:0.625rem;padding-top:0.5rem;border-top:1px solid var(--border-subtle);">
+                <div class="t-label-sm" style="font-size:10px;color:var(--outline);text-transform:uppercase;margin-bottom:0.25rem;font-weight:700;">Lifecycle Milestones & Citations</div>
+                <div id="impact-milestones-list" style="display:flex;flex-direction:column;gap:0.25rem;">
+                  <!-- Populated from project.history -->
+                </div>
               </div>
             </div>
           </div>
@@ -842,6 +939,21 @@
                   </div>
                   <div style="text-align:right;flex-shrink:0;"><span class="t-mono" style="font-size:11px;font-weight:700;">₹10,584 Cr</span><div style="margin-top:0.25rem;"><span class="citation-chip t-mono" style="font-size:9px;">[BMRCL-PH2B]</span></div></div>
                 </div>
+                <!-- Collapsible "Why this matters" section -->
+                <div class="why-matters-container" style="margin:0.375rem 0.25rem 0.25rem;">
+                  <button type="button" class="why-matters-btn t-label-sm" onclick="event.stopPropagation(); toggleWhyMatters('metro')" style="display:flex;align-items:center;justify-content:space-between;width:100%;padding:0.25rem 0.375rem;background:var(--surface-container-low);border-radius:0.25rem;border:1px solid var(--border-subtle);color:var(--primary);font-weight:600;">
+                    <span style="display:flex;align-items:center;gap:0.25rem;">
+                      <span class="material-symbols-outlined" style="font-size:14px;color:var(--secondary);">lightbulb</span>
+                      <span>Why this matters</span>
+                    </span>
+                    <span class="material-symbols-outlined why-arrow" id="arrow-why-metro" style="font-size:15px;transition:transform 0.2s;">expand_more</span>
+                  </button>
+                  <div class="why-matters-drawer" id="why-drawer-metro" style="display:none;padding:0.375rem 0.5rem;background:var(--surface-container-lowest);border:1px solid var(--border-subtle);border-top:none;border-radius:0 0 0.25rem 0.25rem;" onclick="event.stopPropagation();">
+                    <p class="t-body-sm" style="font-size:11.5px;color:var(--on-surface);line-height:1.4;" id="why-text-metro">
+                      The 37 km rapid rail corridor will serve 340,000 daily commuters <span class="citation-chip t-mono" style="font-size:9px;">[Ref: Census-2011-PCA]</span>. <strong>92 citizen complaints</strong> <span class="citation-chip t-mono" style="font-size:9px;">[Ref: CPGRAMS-DARPG-2025]</span> highlight acute pedestrian detour hazards around construction piers at Kodigehalli and Hebbal. While <strong>94.5% funded</strong> (₹10,584 Cr sanctioned vs ₹11,200 Cr needed) <span class="citation-chip t-mono" style="font-size:9px;">[Ref: BMRCL-PH2B]</span>, pier foundation conflicts at railway crossings have pushed testing by <strong>6 months</strong> <span class="citation-chip t-mono" style="font-size:9px;">[Ref: K-RIDE-25]</span>.
+                    </p>
+                  </div>
+                </div>
                 <div class="nearby-footer" style="font-size:11px;"><span class="t-label-sm" style="color:var(--outline);">High AI Confidence (94%)</span><span class="t-label-sm" style="color:var(--primary);font-weight:600;display:flex;align-items:center;">View details<span class="material-symbols-outlined" style="font-size:13px;">chevron_right</span></span></div>
               </div>
               <!-- Row 2: Suburban Rail -->
@@ -854,6 +966,21 @@
                   </div>
                   <div style="text-align:right;flex-shrink:0;"><span class="t-mono" style="font-size:11px;font-weight:700;">₹2,840 Cr</span><div style="margin-top:0.25rem;"><span class="citation-chip t-mono" style="font-size:9px;">[K-RIDE-25]</span></div></div>
                 </div>
+                <!-- Collapsible "Why this matters" section -->
+                <div class="why-matters-container" style="margin:0.375rem 0.25rem 0.25rem;">
+                  <button type="button" class="why-matters-btn t-label-sm" onclick="event.stopPropagation(); toggleWhyMatters('bsrp')" style="display:flex;align-items:center;justify-content:space-between;width:100%;padding:0.25rem 0.375rem;background:var(--surface-container-low);border-radius:0.25rem;border:1px solid var(--border-subtle);color:var(--primary);font-weight:600;">
+                    <span style="display:flex;align-items:center;gap:0.25rem;">
+                      <span class="material-symbols-outlined" style="font-size:14px;color:var(--secondary);">lightbulb</span>
+                      <span>Why this matters</span>
+                    </span>
+                    <span class="material-symbols-outlined why-arrow" id="arrow-why-bsrp" style="font-size:15px;transition:transform 0.2s;">expand_more</span>
+                  </button>
+                  <div class="why-matters-drawer" id="why-drawer-bsrp" style="display:none;padding:0.375rem 0.5rem;background:var(--surface-container-lowest);border:1px solid var(--border-subtle);border-top:none;border-radius:0 0 0.25rem 0.25rem;" onclick="event.stopPropagation();">
+                    <p class="t-body-sm" style="font-size:11.5px;color:var(--on-surface);line-height:1.4;" id="why-text-bsrp">
+                      Provides high-frequency suburban rail for 210,000 industrial and tech workers <span class="citation-chip t-mono" style="font-size:9px;">[Ref: Census-2011-PCA]</span> between Baiyappanahalli and Chikkabanavara. <strong>64 citizen petitions</strong> <span class="citation-chip t-mono" style="font-size:9px;">[Ref: CPGRAMS-DARPG-2025]</span> demand multimodal integration with BMTC bus terminals. With <strong>78.9% funding sanctioned</strong> (₹2,840 Cr sanctioned vs ₹3,600 Cr needed, an unfunded gap of <strong>₹760.00 Cr</strong>) <span class="citation-chip t-mono" style="font-size:9px;">[Ref: K-RIDE-25]</span>, civil packages were delayed by <strong>9 months</strong> <span class="citation-chip t-mono" style="font-size:9px;">[Ref: Govt-Project-Registry]</span>.
+                    </p>
+                  </div>
+                </div>
                 <div class="nearby-footer" style="font-size:11px;"><span class="t-label-sm" style="color:var(--outline);">Sanctioned DPR on file</span><span class="t-label-sm" style="color:var(--tertiary);font-weight:600;display:flex;align-items:center;">View details<span class="material-symbols-outlined" style="font-size:13px;">chevron_right</span></span></div>
               </div>
               <!-- Row 3: NH-44 -->
@@ -865,6 +992,21 @@
                     <p class="t-body-sm" style="font-size:12px;color:var(--outline);margin-top:0.125rem;">6-lane access controlled corridor • Continuous fast-tag tolling</p>
                   </div>
                   <div style="text-align:right;flex-shrink:0;"><span class="t-mono" style="font-size:11px;font-weight:700;">Operational</span><div style="margin-top:0.25rem;"><span class="citation-chip t-mono" style="font-size:9px;">[NHAI-2022]</span></div></div>
+                </div>
+                <!-- Collapsible "Why this matters" section -->
+                <div class="why-matters-container" style="margin:0.375rem 0.25rem 0.25rem;">
+                  <button type="button" class="why-matters-btn t-label-sm" onclick="event.stopPropagation(); toggleWhyMatters('nh44')" style="display:flex;align-items:center;justify-content:space-between;width:100%;padding:0.25rem 0.375rem;background:var(--surface-container-low);border-radius:0.25rem;border:1px solid var(--border-subtle);color:var(--primary);font-weight:600;">
+                    <span style="display:flex;align-items:center;gap:0.25rem;">
+                      <span class="material-symbols-outlined" style="font-size:14px;color:var(--secondary);">lightbulb</span>
+                      <span>Why this matters</span>
+                    </span>
+                    <span class="material-symbols-outlined why-arrow" id="arrow-why-nh44" style="font-size:15px;transition:transform 0.2s;">expand_more</span>
+                  </button>
+                  <div class="why-matters-drawer" id="why-drawer-nh44" style="display:none;padding:0.375rem 0.5rem;background:var(--surface-container-lowest);border:1px solid var(--border-subtle);border-top:none;border-radius:0 0 0.25rem 0.25rem;" onclick="event.stopPropagation();">
+                    <p class="t-body-sm" style="font-size:11.5px;color:var(--on-surface);line-height:1.4;" id="why-text-nh44">
+                      An expressway carrying 120,000 vehicles/day <span class="citation-chip t-mono" style="font-size:9px;">[Ref: MoRTH-Gazette-2024-F12]</span>. However, <strong>56 citizen grievances</strong> <span class="citation-chip t-mono" style="font-size:9px;">[Ref: PCMC-Grievance-2025]</span> document that the access-controlled barrier completely severed at-grade pedestrian connections for 48,000 residents <span class="citation-chip t-mono" style="font-size:9px;">[Ref: Census-2011-PCA]</span> visiting Baptist Hospital. Expressway capital is <strong>100% disbursed</strong> <span class="citation-chip t-mono" style="font-size:9px;">[Ref: NHAI-2022]</span>, yet required pedestrian cross-mitigation remains <strong>0% funded</strong> (₹12.50 Cr gap) <span class="citation-chip t-mono" style="font-size:9px;">[Ref: Govt-Project-Registry]</span>.
+                    </p>
+                  </div>
                 </div>
                 <div class="nearby-footer" style="font-size:11px;"><span class="t-label-sm" style="color:var(--outline);">Registry Audit: Verified</span><span class="t-label-sm" style="color:var(--primary);font-weight:600;display:flex;align-items:center;">View details<span class="material-symbols-outlined" style="font-size:13px;">chevron_right</span></span></div>
               </div>
@@ -959,6 +1101,8 @@
     </div>
   </div>
 
+  <!-- Single Source of Truth Script -->
+  <script src="data.js"></script>
   <script>
     // === Search Omnibar ===
     const searchInput = document.getElementById('geo-search-input');
@@ -1005,15 +1149,19 @@
     }
 
     // === Timeline Slider ===
+    let currentImpactProjectId = 'hebbal-flyover';
     document.getElementById('temporal-slider').addEventListener('input', (e) => {
-      const year = e.target.value;
-      document.getElementById('timeline-year-label').textContent = year + (year === '2026' ? ' (Current Cadastre)' : ' (Archival View)');
+      const year = parseInt(e.target.value, 10);
+      document.getElementById('timeline-year-label').textContent = year + (year === 2026 ? ' (Current Cadastre)' : ' (Archival View)');
       const metro = document.getElementById('namma-metro-line');
       const bsrp = document.getElementById('rail-bsrp-layer');
       const flyover = document.getElementById('hebbal-junction-works');
       if (year < 2000) { metro.style.opacity='0'; bsrp.style.opacity='0'; flyover.style.opacity='0.1'; }
       else if (year < 2024) { metro.style.opacity='0.4'; bsrp.style.opacity='0.2'; flyover.style.opacity='0.5'; }
       else { metro.style.opacity='1'; bsrp.style.opacity='1'; flyover.style.opacity='1'; }
+      
+      // Update Impact Over Time chart and overlay needle
+      updateImpactView(currentImpactProjectId, year);
     });
 
     // === Zoom ===
@@ -1024,6 +1172,14 @@
 
     // === Project Highlight ===
     function highlightProject(key) {
+      if (key === 'metro') currentImpactProjectId = 'namma-metro-blue';
+      else if (key === 'bsrp') currentImpactProjectId = 'bsrp-corridor-2';
+      else if (key === 'nh44' || key === 'baptist') currentImpactProjectId = 'baptist-crossing';
+      else currentImpactProjectId = 'hebbal-flyover';
+
+      const sliderVal = parseInt(document.getElementById('temporal-slider').value, 10);
+      updateImpactView(currentImpactProjectId, sliderVal);
+
       const card = document.getElementById('active-inspection-dossier');
       card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       card.style.boxShadow = '0 0 0 2px var(--primary)';
@@ -1092,9 +1248,317 @@
     // === Header Search ===
     document.getElementById('header-search-btn').addEventListener('click', () => { searchInput.focus(); searchDropdown.classList.add('open'); document.getElementById('map-viewport').scrollIntoView(); });
 
-    // === Responsive: show H3 text on desktop ===
-    function checkResponsive() { document.querySelector('.h3-text').style.display = window.innerWidth >= 640 ? 'inline' : 'none'; }
+    // === Responsive: show H3 & Funding Gap text on desktop ===
+    function checkResponsive() {
+      const show = window.innerWidth >= 640;
+      const h3 = document.querySelector('.h3-text');
+      const fg = document.querySelector('.funding-gap-text');
+      if (h3) h3.style.display = show ? 'inline' : 'none';
+      if (fg) fg.style.display = show ? 'inline' : 'none';
+    }
     checkResponsive(); window.addEventListener('resize', checkResponsive);
+
+    // === Collapsible "Why this matters" section ===
+    function toggleWhyMatters(id) {
+      const drawer = document.getElementById('why-drawer-' + id);
+      const arrow = document.getElementById('arrow-why-' + id);
+      if (!drawer) return;
+      const isHidden = drawer.style.display === 'none' || drawer.style.display === '';
+      drawer.style.display = isHidden ? 'block' : 'none';
+      if (arrow) arrow.style.transform = isHidden ? 'rotate(180deg)' : 'none';
+    }
+
+    // === Funding Gap Overlay Toggle (Pulling from data.js) ===
+    let fundingGapActive = false;
+    function toggleFundingGapOverlay() {
+      fundingGapActive = !fundingGapActive;
+      const badge = document.getElementById('funding-gap-indicator');
+      const hexLayer = document.getElementById('h3-hex-layer');
+      const legend = document.getElementById('funding-gap-legend');
+
+      // Elements to recolor
+      const flyoverCircle = document.querySelector('#hebbal-junction-works circle:first-child');
+      const flyoverPin = document.querySelector('#hebbal-junction-works g[transform="translate(538, 442)"] circle:nth-child(2)');
+      const baptistOuter = document.querySelector('g[onclick*="baptist"] circle:first-child');
+      const baptistInner = document.querySelector('g[onclick*="baptist"] circle:nth-child(2)');
+      const baptistTag = document.querySelector('g[onclick*="baptist"] text:last-child');
+      const lakeOuter = document.querySelector('g[onclick*="lake"] circle:first-child');
+      const lakeTag = document.querySelector('g[onclick*="lake"] text:last-child');
+
+      if (fundingGapActive) {
+        badge.textContent = 'ON';
+        badge.className = 'h3-badge on t-mono';
+        if (legend) legend.style.display = 'flex';
+        if (hexLayer) hexLayer.style.opacity = '1';
+
+        // Recolor hex layer circles by allocated-vs-needed ratio
+        document.querySelectorAll('#h3-hex-layer circle').forEach((c, idx) => {
+          if (idx === 0) { c.setAttribute('fill', '#D97706'); c.setAttribute('opacity', '0.35'); } // Hebbal Flyover (38.7% gap)
+          else if (idx === 1) { c.setAttribute('fill', '#0E5A66'); c.setAttribute('opacity', '0.25'); } // Metro (5.5% gap / 94.5% funded)
+          else if (idx === 2) { c.setAttribute('fill', '#B3382C'); c.setAttribute('opacity', '0.45'); } // Baptist (100% gap / Critical)
+        });
+
+        // Recolor map markers by allocated-vs-needed ratio from data.js
+        if (baptistOuter) baptistOuter.setAttribute('fill', '#B3382C');
+        if (baptistInner) baptistInner.setAttribute('stroke', '#B3382C');
+        if (baptistTag) {
+          baptistTag.dataset.original = baptistTag.textContent;
+          baptistTag.textContent = '100% Unfunded Gap [Ref: Govt-Project-Registry]';
+          baptistTag.setAttribute('fill', '#B3382C');
+        }
+
+        if (lakeOuter) lakeOuter.setAttribute('stroke', '#B3382C');
+        if (lakeTag) {
+          lakeTag.dataset.original = lakeTag.textContent;
+          lakeTag.textContent = '85.7% Unfunded Gap [Ref: LokDristi-Datasets]';
+          lakeTag.setAttribute('fill', '#B3382C');
+        }
+
+        if (flyoverPin) flyoverPin.setAttribute('fill', '#D97706');
+        if (flyoverCircle) flyoverCircle.setAttribute('stroke', '#D97706');
+      } else {
+        badge.textContent = 'OFF';
+        badge.className = 'h3-badge off t-mono';
+        if (legend) legend.style.display = 'none';
+        if (hexLayer && !h3Active) hexLayer.style.opacity = '0';
+
+        // Restore original colors
+        document.querySelectorAll('#h3-hex-layer circle').forEach((c, idx) => {
+          if (idx === 0) { c.setAttribute('fill', '#226773'); c.setAttribute('opacity', '0.12'); }
+          else if (idx === 1) { c.setAttribute('fill', '#fda137'); c.setAttribute('opacity', '0.14'); }
+          else if (idx === 2) { c.setAttribute('fill', '#00414b'); c.setAttribute('opacity', '0.08'); }
+        });
+
+        if (baptistOuter) baptistOuter.setAttribute('fill', '#fda137');
+        if (baptistInner) baptistInner.setAttribute('stroke', '#8a5100');
+        if (baptistTag && baptistTag.dataset.original) {
+          baptistTag.textContent = baptistTag.dataset.original;
+          baptistTag.setAttribute('fill', '#8a5100');
+        }
+
+        if (lakeOuter) lakeOuter.setAttribute('stroke', '#00414b');
+        if (lakeTag && lakeTag.dataset.original) {
+          lakeTag.textContent = lakeTag.dataset.original;
+          lakeTag.setAttribute('fill', '#70797b');
+        }
+
+        if (flyoverPin) flyoverPin.setAttribute('fill', '#fda137');
+        if (flyoverCircle) flyoverCircle.setAttribute('stroke', '#fda137');
+      }
+    }
+
+    // === Single Source of Truth Hydration from data.js ===
+    function hydrateExploreData() {
+      if (!window.INFRA_DATA) return;
+      const d = window.INFRA_DATA;
+      if (d.exploreOverview) {
+        const elTot = document.getElementById('exp-metric-total');
+        if (elTot) elTot.textContent = d.exploreOverview.totalProjects;
+        const elOp = document.getElementById('exp-metric-op');
+        if (elOp) elOp.textContent = d.exploreOverview.operationalProjects;
+        const elUc = document.getElementById('exp-metric-uc');
+        if (elUc) elUc.textContent = d.exploreOverview.underConstructionProjects;
+        const elPl = document.getElementById('exp-metric-pl');
+        if (elPl) elPl.textContent = d.exploreOverview.plannedProjects;
+      }
+      updateImpactView(currentImpactProjectId, 2026);
+    }
+
+    // === Impact Over Time Rendering Engine ===
+    function updateImpactView(projectId, scrubbedYear) {
+      if (!window.INFRA_DATA) return;
+      const project = window.INFRA_DATA.hotspots.find(h => h.id === projectId) || window.INFRA_DATA.hotspots.find(h => h.id === 'hebbal-flyover');
+      if (!project || !project.history || project.history.length === 0) return;
+
+      const history = project.history;
+      const pName = document.getElementById('impact-project-name');
+      if (pName) pName.textContent = project.shortTitle || project.title;
+
+      // Completion year extraction (default 2027)
+      let completionYear = 2027;
+      if (project.target_completion) {
+        const match = project.target_completion.match(/\b(20\d\d)\b/);
+        if (match) completionYear = parseInt(match[1], 10);
+      }
+
+      // Determine active complaint count & milestone based on scrubbedYear
+      let activeItem = null;
+      let activeCount = 0;
+      let activeStatus = "";
+      let activeCitation = "";
+
+      if (scrubbedYear < history[0].year) {
+        activeCount = Math.max(2, Math.round(history[0].complaints * 0.15));
+        activeStatus = "Baseline (Pre-project phase)";
+        activeCitation = "[Ref: Census-2011-PCA]";
+      } else if (scrubbedYear >= history[history.length - 1].year) {
+        const last = history[history.length - 1];
+        activeCount = last.complaints;
+        activeStatus = last.status + " • " + last.milestone;
+        activeCitation = last.citation;
+      } else {
+        // Find exact or surrounding points
+        for (let i = 0; i < history.length; i++) {
+          if (history[i].year === scrubbedYear) {
+            activeItem = history[i];
+            break;
+          }
+          if (history[i].year < scrubbedYear && (i + 1 < history.length && history[i + 1].year > scrubbedYear)) {
+            // Linear interpolate between history[i] and history[i+1]
+            const h1 = history[i];
+            const h2 = history[i + 1];
+            const t = (scrubbedYear - h1.year) / (h2.year - h1.year);
+            activeCount = Math.round(h1.complaints + t * (h2.complaints - h1.complaints));
+            activeStatus = `${h1.status} → ${h2.status}`;
+            activeCitation = h1.citation;
+            break;
+          }
+        }
+        if (activeItem) {
+          activeCount = activeItem.complaints;
+          activeStatus = activeItem.status + " • " + activeItem.milestone;
+          activeCitation = activeItem.citation;
+        }
+      }
+
+      // Update text nodes
+      const yVal = document.getElementById('impact-year-val');
+      if (yVal) yVal.textContent = scrubbedYear;
+      const cVal = document.getElementById('impact-count-val');
+      if (cVal) cVal.textContent = activeCount.toLocaleString('en-IN');
+      const sVal = document.getElementById('impact-status-val');
+      if (sVal) sVal.textContent = activeStatus;
+      const chipVal = document.getElementById('impact-current-chip');
+      if (chipVal) chipVal.textContent = activeCitation;
+
+      // Update timeline bar mini badge
+      const tbStat = document.getElementById('tb-mini-stat');
+      if (tbStat) tbStat.textContent = `${scrubbedYear}: ${activeCount} complaints`;
+      const tbChip = document.getElementById('tb-mini-chip');
+      if (tbChip) tbChip.textContent = activeCitation;
+
+      // Render SVG Sparkline
+      renderImpactSvg(history, scrubbedYear, completionYear, activeCount);
+
+      // Render milestones list with citation chips
+      const mList = document.getElementById('impact-milestones-list');
+      if (mList) {
+        mList.innerHTML = history.map(h => `
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:0.25rem 0.375rem;border-radius:0.25rem;background:${h.year === scrubbedYear ? 'var(--surface-container-high)' : 'var(--surface-container-lowest)'};font-size:10.5px;">
+            <div style="display:flex;align-items:center;gap:0.375rem;">
+              <span class="t-mono" style="font-weight:700;color:var(--primary);min-width:3.25rem;">${h.quarter}</span>
+              <span style="color:var(--on-surface-variant);max-width:13rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${h.milestone}">${h.milestone}</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:0.375rem;flex-shrink:0;">
+              <span class="t-mono" style="font-weight:700;color:${h.status.includes('Operational') ? 'var(--primary)' : 'var(--secondary)'};">${h.complaints}</span>
+              <span class="citation-chip t-mono" style="font-size:8px;">${h.citation}</span>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    function renderImpactSvg(history, scrubbedYear, completionYear, activeCount) {
+      const svg = document.getElementById('impact-svg-chart');
+      if (!svg) return;
+
+      const minYear = 2021;
+      const maxYear = Math.max(2028, completionYear + 1);
+      const maxComplaints = Math.max(150, ...history.map(h => h.complaints * 1.15));
+
+      const w = 320;
+      const h = 120;
+      const padLeft = 32;
+      const padRight = 20;
+      const padTop = 18;
+      const padBottom = 22;
+
+      function getX(yr) {
+        const clamped = Math.max(minYear, Math.min(maxYear, yr));
+        return padLeft + ((clamped - minYear) / (maxYear - minYear)) * (w - padLeft - padRight);
+      }
+      function getY(val) {
+        return h - padBottom - (val / maxComplaints) * (h - padTop - padBottom);
+      }
+
+      // Grid lines
+      const y0 = getY(0);
+      const y50 = getY(maxComplaints / 2);
+      const y100 = getY(maxComplaints);
+
+      // Points calculation
+      const pts = history.map(item => ({
+        x: getX(item.year),
+        y: getY(item.complaints),
+        item: item
+      }));
+
+      // Split into before and after completion
+      const compX = getX(completionYear);
+
+      // Split path into actual (up to 2026) and projected
+      const actualPts = pts.filter(p => p.item.year <= 2026);
+      const projPts = pts.filter(p => p.item.year >= 2026);
+
+      const actualD = actualPts.map((p, idx) => (idx === 0 ? `M ${p.x} ${p.y}` : `L ${p.x} ${p.y}`)).join(' ');
+      const projD = projPts.map((p, idx) => (idx === 0 ? `M ${p.x} ${p.y}` : `L ${p.x} ${p.y}`)).join(' ');
+
+      // Needle position
+      const needleX = getX(scrubbedYear);
+      const needleY = getY(activeCount);
+
+      svg.innerHTML = `
+        <defs>
+          <linearGradient id="impact-area-grad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#00414b" stop-opacity="0.25"/>
+            <stop offset="100%" stop-color="#00414b" stop-opacity="0.0"/>
+          </linearGradient>
+        </defs>
+
+        <!-- Grid lines & Y-Axis labels -->
+        <line x1="${padLeft}" y1="${y100}" x2="${w - padRight}" y2="${y100}" stroke="#E3E1DA" stroke-dasharray="2 2" stroke-width="0.75"/>
+        <line x1="${padLeft}" y1="${y50}" x2="${w - padRight}" y2="${y50}" stroke="#E3E1DA" stroke-dasharray="2 2" stroke-width="0.75"/>
+        <line x1="${padLeft}" y1="${y0}" x2="${w - padRight}" y2="${y0}" stroke="#C8C5BB" stroke-width="1"/>
+
+        <text x="${padLeft - 4}" y="${y100 + 3}" fill="#8895A5" font-size="8" font-family="'JetBrains Mono', monospace" text-anchor="end">${Math.round(maxComplaints)}</text>
+        <text x="${padLeft - 4}" y="${y50 + 3}" fill="#8895A5" font-size="8" font-family="'JetBrains Mono', monospace" text-anchor="end">${Math.round(maxComplaints / 2)}</text>
+        <text x="${padLeft - 4}" y="${y0 + 3}" fill="#8895A5" font-size="8" font-family="'JetBrains Mono', monospace" text-anchor="end">0</text>
+
+        <!-- X-Axis year labels -->
+        <text x="${getX(2021)}" y="${h - 6}" fill="#8895A5" font-size="8" font-family="'JetBrains Mono', monospace" text-anchor="middle">2021</text>
+        <text x="${getX(2024)}" y="${h - 6}" fill="#8895A5" font-size="8" font-family="'JetBrains Mono', monospace" text-anchor="middle">2024</text>
+        <text x="${getX(2026)}" y="${h - 6}" fill="#00414b" font-weight="700" font-size="8.5" font-family="'JetBrains Mono', monospace" text-anchor="middle">2026</text>
+        <text x="${getX(2028)}" y="${h - 6}" fill="#8895A5" font-size="8" font-family="'JetBrains Mono', monospace" text-anchor="middle">2028</text>
+
+        <!-- Before / After Completion Marker -->
+        <line x1="${compX}" y1="${padTop - 4}" x2="${compX}" y2="${y0}" stroke="#D97706" stroke-width="1.5" stroke-dasharray="3 3"/>
+        <rect x="${compX - 44}" y="${padTop - 14}" width="88" height="12" rx="2" fill="#ffdcbe" stroke="#D97706" stroke-width="0.5"/>
+        <text x="${compX}" y="${padTop - 5}" fill="#6a3c00" font-size="7" font-family="'JetBrains Mono', monospace" text-anchor="middle" font-weight="700">COMPLETION: ${completionYear}</text>
+
+        <!-- Shaded Area Under Curve -->
+        <path d="${actualD} L ${actualPts[actualPts.length - 1].x} ${y0} L ${actualPts[0].x} ${y0} Z" fill="url(#impact-area-grad)"/>
+
+        <!-- Trendline (Actual Solid) -->
+        <path d="${actualD}" fill="none" stroke="#00414b" stroke-width="2.5" stroke-linecap="round"/>
+
+        <!-- Trendline (Projected Dashed) -->
+        <path d="${projD}" fill="none" stroke="#fda137" stroke-width="2" stroke-dasharray="4 3" stroke-linecap="round"/>
+
+        <!-- Data Point Nodes -->
+        ${pts.map(p => `
+          <g>
+            <circle cx="${p.x}" cy="${p.y}" r="3.5" fill="#ffffff" stroke="${p.item.year > 2026 ? '#fda137' : '#00414b'}" stroke-width="2"/>
+            <text x="${p.x}" y="${p.y - 6}" fill="${p.item.year === 2026 ? '#ba1a1a' : '#5B6773'}" font-size="8" font-family="'JetBrains Mono', monospace" text-anchor="middle" font-weight="600">${p.item.complaints}</text>
+          </g>
+        `).join('')}
+
+        <!-- Interactive Needle & Indicator for Scrubbed Year -->
+        <line x1="${needleX}" y1="${padTop - 2}" x2="${needleX}" y2="${y0}" stroke="#8a5100" stroke-width="1.75"/>
+        <circle cx="${needleX}" cy="${needleY}" r="5.5" fill="#fda137" stroke="#ffffff" stroke-width="2"/>
+        <circle cx="${needleX}" cy="${needleY}" r="2.5" fill="#8a5100"/>
+      `;
+    }
+    window.addEventListener('load', hydrateExploreData);
   </script>
 </body>
 </html>

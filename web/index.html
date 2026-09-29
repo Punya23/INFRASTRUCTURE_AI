@@ -765,6 +765,8 @@
           <a class="nav-link text-title-md" href="#place-explorer" data-i18n="navArea">Your Area</a>
           <a class="nav-link text-title-md" href="#citizen-voice-section" data-i18n="navVoice">Citizen Voice</a>
           <a class="nav-link text-title-md" href="#trust-section" data-i18n="navAbout">About</a>
+          <a class="nav-link text-title-md" href="policymaker.html" data-i18n="navPolicymaker">Policymaker View</a>
+          <a class="nav-link text-title-md" href="methodology.html" data-i18n="navMethodology">Methodology</a>
         </nav>
       </div>
       <div class="header-actions">
@@ -799,6 +801,8 @@
     <a class="nav-link text-title-md" href="#place-explorer" data-i18n="navArea">Your Area</a>
     <a class="nav-link text-title-md" href="#citizen-voice-section" data-i18n="navVoice">Citizen Voice</a>
     <a class="nav-link text-title-md" href="#trust-section" data-i18n="navAbout">About</a>
+    <a class="nav-link text-title-md" href="policymaker.html" data-i18n="navPolicymaker">Policymaker View</a>
+    <a class="nav-link text-title-md" href="methodology.html" data-i18n="navMethodology">Methodology</a>
   </div>
 
   <main>
@@ -1455,6 +1459,8 @@
     <a href="#" class="text-label-md" style="color:var(--primary);font-weight:600;">Verify at gazette.gov.in →</a>
   </div>
 
+  <!-- Single Source of Truth Script -->
+  <script src="data.js"></script>
   <script>
     // ============================
     // INFRA-AI Interactive Features
@@ -1464,7 +1470,7 @@
     const translations = {
       en: {
         brand: "INFRA-AI", brandSub: "Infrastructure intelligence for India",
-        navExplore: "Explore", navProjects: "Projects", navArea: "Your Area", navVoice: "Citizen Voice", navAbout: "About",
+        navExplore: "Explore", navProjects: "Projects", navArea: "Your Area", navVoice: "Citizen Voice", navAbout: "About", navPolicymaker: "Policymaker View", navMethodology: "Methodology",
         reportNeed: "Report a Need",
         noticeDpg: "National Digital Public Good", noticeTitle: "Public Infrastructure Observatory of India",
         noticeReconcile: "Reconciling Gazettes, GIS Telemetry, and Ward Voices",
@@ -1506,7 +1512,7 @@
       },
       hi: {
         brand: "INFRA-AI", brandSub: "भारत के लिए बुनियादी ढांचा खुफिया",
-        navExplore: "अन्वेषण", navProjects: "परियोजनाएं", navArea: "आपका क्षेत्र", navVoice: "नागरिक आवाज़", navAbout: "जानकारी",
+        navExplore: "अन्वेषण", navProjects: "परियोजनाएं", navArea: "आपका क्षेत्र", navVoice: "नागरिक आवाज़", navAbout: "जानकारी", navPolicymaker: "नीति निर्माता दृश्य", navMethodology: "पद्धति",
         reportNeed: "ज़रूरत बताएं",
         noticeDpg: "राष्ट्रीय डिजिटल सार्वजनिक हित", noticeTitle: "भारत का सार्वजनिक बुनियादी ढांचा वेधशाला",
         heroEyebrow: "हाइपरलोकल नागरिक पारदर्शिता", heroCities: "812 शहर और तालुक",
@@ -1523,7 +1529,7 @@
       },
       kn: {
         brand: "INFRA-AI", brandSub: "ಭಾರತಕ್ಕಾಗಿ ಮೂಲಸೌಕರ್ಯ ಬುದ್ಧಿಮತ್ತೆ",
-        navExplore: "ಅನ್ವೇಷಿಸಿ", navProjects: "ಯೋಜನೆಗಳು", navArea: "ನಿಮ್ಮ ಪ್ರದೇಶ", navVoice: "ನಾಗರಿಕ ಧ್ವನಿ", navAbout: "ಕುರಿತು",
+        navExplore: "ಅನ್ವೇಷಿಸಿ", navProjects: "ಯೋಜನೆಗಳು", navArea: "ನಿಮ್ಮ ಪ್ರದೇಶ", navVoice: "ನಾಗರಿಕ ಧ್ವನಿ", navAbout: "ಕುರಿತು", navPolicymaker: "ನೀತಿ ನಿರೂಪಕರ ನೋಟ", navMethodology: "ವಿಧಾನ",
         reportNeed: "ಅಗತ್ಯ ವರದಿ",
         heroTitle: "ನಿಮ್ಮ ಸ್ಥಳದಲ್ಲಿ ಏನಾಗುತ್ತಿದೆ ಎಂಬುದನ್ನು ತಿಳಿಯಿರಿ.",
         heroSubtitle: "ನಿಮ್ಮ ಸುತ್ತಮುತ್ತಲಿನ ಮೂಲಸೌಕರ್ಯವನ್ನು ಅನ್ವೇಷಿಸಿ.",
@@ -1708,9 +1714,26 @@
       }
       update();
     }
+    // --- Hydrate Dynamic Metrics from data.js ---
+    function hydrateIndexData() {
+      if (!window.INFRA_DATA) return;
+      const d = window.INFRA_DATA;
+      if (d.cities && d.cities.pune) {
+        const mp = document.getElementById('metric-projects');
+        if (mp) mp.textContent = d.cities.pune.projectSites + ' Sites';
+        const ma = document.getElementById('metric-audits');
+        if (ma) ma.textContent = d.cities.pune.citizenAudits.toLocaleString('en-IN');
+      }
+      if (d.stats) {
+        const ss = document.getElementById('stat-submissions');
+        if (ss) ss.textContent = d.stats.submissionsLabel;
+      }
+    }
+
     // Run on page load
     window.addEventListener('load', () => {
       animateCounter(document.getElementById('gazette-percent'), 98.4);
+      hydrateIndexData();
     });
 
     // --- Nav Active State on Scroll ---
