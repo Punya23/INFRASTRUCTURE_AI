@@ -82,6 +82,7 @@ Notebooks in `ml/notebooks/national_highways/`; logic in `ml/fields/national_hig
 | `05_corridor_effect` | Built-up growth (GHSL 2000→2020) within 0–2 km vs 2–10 km of expressways opened 2001–2019, against corridors not yet open; night lights next |
 | `06_safety` | National and state NH totals from Road Accidents in India 2024's Annexures 9–10 (OCR'd, gridlines stripped, verified against the printed Table 2.5 total) over official state NH km; crash density by lane band from NHAI's 2022–23 crash points; black-spot status |
 | `07_pipeline` | Pipeline km by state and target year; NHAI project stages; access gain once the pipeline completes; land-acquisition notifications at M3 |
+| `08_tolls_traffic` | Tolled length and fees by class and state (class mapping checked against Fee Rules 2008); traffic-count coverage and count points per 100 km |
 
 Reproduce: `cd ml && uv run python -m common.fetch && uv run python -m fields.national_highways all` (about 10 minutes on a laptop), then run the notebooks. HTML exports are in `ml/notebooks/national_highways/reports/`.
 
@@ -149,14 +150,17 @@ As of 2026-09-29, from the OSM extract of 2026-09-28. Notebooks are in `ml/noteb
 7. **NH road deaths rose every year, 2020–2024:** from 50,251 to 64,772. That is 36.6% of all road deaths on about 2% of road length. 77% of NH deaths in 2024 were on NHAI-managed NHs. — `06_safety` (RAI 2024, Tables 2.5 and 2.10)
 8. **City-pair circuity drops once routing uses the full road graph.** Median 1.18 over 1,543 pairs (was 1.31 on the NH-only graph, which broke where NHs cross cities on untagged roads). — `04_access`
 9. **Corridor effect, now with dated openings:** 12 expressways opened 2001–2019 (999 eff-km — Outer Ring Road, Agra–Lucknow, Yamuna, Mumbai–Pune among the largest), matched by name to Wikipedia's "Expressways of India" since OSM tags `opening_date`/`start_date` on only 5,218 of 32,302 expressway segments. Near-minus-far built-up growth (0–2 km vs 2–10 km, GHSL 2000→2020) is −0.02 pp for these corridors and −0.06 pp for ones not yet open: a difference of 0.04 pp, i.e. no measurable concentration of growth right along new expressways at 1 km resolution (descriptive, not causal; growth rose about equally across the whole 0–10 km band — 1.9 pp vs 1.0 pp around unopened corridors). — `05_corridor_effect`
-10. **Toll coverage: OSM has 90.1% of the IHMCL plaza count nationally**, with 151 of 1,044 OSM plazas matched to an IHMCL code by name; Bihar (56%) and Odisha (69%) lag. `build_tolls` now excludes any IHMCL row with a blank code from name matching before it can silently absorb a real match (`ihmcl_codeless_plazas.csv` lists them — usually none on this PDF's current parse, but the crash it once caused with `write_fixtures`' `set_index("code")` is worth guarding regardless). — toll_coverage_by_state
+10. **Toll coverage: OSM has 90.1% of the IHMCL plaza count nationally**, with 151 of 1,044 OSM plazas matched to an IHMCL code by name; Bihar (56%) and Odisha (69%) lag. The 26 IHMCL plazas without a NETC code get a stable `S<serial>` id, so they can still be matched, and duplicate codes raise. — toll_coverage_by_state
 11. **State NH death rates, now from RAI's own annexures, not NHAI's partial crash layer.** Delhi (164/100 km) and Puducherry (164/100 km) are the highest; the state annexures were OCR'd (gridlines stripped) and verified against RAI's printed Table 2.5 total. — `06_safety`
+
+12. **A quarter of NHAI's completed NH is tolled:** 33,594 of 1,37,517 km (24.4%). The median single-journey fee is ₹75 for a car and ₹260 for a bus or truck. Rajasthan is the most tolled large state (54% of its length). NHAI's fee columns follow the Fee Rules 2008 class ratios (LCV 1.62, bus/truck 3.38, 3-axle 3.75, 4–6 axle 5.29, 7+ axle 6.42 × car), and the build fails if they drift more than 10%. — `08_tolls_traffic`
+13. **NHAI counts traffic on 53% of its NH length, but the counts can't be used yet.** Its 14 traffic columns carry no legend anywhere NHAI publishes, and no column is a total. They are profiled, not interpreted. The labelled `traffic_survey` layer has 4,179 confirmed count points, 2.9 per 100 official km (Karnataka 4.0; Andhra Pradesh 1.9). So per-vehicle crash rates remain blocked. — `08_tolls_traffic`
 
 ## Open questions
 
 - NHAI GeoServer — decided in ADR-0014: used for analysis, aggregates only. Still open: send the terms request to NHAI and record the reply.
 - Land acquisition: Bhoomi Rashi is CAPTCHA-gated (manual exports) and eGazette has no bulk access — which corridors to export by hand first, and is extracting gazette PDFs worth it for M3?
 - Lanes: OSM tags lanes on 48.7% of NH length; NHAI's layer covers every completed stretch. Use NHAI bands for analysis and OSM only for display — or wait for the data.gov.in state lane table?
-- Traffic volumes are not public — which proxies for capacity analysis (night lights, population, toll density)?
+- Traffic volumes: NHAI's `nh_network_of_india_new` has 14 unlabelled traffic count columns on 53% of NH length. Ask NHAI for the column legend (with the ADR-0014 terms request); until then no per-vehicle rates.
 - State-built expressways: inside this field with `owner_level` (default), or a separate field?
 - Delay flags (M3): which source actually carries a per-project planned-completion or award date — data.gov.in, PIB, or scraping NHAI's dashboard UI (the GeoServer layer has none)?

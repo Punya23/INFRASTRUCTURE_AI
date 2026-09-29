@@ -11,6 +11,7 @@ Reports (aggregates, committed) go to ml/fields/public_transport/gtfs/reports/.
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 import geopandas as gpd
@@ -135,10 +136,16 @@ def link_nh() -> pd.DataFrame:
 def write_fixtures() -> None:
     stops = gpd.read_parquet(OUT / "gtfs_stops.parquet")
     routes = gpd.read_parquet(OUT / "gtfs_routes.parquet")
-    for sid in CFG["feeds"]:
+    index = []
+    for sid, meta in CFG["feeds"].items():
         s = stops[stops["source"] == sid]
         if s.empty:
             continue
+        index.append({"id": sid, **{k: meta[k] for k in ("mode", "operator", "city", "tier", "confidence")},
+                      "license": s["license"].iloc[0], "fetched_at": s["fetched_at"].iloc[0],
+                      "stops": len(s), "routes": int((routes["source"] == sid).sum()),
+                      "bbox": [round(float(v), 4) for v in s.total_bounds],
+                      "stops_file": f"{sid}_stops.geojson", "routes_file": f"{sid}_routes.geojson"})
         write_geojson(gpd.GeoDataFrame({
             "id": "transit_stop:" + sid + ":" + s["source_ref"], "field": "public_transport",
             "kind": "transit_stop", "name": s.get("stop_name"), "ref": None,
@@ -155,3 +162,6 @@ def write_fixtures() -> None:
             "mode": r["mode"], "tier": r["tier"], "geometry_source": r["geometry_source"],
             "geometry": r.geometry.simplify(CFG["route_simplify_deg"]).values}, crs="EPSG:4326"),
             FIXTURES / f"{sid}_routes.geojson")
+    # the UI builds its transit toggles from this list — no feed is hard-coded in the page
+    (FIXTURES / "index.json").write_text(json.dumps({"field": "public_transport", "feeds": index}, indent=1))
+    print(f"fixture index.json: {len(index)} feeds")

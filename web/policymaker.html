@@ -792,6 +792,8 @@
               <th onclick="sortNH(4)" style="text-align:right;padding:0.5rem;font-weight:600;color:var(--text-muted);font-size:0.625rem;text-transform:uppercase;letter-spacing:0.04em;border-bottom:2px solid var(--border-subtle);cursor:pointer;">Pop ≤10km ↕</th>
               <th onclick="sortNH(5)" style="text-align:right;padding:0.5rem;font-weight:600;color:var(--text-muted);font-size:0.625rem;text-transform:uppercase;letter-spacing:0.04em;border-bottom:2px solid var(--border-subtle);cursor:pointer;">Deaths/100km ↕</th>
               <th onclick="sortNH(6)" style="text-align:right;padding:0.5rem;font-weight:600;color:var(--text-muted);font-size:0.625rem;text-transform:uppercase;letter-spacing:0.04em;border-bottom:2px solid var(--border-subtle);cursor:pointer;">Under Const. ↕</th>
+              <th onclick="sortNH(7)" title="Share of NHAI completed NH length that is tolled; median car fee" style="text-align:right;padding:0.5rem;font-weight:600;color:var(--text-muted);font-size:0.625rem;text-transform:uppercase;letter-spacing:0.04em;border-bottom:2px solid var(--border-subtle);cursor:pointer;">Tolled ↕</th>
+              <th onclick="sortNH(8)" title="Share of NHAI NH length with traffic counts" style="text-align:right;padding:0.5rem;font-weight:600;color:var(--text-muted);font-size:0.625rem;text-transform:uppercase;letter-spacing:0.04em;border-bottom:2px solid var(--border-subtle);cursor:pointer;">Traffic data ↕</th>
             </tr>
           </thead>
           <tbody id="nh-state-tbody"></tbody>
@@ -1287,6 +1289,10 @@
         { label: 'NH Accidents (2024)', value: india.rai_2024_accidents.toLocaleString('en-IN'), unit: 'incidents', source: 'RAI 2024', color: 'var(--status-stalled)' },
         { label: 'NH Deaths (2024)', value: india.rai_2024_deaths.toLocaleString('en-IN'), unit: `(${india.rai_2024_deaths_per_100km.toFixed(1)}/100km)`, source: 'RAI 2024, Annexures 9-10', color: 'var(--status-stalled)' },
       ];
+      if (india.tolled_km_share != null) {
+        kpis.push({ label: 'Tolled NH', value: (india.tolled_km_share*100).toFixed(1), unit: `% of NHAI NH · median fee car ₹${india.median_car_fee_inr.toFixed(0)}, truck ₹${india.median_truck_fee_inr.toFixed(0)}`, source: 'NHAI Datalake, aggregates', color: 'var(--accent-saffron, #D97706)' });
+        kpis.push({ label: 'Traffic Counts', value: (india.traffic_count_km_share*100).toFixed(1), unit: `% of NH length · ${india.survey_points_per_100_official_km.toFixed(1)} count points/100 km`, source: 'NHAI Datalake, aggregates', color: 'var(--primary)' });
+      }
       if (nhCityPairs) {
         kpis.push({ label: 'City-Pair Circuity', value: nhCityPairs.median_circuity.toFixed(2), unit: `median, ${nhCityPairs.flagged_count} of ${nhCityPairs.total_pairs} flagged`, source: 'OSM road network', color: 'var(--status-construction)' });
       }
@@ -1320,6 +1326,8 @@
           case 4: va = a.share_within_10km_now || 0; vb = b.share_within_10km_now || 0; break;
           case 5: va = a.rai_2024_deaths_per_100km || 0; vb = b.rai_2024_deaths_per_100km || 0; break;
           case 6: va = a.nhai_km_under_construction || 0; vb = b.nhai_km_under_construction || 0; break;
+          case 7: va = a.tolled_km_share ?? -1; vb = b.tolled_km_share ?? -1; break;
+          case 8: va = a.traffic_count_km_share ?? -1; vb = b.traffic_count_km_share ?? -1; break;
         }
         return nhSortAsc ? va - vb : vb - va;
       });
@@ -1342,6 +1350,8 @@
           <td style="padding:0.375rem 0.5rem;text-align:right;font-family:'JetBrains Mono',monospace;font-size:0.6875rem;">${s.share_within_10km_now ? (s.share_within_10km_now*100).toFixed(0) + '%' : '—'}</td>
           <td style="padding:0.375rem 0.5rem;text-align:right;font-family:'JetBrains Mono',monospace;font-size:0.6875rem;color:${deathColor};font-weight:600;">${deathRate ? deathRate.toFixed(1) : '—'}</td>
           <td style="padding:0.375rem 0.5rem;text-align:right;font-family:'JetBrains Mono',monospace;font-size:0.6875rem;">${s.nhai_km_under_construction ? s.nhai_km_under_construction.toLocaleString('en-IN') : '—'}</td>
+          <td style="padding:0.375rem 0.5rem;text-align:right;font-family:'JetBrains Mono',monospace;font-size:0.6875rem;">${s.tolled_km_share != null ? (s.tolled_km_share*100).toFixed(0) + '%' : '—'}${s.median_car_fee_inr != null ? ` <span style="color:var(--text-muted);">₹${s.median_car_fee_inr.toFixed(0)}</span>` : ''}</td>
+          <td style="padding:0.375rem 0.5rem;text-align:right;font-family:'JetBrains Mono',monospace;font-size:0.6875rem;">${s.traffic_count_km_share != null ? (s.traffic_count_km_share*100).toFixed(0) + '%' : '—'}</td>
         </tr>`;
       }).join('');
     }
@@ -1354,13 +1364,17 @@
 
     function exportNHData() {
       if (!nhMetrics || !nhMetrics.states) return;
-      const headers = ['State','Official_km','OSM_km','Coverage_pct','Pop_within_10km_pct','Deaths_per_100km_RAI2024','Under_construction_km'];
+      const headers = ['State','Official_km','OSM_km','Coverage_pct','Pop_within_10km_pct','Deaths_per_100km_RAI2024','Under_construction_km','Tolled_pct_NHAI','Median_car_fee_inr','Median_truck_fee_inr','Traffic_count_length_pct','Count_points_per_100km'];
       const rows = nhMetrics.states.filter(s => s.state !== 'India').map(s => [
         s.state, s.official_km || '', Math.round(s.osm_nh_km || 0),
         s.osm_ratio ? (s.osm_ratio*100).toFixed(1) : '',
         s.share_within_10km_now ? (s.share_within_10km_now*100).toFixed(1) : '',
         s.rai_2024_deaths_per_100km || '',
-        s.nhai_km_under_construction || ''
+        s.nhai_km_under_construction || '',
+        s.tolled_km_share != null ? (s.tolled_km_share*100).toFixed(1) : '',
+        s.median_car_fee_inr ?? '', s.median_truck_fee_inr ?? '',
+        s.traffic_count_km_share != null ? (s.traffic_count_km_share*100).toFixed(1) : '',
+        s.survey_points_per_100_official_km != null ? s.survey_points_per_100_official_km.toFixed(1) : ''
       ]);
       const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
       const blob = new Blob([csv], { type: 'text/csv' });

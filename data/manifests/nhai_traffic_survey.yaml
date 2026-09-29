@@ -1,0 +1,12 @@
+id: nhai_traffic_survey
+license: none stated — analysis use by team decision (ADR-0014); not redistributed
+attribution: National Highways Authority of India — Datalake GeoServer (traffic survey
+  locations)
+used_by:
+- national_highways
+files:
+- file: data/raw/nhai/traffic_survey.geojson
+  url: https://datalakew.nhai.gov.in/geoserver/NHAI/ows
+  bytes: 2158276
+  sha256: 80f6c7e6b4f44655578bd0d5ab2744a6ddddd656a8195e0246310fd94b8f63c2
+  fetched_at: '2026-09-29T17:29:06Z'

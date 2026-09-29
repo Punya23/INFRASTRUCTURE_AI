@@ -22,7 +22,12 @@
    "rai_2024_accidents": 150958.0,
    "rai_2024_deaths": 64772.0,
    "rai_2024_deaths_per_100km": 44.306,
-   "nhai_km_under_construction": 11392.0
+   "nhai_km_under_construction": 11373.0,
+   "tolled_km_share": 0.244,
+   "median_car_fee_inr": 75.0,
+   "median_truck_fee_inr": 260.0,
+   "traffic_count_km_share": 0.527,
+   "survey_points_per_100_official_km": 2.859
   },
   {
    "state": "Maharashtra",
@@ -38,7 +43,12 @@
    "rai_2024_accidents": 11285.0,
    "rai_2024_deaths": 5812.0,
    "rai_2024_deaths_per_100km": 31.481,
-   "nhai_km_under_construction": 1705.0
+   "nhai_km_under_construction": 1705.0,
+   "tolled_km_share": 0.113,
+   "median_car_fee_inr": 75.0,
+   "median_truck_fee_inr": 260.0,
+   "traffic_count_km_share": 0.662,
+   "survey_points_per_100_official_km": 3.418
   },
   {
    "state": "Uttar Pradesh",
@@ -54,7 +64,12 @@
    "rai_2024_accidents": 17113.0,
    "rai_2024_deaths": 9560.0,
    "rai_2024_deaths_per_100km": 78.858,
-   "nhai_km_under_construction": 1406.0
+   "nhai_km_under_construction": 1461.0,
+   "tolled_km_share": 0.294,
+   "median_car_fee_inr": 80.0,
+   "median_truck_fee_inr": 270.0,
+   "traffic_count_km_share": 0.485,
+   "survey_points_per_100_official_km": 2.351
   },
   {
    "state": "Rajasthan",
@@ -70,7 +85,12 @@
    "rai_2024_accidents": 7174.0,
    "rai_2024_deaths": 4285.0,
    "rai_2024_deaths_per_100km": 39.924,
-   "nhai_km_under_construction": 1096.0
+   "nhai_km_under_construction": 1027.0,
+   "tolled_km_share": 0.536,
+   "median_car_fee_inr": 75.0,
+   "median_truck_fee_inr": 260.0,
+   "traffic_count_km_share": 0.122,
+   "survey_points_per_100_official_km": 2.404
   },
   {
    "state": "Madhya Pradesh",
@@ -86,7 +106,12 @@
    "rai_2024_accidents": 13937.0,
    "rai_2024_deaths": 4644.0,
    "rai_2024_deaths_per_100km": 50.699,
-   "nhai_km_under_construction": 718.0
+   "nhai_km_under_construction": 718.0,
+   "tolled_km_share": 0.353,
+   "median_car_fee_inr": 95.0,
+   "median_truck_fee_inr": 330.0,
+   "traffic_count_km_share": 0.455,
+   "survey_points_per_100_official_km": 2.467
   },
   {
    "state": "Andhra Pradesh",
@@ -102,7 +127,12 @@
    "rai_2024_accidents": 8258.0,
    "rai_2024_deaths": 4014.0,
    "rai_2024_deaths_per_100km": 46.228,
-   "nhai_km_under_construction": 1121.0
+   "nhai_km_under_construction": 1121.0,
+   "tolled_km_share": 0.396,
+   "median_car_fee_inr": 65.0,
+   "median_truck_fee_inr": 220.0,
+   "traffic_count_km_share": 0.206,
+   "survey_points_per_100_official_km": 1.9
   },
   {
    "state": "Karnataka",
@@ -118,7 +148,12 @@
    "rai_2024_accidents": 14208.0,
    "rai_2024_deaths": 4278.0,
    "rai_2024_deaths_per_100km": 52.228,
-   "nhai_km_under_construction": 328.0
+   "nhai_km_under_construction": 328.0,
+   "tolled_km_share": 0.269,
+   "median_car_fee_inr": 67.5,
+   "median_truck_fee_inr": 227.5,
+   "traffic_count_km_share": 0.466,
+   "survey_points_per_100_official_km": 4.029
   },
   {
    "state": "Gujarat",
@@ -134,7 +169,12 @@
    "rai_2024_accidents": 3519.0,
    "rai_2024_deaths": 2192.0,
    "rai_2024_deaths_per_100km": 27.025,
-   "nhai_km_under_construction": 898.0
+   "nhai_km_under_construction": 898.0,
+   "tolled_km_share": 0.293,
+   "median_car_fee_inr": 100.0,
+   "median_truck_fee_inr": 335.0,
+   "traffic_count_km_share": 0.269,
+   "survey_points_per_100_official_km": 3.773
   },
   {
    "state": "Tamil Nadu",
@@ -150,7 +190,12 @@
    "rai_2024_accidents": 20672.0,
    "rai_2024_deaths": 6376.0,
    "rai_2024_deaths_per_100km": 91.086,
-   "nhai_km_under_construction": 484.0
+   "nhai_km_under_construction": 484.0,
+   "tolled_km_share": 0.341,
+   "median_car_fee_inr": 65.0,
+   "median_truck_fee_inr": 220.0,
+   "traffic_count_km_share": 0.393,
+   "survey_points_per_100_official_km": 3.1
   },
   {
    "state": "Bihar",
@@ -166,7 +211,12 @@
    "rai_2024_accidents": 4681.0,
    "rai_2024_deaths": 4012.0,
    "rai_2024_deaths_per_100km": 65.427,
-   "nhai_km_under_construction": 174.0
+   "nhai_km_under_construction": 174.0,
+   "tolled_km_share": 0.185,
+   "median_car_fee_inr": 60.0,
+   "median_truck_fee_inr": 195.0,
+   "traffic_count_km_share": 0.694,
+   "survey_points_per_100_official_km": 3.963
   },
   {
    "state": "Odisha",
@@ -182,7 +232,12 @@
    "rai_2024_accidents": 4555.0,
    "rai_2024_deaths": 2358.0,
    "rai_2024_deaths_per_100km": 39.986,
-   "nhai_km_under_construction": 245.0
+   "nhai_km_under_construction": 245.0,
+   "tolled_km_share": 0.182,
+   "median_car_fee_inr": 100.0,
+   "median_truck_fee_inr": 355.0,
+   "traffic_count_km_share": 0.72,
+   "survey_points_per_100_official_km": 2.272
   },
   {
    "state": "Telangana",
@@ -198,7 +253,12 @@
    "rai_2024_accidents": 8599.0,
    "rai_2024_deaths": 3066.0,
    "rai_2024_deaths_per_100km": 62.241,
-   "nhai_km_under_construction": 584.0
+   "nhai_km_under_construction": 584.0,
+   "tolled_km_share": 0.214,
+   "median_car_fee_inr": 65.0,
+   "median_truck_fee_inr": 230.0,
+   "traffic_count_km_share": 0.639,
+   "survey_points_per_100_official_km": 2.05
   },
   {
    "state": "Arunachal Pradesh",
@@ -214,7 +274,12 @@
    "rai_2024_accidents": 145.0,
    "rai_2024_deaths": 96.0,
    "rai_2024_deaths_per_100km": 2.198,
-   "nhai_km_under_construction": null
+   "nhai_km_under_construction": null,
+   "tolled_km_share": 0.0,
+   "median_car_fee_inr": null,
+   "median_truck_fee_inr": null,
+   "traffic_count_km_share": 0.879,
+   "survey_points_per_100_official_km": 0.481
   },
   {
    "state": "Punjab",
@@ -230,7 +295,12 @@
    "rai_2024_accidents": 1912.0,
    "rai_2024_deaths": 1562.0,
    "rai_2024_deaths_per_100km": 36.632,
-   "nhai_km_under_construction": 859.0
+   "nhai_km_under_construction": 854.0,
+   "tolled_km_share": 0.282,
+   "median_car_fee_inr": 100.0,
+   "median_truck_fee_inr": 335.0,
+   "traffic_count_km_share": 0.579,
+   "survey_points_per_100_official_km": 3.119
   },
   {
    "state": "Assam",
@@ -246,7 +316,12 @@
    "rai_2024_accidents": 3766.0,
    "rai_2024_deaths": 1722.0,
    "rai_2024_deaths_per_100km": 42.237,
-   "nhai_km_under_construction": 0.0
+   "nhai_km_under_construction": 0.0,
+   "tolled_km_share": 0.101,
+   "median_car_fee_inr": 92.5,
+   "median_truck_fee_inr": 315.0,
+   "traffic_count_km_share": 0.714,
+   "survey_points_per_100_official_km": 3.164
   },
   {
    "state": "West Bengal",
@@ -262,7 +337,12 @@
    "rai_2024_accidents": 4172.0,
    "rai_2024_deaths": 2113.0,
    "rai_2024_deaths_per_100km": 54.041,
-   "nhai_km_under_construction": 464.0
+   "nhai_km_under_construction": 464.0,
+   "tolled_km_share": 0.385,
+   "median_car_fee_inr": 60.0,
+   "median_truck_fee_inr": 205.0,
+   "traffic_count_km_share": 0.372,
+   "survey_points_per_100_official_km": 3.836
   },
   {
    "state": "Uttarakhand",
@@ -278,7 +358,12 @@
    "rai_2024_accidents": 828.0,
    "rai_2024_deaths": 543.0,
    "rai_2024_deaths_per_100km": 14.82,
-   "nhai_km_under_construction": 25.0
+   "nhai_km_under_construction": 25.0,
+   "tolled_km_share": 0.048,
+   "median_car_fee_inr": 80.0,
+   "median_truck_fee_inr": 270.0,
+   "traffic_count_km_share": 0.846,
+   "survey_points_per_100_official_km": 1.774
   },
   {
    "state": "Jharkhand",
@@ -294,7 +379,12 @@
    "rai_2024_accidents": 2039.0,
    "rai_2024_deaths": 1686.0,
    "rai_2024_deaths_per_100km": 46.408,
-   "nhai_km_under_construction": 195.0
+   "nhai_km_under_construction": 195.0,
+   "tolled_km_share": 0.157,
+   "median_car_fee_inr": 70.0,
+   "median_truck_fee_inr": 235.0,
+   "traffic_count_km_share": 0.745,
+   "survey_points_per_100_official_km": 4.266
   },
   {
    "state": "Chhattisgarh",
@@ -310,7 +400,12 @@
    "rai_2024_accidents": 4156.0,
    "rai_2024_deaths": 1952.0,
    "rai_2024_deaths_per_100km": 53.923,
-   "nhai_km_under_construction": 319.0
+   "nhai_km_under_construction": 319.0,
+   "tolled_km_share": 0.261,
+   "median_car_fee_inr": 65.0,
+   "median_truck_fee_inr": 217.5,
+   "traffic_count_km_share": 0.638,
+   "survey_points_per_100_official_km": 3.039
   },
   {
    "state": "Haryana",
@@ -326,7 +421,12 @@
    "rai_2024_accidents": 3844.0,
    "rai_2024_deaths": 2052.0,
    "rai_2024_deaths_per_100km": 61.309,
-   "nhai_km_under_construction": 625.0
+   "nhai_km_under_construction": 625.0,
+   "tolled_km_share": 0.359,
+   "median_car_fee_inr": 75.0,
+   "median_truck_fee_inr": 235.0,
+   "traffic_count_km_share": 0.521,
+   "survey_points_per_100_official_km": 4.033
   },
   {
    "state": "Himachal Pradesh",
@@ -342,7 +442,12 @@
    "rai_2024_accidents": 1018.0,
    "rai_2024_deaths": 312.0,
    "rai_2024_deaths_per_100km": 11.968,
-   "nhai_km_under_construction": 0.0
+   "nhai_km_under_construction": 0.0,
+   "tolled_km_share": 0.055,
+   "median_car_fee_inr": 214.553,
+   "median_truck_fee_inr": 724.266,
+   "traffic_count_km_share": 0.719,
+   "survey_points_per_100_official_km": 2.608
   },
   {
    "state": "Jammu and Kashmir",
@@ -358,7 +463,12 @@
    "rai_2024_accidents": 2120.0,
    "rai_2024_deaths": 271.0,
    "rai_2024_deaths_per_100km": 14.005,
-   "nhai_km_under_construction": 57.0
+   "nhai_km_under_construction": 57.0,
+   "tolled_km_share": 0.235,
+   "median_car_fee_inr": 75.0,
+   "median_truck_fee_inr": 255.0,
+   "traffic_count_km_share": 0.361,
+   "survey_points_per_100_official_km": 1.757
   },
   {
    "state": "Kerala",
@@ -374,7 +484,12 @@
    "rai_2024_accidents": 9757.0,
    "rai_2024_deaths": 940.0,
    "rai_2024_deaths_per_100km": 50.592,
-   "nhai_km_under_construction": 0.0
+   "nhai_km_under_construction": 0.0,
+   "tolled_km_share": 0.16,
+   "median_car_fee_inr": 70.0,
+   "median_truck_fee_inr": 235.0,
+   "traffic_count_km_share": 0.669,
+   "survey_points_per_100_official_km": 6.189
   },
   {
    "state": "Manipur",
@@ -390,7 +505,12 @@
    "rai_2024_accidents": 210.0,
    "rai_2024_deaths": 49.0,
    "rai_2024_deaths_per_100km": 2.663,
-   "nhai_km_under_construction": null
+   "nhai_km_under_construction": null,
+   "tolled_km_share": 0.0,
+   "median_car_fee_inr": null,
+   "median_truck_fee_inr": null,
+   "traffic_count_km_share": 0.88,
+   "survey_points_per_100_official_km": 1.739
   },
   {
    "state": "Nagaland",
@@ -406,7 +526,12 @@
    "rai_2024_accidents": 86.0,
    "rai_2024_deaths": 37.0,
    "rai_2024_deaths_per_100km": 2.216,
-   "nhai_km_under_construction": null
+   "nhai_km_under_construction": null,
+   "tolled_km_share": 0.0,
+   "median_car_fee_inr": null,
+   "median_truck_fee_inr": null,
+   "traffic_count_km_share": 0.776,
+   "survey_points_per_100_official_km": 1.138
   },
   {
    "state": "Mizoram",
@@ -422,7 +547,12 @@
    "rai_2024_accidents": 69.0,
    "rai_2024_deaths": 66.0,
    "rai_2024_deaths_per_100km": 4.403,
-   "nhai_km_under_construction": 0.0
+   "nhai_km_under_construction": 0.0,
+   "tolled_km_share": 0.0,
+   "median_car_fee_inr": null,
+   "median_truck_fee_inr": null,
+   "traffic_count_km_share": 0.837,
+   "survey_points_per_100_official_km": 2.068
   },
   {
    "state": "Meghalaya",
@@ -438,7 +568,12 @@
    "rai_2024_accidents": 135.0,
    "rai_2024_deaths": 102.0,
    "rai_2024_deaths_per_100km": 8.824,
-   "nhai_km_under_construction": null
+   "nhai_km_under_construction": null,
+   "tolled_km_share": 0.207,
+   "median_car_fee_inr": 90.0,
+   "median_truck_fee_inr": 300.0,
+   "traffic_count_km_share": 0.777,
+   "survey_points_per_100_official_km": 2.595
   },
   {
    "state": "Tripura",
@@ -454,7 +589,12 @@
    "rai_2024_accidents": 242.0,
    "rai_2024_deaths": 114.0,
    "rai_2024_deaths_per_100km": 12.823,
-   "nhai_km_under_construction": 0.0
+   "nhai_km_under_construction": 0.0,
+   "tolled_km_share": 0.0,
+   "median_car_fee_inr": null,
+   "median_truck_fee_inr": null,
+   "traffic_count_km_share": 0.9,
+   "survey_points_per_100_official_km": 2.7
   },
   {
    "state": "Ladakh",
@@ -470,7 +610,12 @@
    "rai_2024_accidents": 191.0,
    "rai_2024_deaths": 45.0,
    "rai_2024_deaths_per_100km": 5.583,
-   "nhai_km_under_construction": 0.0
+   "nhai_km_under_construction": 0.0,
+   "tolled_km_share": 0.0,
+   "median_car_fee_inr": null,
+   "median_truck_fee_inr": null,
+   "traffic_count_km_share": 0.88,
+   "survey_points_per_100_official_km": 0.372
   },
   {
    "state": "Sikkim",
@@ -486,7 +631,12 @@
    "rai_2024_accidents": 56.0,
    "rai_2024_deaths": 24.0,
    "rai_2024_deaths_per_100km": 3.385,
-   "nhai_km_under_construction": null
+   "nhai_km_under_construction": null,
+   "tolled_km_share": 0.0,
+   "median_car_fee_inr": null,
+   "median_truck_fee_inr": null,
+   "traffic_count_km_share": 0.497,
+   "survey_points_per_100_official_km": 1.41
   },
   {
    "state": "Andaman and Nicobar Islands",
@@ -502,7 +652,12 @@
    "rai_2024_accidents": 52.0,
    "rai_2024_deaths": 14.0,
    "rai_2024_deaths_per_100km": 4.23,
-   "nhai_km_under_construction": 0.0
+   "nhai_km_under_construction": 0.0,
+   "tolled_km_share": 0.0,
+   "median_car_fee_inr": null,
+   "median_truck_fee_inr": null,
+   "traffic_count_km_share": 0.0,
+   "survey_points_per_100_official_km": null
   },
   {
    "state": "Goa",
@@ -518,7 +673,12 @@
    "rai_2024_accidents": 920.0,
    "rai_2024_deaths": 108.0,
    "rai_2024_deaths_per_100km": 36.12,
-   "nhai_km_under_construction": 0.0
+   "nhai_km_under_construction": 0.0,
+   "tolled_km_share": 0.0,
+   "median_car_fee_inr": 90.0,
+   "median_truck_fee_inr": 290.0,
+   "traffic_count_km_share": 0.83,
+   "survey_points_per_100_official_km": 6.02
   },
   {
    "state": "Delhi",
@@ -534,7 +694,12 @@
    "rai_2024_accidents": 593.0,
    "rai_2024_deaths": 258.0,
    "rai_2024_deaths_per_100km": 164.331,
-   "nhai_km_under_construction": 85.0
+   "nhai_km_under_construction": 85.0,
+   "tolled_km_share": 0.133,
+   "median_car_fee_inr": 20.725,
+   "median_truck_fee_inr": 64.56,
+   "traffic_count_km_share": 0.0,
+   "survey_points_per_100_official_km": null
   },
   {
    "state": "Puducherry",
@@ -550,7 +715,12 @@
    "rai_2024_accidents": 631.0,
    "rai_2024_deaths": 105.0,
    "rai_2024_deaths_per_100km": 164.062,
-   "nhai_km_under_construction": 0.0
+   "nhai_km_under_construction": 0.0,
+   "tolled_km_share": 0.075,
+   "median_car_fee_inr": 65.0,
+   "median_truck_fee_inr": 220.0,
+   "traffic_count_km_share": 0.598,
+   "survey_points_per_100_official_km": 1.562
   },
   {
    "state": "Dadra and Nagar Haveli and Daman and Diu",
@@ -566,7 +736,12 @@
    "rai_2024_accidents": 2.0,
    "rai_2024_deaths": 1.0,
    "rai_2024_deaths_per_100km": 1.695,
-   "nhai_km_under_construction": 6.0
+   "nhai_km_under_construction": 6.0,
+   "tolled_km_share": 0.0,
+   "median_car_fee_inr": null,
+   "median_truck_fee_inr": null,
+   "traffic_count_km_share": 0.0,
+   "survey_points_per_100_official_km": null
   },
   {
    "state": "Chandigarh",
@@ -582,7 +757,12 @@
    "rai_2024_accidents": 13.0,
    "rai_2024_deaths": 3.0,
    "rai_2024_deaths_per_100km": 20.0,
-   "nhai_km_under_construction": null
+   "nhai_km_under_construction": null,
+   "tolled_km_share": null,
+   "median_car_fee_inr": null,
+   "median_truck_fee_inr": null,
+   "traffic_count_km_share": null,
+   "survey_points_per_100_official_km": null
   }
  ]
 }

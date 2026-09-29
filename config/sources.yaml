@@ -87,10 +87,28 @@ rai_2024_states_fatalities:
 
 # NHAI Datalake GeoServer — no license stated; used for analysis by team decision (ADR-0014).
 # Read-only GetFeature requests; `keep` is a keep-list, so personal fields never reach disk.
+nhai_traffic_survey:
+  url: https://datalakew.nhai.gov.in/geoserver/NHAI/ows
+  tls_max: "1.2"  # server drops OpenSSL 3.5's TLS 1.3 hello (UNEXPECTED_EOF)
+  layer: NHAI:traffic_survey
+  keep: [new_serial, road_type, new_nh_no_, state, toll_plaza, existing_i, final_outp, doubtful_c, zone, lane]
+  # traffic count locations (no counts); agency/company and village fields not kept
+  dest: nhai/traffic_survey.geojson
+  kind: wfs
+  license: none stated — analysis use by team decision (ADR-0014); not redistributed
+  attribution: National Highways Authority of India — Datalake GeoServer (traffic survey locations)
+  used_by: [national_highways]
+
 nhai_nh_network:
   url: https://datalakew.nhai.gov.in/geoserver/NHAI/ows
+  tls_max: "1.2"  # server drops OpenSSL 3.5's TLS 1.3 hello (UNEXPECTED_EOF)
   layer: NHAI:nh_network_of_india_new
-  keep: [state_ut, road_name, greenfield, road_type, lane_statu, completion, completi_1, toll_type, agency, gis_length]
+  keep: [state_ut, road_name, greenfield, road_type, lane_statu, completion, completi_1, toll_type, agency, gis_length,
+         toll_rate_, toll_rat_1, toll_rat_2, toll_rat_3, toll_rat_4, toll_rat_5, toll_rat_6, toll_rat_7, toll_rat_8, toll_rat_9,
+         traffic_1, traffic_2, traffic_3, traffic_4, traffic_5, traffic_6, traffic_7, traffic_8, traffic_9, traffic_10,
+         traffic_11, traffic_12, traffic_13, traffic_14]
+  # toll_rat*: single-journey fee by vehicle class (mapping checked in code, config/fields/national_highways.yaml)
+  # traffic_1..14: unlabelled counts — kept raw for profiling only until NHAI supplies the legend
   dest: nhai/nh_network_of_india_new.geojson
   kind: wfs
   license: none stated — analysis use by team decision (ADR-0014); not redistributed
@@ -99,6 +117,7 @@ nhai_nh_network:
 
 nhai_toll_plazas:
   url: https://datalakew.nhai.gov.in/geoserver/NHAI/ows
+  tls_max: "1.2"  # server drops OpenSSL 3.5's TLS 1.3 hello (UNEXPECTED_EOF)
   layer: NHAI:toll_plaza
   keep: [tollplazan, nooflanes, nhno_new, stateid, concession, tollingmod, designcapa, project_na, feecollect]
   dest: nhai/toll_plaza.geojson
@@ -109,6 +128,7 @@ nhai_toll_plazas:
 
 nhai_crashes:
   url: https://datalakew.nhai.gov.in/geoserver/NHAI/ows
+  tls_max: "1.2"  # server drops OpenSSL 3.5's TLS 1.3 hello (UNEXPECTED_EOF)
   layer: NHAI:RoadAccident_Spot_GIS_Layer
   keep: [accident_d, accident_t, upc, project_na, blackspot, project_st, chainage_f, chainage_t, classifica, no__of_fat]
   dest: nhai/road_accident_spots.geojson
@@ -119,6 +139,7 @@ nhai_crashes:
 
 nhai_black_spots:
   url: https://datalakew.nhai.gov.in/geoserver/NHAI/ows
+  tls_max: "1.2"  # server drops OpenSSL 3.5's TLS 1.3 hello (UNEXPECTED_EOF)
   layer: NHAI:RoadAccident_GIS_Layer
   keep: [blackspot_, blackspot1, nh_no_, start_chai, end_chaina, severity, state, district, type_of_ar, junction_r, type_of_ju, category_o, status_of_]
   dest: nhai/black_spots.geojson
@@ -129,6 +150,7 @@ nhai_black_spots:
 
 nhai_projects:
   url: https://datalakew.nhai.gov.in/geoserver/NHAI/ows
+  tls_max: "1.2"  # server drops OpenSSL 3.5's TLS 1.3 hello (UNEXPECTED_EOF)
   layer: NHAI:upc_wise_alignments_wfs_layer
   keep: [upc, length, lane, scheme, mode, state, phase, project_ty, project_na, current_st, starting_l, end_latitu, start_long, end_long, nh_new, green_brown_field]
   dest: nhai/upc_projects.geojson
@@ -140,6 +162,7 @@ nhai_projects:
 
 nhai_bharatmala:
   url: https://datalakew.nhai.gov.in/geoserver/NHAI/ows
+  tls_max: "1.2"  # server drops OpenSSL 3.5's TLS 1.3 hello (UNEXPECTED_EOF)
   layer: NHAI:bharatmala_corridors
   keep: [name, corridor_t, classifica, code, corridor, category_1]
   dest: nhai/bharatmala_corridors.geojson
