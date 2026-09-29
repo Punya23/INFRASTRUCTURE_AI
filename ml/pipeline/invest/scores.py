@@ -7,6 +7,7 @@ weights are renormalised — it is never scored as zero (AGENTS invariant 2, fai
 from __future__ import annotations
 
 import math
+from collections.abc import Iterable
 from dataclasses import dataclass, field
 from itertools import pairwise
 from pathlib import Path
@@ -53,7 +54,7 @@ class AreaScore:
     momentum: float | None
     coverage: float
     confidence: float
-    subscores: dict[str, float | None]  # echo of the inputs (None = unobserved)
+    subscores: dict[str, float | None]  # echo of the inputs (None = unobserved; NaN input is stored as None)
     points: dict[str, float]  # factor -> contribution in score points; sums to `score`
     drivers: tuple[tuple[str, float], ...]  # (factor, points), largest first, at most max_drivers
     gaps: tuple[tuple[str, float], ...]  # (factor, sub-score), largest weighted shortfall first
@@ -124,7 +125,12 @@ def subscore(factor: Factor, value: float | None) -> float | None:
     return knots[-1][1]
 
 
-def _driver_gap_lists(cfg, weights, subs, points):
+def _driver_gap_lists(
+    cfg: ScoringConfig,
+    weights: dict[str, float],
+    subs: dict[str, float],
+    points: dict[str, float],
+) -> tuple[tuple[tuple[str, float], ...], tuple[tuple[str, float], ...]]:
     drivers = sorted(
         ((f, p) for f, p in points.items() if subs[f] >= cfg.driver_min_subscore),
         key=lambda fp: (-fp[1], fp[0]),
@@ -137,12 +143,15 @@ def _driver_gap_lists(cfg, weights, subs, points):
 
 
 def score_area(cfg: ScoringConfig, preset_id: str, subscores: dict[str, float | None]) -> AreaScore | None:
-    """Score one area; None when no weighted factor was observed (nothing honest to say)."""
+    """Score one area; None when no weighted factor was observed (nothing honest to say).
+
+    NaN counts as not observed, exactly like None: pandas turns None into NaN in float columns."""
     unknown = set(subscores) - set(cfg.factors)
     if unknown:
         raise ValueError(f"unknown factor(s): {sorted(unknown)}")
+    subs = {f: None if s is None or math.isnan(s) else s for f, s in subscores.items()}
     weights = cfg.presets[preset_id].weights
-    observed = {f: s for f, s in subscores.items() if s is not None and weights[f] > 0}
+    observed = {f: s for f, s in subs.items() if s is not None and weights[f] > 0}
     observed_weight = sum(weights[f] for f in observed)
     if observed_weight == 0:
         return None
@@ -152,7 +161,7 @@ def score_area(cfg: ScoringConfig, preset_id: str, subscores: dict[str, float | 
     access = (
         sum(weights[f] * observed[f] for f in access_factors) / access_weight if access_weight else None
     )
-    momentum_values = [s for f, s in subscores.items() if s is not None and cfg.factors[f].group == "momentum"]
+    momentum_values = [s for f, s in subs.items() if s is not None and cfg.factors[f].group == "momentum"]
     momentum = sum(momentum_values) / len(momentum_values) if momentum_values else None
     drivers, gaps = _driver_gap_lists(cfg, weights, observed, points)
     return AreaScore(
@@ -161,7 +170,7 @@ def score_area(cfg: ScoringConfig, preset_id: str, subscores: dict[str, float | 
         momentum=momentum,
         coverage=observed_weight,  # weights sum to 1
         confidence=cfg.confidence_base * observed_weight,
-        subscores=dict(subscores),
+        subscores=subs,
         points=points,
         drivers=drivers,
         gaps=gaps,
@@ -176,17 +185,19 @@ def aggregate_city(
     if not areas or len(areas) != len(pops):
         raise ValueError("areas and pops must be non-empty and the same length")
     total = float(sum(pops))
-    if total <= 0:
-        raise ValueError("city population must be positive")
+    if not total > 0 or any(p < 0 for p in pops):  # `not total > 0` also rejects NaN
+        raise ValueError("area populations must be non-negative and sum to more than zero")
     weights = cfg.presets[preset_id].weights
 
-    def wmean(pairs):
+    def wmean(pairs: Iterable[tuple[float | None, float]]) -> float | None:
         pairs = [(v, p) for v, p in pairs if v is not None]
         w = sum(p for _, p in pairs)
         return sum(v * p for v, p in pairs) / w if w else None
 
     seen = {f for a in areas for f in a.points}  # factors at least one area observed and weighted
-    points = {f: sum(p * a.points.get(f, 0.0) for a, p in zip(areas, pops)) / total for f in seen}
+    points = {  # config order, not set order, so a rerun writes byte-identical output
+        f: sum(p * a.points.get(f, 0.0) for a, p in zip(areas, pops)) / total for f in cfg.factors if f in seen
+    }
     subs = {f: wmean((a.subscores.get(f), p) for a, p in zip(areas, pops)) for f in cfg.factors}
     coverage = sum(a.coverage * p for a, p in zip(areas, pops)) / total
     observed = {f: s for f, s in subs.items() if s is not None and f in points}

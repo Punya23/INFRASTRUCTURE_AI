@@ -83,6 +83,17 @@ def test_nothing_observed_returns_none(cfg):
     assert score_area(cfg, "balanced", {f: None for f in FACTORS}) is None
 
 
+@pytest.mark.parametrize("factor", FACTORS)
+def test_nan_is_unobserved_exactly_like_none(cfg, factor):
+    # pandas turns None into NaN in float columns; a NaN must never count as an observed value
+    with_nan = score_area(cfg, "balanced", {**ALL_80, factor: float("nan")})
+    assert with_nan == score_area(cfg, "balanced", {**ALL_80, factor: None})
+
+
+def test_all_nan_means_nothing_observed(cfg):
+    assert score_area(cfg, "balanced", {f: float("nan") for f in FACTORS}) is None
+
+
 def test_unknown_factor_is_rejected(cfg):
     with pytest.raises(ValueError, match="unknown factor"):
         score_area(cfg, "balanced", {**ALL_80, "vibes": 90.0})
@@ -109,6 +120,14 @@ def test_zero_weight_factor_is_never_a_watch_out(cfg):
     r = score_area(cfg, "highway", {**ALL_80, "metro_access": 0.0})  # the highway preset ignores metro
     assert r.score == pytest.approx(80.0)
     assert r.gaps == ()
+
+
+def test_a_driver_needs_a_sub_score_of_at_least_50(cfg):
+    subs = {**dict.fromkeys(FACTORS, 10.0), "nh_access": 50.0, "rail_access": 49.9}
+    area = score_area(cfg, "balanced", subs)
+    city = aggregate_city(cfg, "balanced", [area], [1000])
+    for r in (area, city):
+        assert [f for f, _ in r.drivers] == ["nh_access"]  # 50 qualifies, 49.9 does not, nothing pads the list
 
 
 def test_city_is_population_weighted(cfg):
@@ -139,9 +158,53 @@ def test_city_coverage_confidence_access_momentum_are_population_weighted(cfg):
     assert c.access == pytest.approx((a.access * 3 + b.access) / 4)
 
 
+def test_city_drivers_and_gaps_come_from_the_weighted_city_values(cfg):
+    subs_a = {"nh_access": 90, "rail_access": 10, "metro_access": None, "road_strength": 60, "built_up_growth": 100}
+    a = score_area(cfg, "balanced", subs_a)
+    b = score_area(cfg, "balanced", {f: 40.0 for f in FACTORS})
+    c = aggregate_city(cfg, "balanced", [a, b], [3000, 1000])
+    assert [f for f, _ in c.drivers] == ["built_up_growth", "nh_access", "road_strength"]
+    assert [p for _, p in c.drivers] == pytest.approx([29.471, 22.353, 9.441], abs=1e-3)
+    assert c.gaps == (("rail_access", pytest.approx(17.5)),)  # metro sits exactly on 40, which is not below the line
+    assert c.subscores["metro_access"] == 40.0  # only area b observed it
+
+
+@pytest.mark.parametrize("metro", [80.0, 0.0])
+def test_city_ignores_a_factor_the_preset_gives_zero_weight(cfg, metro):
+    a = score_area(cfg, "highway", {**ALL_80, "metro_access": metro})  # the highway preset weights metro at 0
+    c = aggregate_city(cfg, "highway", [a, a], [1000, 1000])
+    assert "metro_access" not in c.points
+    assert c.gaps == ()  # even a metro sub-score of 0 is no watch-out when the preset ignores metro
+    assert c.subscores["metro_access"] == metro  # still reported for display
+
+
+def test_city_factor_observed_in_no_area_is_dropped_not_zero(cfg):
+    a = score_area(cfg, "balanced", {**ALL_80, "rail_access": None})
+    c = aggregate_city(cfg, "balanced", [a, a], [1000, 3000])
+    assert c.subscores["rail_access"] is None
+    assert "rail_access" not in c.points
+    assert c.coverage == pytest.approx(0.85)  # balanced weight of rail_access is 0.15
+    assert c.score == pytest.approx(80.0)
+
+
+def test_city_points_keep_config_factor_order(cfg):
+    c = aggregate_city(cfg, "balanced", [score_area(cfg, "balanced", ALL_80)], [1000])
+    assert list(c.points) == [f for f in cfg.factors if f in c.points]  # not set order: reruns must be byte-identical
+
+
 def test_city_rejects_empty_and_zero_population(cfg):
     a = score_area(cfg, "balanced", ALL_80)
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="non-empty"):
         aggregate_city(cfg, "balanced", [], [])
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="same length"):
+        aggregate_city(cfg, "balanced", [a], [1000, 1000])
+    with pytest.raises(ValueError, match="populations"):
         aggregate_city(cfg, "balanced", [a], [0])
+
+
+@pytest.mark.parametrize("pops", [[3000, -1000], [-5], [float("nan")]])
+def test_city_rejects_negative_or_nan_population(cfg, pops):
+    # WorldPop's nodata is -99999 and pandas turns a missing value into NaN; either would silently skew the weights
+    a = score_area(cfg, "balanced", ALL_80)
+    with pytest.raises(ValueError, match="populations"):
+        aggregate_city(cfg, "balanced", [a] * len(pops), pops)
