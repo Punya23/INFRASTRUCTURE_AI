@@ -11,6 +11,7 @@ from collections import Counter
 
 import numpy as np
 import pandas as pd
+from affine import Affine
 
 _OFFSETS = {
     4: [(-1, 0), (0, -1), (0, 1), (1, 0)],
@@ -81,14 +82,22 @@ def label_urban_centres(density, state_ids, min_density, connectivity=8):
     return labels, label_state
 
 
-def assign_places(places: pd.DataFrame, labels: np.ndarray, transform) -> pd.DataFrame:
-    """Add `label` (0 = outside every urban centre) to places with `lon`/`lat`, by the raster cell."""
-    cols, rows = ~transform @ (places["lon"].to_numpy(), places["lat"].to_numpy())
-    rows, cols = np.floor(rows).astype(int), np.floor(cols).astype(int)
+def assign_places(places: pd.DataFrame, labels: np.ndarray, transform: Affine) -> pd.DataFrame:
+    """Add `label` (0 = outside every urban centre) to places with `lon`/`lat`, by the raster cell.
+
+    A place off the grid, or with a NaN or infinite coordinate, is outside: it is never guessed
+    onto a cell.
+    """
+    lon = places["lon"].to_numpy(dtype=float)
+    lat = places["lat"].to_numpy(dtype=float)
+    located = np.isfinite(lon) & np.isfinite(lat)
+    # NaN in, NaN out: it fails every bound below, so nothing non-finite is ever cast to an index
+    cols, rows = ~transform @ (np.where(located, lon, np.nan), np.where(located, lat, np.nan))
+    rows, cols = np.floor(rows), np.floor(cols)
     inside = (rows >= 0) & (rows < labels.shape[0]) & (cols >= 0) & (cols < labels.shape[1])
     out = places.copy()
     out["label"] = 0
-    out.loc[inside, "label"] = labels[rows[inside], cols[inside]]
+    out.loc[inside, "label"] = labels[rows[inside].astype(int), cols[inside].astype(int)]
     return out
 
 

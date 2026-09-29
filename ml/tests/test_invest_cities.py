@@ -47,14 +47,38 @@ def test_cells_outside_every_state_polygon_inherit_the_neighbour_state():
     assert set(label_state.values()) == {7}
 
 
+# A 2x2 grid of 0.1-degree cells: pixel (0,0) spans lon 73.0-73.1, lat 18.9-19.0.
+GRID = Affine(0.1, 0, 73.0, 0, -0.1, 19.0)
+
+
+@pytest.mark.filterwarnings("error")  # affine deprecates `transform * point`; a warning must fail
 def test_assign_places_uses_the_raster_cell():
     labels = np.zeros((2, 2), dtype=np.int32)
     labels[0, 0] = 5
-    transform = Affine(
-        0.1, 0, 73.0, 0, -0.1, 19.0
-    )  # pixel (0,0) spans lon 73.0-73.1, lat 18.9-19.0
     places = pd.DataFrame({"lon": [73.05, 73.15, 80.0], "lat": [18.95, 18.95, 18.95]})
-    assert assign_places(places, labels, transform)["label"].tolist() == [5, 0, 0]
+    assert assign_places(places, labels, GRID)["label"].tolist() == [5, 0, 0]
+
+
+@pytest.mark.filterwarnings("error")
+def test_assign_places_off_the_grid_on_any_side_is_outside():
+    labels = np.array([[1, 2], [3, 4]], dtype=np.int32)  # no empty cell, so a wrap-around shows
+    places = pd.DataFrame(
+        {
+            # inside, inside, west of the grid, north, east, south
+            "lon": [73.05, 73.15, 72.95, 73.05, 73.25, 73.05],
+            "lat": [18.95, 18.85, 18.95, 19.05, 18.95, 18.75],
+        }
+    )
+    assert assign_places(places, labels, GRID)["label"].tolist() == [1, 4, 0, 0, 0, 0]
+
+
+@pytest.mark.filterwarnings("error")
+def test_assign_places_non_finite_coordinates_are_outside_without_a_warning():
+    labels = np.full((2, 2), 9, dtype=np.int32)
+    places = pd.DataFrame(
+        {"lon": [np.nan, 73.05, np.inf, 73.05], "lat": [18.95, np.nan, 18.95, -np.inf]}
+    )
+    assert assign_places(places, labels, GRID)["label"].tolist() == [0, 0, 0, 0]
 
 
 def test_name_pieces_uses_largest_place_and_lists_big_aliases():
