@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { formatCount, formatDelta, formatKm, formatScore, formatValue, tt } from './format.js';
+import { formatCount, formatDelta, formatScore, formatValue, tt } from './format.js';
 
 test('counts use Indian grouping in every language', () => {
   assert.equal(formatCount(6100000, 'en'), '61,00,000');
@@ -42,16 +42,6 @@ test('an observed zero is not unknown', () => {
   assert.equal(formatValue(-0.04, 0), '0');
   assert.equal(formatValue(-0.06), '-0.1');
   assert.equal(formatValue(-12.34), '-12.3');
-});
-
-test('distances carry a localised unit and drop a trailing .0', () => {
-  assert.equal(formatKm(3.14, 'en'), '3.1 km');
-  assert.equal(formatKm(12, 'en'), '12 km');
-  // The unit is written in the reader's script; the exact abbreviation is ICU data and can differ by version.
-  assert.match(formatKm(3.1, 'hi'), /^3\.1 [\u0900-\u097F॰.]+$/u);
-  assert.match(formatKm(3.1, 'kn'), /^3\.1 [\u0C80-\u0CFF.]+$/u);
-  assert.equal(formatKm(3.1, 'zz'), '3.1 km', 'a language without a dictionary reads like English');
-  assert.equal(formatKm(null, 'en'), '—');
 });
 
 test('tt fills tokens from a dictionary and falls back to the key', () => {

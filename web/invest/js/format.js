@@ -29,21 +29,6 @@ export function formatValue(x, digits = 1) {
   return /^-0(\.0+)?$/.test(text) ? text.slice(1) : text;
 }
 
-// "3.1 km" in English, with the unit written in the reader's script for Hindi and Kannada.
-const KM_LOCALE = { hi: 'hi-IN', kn: 'kn-IN' };
-const kmFormats = new Map();
-
-export function formatKm(x, lang) {
-  if (!Number.isFinite(x)) return DASH;
-  const locale = KM_LOCALE[lang] ?? 'en-IN';
-  if (!kmFormats.has(locale)) {
-    kmFormats.set(locale, new Intl.NumberFormat(locale, {
-      style: 'unit', unit: 'kilometer', unitDisplay: 'short', maximumFractionDigits: 1,
-    }));
-  }
-  return kmFormats.get(locale).format(x);
-}
-
 // Translate `key` (from i18n.js, or `dict` in tests) and fill {name} tokens from `params`. Falls back
 // to the key itself, so a missing string is visible instead of blank. A token with no usable
 // parameter (missing, null, undefined, NaN or infinite) is left as written, never printed as a value.
