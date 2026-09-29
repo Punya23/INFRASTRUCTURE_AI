@@ -747,6 +747,57 @@
     </section>
   </main>
 
+  <!-- ==========================================
+       REAL NH ANALYTICS (from ML pipeline fixtures)
+       ========================================== -->
+  <section style="padding:2rem 1rem;max-width:1200px;margin:0 auto;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;">
+      <div>
+        <h2 style="font-size:1.5rem;font-weight:700;color:var(--primary);display:flex;align-items:center;gap:0.5rem;">
+          <span class="material-symbols-outlined" style="font-size:24px;">verified</span>
+          National Highways — Real Data Analytics
+        </h2>
+        <p class="text-body-sm" style="color:var(--on-surface-variant);margin-top:0.25rem;">
+          Source: MoRTH Annual Report 2024-25 + © OpenStreetMap contributors + WorldPop 2020 + NHAI Datalake
+        </p>
+      </div>
+      <a href="nh-explorer.html" style="padding:0.5rem 1rem;border-radius:999px;background:var(--primary);color:var(--on-primary);font-size:0.8125rem;font-weight:600;display:flex;align-items:center;gap:0.375rem;">
+        <span class="material-symbols-outlined" style="font-size:16px;">map</span>
+        Open NH Map Explorer
+      </a>
+    </div>
+
+    <!-- National KPIs from real data -->
+    <div id="nh-kpi-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:0.75rem;margin-bottom:1.5rem;"></div>
+
+    <!-- State table -->
+    <div style="background:var(--surface-container-lowest);border-radius:var(--radius-lg);border:1px solid var(--border-subtle);overflow:hidden;">
+      <div style="padding:0.75rem 1rem;border-bottom:1px solid var(--border-subtle);display:flex;align-items:center;justify-content:space-between;">
+        <span style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted);">State-wise NH Metrics (click headers to sort)</span>
+        <button onclick="exportNHData()" style="padding:0.375rem 0.75rem;border-radius:var(--radius);background:var(--surface-container);color:var(--primary);font-size:0.75rem;font-weight:600;display:flex;align-items:center;gap:0.25rem;border:1px solid var(--border-subtle);">
+          <span class="material-symbols-outlined" style="font-size:14px;">download</span>
+          Export CSV
+        </button>
+      </div>
+      <div style="overflow-x:auto;max-height:500px;overflow-y:auto;">
+        <table id="nh-state-table" style="width:100%;border-collapse:collapse;font-size:0.75rem;">
+          <thead>
+            <tr style="position:sticky;top:0;background:var(--surface-container-lowest);z-index:2;">
+              <th onclick="sortNH(0)" style="text-align:left;padding:0.5rem;font-weight:600;color:var(--text-muted);font-size:0.625rem;text-transform:uppercase;letter-spacing:0.04em;border-bottom:2px solid var(--border-subtle);cursor:pointer;">State ↕</th>
+              <th onclick="sortNH(1)" style="text-align:right;padding:0.5rem;font-weight:600;color:var(--text-muted);font-size:0.625rem;text-transform:uppercase;letter-spacing:0.04em;border-bottom:2px solid var(--border-subtle);cursor:pointer;">Official km ↕</th>
+              <th onclick="sortNH(2)" style="text-align:right;padding:0.5rem;font-weight:600;color:var(--text-muted);font-size:0.625rem;text-transform:uppercase;letter-spacing:0.04em;border-bottom:2px solid var(--border-subtle);cursor:pointer;">OSM km ↕</th>
+              <th onclick="sortNH(3)" style="text-align:right;padding:0.5rem;font-weight:600;color:var(--text-muted);font-size:0.625rem;text-transform:uppercase;letter-spacing:0.04em;border-bottom:2px solid var(--border-subtle);cursor:pointer;">Coverage ↕</th>
+              <th onclick="sortNH(4)" style="text-align:right;padding:0.5rem;font-weight:600;color:var(--text-muted);font-size:0.625rem;text-transform:uppercase;letter-spacing:0.04em;border-bottom:2px solid var(--border-subtle);cursor:pointer;">Pop ≤10km ↕</th>
+              <th onclick="sortNH(5)" style="text-align:right;padding:0.5rem;font-weight:600;color:var(--text-muted);font-size:0.625rem;text-transform:uppercase;letter-spacing:0.04em;border-bottom:2px solid var(--border-subtle);cursor:pointer;">Deaths/100km ↕</th>
+              <th onclick="sortNH(6)" style="text-align:right;padding:0.5rem;font-weight:600;color:var(--text-muted);font-size:0.625rem;text-transform:uppercase;letter-spacing:0.04em;border-bottom:2px solid var(--border-subtle);cursor:pointer;">Under Const. ↕</th>
+            </tr>
+          </thead>
+          <tbody id="nh-state-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
   <!-- Footer -->
   <footer class="site-footer">
     <div class="container" style="display:flex;flex-direction:column;gap:0.75rem;align-items:center;text-align:center;">
@@ -1196,10 +1247,118 @@
       }
     }
 
+    // ========================================
+    // REAL NH ANALYTICS (from ML pipeline)
+    // ========================================
+    let nhMetrics = null;
+    let nhSortCol = 1, nhSortAsc = false;
+
+    async function loadNHAnalytics() {
+      try {
+        const res = await fetch('fixtures/national_highways/nh_state_metrics.json');
+        nhMetrics = await res.json();
+        renderNHKPIs();
+        renderNHTable();
+      } catch (err) {
+        console.warn('NH metrics not loaded:', err);
+      }
+    }
+
+    function renderNHKPIs() {
+      if (!nhMetrics || !nhMetrics.states) return;
+      const india = nhMetrics.states.find(s => s.state === 'India');
+      if (!india) return;
+
+      const kpis = [
+        { label: 'Official NH Length', value: india.official_km.toLocaleString('en-IN'), unit: 'km', source: 'MoRTH 2024-25', color: 'var(--primary)' },
+        { label: 'OSM Mapped', value: Math.round(india.osm_nh_km).toLocaleString('en-IN'), unit: `km (${(india.osm_ratio*100).toFixed(1)}%)`, source: '© OSM contributors', color: 'var(--primary)' },
+        { label: 'Pop. within 10 km', value: (india.share_within_10km_now*100).toFixed(0), unit: '% of Indians', source: 'WorldPop 2020', color: 'var(--status-operational)' },
+        { label: 'Under Construction', value: india.nhai_km_under_construction.toLocaleString('en-IN'), unit: 'km', source: 'NHAI Datalake', color: 'var(--status-construction)' },
+        { label: 'NHAI Crashes (FY23)', value: india.nhai_2022_23_crashes.toLocaleString('en-IN'), unit: 'incidents', source: 'NHAI 2022-23', color: 'var(--status-stalled)' },
+        { label: 'NHAI Deaths (FY23)', value: india.nhai_2022_23_deaths.toLocaleString('en-IN'), unit: `(${india.nhai_2022_23_deaths_per_100km_per_year.toFixed(1)}/100km/yr)`, source: 'NHAI 2022-23', color: 'var(--status-stalled)' },
+      ];
+
+      const grid = document.getElementById('nh-kpi-grid');
+      grid.innerHTML = kpis.map(k => `
+        <div style="background:var(--surface-container-lowest);border-radius:0.5rem;padding:0.75rem;border:1px solid var(--border-subtle);">
+          <div style="font-size:0.625rem;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted);">${k.label}</div>
+          <div style="font-size:1.375rem;font-weight:700;color:${k.color};font-family:'JetBrains Mono',monospace;margin-top:0.125rem;">${k.value}</div>
+          <div style="font-size:0.6875rem;color:var(--text-secondary);">${k.unit}</div>
+          <div style="font-size:0.5625rem;color:var(--text-muted);margin-top:0.25rem;font-family:'JetBrains Mono',monospace;">[${k.source}]</div>
+        </div>
+      `).join('');
+    }
+
+    function renderNHTable() {
+      if (!nhMetrics || !nhMetrics.states) return;
+      const states = nhMetrics.states.filter(s => s.state !== 'India');
+
+      states.sort((a, b) => {
+        let va, vb;
+        switch (nhSortCol) {
+          case 0: va = a.state; vb = b.state; return nhSortAsc ? va.localeCompare(vb) : vb.localeCompare(va);
+          case 1: va = a.official_km || 0; vb = b.official_km || 0; break;
+          case 2: va = a.osm_nh_km || 0; vb = b.osm_nh_km || 0; break;
+          case 3: va = a.osm_ratio || 0; vb = b.osm_ratio || 0; break;
+          case 4: va = a.share_within_10km_now || 0; vb = b.share_within_10km_now || 0; break;
+          case 5: va = a.nhai_2022_23_deaths_per_100km_per_year || 0; vb = b.nhai_2022_23_deaths_per_100km_per_year || 0; break;
+          case 6: va = a.nhai_km_under_construction || 0; vb = b.nhai_km_under_construction || 0; break;
+        }
+        return nhSortAsc ? va - vb : vb - va;
+      });
+
+      const maxKm = Math.max(...states.map(s => s.official_km || 0));
+      const tbody = document.getElementById('nh-state-tbody');
+      tbody.innerHTML = states.map(s => {
+        const barW = ((s.official_km || 0) / maxKm * 100).toFixed(1);
+        const deathRate = s.nhai_2022_23_deaths_per_100km_per_year;
+        const deathColor = deathRate > 6 ? 'var(--status-stalled)' : deathRate > 3 ? '#D97706' : 'var(--status-operational)';
+        const covColor = (s.osm_ratio || 0) >= 0.95 ? 'var(--status-operational)' : (s.osm_ratio || 0) >= 0.8 ? '#D97706' : 'var(--status-stalled)';
+        return `<tr style="border-bottom:1px solid rgba(0,0,0,0.04);">
+          <td style="padding:0.375rem 0.5rem;font-weight:500;color:var(--on-surface);font-size:0.75rem;">${s.state}</td>
+          <td style="padding:0.375rem 0.5rem;text-align:right;font-family:'JetBrains Mono',monospace;font-size:0.6875rem;position:relative;">
+            <div style="position:absolute;left:0;top:2px;bottom:2px;background:var(--primary);opacity:0.08;border-radius:2px;width:${barW}%;"></div>
+            ${(s.official_km || 0).toLocaleString('en-IN')}
+          </td>
+          <td style="padding:0.375rem 0.5rem;text-align:right;font-family:'JetBrains Mono',monospace;font-size:0.6875rem;">${s.osm_nh_km ? Math.round(s.osm_nh_km).toLocaleString('en-IN') : '—'}</td>
+          <td style="padding:0.375rem 0.5rem;text-align:right;font-family:'JetBrains Mono',monospace;font-size:0.6875rem;color:${covColor};font-weight:600;">${s.osm_ratio ? (s.osm_ratio*100).toFixed(0) + '%' : '—'}</td>
+          <td style="padding:0.375rem 0.5rem;text-align:right;font-family:'JetBrains Mono',monospace;font-size:0.6875rem;">${s.share_within_10km_now ? (s.share_within_10km_now*100).toFixed(0) + '%' : '—'}</td>
+          <td style="padding:0.375rem 0.5rem;text-align:right;font-family:'JetBrains Mono',monospace;font-size:0.6875rem;color:${deathColor};font-weight:600;">${deathRate ? deathRate.toFixed(1) : '—'}</td>
+          <td style="padding:0.375rem 0.5rem;text-align:right;font-family:'JetBrains Mono',monospace;font-size:0.6875rem;">${s.nhai_km_under_construction ? s.nhai_km_under_construction.toLocaleString('en-IN') : '—'}</td>
+        </tr>`;
+      }).join('');
+    }
+
+    function sortNH(col) {
+      if (nhSortCol === col) nhSortAsc = !nhSortAsc;
+      else { nhSortCol = col; nhSortAsc = col === 0; }
+      renderNHTable();
+    }
+
+    function exportNHData() {
+      if (!nhMetrics || !nhMetrics.states) return;
+      const headers = ['State','Official_km','OSM_km','Coverage_pct','Pop_within_10km_pct','Deaths_per_100km','Under_construction_km'];
+      const rows = nhMetrics.states.filter(s => s.state !== 'India').map(s => [
+        s.state, s.official_km || '', Math.round(s.osm_nh_km || 0),
+        s.osm_ratio ? (s.osm_ratio*100).toFixed(1) : '',
+        s.share_within_10km_now ? (s.share_within_10km_now*100).toFixed(1) : '',
+        s.nhai_2022_23_deaths_per_100km_per_year || '',
+        s.nhai_km_under_construction || ''
+      ]);
+      const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'INFRA-AI-NH-State-Metrics.csv';
+      document.body.appendChild(a); a.click();
+      document.body.removeChild(a); URL.revokeObjectURL(url);
+    }
+
     // Initialize on DOM load
     window.addEventListener('DOMContentLoaded', () => {
       hydrateKPIs();
       renderHotspots();
+      loadNHAnalytics();
     });
   </script>
 </body>

@@ -1591,8 +1591,32 @@
     submitModal.addEventListener('click', (e) => { if (e.target === submitModal) closeModal(); });
     document.getElementById('need-form').addEventListener('submit', (e) => {
       e.preventDefault();
+      // Gather form data
+      const form = e.target;
+      const request = {
+        id: 'INFRA-' + Date.now().toString(36).toUpperCase(),
+        timestamp: new Date().toISOString(),
+        location: form.querySelector('[name="location"], #need-location, input[placeholder*="location" i], input[placeholder*="Hebbal" i]')?.value || '',
+        category: form.querySelector('select')?.value || '',
+        description: form.querySelector('textarea')?.value || '',
+        status: 'submitted',
+        language: document.documentElement.lang || 'en'
+      };
+      // Store in localStorage
+      const existing = JSON.parse(localStorage.getItem('infra_ai_requests') || '[]');
+      existing.push(request);
+      localStorage.setItem('infra_ai_requests', JSON.stringify(existing));
+      // Update success view with ticket ID
+      const ticketEl = document.getElementById('ticket-id-display');
+      if (ticketEl) ticketEl.textContent = request.id;
       formContainer.style.display = 'none';
       successDiv.classList.add('show');
+      // Update submission count
+      const countEl = document.getElementById('stat-submissions');
+      if (countEl) {
+        const total = existing.length;
+        countEl.textContent = total + ' Request' + (total !== 1 ? 's' : '') + ' logged';
+      }
     });
     document.getElementById('submit-another-btn').addEventListener('click', () => {
       formContainer.style.display = 'block';

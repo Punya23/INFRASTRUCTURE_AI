@@ -1238,7 +1238,25 @@
     document.getElementById('report-need-btn').addEventListener('click', () => { document.getElementById('report-modal').classList.add('open'); document.getElementById('report-form-container').style.display = 'block'; document.getElementById('report-success').classList.remove('show'); });
     function closeReportModal() { document.getElementById('report-modal').classList.remove('open'); }
     document.getElementById('report-modal').addEventListener('click', (e) => { if (e.target === document.getElementById('report-modal')) closeReportModal(); });
-    document.getElementById('report-form').addEventListener('submit', (e) => { e.preventDefault(); document.getElementById('report-form-container').style.display = 'none'; document.getElementById('report-success').classList.add('show'); });
+    document.getElementById('report-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const request = {
+        id: 'INFRA-' + Date.now().toString(36).toUpperCase(),
+        timestamp: new Date().toISOString(),
+        location: document.getElementById('r-location')?.value || '',
+        category: document.getElementById('r-category')?.value || '',
+        description: document.getElementById('r-desc')?.value || '',
+        status: 'submitted',
+        source: 'explore-page',
+        language: document.documentElement.lang || 'en'
+      };
+      const existing = JSON.parse(localStorage.getItem('infra_ai_requests') || '[]');
+      existing.push(request);
+      localStorage.setItem('infra_ai_requests', JSON.stringify(existing));
+      document.getElementById('report-form-container').style.display = 'none';
+      document.getElementById('report-success').classList.add('show');
+    });
     document.getElementById('report-another-btn').addEventListener('click', () => { document.getElementById('report-form-container').style.display = 'block'; document.getElementById('report-success').classList.remove('show'); document.getElementById('report-form').reset(); });
 
     // === Language Switcher — now handled by shared i18n.js ===
