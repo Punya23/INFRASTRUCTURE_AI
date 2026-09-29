@@ -60,8 +60,9 @@ export function renderSkeleton(node, rows = 3) {
 // What to tell the visitor about a failed request. Only the codes a person can act on get their own
 // wording; everything else, including unexpected errors, reads the same and leaks no detail.
 const SPECIFIC_ERRORS = new Set(['timeout', 'network', 'rate_limited', 'not_found']);
-const errorKey = (error) => `inv.error.${SPECIFIC_ERRORS.has(error?.code) ? error.code : 'generic'}`;
-export const errorText = (error) => tt(errorKey(error));
+// Give the key to data-i18n (with tt(key) as the starting text) for a message shown outside renderError,
+// so i18n.js fills in the wording even if the request failed before its dictionary loaded.
+export const errorKey = (error) => `inv.error.${SPECIFIC_ERRORS.has(error?.code) ? error.code : 'generic'}`;
 
 // Replaces the children of `node` with an error message and, when there is something to retry, a
 // Retry button. To keep the last good view on screen, pass a separate slot next to it, not the

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { ApiError } from './api.js';
-import { clear, errorText, h, onLangChange, renderError, renderSkeleton, setStatus } from './ui.js';
+import { clear, errorKey, h, onLangChange, renderError, renderSkeleton, setStatus } from './ui.js';
 
 // Node has no DOM and this project takes no test dependency, so this is a minimal stand-in: enough to
 // see what h() does. Elements REFUSE direct property assignment, so h() reaching for a markup setter
@@ -216,15 +216,13 @@ test('onLangChange calls back with the new language and can unsubscribe', (t) =>
   assert.equal(doc.listeners['infra-ai-lang-change'].length, 0);
 });
 
-test('errorText picks a specific message for the codes people can act on, a generic one otherwise', (t) => {
-  t.after(() => { delete globalThis.InfraI18n; });
-  globalThis.InfraI18n = { t: (key) => key };
+test('errorKey picks a specific message for the codes people can act on, a generic one otherwise', () => {
   for (const code of ['timeout', 'network', 'rate_limited', 'not_found']) {
-    assert.equal(errorText(new ApiError(code, 'x')), `inv.error.${code}`);
+    assert.equal(errorKey(new ApiError(code, 'x')), `inv.error.${code}`);
   }
   for (const code of ['internal', 'bad_response', 'bad_request', 'aborted', 'made_up', '__proto__', 'constructor']) {
-    assert.equal(errorText(new ApiError(code, 'x')), 'inv.error.generic', code);
+    assert.equal(errorKey(new ApiError(code, 'x')), 'inv.error.generic', code);
   }
-  assert.equal(errorText(new Error('secret internal detail')), 'inv.error.generic');
-  assert.equal(errorText(undefined), 'inv.error.generic');
+  assert.equal(errorKey(new Error('secret internal detail')), 'inv.error.generic');
+  assert.equal(errorKey(undefined), 'inv.error.generic');
 });
