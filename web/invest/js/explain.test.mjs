@@ -30,6 +30,11 @@ test('unobserved is unknown, never zero', () => {
 });
 test('growth and roads', () => {
   assert.deepEqual(explain('why', { factor: 'built_up_growth', value: 24.4 }, meta), { key: 'inv.why.built_up_growth', params: { pp: 24 } });
+  // exactly one point is singular in English ("1 percentage point"); 0 and decimals that round elsewhere are not
+  assert.deepEqual(explain('why', { factor: 'built_up_growth', value: 1.2 }, meta), { key: 'inv.why.built_up_growth.one', params: { pp: 1 } });
+  assert.equal(explain('gap', { factor: 'built_up_growth', value: 0.8 }, meta).key, 'inv.gap.built_up_growth.one');
+  assert.equal(explain('gap', { factor: 'built_up_growth', value: 0.2 }, meta).key, 'inv.gap.built_up_growth');
+  assert.equal(explain('gap', { factor: 'built_up_growth', value: 2 }, meta).key, 'inv.gap.built_up_growth');
   assert.deepEqual(explain('why', { factor: 'road_strength', value: 2.24 }, meta), { key: 'inv.why.road_strength', params: { km: 2.2 } });
 });
 
@@ -101,5 +106,5 @@ test('every key explain() can return has English wording that its parameters fil
   }
   const orphans = Object.keys(en).filter((k) => /^inv\.(why|gap)\./.test(k) && !used.has(k));
   assert.deepEqual(orphans, [], 'wording that explain() never asks for');
-  assert.equal(used.size, 38);
+  assert.equal(used.size, 40);
 });

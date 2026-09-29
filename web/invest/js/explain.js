@@ -42,7 +42,10 @@ export function explain(kind, item, meta) {
     return known(value) ? { key: `${prefix}.road_strength`, params: { km: round1(value) } } : unknown;
   }
   if (factor === 'built_up_growth') {
-    return known(value) ? { key: `${prefix}.built_up_growth`, params: { pp: Math.round(value) } } : unknown;
+    if (!known(value)) return unknown;
+    const pp = Math.round(value);
+    // English says "1 percentage point": the one-form key exists so the sentence is right for exactly one
+    return { key: `${prefix}.built_up_growth${Math.abs(pp) === 1 ? '.one' : ''}`, params: { pp } };
   }
   // A factor this build has no wording for: tt() shows the raw key, never an invented sentence.
   return unknown;
