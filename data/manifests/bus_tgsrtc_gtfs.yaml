@@ -5,6 +5,7 @@ attribution: TGSRTC (Telangana State Road Transport Corporation), via OpenCity.i
   — GTFS static feed, February 2026
 used_by:
 - bus
+- invest
 files:
 - file: data/raw/bus/tgsrtc/telangana_opendata_gtfs_tgsrtc_08_february_2026.zip
   url: https://data.opencity.in/dataset/88e2d145-7ec6-4666-88dd-6cf18b18312e/resource/1b0d18bb-b2fb-4a79-8ed0-1e071da5790c/download/telangana_opendata_gtfs_tgsrtc_08_february_2026.zip
