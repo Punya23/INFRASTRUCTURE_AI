@@ -59,7 +59,7 @@ def _keep_one_per_cluster(stations: pd.DataFrame, within_m: float) -> np.ndarray
 
 def _name_key(name: object) -> str:
     """A station name reduced to what identifies it: NFKC, case-folded, only letters, marks and
-    digits ("Pachaiyappa's College" and "PACHAIYAPPAS  COLLEGE." agree). "" when there is no name."""
+    digits ("Pachaiyappa's College" and "PACHAIYAPPAS  COLLEGE." agree); "" for no name."""
     if not isinstance(name, str):
         return ""
     folded = unicodedata.normalize("NFKC", name).casefold()

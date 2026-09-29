@@ -20,7 +20,7 @@ _FACT_KEYS = ("station_dedupe_m", "station_name_merge_m", "place_name_max_km")
 
 
 def _check_facts_config(section: Mapping[str, object]) -> dict[str, float]:
-    """The numbers of the `facts:` section of config/scoring.yaml; each must be a positive number."""
+    """The numbers of the `facts:` section of config/scoring.yaml, each a positive number."""
     bad = [
         k for k in _FACT_KEYS if not (isinstance(section.get(k), int | float) and section[k] > 0)
     ]
@@ -51,7 +51,7 @@ def cell_centres(cells: list[str]) -> pd.DataFrame:
     """DataFrame[cell, lat, lon]: the centre of each H3 cell, indexed by cell id, so that a Series
     by cell id (mean_by_cell, arterial_km_by_cell, ...) lines up with it instead of aligning to NaN
     against a RangeIndex. The index has no name: "cell" stays one ordinary column, since an index
-    also called "cell" makes merge, groupby and sort_values on it ambiguous errors."""
+    also called "cell" makes merge, groupby and sort_values on it raise "ambiguous" errors."""
     latlng = np.array([h3.cell_to_latlng(c) for c in cells], dtype=float).reshape(-1, 2)
     frame = pd.DataFrame({"cell": cells, "lat": latlng[:, 0], "lon": latlng[:, 1]})
     return frame.set_index("cell", drop=False).rename_axis(None)

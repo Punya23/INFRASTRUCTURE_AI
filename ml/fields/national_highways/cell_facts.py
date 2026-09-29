@@ -69,13 +69,14 @@ def _divided_road_weights(way: np.ndarray, lon: np.ndarray, lat: np.ndarray) -> 
     The context file has no oneway tag, so every way is treated as one-way and
     dual_carriageway_weights pairs any two ways within its gap that run in opposite drawing
     directions. On the 2,244 ways of the Pune region, whose real tags are known, this differs from
-    the tag-based weights by 0.7% of the km (2.5 km of 349).
+    the tag-based weights by 0.7% of the km (2.5 km of 348).
     """
     way_no = pd.factorize(way)[0]
-    has_line = np.bincount(way_no)[way_no] >= 2  # a way of one node has no length to weigh
+    nodes_in_way = np.bincount(way_no)
+    has_line = nodes_in_way[way_no] >= 2  # a way of one node has no length to weigh
     x, y = _TO_METRES.transform(lon[has_line], lat[has_line])
     lines = shapely.linestrings(np.column_stack([x, y]), indices=pd.factorize(way_no[has_line])[0])
-    weight = np.ones(way_no.max() + 1 if len(way_no) else 0)
+    weight = np.ones(len(nodes_in_way))
     weight[np.unique(way_no[has_line])] = dual_carriageway_weights(
         lines, np.ones(len(lines), dtype=bool), np.zeros(len(lines), dtype=bool)
     )
