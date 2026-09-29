@@ -1,0 +1,60 @@
+{
+  "city": "bengaluru",
+  "stations": {
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": {"type": "Point", "coordinates": [77.5746, 12.9836]},
+        "properties": {"name": "Majestic", "mode": "metro", "source": "synthetic-test"}
+      },
+      {
+        "type": "Feature",
+        "geometry": {"type": "Point", "coordinates": [77.6276, 12.9726]},
+        "properties": {"name": "Indiranagar", "mode": "metro", "source": "synthetic-test"}
+      },
+      {
+        "type": "Feature",
+        "geometry": {"type": "Point", "coordinates": [77.6446, 12.9726]},
+        "properties": {"name": "Baiyappanahalli", "mode": "metro", "source": "synthetic-test"}
+      },
+      {
+        "type": "Feature",
+        "geometry": {"type": "Point", "coordinates": [77.5756, 12.9846]},
+        "properties": {"name": "KSR Bengaluru City", "mode": "rail", "source": "synthetic-test"}
+      },
+      {
+        "type": "Feature",
+        "geometry": {"type": "Point", "coordinates": [77.5546, 13.0096]},
+        "properties": {"name": "Yeshwantpur", "mode": "rail", "source": "synthetic-test"}
+      }
+    ]
+  },
+  "bus_stops": null,
+  "bus_source": null,
+  "highways": {
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": {"type": "LineString", "coordinates": [[77.5746, 13.0916], [77.5846, 13.0216], [77.6046, 12.9516]]},
+        "properties": {"ref": "NH 44", "status": "operational", "kind": "nh_segment"}
+      },
+      {
+        "type": "Feature",
+        "geometry": {"type": "LineString", "coordinates": [[77.5046, 12.9716], [77.5546, 12.9916]]},
+        "properties": {"ref": "NH 48", "status": "operational", "kind": "nh_segment"}
+      }
+    ]
+  },
+  "toll_plazas": {
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": {"type": "Point", "coordinates": [77.4646, 13.1516]},
+        "properties": {"name": "Nelamangala Toll Plaza"}
+      }
+    ]
+  }
+}

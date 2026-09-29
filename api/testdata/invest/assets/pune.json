@@ -1,0 +1,97 @@
+{
+  "city": "pune",
+  "stations": {
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": {"type": "Point", "coordinates": [73.8563, 18.5206]},
+        "properties": {"name": "Civil Court", "mode": "metro", "source": "synthetic-test"}
+      },
+      {
+        "type": "Feature",
+        "geometry": {"type": "Point", "coordinates": [73.8433, 18.5156]},
+        "properties": {"name": "Deccan Gymkhana", "mode": "metro", "source": "synthetic-test"}
+      },
+      {
+        "type": "Feature",
+        "geometry": {"type": "Point", "coordinates": [73.8743, 18.5286]},
+        "properties": {"name": "Pune Junction", "mode": "rail", "source": "synthetic-test"}
+      },
+      {
+        "type": "Feature",
+        "geometry": {"type": "Point", "coordinates": [73.8473, 18.5306]},
+        "properties": {"name": "Shivajinagar", "mode": "rail", "source": "synthetic-test"}
+      },
+      {
+        "type": "Feature",
+        "geometry": {"type": "Point", "coordinates": [73.9553, 18.5096]},
+        "properties": {"name": "Hadapsar", "mode": "rail", "source": "synthetic-test"}
+      }
+    ]
+  },
+  "bus_stops": {
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": {"type": "Point", "coordinates": [73.8573, 18.4916]},
+        "properties": {"name": "Swargate"}
+      },
+      {
+        "type": "Feature",
+        "geometry": {"type": "Point", "coordinates": [73.8473, 18.5306]},
+        "properties": {"name": "Shivajinagar"}
+      },
+      {
+        "type": "Feature",
+        "geometry": {"type": "Point", "coordinates": [73.7553, 18.5646]},
+        "properties": {"name": "Hinjewadi Phase 1"}
+      },
+      {
+        "type": "Feature",
+        "geometry": {"type": "Point", "coordinates": [73.9353, 18.5396]},
+        "properties": {"name": "Kharadi Bypass"}
+      },
+      {
+        "type": "Feature",
+        "geometry": {"type": "Point", "coordinates": [73.7703, 18.5596]},
+        "properties": {"name": "Wakad Chowk"}
+      }
+    ]
+  },
+  "bus_source": {"operator": "PMPML", "tier": "secondary", "license": "synthetic-test", "fetched_at": "2026-09-29"},
+  "highways": {
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": {"type": "LineString", "coordinates": [[73.7553, 18.5996], [73.8053, 18.5396], [73.8753, 18.4696]]},
+        "properties": {"ref": "NH 48", "status": "operational", "kind": "nh_segment"}
+      },
+      {
+        "type": "Feature",
+        "geometry": {"type": "LineString", "coordinates": [[73.7353, 18.5696], [73.6953, 18.5996]]},
+        "properties": {"ref": "NE 4", "status": "operational", "kind": "expressway_segment"}
+      },
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "MultiLineString",
+          "coordinates": [[[73.9553, 18.4796], [73.9853, 18.4596]], [[73.9953, 18.4396], [74.0253, 18.4196]]]
+        },
+        "properties": {"ref": "NH 65", "status": "under_construction", "kind": "nh_segment"}
+      }
+    ]
+  },
+  "toll_plazas": {
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": {"type": "Point", "coordinates": [73.7553, 18.3896]},
+        "properties": {"name": "Khed Shivapur Toll Plaza"}
+      }
+    ]
+  }
+}

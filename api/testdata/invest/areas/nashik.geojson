@@ -1,0 +1,181 @@
+{
+  "type": "FeatureCollection",
+  "city": "nashik",
+  "source": "synthetic-test",
+  "fetched_at": "2026-09-29",
+  "license": "synthetic-test",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [73.8002, 20.001],
+            [73.7962, 20.0126],
+            [73.7838, 20.0143],
+            [73.7756, 20.0043],
+            [73.7796, 19.9927],
+            [73.792, 19.991],
+            [73.8002, 20.001]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "876099a04ffffff",
+        "name": "Gangapur",
+        "pop": 24000,
+        "elig": true,
+        "bus_stops": null,
+        "f": {"nh_access": 2.8, "rail_access": 6.1, "metro_access": 167.9, "road_strength": 0.6, "built_up_growth": 15.0},
+        "s": {"nh_access": 85.0, "rail_access": 40.0, "metro_access": 0.0, "road_strength": 45.0, "built_up_growth": 70.0},
+        "sc": {"balanced": 55.0, "commuter": 40.5, "highway": 70.3, "growth": 59.8},
+        "ac": {"balanced": 48.6, "commuter": 30.7, "highway": 70.4, "growth": 47.2},
+        "d": {
+          "balanced": [["nh_access", 21.3], ["built_up_growth", 21.0]],
+          "commuter": [["built_up_growth", 17.5], ["nh_access", 8.5]],
+          "highway": [["nh_access", 38.3], ["built_up_growth", 21.0]],
+          "growth": [["built_up_growth", 38.5], ["nh_access", 12.8]]
+        },
+        "g": {
+          "balanced": [["metro_access", 0.0]],
+          "commuter": [["metro_access", 0.0]],
+          "highway": [],
+          "growth": [["metro_access", 0.0]]
+        },
+        "cov": 1.0,
+        "conf": 0.8,
+        "source_ref": "h3:876099a04ffffff"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [73.7838, 20.0143],
+            [73.7798, 20.0259],
+            [73.7674, 20.0276],
+            [73.7592, 20.0176],
+            [73.7632, 20.006],
+            [73.7756, 20.0043],
+            [73.7838, 20.0143]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "876099a00ffffff",
+        "name": "Panchavati",
+        "pop": 19000,
+        "elig": true,
+        "bus_stops": null,
+        "f": {"nh_access": 2.8, "rail_access": 6.1, "metro_access": 167.9, "road_strength": 0.6, "built_up_growth": 15.0},
+        "s": {"nh_access": 85.0, "rail_access": 40.0, "metro_access": 0.0, "road_strength": 45.0, "built_up_growth": 70.0},
+        "sc": {"balanced": 55.0, "commuter": 40.5, "highway": 70.3, "growth": 59.8},
+        "ac": {"balanced": 48.6, "commuter": 30.7, "highway": 70.4, "growth": 47.2},
+        "d": {
+          "balanced": [["nh_access", 21.3], ["built_up_growth", 21.0]],
+          "commuter": [["built_up_growth", 17.5], ["nh_access", 8.5]],
+          "highway": [["nh_access", 38.3], ["built_up_growth", 21.0]],
+          "growth": [["built_up_growth", 38.5], ["nh_access", 12.8]]
+        },
+        "g": {
+          "balanced": [["metro_access", 0.0]],
+          "commuter": [["metro_access", 0.0]],
+          "highway": [],
+          "growth": [["metro_access", 0.0]]
+        },
+        "cov": 1.0,
+        "conf": 0.8,
+        "source_ref": "h3:876099a00ffffff"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [73.7796, 19.9927],
+            [73.7756, 20.0043],
+            [73.7632, 20.006],
+            [73.755, 19.996],
+            [73.759, 19.9844],
+            [73.7714, 19.9827],
+            [73.7796, 19.9927]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "876099a05ffffff",
+        "name": "Indira Nagar",
+        "pop": 16000,
+        "elig": true,
+        "bus_stops": null,
+        "f": {"nh_access": 2.8, "rail_access": 6.1, "metro_access": 167.9, "road_strength": 0.6, "built_up_growth": 15.0},
+        "s": {"nh_access": 85.0, "rail_access": 40.0, "metro_access": 0.0, "road_strength": 45.0, "built_up_growth": 70.0},
+        "sc": {"balanced": 55.0, "commuter": 40.5, "highway": 70.3, "growth": 59.8},
+        "ac": {"balanced": 48.6, "commuter": 30.7, "highway": 70.4, "growth": 47.2},
+        "d": {
+          "balanced": [["nh_access", 21.3], ["built_up_growth", 21.0]],
+          "commuter": [["built_up_growth", 17.5], ["nh_access", 8.5]],
+          "highway": [["nh_access", 38.3], ["built_up_growth", 21.0]],
+          "growth": [["built_up_growth", 38.5], ["nh_access", 12.8]]
+        },
+        "g": {
+          "balanced": [["metro_access", 0.0]],
+          "commuter": [["metro_access", 0.0]],
+          "highway": [],
+          "growth": [["metro_access", 0.0]]
+        },
+        "cov": 1.0,
+        "conf": 0.8,
+        "source_ref": "h3:876099a05ffffff"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [73.8044, 20.0226],
+            [73.8004, 20.0342],
+            [73.788, 20.0359],
+            [73.7798, 20.0259],
+            [73.7838, 20.0143],
+            [73.7962, 20.0126],
+            [73.8044, 20.0226]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "876099a06ffffff",
+        "name": "Satpur",
+        "pop": 11000,
+        "elig": true,
+        "bus_stops": null,
+        "f": {"nh_access": 2.8, "rail_access": 6.1, "metro_access": 167.9, "road_strength": 0.6, "built_up_growth": 15.0},
+        "s": {"nh_access": 85.0, "rail_access": 40.0, "metro_access": 0.0, "road_strength": 45.0, "built_up_growth": 70.0},
+        "sc": {"balanced": 55.0, "commuter": 40.5, "highway": 70.3, "growth": 59.8},
+        "ac": {"balanced": 48.6, "commuter": 30.7, "highway": 70.4, "growth": 47.2},
+        "d": {
+          "balanced": [["nh_access", 21.3], ["built_up_growth", 21.0]],
+          "commuter": [["built_up_growth", 17.5], ["nh_access", 8.5]],
+          "highway": [["nh_access", 38.3], ["built_up_growth", 21.0]],
+          "growth": [["built_up_growth", 38.5], ["nh_access", 12.8]]
+        },
+        "g": {
+          "balanced": [["metro_access", 0.0]],
+          "commuter": [["metro_access", 0.0]],
+          "highway": [],
+          "growth": [["metro_access", 0.0]]
+        },
+        "cov": 1.0,
+        "conf": 0.8,
+        "source_ref": "h3:876099a06ffffff"
+      }
+    }
+  ]
+}

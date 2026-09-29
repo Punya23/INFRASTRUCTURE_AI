@@ -1,0 +1,483 @@
+[
+  {
+    "id": "delhi",
+    "name": "Delhi",
+    "state": "DL",
+    "aliases": ["Noida"],
+    "lat": 28.6139,
+    "lon": 77.209,
+    "population": 22000000,
+    "area_km2": 1480.0,
+    "tier": "metro",
+    "cells": 2,
+    "factors": {
+      "nh_access": {"value": 5.0, "unit": "km", "share": 1.0, "band_km": 10, "subscore": 70.0},
+      "rail_access": {"value": 1.8, "unit": "km", "share": 1.0, "band_km": 2, "subscore": 80.0},
+      "metro_access": {"value": 1.0, "unit": "km", "share": 1.0, "band_km": 2, "subscore": 90.0},
+      "road_strength": {"value": 1.8, "unit": "km_per_km2", "share": null, "band_km": null, "subscore": 85.0},
+      "built_up_growth": {"value": 6.5, "unit": "pp", "share": null, "band_km": null, "subscore": 45.0}
+    },
+    "scores": {
+      "balanced": {
+        "score": 69.3,
+        "access": 79.6,
+        "momentum": 45.0,
+        "coverage": 1.0,
+        "confidence": 0.8,
+        "drivers": [
+          {"factor": "nh_access", "points": 17.5, "value": 5.0, "unit": "km", "share": 1.0, "band_km": 10},
+          {"factor": "metro_access", "points": 13.5, "value": 1.0, "unit": "km", "share": 1.0, "band_km": 2},
+          {
+            "factor": "road_strength",
+            "points": 12.8,
+            "value": 1.8,
+            "unit": "km_per_km2",
+            "share": null,
+            "band_km": null
+          }
+        ],
+        "gaps": [],
+        "best_area": {"id": "873da1146ffffff", "name": "Dwarka", "score": 69.3}
+      },
+      "commuter": {
+        "score": 73.8,
+        "access": 83.3,
+        "momentum": 45.0,
+        "coverage": 1.0,
+        "confidence": 0.8,
+        "drivers": [
+          {"factor": "metro_access", "points": 27.0, "value": 1.0, "unit": "km", "share": 1.0, "band_km": 2},
+          {"factor": "rail_access", "points": 20.0, "value": 1.8, "unit": "km", "share": 1.0, "band_km": 2},
+          {
+            "factor": "road_strength",
+            "points": 8.5,
+            "value": 1.8,
+            "unit": "km_per_km2",
+            "share": null,
+            "band_km": null
+          }
+        ],
+        "gaps": [],
+        "best_area": {"id": "873da1146ffffff", "name": "Dwarka", "score": 73.8}
+      },
+      "highway": {
+        "score": 66.0,
+        "access": 75.0,
+        "momentum": 45.0,
+        "coverage": 1.0,
+        "confidence": 0.8,
+        "drivers": [
+          {"factor": "nh_access", "points": 31.5, "value": 5.0, "unit": "km", "share": 1.0, "band_km": 10},
+          {
+            "factor": "road_strength",
+            "points": 17.0,
+            "value": 1.8,
+            "unit": "km_per_km2",
+            "share": null,
+            "band_km": null
+          },
+          {"factor": "rail_access", "points": 4.0, "value": 1.8, "unit": "km", "share": 1.0, "band_km": 2}
+        ],
+        "gaps": [],
+        "best_area": {"id": "873da1146ffffff", "name": "Dwarka", "score": 66.0}
+      },
+      "growth": {
+        "score": 60.8,
+        "access": 80.0,
+        "momentum": 45.0,
+        "coverage": 1.0,
+        "confidence": 0.8,
+        "drivers": [
+          {"factor": "nh_access", "points": 10.5, "value": 5.0, "unit": "km", "share": 1.0, "band_km": 10},
+          {"factor": "metro_access", "points": 9.0, "value": 1.0, "unit": "km", "share": 1.0, "band_km": 2},
+          {
+            "factor": "road_strength",
+            "points": 8.5,
+            "value": 1.8,
+            "unit": "km_per_km2",
+            "share": null,
+            "band_km": null
+          }
+        ],
+        "gaps": [],
+        "best_area": {"id": "873da1146ffffff", "name": "Dwarka", "score": 60.8}
+      }
+    },
+    "data": {"bus": null, "metro_stations": 4, "rail_stations": 2},
+    "source": "synthetic-test",
+    "source_ref": "city:delhi",
+    "fetched_at": "2026-09-29",
+    "license": "synthetic-test",
+    "confidence": 0.8
+  },
+  {
+    "id": "mumbai",
+    "name": "Mumbai",
+    "state": "MH",
+    "aliases": ["Thane", "Navi Mumbai"],
+    "lat": 19.076,
+    "lon": 72.8777,
+    "population": 12600000,
+    "area_km2": 1210.0,
+    "tier": "metro",
+    "cells": 2,
+    "factors": {
+      "nh_access": {"value": 6.7, "unit": "km", "share": 1.0, "band_km": 10, "subscore": 60.0},
+      "rail_access": {"value": 1.0, "unit": "km", "share": 1.0, "band_km": 2, "subscore": 90.0},
+      "metro_access": {"value": 1.5, "unit": "km", "share": 1.0, "band_km": 2, "subscore": 80.0},
+      "road_strength": {"value": 1.2, "unit": "km_per_km2", "share": null, "band_km": null, "subscore": 70.0},
+      "built_up_growth": {"value": 5.3, "unit": "pp", "share": null, "band_km": null, "subscore": 40.0}
+    },
+    "scores": {
+      "balanced": {
+        "score": 63.0,
+        "access": 72.9,
+        "momentum": 40.0,
+        "coverage": 1.0,
+        "confidence": 0.8,
+        "drivers": [
+          {"factor": "nh_access", "points": 15.0, "value": 6.7, "unit": "km", "share": 1.0, "band_km": 10},
+          {"factor": "rail_access", "points": 13.5, "value": 1.0, "unit": "km", "share": 1.0, "band_km": 2},
+          {"factor": "metro_access", "points": 12.0, "value": 1.5, "unit": "km", "share": 1.0, "band_km": 2}
+        ],
+        "gaps": [],
+        "best_area": {"id": "87608b0b6ffffff", "name": "Andheri East", "score": 63.0}
+      },
+      "commuter": {
+        "score": 69.5,
+        "access": 79.3,
+        "momentum": 40.0,
+        "coverage": 1.0,
+        "confidence": 0.8,
+        "drivers": [
+          {"factor": "metro_access", "points": 24.0, "value": 1.5, "unit": "km", "share": 1.0, "band_km": 2},
+          {"factor": "rail_access", "points": 22.5, "value": 1.0, "unit": "km", "share": 1.0, "band_km": 2},
+          {
+            "factor": "road_strength",
+            "points": 7.0,
+            "value": 1.2,
+            "unit": "km_per_km2",
+            "share": null,
+            "band_km": null
+          }
+        ],
+        "gaps": [],
+        "best_area": {"id": "87608b0b6ffffff", "name": "Andheri East", "score": 69.5}
+      },
+      "highway": {
+        "score": 57.5,
+        "access": 65.0,
+        "momentum": 40.0,
+        "coverage": 1.0,
+        "confidence": 0.8,
+        "drivers": [
+          {"factor": "nh_access", "points": 27.0, "value": 6.7, "unit": "km", "share": 1.0, "band_km": 10},
+          {
+            "factor": "road_strength",
+            "points": 14.0,
+            "value": 1.2,
+            "unit": "km_per_km2",
+            "share": null,
+            "band_km": null
+          },
+          {"factor": "rail_access", "points": 4.5, "value": 1.0, "unit": "km", "share": 1.0, "band_km": 2}
+        ],
+        "gaps": [],
+        "best_area": {"id": "87608b0b6ffffff", "name": "Andheri East", "score": 57.5}
+      },
+      "growth": {
+        "score": 55.0,
+        "access": 73.3,
+        "momentum": 40.0,
+        "coverage": 1.0,
+        "confidence": 0.8,
+        "drivers": [
+          {"factor": "nh_access", "points": 9.0, "value": 6.7, "unit": "km", "share": 1.0, "band_km": 10},
+          {"factor": "rail_access", "points": 9.0, "value": 1.0, "unit": "km", "share": 1.0, "band_km": 2},
+          {"factor": "metro_access", "points": 8.0, "value": 1.5, "unit": "km", "share": 1.0, "band_km": 2}
+        ],
+        "gaps": [],
+        "best_area": {"id": "87608b0b6ffffff", "name": "Andheri East", "score": 55.0}
+      }
+    },
+    "data": {"bus": null, "metro_stations": 3, "rail_stations": 3},
+    "source": "synthetic-test",
+    "source_ref": "city:mumbai",
+    "fetched_at": "2026-09-29",
+    "license": "synthetic-test",
+    "confidence": 0.8
+  },
+  {
+    "id": "bengaluru",
+    "name": "Bengaluru",
+    "state": "KA",
+    "aliases": ["Bangalore"],
+    "lat": 12.9716,
+    "lon": 77.5946,
+    "population": 11000000,
+    "area_km2": 920.0,
+    "tier": "metro",
+    "cells": 2,
+    "factors": {
+      "nh_access": {"value": 5.8, "unit": "km", "share": 1.0, "band_km": 10, "subscore": 65.0},
+      "rail_access": {"value": 5.5, "unit": "km", "share": 0.0, "band_km": 2, "subscore": 45.0},
+      "metro_access": {"value": 2.8, "unit": "km", "share": 0.0, "band_km": 2, "subscore": 60.0},
+      "road_strength": {"value": 0.9, "unit": "km_per_km2", "share": null, "band_km": null, "subscore": 60.0},
+      "built_up_growth": {"value": 20.0, "unit": "pp", "share": null, "band_km": null, "subscore": 80.0}
+    },
+    "scores": {
+      "balanced": {
+        "score": 65.0,
+        "access": 58.6,
+        "momentum": 80.0,
+        "coverage": 1.0,
+        "confidence": 0.8,
+        "drivers": [
+          {"factor": "built_up_growth", "points": 24.0, "value": 20.0, "unit": "pp", "share": null, "band_km": null},
+          {"factor": "nh_access", "points": 16.3, "value": 5.8, "unit": "km", "share": 1.0, "band_km": 10},
+          {"factor": "metro_access", "points": 9.0, "value": 2.8, "unit": "km", "share": 0.0, "band_km": 2}
+        ],
+        "gaps": [],
+        "best_area": {"id": "8760145b4ffffff", "name": "Whitefield", "score": 65.0}
+      },
+      "commuter": {
+        "score": 61.8,
+        "access": 55.7,
+        "momentum": 80.0,
+        "coverage": 1.0,
+        "confidence": 0.8,
+        "drivers": [
+          {"factor": "built_up_growth", "points": 20.0, "value": 20.0, "unit": "pp", "share": null, "band_km": null},
+          {"factor": "metro_access", "points": 18.0, "value": 2.8, "unit": "km", "share": 0.0, "band_km": 2},
+          {"factor": "nh_access", "points": 6.5, "value": 5.8, "unit": "km", "share": 1.0, "band_km": 10}
+        ],
+        "gaps": [],
+        "best_area": {"id": "8760145b4ffffff", "name": "Whitefield", "score": 61.8}
+      },
+      "highway": {
+        "score": 67.5,
+        "access": 62.1,
+        "momentum": 80.0,
+        "coverage": 1.0,
+        "confidence": 0.8,
+        "drivers": [
+          {"factor": "nh_access", "points": 29.3, "value": 5.8, "unit": "km", "share": 1.0, "band_km": 10},
+          {"factor": "built_up_growth", "points": 24.0, "value": 20.0, "unit": "pp", "share": null, "band_km": null},
+          {
+            "factor": "road_strength",
+            "points": 12.0,
+            "value": 0.9,
+            "unit": "km_per_km2",
+            "share": null,
+            "band_km": null
+          }
+        ],
+        "gaps": [],
+        "best_area": {"id": "8760145b4ffffff", "name": "Whitefield", "score": 67.5}
+      },
+      "growth": {
+        "score": 70.3,
+        "access": 58.3,
+        "momentum": 80.0,
+        "coverage": 1.0,
+        "confidence": 0.8,
+        "drivers": [
+          {"factor": "built_up_growth", "points": 44.0, "value": 20.0, "unit": "pp", "share": null, "band_km": null},
+          {"factor": "nh_access", "points": 9.8, "value": 5.8, "unit": "km", "share": 1.0, "band_km": 10},
+          {"factor": "metro_access", "points": 6.0, "value": 2.8, "unit": "km", "share": 0.0, "band_km": 2}
+        ],
+        "gaps": [],
+        "best_area": {"id": "8760145b4ffffff", "name": "Whitefield", "score": 70.3}
+      }
+    },
+    "data": {"bus": null, "metro_stations": 3, "rail_stations": 2},
+    "source": "synthetic-test",
+    "source_ref": "city:bengaluru",
+    "fetched_at": "2026-09-29",
+    "license": "synthetic-test",
+    "confidence": 0.8
+  },
+  {
+    "id": "pune",
+    "name": "Pune",
+    "state": "MH",
+    "aliases": ["Pimpri-Chinchwad"],
+    "lat": 18.5196,
+    "lon": 73.8553,
+    "population": 6100000,
+    "area_km2": 850.0,
+    "tier": "metro",
+    "cells": 6,
+    "factors": {
+      "nh_access": {"value": 4.3, "unit": "km", "share": 1.0, "band_km": 10, "subscore": 75.0},
+      "rail_access": {"value": 3.6, "unit": "km", "share": 0.0, "band_km": 2, "subscore": 60.0},
+      "metro_access": {"value": 4.9, "unit": "km", "share": 0.01, "band_km": 2, "subscore": 40.0},
+      "road_strength": {"value": 1.0, "unit": "km_per_km2", "share": null, "band_km": null, "subscore": 65.0},
+      "built_up_growth": {"value": 28.0, "unit": "pp", "share": null, "band_km": null, "subscore": 90.0}
+    },
+    "scores": {
+      "balanced": {
+        "score": 70.5,
+        "access": 62.1,
+        "momentum": 90.0,
+        "coverage": 1.0,
+        "confidence": 0.8,
+        "drivers": [
+          {"factor": "built_up_growth", "points": 27.0, "value": 28.0, "unit": "pp", "share": null, "band_km": null},
+          {"factor": "nh_access", "points": 18.8, "value": 4.3, "unit": "km", "share": 1.0, "band_km": 10},
+          {
+            "factor": "road_strength",
+            "points": 9.8,
+            "value": 1.0,
+            "unit": "km_per_km2",
+            "share": null,
+            "band_km": null
+          }
+        ],
+        "gaps": [],
+        "best_area": {"id": "876088500ffffff", "name": "Hinjewadi", "score": 74.1}
+      },
+      "commuter": {
+        "score": 63.5,
+        "access": 54.7,
+        "momentum": 90.0,
+        "coverage": 1.0,
+        "confidence": 0.8,
+        "drivers": [
+          {"factor": "built_up_growth", "points": 22.5, "value": 28.0, "unit": "pp", "share": null, "band_km": null},
+          {"factor": "rail_access", "points": 15.0, "value": 3.6, "unit": "km", "share": 0.0, "band_km": 2},
+          {"factor": "nh_access", "points": 7.5, "value": 4.3, "unit": "km", "share": 1.0, "band_km": 10}
+        ],
+        "gaps": [],
+        "best_area": {"id": "876088500ffffff", "name": "Hinjewadi", "score": 70.0}
+      },
+      "highway": {
+        "score": 76.8,
+        "access": 71.1,
+        "momentum": 90.0,
+        "coverage": 1.0,
+        "confidence": 0.8,
+        "drivers": [
+          {"factor": "nh_access", "points": 33.8, "value": 4.3, "unit": "km", "share": 1.0, "band_km": 10},
+          {"factor": "built_up_growth", "points": 27.0, "value": 28.0, "unit": "pp", "share": null, "band_km": null},
+          {
+            "factor": "road_strength",
+            "points": 13.0,
+            "value": 1.0,
+            "unit": "km_per_km2",
+            "share": null,
+            "band_km": null
+          }
+        ],
+        "gaps": [],
+        "best_area": {"id": "876088501ffffff", "name": "Wakad", "score": 78.0}
+      },
+      "growth": {
+        "score": 77.3,
+        "access": 61.7,
+        "momentum": 90.0,
+        "coverage": 1.0,
+        "confidence": 0.8,
+        "drivers": [
+          {"factor": "built_up_growth", "points": 49.5, "value": 28.0, "unit": "pp", "share": null, "band_km": null},
+          {"factor": "nh_access", "points": 11.3, "value": 4.3, "unit": "km", "share": 1.0, "band_km": 10},
+          {
+            "factor": "road_strength",
+            "points": 6.5,
+            "value": 1.0,
+            "unit": "km_per_km2",
+            "share": null,
+            "band_km": null
+          }
+        ],
+        "gaps": [],
+        "best_area": {"id": "876088500ffffff", "name": "Hinjewadi", "score": 80.4}
+      }
+    },
+    "data": {"bus": {"operator": "PMPML", "tier": "secondary", "stops": 6713}, "metro_stations": 2, "rail_stations": 3},
+    "source": "synthetic-test",
+    "source_ref": "city:pune",
+    "fetched_at": "2026-09-29",
+    "license": "synthetic-test",
+    "confidence": 0.8
+  },
+  {
+    "id": "nashik",
+    "name": "Nashik",
+    "state": "MH",
+    "aliases": [],
+    "lat": 19.9975,
+    "lon": 73.7898,
+    "population": 1900000,
+    "area_km2": 260.0,
+    "tier": "large",
+    "cells": 4,
+    "factors": {
+      "nh_access": {"value": 2.8, "unit": "km", "share": 1.0, "band_km": 10, "subscore": 85.0},
+      "rail_access": {"value": 6.1, "unit": "km", "share": 0.0, "band_km": 2, "subscore": 40.0},
+      "metro_access": {"value": 167.9, "unit": "km", "share": 0.0, "band_km": 2, "subscore": 0.0},
+      "road_strength": {"value": 0.6, "unit": "km_per_km2", "share": null, "band_km": null, "subscore": 45.0},
+      "built_up_growth": {"value": 15.0, "unit": "pp", "share": null, "band_km": null, "subscore": 70.0}
+    },
+    "scores": {
+      "balanced": {
+        "score": 55.0,
+        "access": 48.6,
+        "momentum": 70.0,
+        "coverage": 1.0,
+        "confidence": 0.8,
+        "drivers": [
+          {"factor": "nh_access", "points": 21.3, "value": 2.8, "unit": "km", "share": 1.0, "band_km": 10},
+          {"factor": "built_up_growth", "points": 21.0, "value": 15.0, "unit": "pp", "share": null, "band_km": null}
+        ],
+        "gaps": [{"factor": "metro_access", "subscore": 0.0, "value": 167.9, "unit": "km", "share": 0.0, "band_km": 2}],
+        "best_area": {"id": "876099a04ffffff", "name": "Gangapur", "score": 55.0}
+      },
+      "commuter": {
+        "score": 40.5,
+        "access": 30.7,
+        "momentum": 70.0,
+        "coverage": 1.0,
+        "confidence": 0.8,
+        "drivers": [
+          {"factor": "built_up_growth", "points": 17.5, "value": 15.0, "unit": "pp", "share": null, "band_km": null},
+          {"factor": "nh_access", "points": 8.5, "value": 2.8, "unit": "km", "share": 1.0, "band_km": 10}
+        ],
+        "gaps": [{"factor": "metro_access", "subscore": 0.0, "value": 167.9, "unit": "km", "share": 0.0, "band_km": 2}],
+        "best_area": {"id": "876099a04ffffff", "name": "Gangapur", "score": 40.5}
+      },
+      "highway": {
+        "score": 70.3,
+        "access": 70.4,
+        "momentum": 70.0,
+        "coverage": 1.0,
+        "confidence": 0.8,
+        "drivers": [
+          {"factor": "nh_access", "points": 38.3, "value": 2.8, "unit": "km", "share": 1.0, "band_km": 10},
+          {"factor": "built_up_growth", "points": 21.0, "value": 15.0, "unit": "pp", "share": null, "band_km": null}
+        ],
+        "gaps": [],
+        "best_area": {"id": "876099a04ffffff", "name": "Gangapur", "score": 70.3}
+      },
+      "growth": {
+        "score": 59.8,
+        "access": 47.2,
+        "momentum": 70.0,
+        "coverage": 1.0,
+        "confidence": 0.8,
+        "drivers": [
+          {"factor": "built_up_growth", "points": 38.5, "value": 15.0, "unit": "pp", "share": null, "band_km": null},
+          {"factor": "nh_access", "points": 12.8, "value": 2.8, "unit": "km", "share": 1.0, "band_km": 10}
+        ],
+        "gaps": [{"factor": "metro_access", "subscore": 0.0, "value": 167.9, "unit": "km", "share": 0.0, "band_km": 2}],
+        "best_area": {"id": "876099a04ffffff", "name": "Gangapur", "score": 59.8}
+      }
+    },
+    "data": {"bus": null, "metro_stations": 0, "rail_stations": 2},
+    "source": "synthetic-test",
+    "source_ref": "city:nashik",
+    "fetched_at": "2026-09-29",
+    "license": "synthetic-test",
+    "confidence": 0.8
+  }
+]

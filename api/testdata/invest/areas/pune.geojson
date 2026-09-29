@@ -1,0 +1,258 @@
+{
+  "type": "FeatureCollection",
+  "city": "pune",
+  "source": "synthetic-test",
+  "fetched_at": "2026-09-29",
+  "license": "synthetic-test",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [73.8553, 18.5223],
+            [73.8513, 18.5341],
+            [73.839, 18.5359],
+            [73.8307, 18.526],
+            [73.8348, 18.5142],
+            [73.8471, 18.5124],
+            [73.8553, 18.5223]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "87608850effffff",
+        "name": "Wagholi",
+        "pop": 1200,
+        "elig": false,
+        "bus_stops": 0,
+        "f": {"nh_access": 4.3, "rail_access": 3.6, "metro_access": 1.0, "road_strength": 1.0, "built_up_growth": 43.5},
+        "s": {
+          "nh_access": 75.0,
+          "rail_access": 60.0,
+          "metro_access": 90.0,
+          "road_strength": 65.0,
+          "built_up_growth": 100.0
+        },
+        "sc": {"balanced": 81.0, "commuter": 81.0, "highway": 79.8, "growth": 87.8},
+        "ac": {"balanced": 72.9, "commuter": 74.7, "highway": 71.1, "growth": 72.8},
+        "d": {
+          "balanced": [["built_up_growth", 30.0], ["nh_access", 18.8], ["metro_access", 13.5]],
+          "commuter": [["metro_access", 27.0], ["built_up_growth", 25.0], ["rail_access", 15.0]],
+          "highway": [["nh_access", 33.8], ["built_up_growth", 30.0], ["road_strength", 13.0]],
+          "growth": [["built_up_growth", 55.0], ["nh_access", 11.3], ["metro_access", 9.0]]
+        },
+        "g": {"balanced": [], "commuter": [], "highway": [], "growth": []},
+        "cov": 1.0,
+        "conf": 0.8,
+        "source_ref": "h3:87608850effffff"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [73.8921, 18.5169],
+            [73.8881, 18.5287],
+            [73.8758, 18.5305],
+            [73.8676, 18.5205],
+            [73.8716, 18.5087],
+            [73.8839, 18.5069],
+            [73.8921, 18.5169]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "876088500ffffff",
+        "name": "Hinjewadi",
+        "pop": 30000,
+        "elig": true,
+        "bus_stops": 31,
+        "f": {"nh_access": 4.3, "rail_access": 3.6, "metro_access": 2.8, "road_strength": 1.0, "built_up_growth": 28.0},
+        "s": {"nh_access": 75.0, "rail_access": 60.0, "metro_access": 60.0, "road_strength": 65.0, "built_up_growth": 92.0},
+        "sc": {"balanced": 74.1, "commuter": 70.0, "highway": 77.4, "growth": 80.4},
+        "ac": {"balanced": 66.4, "commuter": 62.7, "highway": 71.1, "growth": 66.1},
+        "d": {
+          "balanced": [["built_up_growth", 27.6], ["nh_access", 18.8], ["road_strength", 9.8]],
+          "commuter": [["built_up_growth", 23.0], ["metro_access", 18.0], ["rail_access", 15.0]],
+          "highway": [["nh_access", 33.8], ["built_up_growth", 27.6], ["road_strength", 13.0]],
+          "growth": [["built_up_growth", 50.6], ["nh_access", 11.3], ["road_strength", 6.5]]
+        },
+        "g": {"balanced": [], "commuter": [], "highway": [], "growth": []},
+        "cov": 1.0,
+        "conf": 0.8,
+        "source_ref": "h3:876088500ffffff"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [73.8716, 18.5087],
+            [73.8676, 18.5205],
+            [73.8553, 18.5223],
+            [73.8471, 18.5124],
+            [73.8511, 18.5006],
+            [73.8634, 18.4988],
+            [73.8716, 18.5087]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "876088501ffffff",
+        "name": "Wakad",
+        "pop": 40000,
+        "elig": true,
+        "bus_stops": 12,
+        "f": {"nh_access": 4.3, "rail_access": 3.6, "metro_access": 5.0, "road_strength": 1.0, "built_up_growth": 31.0},
+        "s": {"nh_access": 75.0, "rail_access": 60.0, "metro_access": 30.0, "road_strength": 65.0, "built_up_growth": 94.0},
+        "sc": {"balanced": 70.2, "commuter": 61.5, "highway": 78.0, "growth": 78.5},
+        "ac": {"balanced": 60.0, "commuter": 50.7, "highway": 71.1, "growth": 59.4},
+        "d": {
+          "balanced": [["built_up_growth", 28.2], ["nh_access", 18.8], ["road_strength", 9.8]],
+          "commuter": [["built_up_growth", 23.5], ["rail_access", 15.0], ["nh_access", 7.5]],
+          "highway": [["nh_access", 33.8], ["built_up_growth", 28.2], ["road_strength", 13.0]],
+          "growth": [["built_up_growth", 51.7], ["nh_access", 11.3], ["road_strength", 6.5]]
+        },
+        "g": {
+          "balanced": [["metro_access", 30.0]],
+          "commuter": [["metro_access", 30.0]],
+          "highway": [],
+          "growth": [["metro_access", 30.0]]
+        },
+        "cov": 1.0,
+        "conf": 0.8,
+        "source_ref": "h3:876088501ffffff"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [73.8879, 18.4951],
+            [73.8839, 18.5069],
+            [73.8716, 18.5087],
+            [73.8634, 18.4988],
+            [73.8674, 18.487],
+            [73.8797, 18.4852],
+            [73.8879, 18.4951]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "876088505ffffff",
+        "name": null,
+        "pop": 20000,
+        "elig": true,
+        "bus_stops": 5,
+        "f": {"nh_access": 4.3, "rail_access": 3.6, "metro_access": 4.3, "road_strength": 1.0, "built_up_growth": 23.5},
+        "s": {"nh_access": 75.0, "rail_access": 60.0, "metro_access": 40.0, "road_strength": 65.0, "built_up_growth": 87.0},
+        "sc": {"balanced": 69.6, "commuter": 62.8, "highway": 75.9, "growth": 75.6},
+        "ac": {"balanced": 62.1, "commuter": 54.7, "highway": 71.1, "growth": 61.7},
+        "d": {
+          "balanced": [["built_up_growth", 26.1], ["nh_access", 18.8], ["road_strength", 9.8]],
+          "commuter": [["built_up_growth", 21.8], ["rail_access", 15.0], ["nh_access", 7.5]],
+          "highway": [["nh_access", 33.8], ["built_up_growth", 26.1], ["road_strength", 13.0]],
+          "growth": [["built_up_growth", 47.9], ["nh_access", 11.3], ["road_strength", 6.5]]
+        },
+        "g": {"balanced": [], "commuter": [], "highway": [], "growth": []},
+        "cov": 1.0,
+        "conf": 0.8,
+        "source_ref": "h3:876088505ffffff"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [73.8511, 18.5006],
+            [73.8471, 18.5124],
+            [73.8348, 18.5142],
+            [73.8266, 18.5042],
+            [73.8306, 18.4924],
+            [73.8429, 18.4906],
+            [73.8511, 18.5006]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "87608850cffffff",
+        "name": "Kharadi",
+        "pop": 10000,
+        "elig": true,
+        "bus_stops": 22,
+        "f": {"nh_access": 4.3, "rail_access": 3.6, "metro_access": 4.7, "road_strength": 1.0, "built_up_growth": 23.9},
+        "s": {"nh_access": 75.0, "rail_access": 60.0, "metro_access": 34.0, "road_strength": 65.0, "built_up_growth": 87.8},
+        "sc": {"balanced": 68.9, "commuter": 61.2, "highway": 76.1, "growth": 75.4},
+        "ac": {"balanced": 60.9, "commuter": 52.3, "highway": 71.1, "growth": 60.3},
+        "d": {
+          "balanced": [["built_up_growth", 26.3], ["nh_access", 18.8], ["road_strength", 9.8]],
+          "commuter": [["built_up_growth", 22.0], ["rail_access", 15.0], ["nh_access", 7.5]],
+          "highway": [["nh_access", 33.8], ["built_up_growth", 26.3], ["road_strength", 13.0]],
+          "growth": [["built_up_growth", 48.3], ["nh_access", 11.3], ["road_strength", 6.5]]
+        },
+        "g": {
+          "balanced": [["metro_access", 34.0]],
+          "commuter": [["metro_access", 34.0]],
+          "highway": [],
+          "growth": [["metro_access", 34.0]]
+        },
+        "cov": 1.0,
+        "conf": 0.8,
+        "source_ref": "h3:87608850cffffff"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [73.8758, 18.5305],
+            [73.8718, 18.5423],
+            [73.8595, 18.5441],
+            [73.8513, 18.5341],
+            [73.8553, 18.5223],
+            [73.8676, 18.5205],
+            [73.8758, 18.5305]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "876088503ffffff",
+        "name": "Hadapsar",
+        "pop": 25000,
+        "elig": true,
+        "bus_stops": 9,
+        "f": {"nh_access": 4.3, "rail_access": 3.6, "metro_access": 4.9, "road_strength": 1.0, "built_up_growth": 22.0},
+        "s": {"nh_access": 75.0, "rail_access": 60.0, "metro_access": 32.0, "road_strength": 65.0, "built_up_growth": 84.0},
+        "sc": {"balanced": 67.5, "commuter": 59.6, "highway": 75.0, "growth": 73.2},
+        "ac": {"balanced": 60.4, "commuter": 51.5, "highway": 71.1, "growth": 59.9},
+        "d": {
+          "balanced": [["built_up_growth", 25.2], ["nh_access", 18.8], ["road_strength", 9.8]],
+          "commuter": [["built_up_growth", 21.0], ["rail_access", 15.0], ["nh_access", 7.5]],
+          "highway": [["nh_access", 33.8], ["built_up_growth", 25.2], ["road_strength", 13.0]],
+          "growth": [["built_up_growth", 46.2], ["nh_access", 11.3], ["road_strength", 6.5]]
+        },
+        "g": {
+          "balanced": [["metro_access", 32.0]],
+          "commuter": [["metro_access", 32.0]],
+          "highway": [],
+          "growth": [["metro_access", 32.0]]
+        },
+        "cov": 1.0,
+        "conf": 0.8,
+        "source_ref": "h3:876088503ffffff"
+      }
+    }
+  ]
+}

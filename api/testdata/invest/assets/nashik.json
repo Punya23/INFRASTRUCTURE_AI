@@ -1,0 +1,40 @@
+{
+  "city": "nashik",
+  "stations": {
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": {"type": "Point", "coordinates": [73.8298, 19.9575]},
+        "properties": {"name": "Nashik Road", "mode": "rail", "source": "synthetic-test"}
+      },
+      {
+        "type": "Feature",
+        "geometry": {"type": "Point", "coordinates": [73.8498, 19.9225]},
+        "properties": {"name": "Devlali", "mode": "rail", "source": "synthetic-test"}
+      }
+    ]
+  },
+  "bus_stops": null,
+  "bus_source": null,
+  "highways": {
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": {"type": "LineString", "coordinates": [[73.7298, 20.0275], [73.7898, 19.9975], [73.8498, 19.9575]]},
+        "properties": {"ref": "NH 60", "status": "operational", "kind": "nh_segment"}
+      }
+    ]
+  },
+  "toll_plazas": {
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": {"type": "Point", "coordinates": [73.8098, 19.7975]},
+        "properties": {"name": "Gonde Toll Plaza"}
+      }
+    ]
+  }
+}

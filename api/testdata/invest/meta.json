@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "as_of": "2026-09-29",
+  "grid": {"h3_res": 7, "buffer_rings": 3, "min_area_population": 1000, "best_area_min_population": 5000},
+  "factors": [
+    {
+      "id": "nh_access",
+      "group": "access",
+      "unit": "km",
+      "better": "lower",
+      "headline_band_km": 10,
+      "bands": [[0, 100], [2, 90], [5, 70], [10, 40], [25, 0]]
+    },
+    {
+      "id": "rail_access",
+      "group": "access",
+      "unit": "km",
+      "better": "lower",
+      "headline_band_km": 2,
+      "bands": [[0, 100], [1, 90], [3, 65], [8, 25], [15, 0]]
+    },
+    {
+      "id": "metro_access",
+      "group": "access",
+      "unit": "km",
+      "better": "lower",
+      "headline_band_km": 2,
+      "bands": [[0, 100], [1, 90], [2, 70], [5, 30], [10, 0]]
+    },
+    {
+      "id": "road_strength",
+      "group": "access",
+      "unit": "km_per_km2",
+      "better": "higher",
+      "headline_band_km": null,
+      "bands": [[0, 0], [0.3, 30], [1, 65], [2, 90], [3, 100]]
+    },
+    {
+      "id": "built_up_growth",
+      "group": "momentum",
+      "unit": "pp",
+      "better": "higher",
+      "headline_band_km": null,
+      "bands": [[0, 0], [3, 30], [10, 60], [25, 90], [40, 100]]
+    }
+  ],
+  "presets": [
+    {
+      "id": "balanced",
+      "weights": {"nh_access": 0.25, "rail_access": 0.15, "metro_access": 0.15, "road_strength": 0.15, "built_up_growth": 0.3},
+      "default": true
+    },
+    {
+      "id": "commuter",
+      "weights": {"nh_access": 0.1, "rail_access": 0.25, "metro_access": 0.3, "road_strength": 0.1, "built_up_growth": 0.25},
+      "default": false
+    },
+    {
+      "id": "highway",
+      "weights": {"nh_access": 0.45, "rail_access": 0.05, "metro_access": 0.0, "road_strength": 0.2, "built_up_growth": 0.3},
+      "default": false
+    },
+    {
+      "id": "growth",
+      "weights": {"nh_access": 0.15, "rail_access": 0.1, "metro_access": 0.1, "road_strength": 0.1, "built_up_growth": 0.55},
+      "default": false
+    }
+  ],
+  "tiers": {"metro_min_population": 2500000, "large_min_population": 1000000},
+  "sources": [
+    {
+      "id": "synthetic-test",
+      "name": "Synthetic test data (invented, not real)",
+      "license": "synthetic-test",
+      "attribution": "Invented for tests in api/testdata/invest; never shipped or served in production."
+    }
+  ],
+  "disclaimer": "Scores describe existing infrastructure and past growth. They are not forecasts, price predictions or financial advice."
+}

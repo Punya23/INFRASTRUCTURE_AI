@@ -1,0 +1,85 @@
+{
+  "type": "FeatureCollection",
+  "city": "bengaluru",
+  "source": "synthetic-test",
+  "fetched_at": "2026-09-29",
+  "license": "synthetic-test",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [77.603, 12.976],
+            [77.599, 12.9884],
+            [77.5864, 12.991],
+            [77.5778, 12.981],
+            [77.5818, 12.9686],
+            [77.5944, 12.966],
+            [77.603, 12.976]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "8760145b4ffffff",
+        "name": "Whitefield",
+        "pop": 44000,
+        "elig": true,
+        "bus_stops": null,
+        "f": {"nh_access": 5.8, "rail_access": 5.5, "metro_access": 2.8, "road_strength": 0.9, "built_up_growth": 20.0},
+        "s": {"nh_access": 65.0, "rail_access": 45.0, "metro_access": 60.0, "road_strength": 60.0, "built_up_growth": 80.0},
+        "sc": {"balanced": 65.0, "commuter": 61.8, "highway": 67.5, "growth": 70.3},
+        "ac": {"balanced": 58.6, "commuter": 55.7, "highway": 62.1, "growth": 58.3},
+        "d": {
+          "balanced": [["built_up_growth", 24.0], ["nh_access", 16.3], ["metro_access", 9.0]],
+          "commuter": [["built_up_growth", 20.0], ["metro_access", 18.0], ["nh_access", 6.5]],
+          "highway": [["nh_access", 29.3], ["built_up_growth", 24.0], ["road_strength", 12.0]],
+          "growth": [["built_up_growth", 44.0], ["nh_access", 9.8], ["metro_access", 6.0]]
+        },
+        "g": {"balanced": [], "commuter": [], "highway": [], "growth": []},
+        "cov": 1.0,
+        "conf": 0.8,
+        "source_ref": "h3:8760145b4ffffff"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [77.5864, 12.991],
+            [77.5824, 13.0035],
+            [77.5698, 13.006],
+            [77.5612, 12.996],
+            [77.5652, 12.9836],
+            [77.5778, 12.981],
+            [77.5864, 12.991]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "8760145b0ffffff",
+        "name": "Hebbal",
+        "pop": 29000,
+        "elig": true,
+        "bus_stops": null,
+        "f": {"nh_access": 5.8, "rail_access": 5.5, "metro_access": 2.8, "road_strength": 0.9, "built_up_growth": 20.0},
+        "s": {"nh_access": 65.0, "rail_access": 45.0, "metro_access": 60.0, "road_strength": 60.0, "built_up_growth": 80.0},
+        "sc": {"balanced": 65.0, "commuter": 61.8, "highway": 67.5, "growth": 70.3},
+        "ac": {"balanced": 58.6, "commuter": 55.7, "highway": 62.1, "growth": 58.3},
+        "d": {
+          "balanced": [["built_up_growth", 24.0], ["nh_access", 16.3], ["metro_access", 9.0]],
+          "commuter": [["built_up_growth", 20.0], ["metro_access", 18.0], ["nh_access", 6.5]],
+          "highway": [["nh_access", 29.3], ["built_up_growth", 24.0], ["road_strength", 12.0]],
+          "growth": [["built_up_growth", 44.0], ["nh_access", 9.8], ["metro_access", 6.0]]
+        },
+        "g": {"balanced": [], "commuter": [], "highway": [], "growth": []},
+        "cov": 1.0,
+        "conf": 0.8,
+        "source_ref": "h3:8760145b0ffffff"
+      }
+    }
+  ]
+}

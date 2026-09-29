@@ -1,0 +1,65 @@
+{
+  "city": "delhi",
+  "stations": {
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": {"type": "Point", "coordinates": [77.21, 28.6129]},
+        "properties": {"name": "Rajiv Chowk", "mode": "metro", "source": "synthetic-test"}
+      },
+      {
+        "type": "Feature",
+        "geometry": {"type": "Point", "coordinates": [77.049, 28.5639]},
+        "properties": {"name": "Dwarka Sector 21", "mode": "metro", "source": "synthetic-test"}
+      },
+      {
+        "type": "Feature",
+        "geometry": {"type": "Point", "coordinates": [77.129, 28.7089]},
+        "properties": {"name": "Rohini West", "mode": "metro", "source": "synthetic-test"}
+      },
+      {
+        "type": "Feature",
+        "geometry": {"type": "Point", "coordinates": [77.219, 28.6339]},
+        "properties": {"name": "Kashmere Gate", "mode": "metro", "source": "synthetic-test"}
+      },
+      {
+        "type": "Feature",
+        "geometry": {"type": "Point", "coordinates": [77.212, 28.6159]},
+        "properties": {"name": "New Delhi", "mode": "rail", "source": "synthetic-test"}
+      },
+      {
+        "type": "Feature",
+        "geometry": {"type": "Point", "coordinates": [77.217, 28.6309]},
+        "properties": {"name": "Old Delhi", "mode": "rail", "source": "synthetic-test"}
+      }
+    ]
+  },
+  "bus_stops": null,
+  "bus_source": null,
+  "highways": {
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": {"type": "LineString", "coordinates": [[77.179, 28.7139], [77.209, 28.6439], [77.249, 28.5639]]},
+        "properties": {"ref": "NH 44", "status": "operational", "kind": "nh_segment"}
+      },
+      {
+        "type": "Feature",
+        "geometry": {"type": "LineString", "coordinates": [[77.259, 28.6139], [77.329, 28.5939]]},
+        "properties": {"ref": "NE 3", "status": "operational", "kind": "expressway_segment"}
+      }
+    ]
+  },
+  "toll_plazas": {
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": {"type": "Point", "coordinates": [77.079, 28.4439]},
+        "properties": {"name": "Kherki Daula Toll Plaza"}
+      }
+    ]
+  }
+}

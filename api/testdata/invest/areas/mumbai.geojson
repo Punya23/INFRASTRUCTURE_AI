@@ -1,0 +1,85 @@
+{
+  "type": "FeatureCollection",
+  "city": "mumbai",
+  "source": "synthetic-test",
+  "fetched_at": "2026-09-29",
+  "license": "synthetic-test",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [72.8876, 19.0728],
+            [72.8836, 19.0844],
+            [72.8714, 19.0861],
+            [72.8633, 19.0762],
+            [72.8674, 19.0645],
+            [72.8795, 19.0628],
+            [72.8876, 19.0728]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "87608b0b6ffffff",
+        "name": "Andheri East",
+        "pop": 52000,
+        "elig": true,
+        "bus_stops": null,
+        "f": {"nh_access": 6.7, "rail_access": 1.0, "metro_access": 1.5, "road_strength": 1.2, "built_up_growth": 5.3},
+        "s": {"nh_access": 60.0, "rail_access": 90.0, "metro_access": 80.0, "road_strength": 70.0, "built_up_growth": 40.0},
+        "sc": {"balanced": 63.0, "commuter": 69.5, "highway": 57.5, "growth": 55.0},
+        "ac": {"balanced": 72.9, "commuter": 79.3, "highway": 65.0, "growth": 73.3},
+        "d": {
+          "balanced": [["nh_access", 15.0], ["rail_access", 13.5], ["metro_access", 12.0]],
+          "commuter": [["metro_access", 24.0], ["rail_access", 22.5], ["road_strength", 7.0]],
+          "highway": [["nh_access", 27.0], ["road_strength", 14.0], ["rail_access", 4.5]],
+          "growth": [["nh_access", 9.0], ["rail_access", 9.0], ["metro_access", 8.0]]
+        },
+        "g": {"balanced": [], "commuter": [], "highway": [], "growth": []},
+        "cov": 1.0,
+        "conf": 0.8,
+        "source_ref": "h3:87608b0b6ffffff"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [72.8674, 19.0645],
+            [72.8633, 19.0762],
+            [72.8512, 19.0778],
+            [72.8431, 19.0679],
+            [72.8471, 19.0563],
+            [72.8593, 19.0546],
+            [72.8674, 19.0645]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "87608b0b0ffffff",
+        "name": "Powai",
+        "pop": 38000,
+        "elig": true,
+        "bus_stops": null,
+        "f": {"nh_access": 6.7, "rail_access": 1.0, "metro_access": 1.5, "road_strength": 1.2, "built_up_growth": 5.3},
+        "s": {"nh_access": 60.0, "rail_access": 90.0, "metro_access": 80.0, "road_strength": 70.0, "built_up_growth": 40.0},
+        "sc": {"balanced": 63.0, "commuter": 69.5, "highway": 57.5, "growth": 55.0},
+        "ac": {"balanced": 72.9, "commuter": 79.3, "highway": 65.0, "growth": 73.3},
+        "d": {
+          "balanced": [["nh_access", 15.0], ["rail_access", 13.5], ["metro_access", 12.0]],
+          "commuter": [["metro_access", 24.0], ["rail_access", 22.5], ["road_strength", 7.0]],
+          "highway": [["nh_access", 27.0], ["road_strength", 14.0], ["rail_access", 4.5]],
+          "growth": [["nh_access", 9.0], ["rail_access", 9.0], ["metro_access", 8.0]]
+        },
+        "g": {"balanced": [], "commuter": [], "highway": [], "growth": []},
+        "cov": 1.0,
+        "conf": 0.8,
+        "source_ref": "h3:87608b0b0ffffff"
+      }
+    }
+  ]
+}

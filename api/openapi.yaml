@@ -1,0 +1,1571 @@
+openapi: 3.1.0
+info:
+  title: INFRA-AI investor API
+  version: 0.1.0
+  summary: Explainable infrastructure scores for the cities and areas of India.
+  description: |
+    Read-only JSON API behind the "where should I invest?" flow. A score is a config-weighted sum of observed
+    infrastructure facts with stored drivers (ADR-0003). *Scores describe existing infrastructure and past
+    growth. They are not forecasts, price predictions or financial advice.*
+
+    **Data.** Loaded once at start-up from the fixtures the pipeline exports to `web/fixtures/invest/`
+    (design spec section 6); the Go store holds no scoring logic. Every example in this file comes from the
+    synthetic test world in `api/testdata/invest/` (each record has `source: synthetic-test`), so the numbers
+    are invented and must never be shown as real.
+
+    **Errors.** Always `{"error": {"code", "message"}}`. The message is safe to show and never carries
+    internal detail. Codes: `bad_request` 400, `not_found` 404, `rate_limited` 429 (with `Retry-After`) and
+    `internal` 500; a request that outlives its 5 s budget is answered 503 with code `internal`.
+
+    **Validation.** State codes match `^[A-Z]{2}$` and city ids `^[a-z0-9-]{2,64}$`; both are looked up in
+    memory and never used to build a path. An unknown `preset`, an unknown enum value or an out-of-range
+    `limit` is a 400 - a limit is never clamped silently.
+
+    **Empty and unknown.** A list is never `null`: an empty list is `[]`. A `null` inside a record means "not
+    observed" and is never a zero; show "-", not 0.
+
+    **Operations.** Per-IP fixed-window rate limit (default 120 requests a minute), CORS allow-list from the
+    environment (default `http://localhost:8765`), `X-Content-Type-Options: nosniff` on every response and
+    `Cache-Control: public, max-age=300` on the data routes.
+servers:
+  - url: http://localhost:8080
+    description: Local development (`-addr :8080`)
+tags:
+  - name: meta
+    description: Service state and the scoring model.
+  - name: states
+    description: States and their top cities.
+  - name: cities
+    description: City search, city detail, areas, map layers and comparison.
+
+paths:
+  /healthz:
+    get:
+      operationId: getHealth
+      tags: [meta]
+      summary: Liveness and data date
+      responses:
+        "200":
+          description: The service is up and its data is loaded.
+          content:
+            application/json:
+              schema: {$ref: "#/components/schemas/Health"}
+              examples:
+                ok:
+                  value:
+                    {status: ok, as_of: '2026-09-29'}
+        "429": {$ref: "#/components/responses/RateLimited"}
+        "500": {$ref: "#/components/responses/Internal"}
+
+  /v1/meta:
+    get:
+      operationId: getMeta
+      tags: [meta]
+      summary: The scoring model, sources and disclaimer
+      description: The content of `meta.json`. The UI reads preset ids, factor bands, sources and the disclaimer from here.
+      responses:
+        "200":
+          description: The scoring model the fixtures were built with.
+          headers:
+            Cache-Control: {$ref: "#/components/headers/CacheControl"}
+          content:
+            application/json:
+              schema: {$ref: "#/components/schemas/Meta"}
+              examples:
+                meta:
+                  value:
+                    schema_version: 1
+                    as_of: '2026-09-29'
+                    grid: {h3_res: 7, buffer_rings: 3, min_area_population: 1000, best_area_min_population: 5000}
+                    factors:
+                      - id: nh_access
+                        group: access
+                        unit: km
+                        better: lower
+                        headline_band_km: 10
+                        bands:
+                          - [0, 100]
+                          - [2, 90]
+                          - [5, 70]
+                          - [10, 40]
+                          - [25, 0]
+                      - id: rail_access
+                        group: access
+                        unit: km
+                        better: lower
+                        headline_band_km: 2
+                        bands:
+                          - [0, 100]
+                          - [1, 90]
+                          - [3, 65]
+                          - [8, 25]
+                          - [15, 0]
+                      - id: metro_access
+                        group: access
+                        unit: km
+                        better: lower
+                        headline_band_km: 2
+                        bands:
+                          - [0, 100]
+                          - [1, 90]
+                          - [2, 70]
+                          - [5, 30]
+                          - [10, 0]
+                      - id: road_strength
+                        group: access
+                        unit: km_per_km2
+                        better: higher
+                        headline_band_km: null
+                        bands:
+                          - [0, 0]
+                          - [0.3, 30]
+                          - [1, 65]
+                          - [2, 90]
+                          - [3, 100]
+                      - id: built_up_growth
+                        group: momentum
+                        unit: pp
+                        better: higher
+                        headline_band_km: null
+                        bands:
+                          - [0, 0]
+                          - [3, 30]
+                          - [10, 60]
+                          - [25, 90]
+                          - [40, 100]
+                    presets:
+                      - id: balanced
+                        weights: {nh_access: 0.25, rail_access: 0.15, metro_access: 0.15, road_strength: 0.15, built_up_growth: 0.3}
+                        default: true
+                      - id: commuter
+                        weights: {nh_access: 0.1, rail_access: 0.25, metro_access: 0.3, road_strength: 0.1, built_up_growth: 0.25}
+                        default: false
+                      - id: highway
+                        weights: {nh_access: 0.45, rail_access: 0.05, metro_access: 0.0, road_strength: 0.2, built_up_growth: 0.3}
+                        default: false
+                      - id: growth
+                        weights: {nh_access: 0.15, rail_access: 0.1, metro_access: 0.1, road_strength: 0.1, built_up_growth: 0.55}
+                        default: false
+                    tiers: {metro_min_population: 2500000, large_min_population: 1000000}
+                    sources:
+                      - {id: synthetic-test, name: 'Synthetic test data (invented, not real)', license: synthetic-test, attribution: Invented
+                          for tests in api/testdata/invest; never shipped or served in production.}
+                    disclaimer: Scores describe existing infrastructure and past growth. They are not forecasts, price predictions or financial
+                      advice.
+        "429": {$ref: "#/components/responses/RateLimited"}
+        "500": {$ref: "#/components/responses/Internal"}
+
+  /v1/states:
+    get:
+      operationId: listStates
+      tags: [states]
+      summary: Every state and union territory with its city count
+      description: All 36 states and union territories are listed; `city_count` may be 0 (Goa in the synthetic world).
+      responses:
+        "200":
+          description: States in `states.json` order.
+          headers:
+            Cache-Control: {$ref: "#/components/headers/CacheControl"}
+          content:
+            application/json:
+              schema: {$ref: "#/components/schemas/StatesResponse"}
+              examples:
+                states:
+                  value:
+                    as_of: '2026-09-29'
+                    states:
+                      - {code: DL, name: Delhi, city_count: 1}
+                      - {code: GA, name: Goa, city_count: 0}
+                      - {code: KA, name: Karnataka, city_count: 1}
+                      - {code: MH, name: Maharashtra, city_count: 3}
+        "429": {$ref: "#/components/responses/RateLimited"}
+        "500": {$ref: "#/components/responses/Internal"}
+
+  /v1/states/{code}/cities:
+    get:
+      operationId: listStateCities
+      tags: [states]
+      summary: The top cities of a state, ranked for a preset
+      description: |
+        Cities of one state ordered by score for the preset (ties: larger population, then id). A state with
+        fewer cities than `limit`, or none, is a normal 200 with a short or empty `cities` list; `total` says
+        how many cities the state has. Only an unknown code is a 404.
+      parameters:
+        - $ref: "#/components/parameters/StateCode"
+        - $ref: "#/components/parameters/Preset"
+        - name: limit
+          in: query
+          description: Maximum number of cities in the response. Outside 1-20 is a 400.
+          schema: {type: integer, minimum: 1, maximum: 20, default: 5}
+      responses:
+        "200":
+          description: The ranked cities.
+          headers:
+            Cache-Control: {$ref: "#/components/headers/CacheControl"}
+          content:
+            application/json:
+              schema: {$ref: "#/components/schemas/StateCitiesResponse"}
+              examples:
+                three_cities:
+                  summary: Maharashtra under the default preset
+                  value:
+                    state: MH
+                    preset: balanced
+                    total: 3
+                    cities:
+                      - rank: 1
+                        id: pune
+                        name: Pune
+                        state: MH
+                        tier: metro
+                        population: 6100000
+                        score: 70.5
+                        access: 62.1
+                        momentum: 90.0
+                        coverage: 1.0
+                        confidence: 0.8
+                        drivers:
+                          - {factor: built_up_growth, points: 27.0, value: 28.0, unit: pp, share: null, band_km: null}
+                          - {factor: nh_access, points: 18.8, value: 4.3, unit: km, share: 1.0, band_km: 10}
+                          - {factor: road_strength, points: 9.8, value: 1.0, unit: km_per_km2, share: null, band_km: null}
+                        gaps: []
+                        best_area: {id: 876088500ffffff, name: Hinjewadi, score: 74.1}
+                        source: synthetic-test
+                        source_ref: city:pune
+                        fetched_at: '2026-09-29'
+                        license: synthetic-test
+                      - rank: 2
+                        id: mumbai
+                        name: Mumbai
+                        state: MH
+                        tier: metro
+                        population: 12600000
+                        score: 63.0
+                        access: 72.9
+                        momentum: 40.0
+                        coverage: 1.0
+                        confidence: 0.8
+                        drivers:
+                          - {factor: nh_access, points: 15.0, value: 6.7, unit: km, share: 1.0, band_km: 10}
+                          - {factor: rail_access, points: 13.5, value: 1.0, unit: km, share: 1.0, band_km: 2}
+                          - {factor: metro_access, points: 12.0, value: 1.5, unit: km, share: 1.0, band_km: 2}
+                        gaps: []
+                        best_area: {id: 87608b0b6ffffff, name: Andheri East, score: 63.0}
+                        source: synthetic-test
+                        source_ref: city:mumbai
+                        fetched_at: '2026-09-29'
+                        license: synthetic-test
+                      - rank: 3
+                        id: nashik
+                        name: Nashik
+                        state: MH
+                        tier: large
+                        population: 1900000
+                        score: 55.0
+                        access: 48.6
+                        momentum: 70.0
+                        coverage: 1.0
+                        confidence: 0.8
+                        drivers:
+                          - {factor: nh_access, points: 21.3, value: 2.8, unit: km, share: 1.0, band_km: 10}
+                          - {factor: built_up_growth, points: 21.0, value: 15.0, unit: pp, share: null, band_km: null}
+                        gaps:
+                          - {factor: metro_access, subscore: 0.0, value: 167.9, unit: km, share: 0.0, band_km: 2}
+                        best_area: {id: 876099a04ffffff, name: Gangapur, score: 55.0}
+                        source: synthetic-test
+                        source_ref: city:nashik
+                        fetched_at: '2026-09-29'
+                        license: synthetic-test
+                commuter_top_two:
+                  summary: Maharashtra, preset=commuter, limit=2
+                  value:
+                    state: MH
+                    preset: commuter
+                    total: 3
+                    cities:
+                      - rank: 1
+                        id: mumbai
+                        name: Mumbai
+                        state: MH
+                        tier: metro
+                        population: 12600000
+                        score: 69.5
+                        access: 79.3
+                        momentum: 40.0
+                        coverage: 1.0
+                        confidence: 0.8
+                        drivers:
+                          - {factor: metro_access, points: 24.0, value: 1.5, unit: km, share: 1.0, band_km: 2}
+                          - {factor: rail_access, points: 22.5, value: 1.0, unit: km, share: 1.0, band_km: 2}
+                          - {factor: road_strength, points: 7.0, value: 1.2, unit: km_per_km2, share: null, band_km: null}
+                        gaps: []
+                        best_area: {id: 87608b0b6ffffff, name: Andheri East, score: 69.5}
+                        source: synthetic-test
+                        source_ref: city:mumbai
+                        fetched_at: '2026-09-29'
+                        license: synthetic-test
+                      - rank: 2
+                        id: pune
+                        name: Pune
+                        state: MH
+                        tier: metro
+                        population: 6100000
+                        score: 63.5
+                        access: 54.7
+                        momentum: 90.0
+                        coverage: 1.0
+                        confidence: 0.8
+                        drivers:
+                          - {factor: built_up_growth, points: 22.5, value: 28.0, unit: pp, share: null, band_km: null}
+                          - {factor: rail_access, points: 15.0, value: 3.6, unit: km, share: 0.0, band_km: 2}
+                          - {factor: nh_access, points: 7.5, value: 4.3, unit: km, share: 1.0, band_km: 10}
+                        gaps: []
+                        best_area: {id: 876088500ffffff, name: Hinjewadi, score: 70.0}
+                        source: synthetic-test
+                        source_ref: city:pune
+                        fetched_at: '2026-09-29'
+                        license: synthetic-test
+                no_cities:
+                  summary: A state without a city is 200 with total 0, never 404
+                  value:
+                    state: GA
+                    preset: balanced
+                    total: 0
+                    cities: []
+        "400": {$ref: "#/components/responses/BadRequest"}
+        "404": {$ref: "#/components/responses/NotFound"}
+        "429": {$ref: "#/components/responses/RateLimited"}
+        "500": {$ref: "#/components/responses/Internal"}
+
+  /v1/cities:
+    get:
+      operationId: searchCities
+      tags: [cities]
+      summary: Find a city by name or alias
+      description: |
+        Case-insensitive match on city names and aliases (an alias is another big place inside the same urban
+        centre, so "Thane" finds Mumbai); names that start with the text come before names that merely contain
+        it. `matched` is the name or alias that matched. No match is a 200 with an empty list.
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: Search text of 2-64 characters, in any script. Too short or too long is a 400. Never echoed back unescaped.
+          schema: {type: string, minLength: 2, maxLength: 64}
+          example: thane
+        - name: limit
+          in: query
+          description: Maximum number of matches in the response. Outside 1-20 is a 400.
+          schema: {type: integer, minimum: 1, maximum: 20, default: 8}
+      responses:
+        "200":
+          description: Matching cities, best match first.
+          headers:
+            Cache-Control: {$ref: "#/components/headers/CacheControl"}
+          content:
+            application/json:
+              schema: {$ref: "#/components/schemas/SearchResponse"}
+              examples:
+                alias:
+                  summary: q=thane finds Mumbai through its alias
+                  value:
+                    cities:
+                      - {id: mumbai, name: Mumbai, state: MH, tier: metro, population: 12600000, matched: Thane}
+                nothing:
+                  summary: q=zzz
+                  value:
+                    cities: []
+        "400": {$ref: "#/components/responses/BadRequest"}
+        "429": {$ref: "#/components/responses/RateLimited"}
+        "500": {$ref: "#/components/responses/Internal"}
+
+  /v1/cities/{id}:
+    get:
+      operationId: getCity
+      tags: [cities]
+      summary: One city with its factor summary, data flags and drivers
+      description: Everything on a ranked card except `rank`, plus `aliases`, `lat`, `lon`, `area_km2`, `cells`, `factors` and `data`.
+      parameters:
+        - $ref: "#/components/parameters/CityId"
+        - $ref: "#/components/parameters/Preset"
+      responses:
+        "200":
+          description: The city, scored for the preset.
+          headers:
+            Cache-Control: {$ref: "#/components/headers/CacheControl"}
+          content:
+            application/json:
+              schema: {$ref: "#/components/schemas/City"}
+              examples:
+                pune_commuter:
+                  summary: Pune, preset=commuter
+                  value:
+                    id: pune
+                    name: Pune
+                    state: MH
+                    tier: metro
+                    population: 6100000
+                    score: 63.5
+                    access: 54.7
+                    momentum: 90.0
+                    coverage: 1.0
+                    confidence: 0.8
+                    drivers:
+                      - {factor: built_up_growth, points: 22.5, value: 28.0, unit: pp, share: null, band_km: null}
+                      - {factor: rail_access, points: 15.0, value: 3.6, unit: km, share: 0.0, band_km: 2}
+                      - {factor: nh_access, points: 7.5, value: 4.3, unit: km, share: 1.0, band_km: 10}
+                    gaps: []
+                    best_area: {id: 876088500ffffff, name: Hinjewadi, score: 70.0}
+                    source: synthetic-test
+                    source_ref: city:pune
+                    fetched_at: '2026-09-29'
+                    license: synthetic-test
+                    aliases: [Pimpri-Chinchwad]
+                    lat: 18.5196
+                    lon: 73.8553
+                    area_km2: 850.0
+                    cells: 6
+                    factors:
+                      nh_access: {value: 4.3, unit: km, share: 1.0, band_km: 10, subscore: 75.0}
+                      rail_access: {value: 3.6, unit: km, share: 0.0, band_km: 2, subscore: 60.0}
+                      metro_access: {value: 4.9, unit: km, share: 0.01, band_km: 2, subscore: 40.0}
+                      road_strength: {value: 1.0, unit: km_per_km2, share: null, band_km: null, subscore: 65.0}
+                      built_up_growth: {value: 28.0, unit: pp, share: null, band_km: null, subscore: 90.0}
+                    data:
+                      bus: {operator: PMPML, tier: secondary, stops: 6713}
+                      metro_stations: 2
+                      rail_stations: 3
+                nashik_balanced:
+                  summary: Nashik has a watch-out and no bus feed
+                  value:
+                    id: nashik
+                    name: Nashik
+                    state: MH
+                    tier: large
+                    population: 1900000
+                    score: 55.0
+                    access: 48.6
+                    momentum: 70.0
+                    coverage: 1.0
+                    confidence: 0.8
+                    drivers:
+                      - {factor: nh_access, points: 21.3, value: 2.8, unit: km, share: 1.0, band_km: 10}
+                      - {factor: built_up_growth, points: 21.0, value: 15.0, unit: pp, share: null, band_km: null}
+                    gaps:
+                      - {factor: metro_access, subscore: 0.0, value: 167.9, unit: km, share: 0.0, band_km: 2}
+                    best_area: {id: 876099a04ffffff, name: Gangapur, score: 55.0}
+                    source: synthetic-test
+                    source_ref: city:nashik
+                    fetched_at: '2026-09-29'
+                    license: synthetic-test
+                    aliases: []
+                    lat: 19.9975
+                    lon: 73.7898
+                    area_km2: 260.0
+                    cells: 4
+                    factors:
+                      nh_access: {value: 2.8, unit: km, share: 1.0, band_km: 10, subscore: 85.0}
+                      rail_access: {value: 6.1, unit: km, share: 0.0, band_km: 2, subscore: 40.0}
+                      metro_access: {value: 167.9, unit: km, share: 0.0, band_km: 2, subscore: 0.0}
+                      road_strength: {value: 0.6, unit: km_per_km2, share: null, band_km: null, subscore: 45.0}
+                      built_up_growth: {value: 15.0, unit: pp, share: null, band_km: null, subscore: 70.0}
+                    data: {bus: null, metro_stations: 0, rail_stations: 2}
+        "400": {$ref: "#/components/responses/BadRequest"}
+        "404": {$ref: "#/components/responses/NotFound"}
+        "429": {$ref: "#/components/responses/RateLimited"}
+        "500": {$ref: "#/components/responses/Internal"}
+
+  /v1/cities/{id}/areas:
+    get:
+      operationId: listCityAreas
+      tags: [cities]
+      summary: The H3 cells of a city as GeoJSON, ranked for a preset
+      description: |
+        A FeatureCollection sorted by the preset's score (ties: larger population, then id). `rank` runs over
+        all cells of the city, so it is stable under `limit`; a cell that is not `elig` still draws on the map
+        but is never a best area. `source`, `fetched_at` and `license` are copied from the stored collection
+        into every feature; `source_ref` is the cell's own (`h3:<id>`). `f` and `s` hold every factor, `null`
+        where it was not observed - show "-", never 0.
+      parameters:
+        - $ref: "#/components/parameters/CityId"
+        - $ref: "#/components/parameters/Preset"
+        - name: limit
+          in: query
+          description: Maximum number of cells in the response. Outside 1-1000 is a 400.
+          schema: {type: integer, minimum: 1, maximum: 1000, default: 500}
+      responses:
+        "200":
+          description: The cells, best first.
+          headers:
+            Cache-Control: {$ref: "#/components/headers/CacheControl"}
+          content:
+            application/json:
+              schema: {$ref: "#/components/schemas/AreaCollection"}
+              examples:
+                pune_balanced_top_four:
+                  summary: Pune, preset=balanced, limit=4 (rank 1 is a tiny cell that is not eligible)
+                  value:
+                    type: FeatureCollection
+                    features:
+                      - type: Feature
+                        geometry:
+                          type: Polygon
+                          coordinates:
+                            - - [73.8553, 18.5223]
+                              - [73.8513, 18.5341]
+                              - [73.839, 18.5359]
+                              - [73.8307, 18.526]
+                              - [73.8348, 18.5142]
+                              - [73.8471, 18.5124]
+                              - [73.8553, 18.5223]
+                        properties:
+                          id: 87608850effffff
+                          name: Wagholi
+                          pop: 1200
+                          elig: false
+                          bus_stops: 0
+                          rank: 1
+                          score: 81.0
+                          access: 72.9
+                          coverage: 1.0
+                          confidence: 0.8
+                          f: {nh_access: 4.3, rail_access: 3.6, metro_access: 1.0, road_strength: 1.0, built_up_growth: 43.5}
+                          s: {nh_access: 75.0, rail_access: 60.0, metro_access: 90.0, road_strength: 65.0, built_up_growth: 100.0}
+                          d:
+                            - {factor: built_up_growth, points: 30.0, value: 43.5, unit: pp}
+                            - {factor: nh_access, points: 18.8, value: 4.3, unit: km}
+                            - {factor: metro_access, points: 13.5, value: 1.0, unit: km}
+                          g: []
+                          source: synthetic-test
+                          source_ref: h3:87608850effffff
+                          fetched_at: '2026-09-29'
+                          license: synthetic-test
+                      - type: Feature
+                        geometry:
+                          type: Polygon
+                          coordinates:
+                            - - [73.8921, 18.5169]
+                              - [73.8881, 18.5287]
+                              - [73.8758, 18.5305]
+                              - [73.8676, 18.5205]
+                              - [73.8716, 18.5087]
+                              - [73.8839, 18.5069]
+                              - [73.8921, 18.5169]
+                        properties:
+                          id: 876088500ffffff
+                          name: Hinjewadi
+                          pop: 30000
+                          elig: true
+                          bus_stops: 31
+                          rank: 2
+                          score: 74.1
+                          access: 66.4
+                          coverage: 1.0
+                          confidence: 0.8
+                          f: {nh_access: 4.3, rail_access: 3.6, metro_access: 2.8, road_strength: 1.0, built_up_growth: 28.0}
+                          s: {nh_access: 75.0, rail_access: 60.0, metro_access: 60.0, road_strength: 65.0, built_up_growth: 92.0}
+                          d:
+                            - {factor: built_up_growth, points: 27.6, value: 28.0, unit: pp}
+                            - {factor: nh_access, points: 18.8, value: 4.3, unit: km}
+                            - {factor: road_strength, points: 9.8, value: 1.0, unit: km_per_km2}
+                          g: []
+                          source: synthetic-test
+                          source_ref: h3:876088500ffffff
+                          fetched_at: '2026-09-29'
+                          license: synthetic-test
+                      - type: Feature
+                        geometry:
+                          type: Polygon
+                          coordinates:
+                            - - [73.8716, 18.5087]
+                              - [73.8676, 18.5205]
+                              - [73.8553, 18.5223]
+                              - [73.8471, 18.5124]
+                              - [73.8511, 18.5006]
+                              - [73.8634, 18.4988]
+                              - [73.8716, 18.5087]
+                        properties:
+                          id: 876088501ffffff
+                          name: Wakad
+                          pop: 40000
+                          elig: true
+                          bus_stops: 12
+                          rank: 3
+                          score: 70.2
+                          access: 60.0
+                          coverage: 1.0
+                          confidence: 0.8
+                          f: {nh_access: 4.3, rail_access: 3.6, metro_access: 5.0, road_strength: 1.0, built_up_growth: 31.0}
+                          s: {nh_access: 75.0, rail_access: 60.0, metro_access: 30.0, road_strength: 65.0, built_up_growth: 94.0}
+                          d:
+                            - {factor: built_up_growth, points: 28.2, value: 31.0, unit: pp}
+                            - {factor: nh_access, points: 18.8, value: 4.3, unit: km}
+                            - {factor: road_strength, points: 9.8, value: 1.0, unit: km_per_km2}
+                          g:
+                            - {factor: metro_access, subscore: 30.0, value: 5.0, unit: km}
+                          source: synthetic-test
+                          source_ref: h3:876088501ffffff
+                          fetched_at: '2026-09-29'
+                          license: synthetic-test
+                      - type: Feature
+                        geometry:
+                          type: Polygon
+                          coordinates:
+                            - - [73.8879, 18.4951]
+                              - [73.8839, 18.5069]
+                              - [73.8716, 18.5087]
+                              - [73.8634, 18.4988]
+                              - [73.8674, 18.487]
+                              - [73.8797, 18.4852]
+                              - [73.8879, 18.4951]
+                        properties:
+                          id: 876088505ffffff
+                          name: null
+                          pop: 20000
+                          elig: true
+                          bus_stops: 5
+                          rank: 4
+                          score: 69.6
+                          access: 62.1
+                          coverage: 1.0
+                          confidence: 0.8
+                          f: {nh_access: 4.3, rail_access: 3.6, metro_access: 4.3, road_strength: 1.0, built_up_growth: 23.5}
+                          s: {nh_access: 75.0, rail_access: 60.0, metro_access: 40.0, road_strength: 65.0, built_up_growth: 87.0}
+                          d:
+                            - {factor: built_up_growth, points: 26.1, value: 23.5, unit: pp}
+                            - {factor: nh_access, points: 18.8, value: 4.3, unit: km}
+                            - {factor: road_strength, points: 9.8, value: 1.0, unit: km_per_km2}
+                          g: []
+                          source: synthetic-test
+                          source_ref: h3:876088505ffffff
+                          fetched_at: '2026-09-29'
+                          license: synthetic-test
+        "400": {$ref: "#/components/responses/BadRequest"}
+        "404": {$ref: "#/components/responses/NotFound"}
+        "429": {$ref: "#/components/responses/RateLimited"}
+        "500": {$ref: "#/components/responses/Internal"}
+
+  /v1/cities/{id}/assets:
+    get:
+      operationId: getCityAssets
+      tags: [cities]
+      summary: Map layers of a city - stations, bus stops, highways, toll plazas
+      description: |
+        Only the requested layers are present in the response. `bus_source` (the operator, tier, license and
+        date of the stops) comes with `bus_stops`. A city without a bus feed has `bus_stops: null` and
+        `bus_source: null`: bus stops are shown, never scored. Highway and station geometry is OpenStreetMap
+        (ODbL); NHAI-derived numbers appear only as aggregates (ADR-0014).
+      parameters:
+        - $ref: "#/components/parameters/CityId"
+        - name: layers
+          in: query
+          description: Comma-separated layers to include. Default all four. An unknown layer is a 400.
+          style: form
+          explode: false
+          schema:
+            type: array
+            minItems: 1
+            uniqueItems: true
+            items: {type: string, enum: [stations, bus_stops, highways, toll_plazas]}
+            default: [stations, bus_stops, highways, toll_plazas]
+      responses:
+        "200":
+          description: The requested layers.
+          headers:
+            Cache-Control: {$ref: "#/components/headers/CacheControl"}
+          content:
+            application/json:
+              schema: {$ref: "#/components/schemas/AssetsResponse"}
+              examples:
+                all_layers:
+                  summary: Pune, default layers
+                  value:
+                    stations:
+                      type: FeatureCollection
+                      features:
+                        - type: Feature
+                          geometry:
+                            type: Point
+                            coordinates: [73.8563, 18.5206]
+                          properties: {name: Civil Court, mode: metro, source: synthetic-test}
+                        - type: Feature
+                          geometry:
+                            type: Point
+                            coordinates: [73.8433, 18.5156]
+                          properties: {name: Deccan Gymkhana, mode: metro, source: synthetic-test}
+                        - type: Feature
+                          geometry:
+                            type: Point
+                            coordinates: [73.8743, 18.5286]
+                          properties: {name: Pune Junction, mode: rail, source: synthetic-test}
+                        - type: Feature
+                          geometry:
+                            type: Point
+                            coordinates: [73.8473, 18.5306]
+                          properties: {name: Shivajinagar, mode: rail, source: synthetic-test}
+                        - type: Feature
+                          geometry:
+                            type: Point
+                            coordinates: [73.9553, 18.5096]
+                          properties: {name: Hadapsar, mode: rail, source: synthetic-test}
+                    bus_stops:
+                      type: FeatureCollection
+                      features:
+                        - type: Feature
+                          geometry:
+                            type: Point
+                            coordinates: [73.8573, 18.4916]
+                          properties: {name: Swargate}
+                        - type: Feature
+                          geometry:
+                            type: Point
+                            coordinates: [73.8473, 18.5306]
+                          properties: {name: Shivajinagar}
+                        - type: Feature
+                          geometry:
+                            type: Point
+                            coordinates: [73.7553, 18.5646]
+                          properties: {name: Hinjewadi Phase 1}
+                        - type: Feature
+                          geometry:
+                            type: Point
+                            coordinates: [73.9353, 18.5396]
+                          properties: {name: Kharadi Bypass}
+                        - type: Feature
+                          geometry:
+                            type: Point
+                            coordinates: [73.7703, 18.5596]
+                          properties: {name: Wakad Chowk}
+                    bus_source: {operator: PMPML, tier: secondary, license: synthetic-test, fetched_at: '2026-09-29'}
+                    highways:
+                      type: FeatureCollection
+                      features:
+                        - type: Feature
+                          geometry:
+                            type: LineString
+                            coordinates:
+                              - [73.7553, 18.5996]
+                              - [73.8053, 18.5396]
+                              - [73.8753, 18.4696]
+                          properties: {ref: NH 48, status: operational, kind: nh_segment}
+                        - type: Feature
+                          geometry:
+                            type: LineString
+                            coordinates:
+                              - [73.7353, 18.5696]
+                              - [73.6953, 18.5996]
+                          properties: {ref: NE 4, status: operational, kind: expressway_segment}
+                        - type: Feature
+                          geometry:
+                            type: MultiLineString
+                            coordinates:
+                              - - [73.9553, 18.4796]
+                                - [73.9853, 18.4596]
+                              - - [73.9953, 18.4396]
+                                - [74.0253, 18.4196]
+                          properties: {ref: NH 65, status: under_construction, kind: nh_segment}
+                    toll_plazas:
+                      type: FeatureCollection
+                      features:
+                        - type: Feature
+                          geometry:
+                            type: Point
+                            coordinates: [73.7553, 18.3896]
+                          properties: {name: Khed Shivapur Toll Plaza}
+                stations_only:
+                  summary: Pune, layers=stations
+                  value:
+                    stations:
+                      type: FeatureCollection
+                      features:
+                        - type: Feature
+                          geometry:
+                            type: Point
+                            coordinates: [73.8563, 18.5206]
+                          properties: {name: Civil Court, mode: metro, source: synthetic-test}
+                        - type: Feature
+                          geometry:
+                            type: Point
+                            coordinates: [73.8433, 18.5156]
+                          properties: {name: Deccan Gymkhana, mode: metro, source: synthetic-test}
+                        - type: Feature
+                          geometry:
+                            type: Point
+                            coordinates: [73.8743, 18.5286]
+                          properties: {name: Pune Junction, mode: rail, source: synthetic-test}
+                        - type: Feature
+                          geometry:
+                            type: Point
+                            coordinates: [73.8473, 18.5306]
+                          properties: {name: Shivajinagar, mode: rail, source: synthetic-test}
+                        - type: Feature
+                          geometry:
+                            type: Point
+                            coordinates: [73.9553, 18.5096]
+                          properties: {name: Hadapsar, mode: rail, source: synthetic-test}
+                no_bus_feed:
+                  summary: Nashik has no bus feed
+                  value:
+                    stations:
+                      type: FeatureCollection
+                      features:
+                        - type: Feature
+                          geometry:
+                            type: Point
+                            coordinates: [73.8298, 19.9575]
+                          properties: {name: Nashik Road, mode: rail, source: synthetic-test}
+                        - type: Feature
+                          geometry:
+                            type: Point
+                            coordinates: [73.8498, 19.9225]
+                          properties: {name: Devlali, mode: rail, source: synthetic-test}
+                    bus_stops: null
+                    bus_source: null
+                    highways:
+                      type: FeatureCollection
+                      features:
+                        - type: Feature
+                          geometry:
+                            type: LineString
+                            coordinates:
+                              - [73.7298, 20.0275]
+                              - [73.7898, 19.9975]
+                              - [73.8498, 19.9575]
+                          properties: {ref: NH 60, status: operational, kind: nh_segment}
+                    toll_plazas:
+                      type: FeatureCollection
+                      features:
+                        - type: Feature
+                          geometry:
+                            type: Point
+                            coordinates: [73.8098, 19.7975]
+                          properties: {name: Gonde Toll Plaza}
+        "400": {$ref: "#/components/responses/BadRequest"}
+        "404": {$ref: "#/components/responses/NotFound"}
+        "429": {$ref: "#/components/responses/RateLimited"}
+        "500": {$ref: "#/components/responses/Internal"}
+
+  /v1/cities/{id}/compare:
+    get:
+      operationId: compareCity
+      tags: [cities]
+      summary: The base city against other cities, with the reasons for each difference
+      description: |
+        `others` never contains the base city and is ordered by score, best first, so better and worse cities
+        both appear. `delta` is the other city's score minus the base city's, as served. `better` and `worse`
+        hold up to two sub-score differences each (largest first, ties by factor id): where the other city is
+        stronger and where it is weaker - the reasons behind `delta`. `base_rank` is the base city's rank in
+        the compared set including itself and `total` the number of other cities in scope, before `limit`.
+        The default scope is `metros` when the base city is a metro and `peers` otherwise; a city with no
+        peers gets `others: []` and `total: 0`.
+      parameters:
+        - $ref: "#/components/parameters/CityId"
+        - $ref: "#/components/parameters/Preset"
+        - name: scope
+          in: query
+          description: |
+            Cities to compare against: `metros` the other metros, `peers` cities of the same tier across India,
+            `state` the other cities of the base city's state, `india` every other city.
+          schema: {type: string, enum: [metros, peers, state, india]}
+        - name: limit
+          in: query
+          description: Maximum number of other cities in the response. Outside 1-10 is a 400.
+          schema: {type: integer, minimum: 1, maximum: 10, default: 5}
+      responses:
+        "200":
+          description: The comparison.
+          headers:
+            Cache-Control: {$ref: "#/components/headers/CacheControl"}
+          content:
+            application/json:
+              schema: {$ref: "#/components/schemas/CompareResponse"}
+              examples:
+                pune_commuter_metros:
+                  summary: Pune, preset=commuter, default scope (metros)
+                  value:
+                    base:
+                      rank: 3
+                      id: pune
+                      name: Pune
+                      state: MH
+                      tier: metro
+                      population: 6100000
+                      score: 63.5
+                      access: 54.7
+                      momentum: 90.0
+                      coverage: 1.0
+                      confidence: 0.8
+                      drivers:
+                        - {factor: built_up_growth, points: 22.5, value: 28.0, unit: pp, share: null, band_km: null}
+                        - {factor: rail_access, points: 15.0, value: 3.6, unit: km, share: 0.0, band_km: 2}
+                        - {factor: nh_access, points: 7.5, value: 4.3, unit: km, share: 1.0, band_km: 10}
+                      gaps: []
+                      best_area: {id: 876088500ffffff, name: Hinjewadi, score: 70.0}
+                      source: synthetic-test
+                      source_ref: city:pune
+                      fetched_at: '2026-09-29'
+                      license: synthetic-test
+                    preset: commuter
+                    scope: metros
+                    total: 3
+                    base_rank: 3
+                    others:
+                      - rank: 1
+                        id: delhi
+                        name: Delhi
+                        state: DL
+                        tier: metro
+                        score: 73.8
+                        delta: 10.3
+                        better:
+                          - {factor: metro_access, delta: 50.0, base: 40.0, other: 90.0}
+                          - {factor: rail_access, delta: 20.0, base: 60.0, other: 80.0}
+                        worse:
+                          - {factor: built_up_growth, delta: -45.0, base: 90.0, other: 45.0}
+                          - {factor: nh_access, delta: -5.0, base: 75.0, other: 70.0}
+                      - rank: 2
+                        id: mumbai
+                        name: Mumbai
+                        state: MH
+                        tier: metro
+                        score: 69.5
+                        delta: 6.0
+                        better:
+                          - {factor: metro_access, delta: 40.0, base: 40.0, other: 80.0}
+                          - {factor: rail_access, delta: 30.0, base: 60.0, other: 90.0}
+                        worse:
+                          - {factor: built_up_growth, delta: -50.0, base: 90.0, other: 40.0}
+                          - {factor: nh_access, delta: -15.0, base: 75.0, other: 60.0}
+                      - rank: 4
+                        id: bengaluru
+                        name: Bengaluru
+                        state: KA
+                        tier: metro
+                        score: 61.8
+                        delta: -1.7
+                        better:
+                          - {factor: metro_access, delta: 20.0, base: 40.0, other: 60.0}
+                        worse:
+                          - {factor: rail_access, delta: -15.0, base: 60.0, other: 45.0}
+                          - {factor: built_up_growth, delta: -10.0, base: 90.0, other: 80.0}
+                nashik_alone:
+                  summary: Nashik is the only large city, so its default scope (peers) is empty
+                  value:
+                    base:
+                      rank: 1
+                      id: nashik
+                      name: Nashik
+                      state: MH
+                      tier: large
+                      population: 1900000
+                      score: 55.0
+                      access: 48.6
+                      momentum: 70.0
+                      coverage: 1.0
+                      confidence: 0.8
+                      drivers:
+                        - {factor: nh_access, points: 21.3, value: 2.8, unit: km, share: 1.0, band_km: 10}
+                        - {factor: built_up_growth, points: 21.0, value: 15.0, unit: pp, share: null, band_km: null}
+                      gaps:
+                        - {factor: metro_access, subscore: 0.0, value: 167.9, unit: km, share: 0.0, band_km: 2}
+                      best_area: {id: 876099a04ffffff, name: Gangapur, score: 55.0}
+                      source: synthetic-test
+                      source_ref: city:nashik
+                      fetched_at: '2026-09-29'
+                      license: synthetic-test
+                    preset: balanced
+                    scope: peers
+                    total: 0
+                    base_rank: 1
+                    others: []
+        "400": {$ref: "#/components/responses/BadRequest"}
+        "404": {$ref: "#/components/responses/NotFound"}
+        "429": {$ref: "#/components/responses/RateLimited"}
+        "500": {$ref: "#/components/responses/Internal"}
+
+components:
+  parameters:
+    StateCode:
+      name: code
+      in: path
+      required: true
+      description: State or union-territory code (ISO 3166-2:IN), upper case. Malformed is a 400, unknown a 404.
+      schema: {type: string, pattern: "^[A-Z]{2}$"}
+      example: MH
+    CityId:
+      name: id
+      in: path
+      required: true
+      description: City id, a slug. Malformed is a 400, unknown a 404.
+      schema: {type: string, pattern: "^[a-z0-9-]{2,64}$"}
+      example: pune
+    Preset:
+      name: preset
+      in: query
+      description: |
+        Scoring preset; one of `presets[].id` in `/v1/meta`. Omitted means the preset marked `default`
+        (`balanced`). Anything else is a 400.
+      schema:
+        $ref: "#/components/schemas/PresetId"
+        default: balanced
+
+  headers:
+    CacheControl:
+      description: Data routes may be cached for five minutes.
+      schema: {type: string, const: "public, max-age=300"}
+    RetryAfter:
+      description: Seconds until the rate-limit window resets.
+      schema: {type: integer, minimum: 0}
+
+  responses:
+    BadRequest:
+      description: A path value, query value or limit is malformed or out of range.
+      content:
+        application/json:
+          schema: {$ref: "#/components/schemas/Error"}
+          examples:
+            limit:
+              value: {error: {code: bad_request, message: "limit must be an integer from 1 to 20"}}
+    NotFound:
+      description: The state code or city id is well formed but not in the data.
+      content:
+        application/json:
+          schema: {$ref: "#/components/schemas/Error"}
+          examples:
+            city:
+              value: {error: {code: not_found, message: "city not found"}}
+    RateLimited:
+      description: This client exceeded the per-minute request limit.
+      headers:
+        Retry-After: {$ref: "#/components/headers/RetryAfter"}
+      content:
+        application/json:
+          schema: {$ref: "#/components/schemas/Error"}
+          examples:
+            limited:
+              value: {error: {code: rate_limited, message: "too many requests; retry later"}}
+    Internal:
+      description: An unexpected failure, or a request that outlived its time budget (503). Nothing internal is disclosed.
+      content:
+        application/json:
+          schema: {$ref: "#/components/schemas/Error"}
+          examples:
+            failure:
+              value: {error: {code: internal, message: "internal error"}}
+
+  schemas:
+    Error:
+      type: object
+      required: [error]
+      additionalProperties: false
+      properties:
+        error:
+          type: object
+          required: [code, message]
+          additionalProperties: false
+          properties:
+            code: {type: string, enum: [bad_request, not_found, rate_limited, internal]}
+            message: {type: string, description: Human-readable and safe to show.}
+
+    Health:
+      type: object
+      required: [status, as_of]
+      additionalProperties: false
+      properties:
+        status: {type: string, const: ok}
+        as_of: {type: string, format: date, description: Date the fixtures were built.}
+
+    # ---- vocabularies -------------------------------------------------------------------------------
+    FactorId:
+      type: string
+      enum: [nh_access, rail_access, metro_access, road_strength, built_up_growth]
+      description: |
+        nh_access - distance to the nearest national highway or expressway; rail_access - distance to a rail
+        station; metro_access - distance to a metro, monorail or light-rail station; road_strength - trunk,
+        primary and secondary road length per km2 (network capacity, not pavement condition);
+        built_up_growth - change in built-up share 2000 to 2020.
+    PresetId:
+      type: string
+      enum: [balanced, commuter, highway, growth]
+    Tier:
+      type: string
+      enum: [metro, large, mid]
+    Unit:
+      type: string
+      enum: [km, km_per_km2, pp]
+      description: Kilometres, kilometres of road per km2, percentage points of built-up share.
+
+    # ---- meta ---------------------------------------------------------------------------------------
+    Meta:
+      type: object
+      required: [schema_version, as_of, grid, factors, presets, tiers, sources, disclaimer]
+      additionalProperties: false
+      properties:
+        schema_version: {type: integer, const: 1}
+        as_of: {type: string, format: date}
+        grid:
+          type: object
+          required: [h3_res, buffer_rings, min_area_population, best_area_min_population]
+          additionalProperties: false
+          properties:
+            h3_res: {type: integer, description: "H3 resolution of an area; 7 is about 5.2 km2."}
+            buffer_rings: {type: integer, description: Rings of cells kept around the urban centre.}
+            min_area_population: {type: integer, description: A cell below this population is not an area.}
+            best_area_min_population: {type: integer, description: Population from which an area is eligible to be a best area.}
+        factors: {type: array, minItems: 1, items: {$ref: "#/components/schemas/Factor"}}
+        presets: {type: array, minItems: 1, items: {$ref: "#/components/schemas/Preset"}}
+        tiers:
+          type: object
+          required: [metro_min_population, large_min_population]
+          additionalProperties: false
+          properties:
+            metro_min_population: {type: integer}
+            large_min_population: {type: integer}
+        sources: {type: array, items: {$ref: "#/components/schemas/Source"}}
+        disclaimer: {type: string, description: Shown on every result page.}
+    Factor:
+      type: object
+      required: [id, group, unit, better, headline_band_km, bands]
+      additionalProperties: false
+      properties:
+        id: {$ref: "#/components/schemas/FactorId"}
+        group: {type: string, enum: [access, momentum]}
+        unit: {$ref: "#/components/schemas/Unit"}
+        better: {type: string, enum: [lower, higher]}
+        headline_band_km:
+          type: [number, "null"]
+          description: Distance inside which a resident counts as served; null for roads and growth.
+        bands:
+          type: array
+          description: Knots of the piecewise-linear map from the raw value to a 0-100 sub-score.
+          items:
+            type: array
+            minItems: 2
+            maxItems: 2
+            items: {type: number}
+    Preset:
+      type: object
+      required: [id, weights, default]
+      additionalProperties: false
+      properties:
+        id: {$ref: "#/components/schemas/PresetId"}
+        weights:
+          type: object
+          description: One weight per factor; the weights of a preset sum to 1.
+          required: [nh_access, rail_access, metro_access, road_strength, built_up_growth]
+          additionalProperties: false
+          properties:
+            nh_access: {type: number, minimum: 0, maximum: 1}
+            rail_access: {type: number, minimum: 0, maximum: 1}
+            metro_access: {type: number, minimum: 0, maximum: 1}
+            road_strength: {type: number, minimum: 0, maximum: 1}
+            built_up_growth: {type: number, minimum: 0, maximum: 1}
+        default: {type: boolean, description: Exactly one preset is the default.}
+    Source:
+      type: object
+      required: [id, name, license, attribution]
+      additionalProperties: false
+      properties:
+        id: {type: string}
+        name: {type: string}
+        license: {type: string}
+        attribution: {type: string}
+
+    # ---- states and cities ----------------------------------------------------------------------------
+    State:
+      type: object
+      required: [code, name, city_count]
+      additionalProperties: false
+      properties:
+        code: {type: string, pattern: "^[A-Z]{2}$"}
+        name: {type: string}
+        city_count: {type: integer, minimum: 0, description: "Cities of at least 100,000 people in the state; may be 0."}
+    StatesResponse:
+      type: object
+      required: [as_of, states]
+      additionalProperties: false
+      properties:
+        as_of: {type: string, format: date}
+        states: {type: array, items: {$ref: "#/components/schemas/State"}}
+
+    Driver:
+      type: object
+      description: A factor that lifts a score. For a city, `points` is the population-weighted mean of its areas' points.
+      required: [factor, points, value, unit, share, band_km]
+      additionalProperties: false
+      properties:
+        factor: {$ref: "#/components/schemas/FactorId"}
+        points: {type: number, description: "Contribution to the score, in score points."}
+        value: {type: [number, "null"], description: Raw value (a population-weighted median for a city).}
+        unit: {$ref: "#/components/schemas/Unit"}
+        share: {type: [number, "null"], minimum: 0, maximum: 1, description: Share of residents inside `band_km`; null for roads and growth.}
+        band_km: {type: [number, "null"], description: The factor's headline distance band.}
+    Gap:
+      type: object
+      description: A watch-out - a factor with a low sub-score, worst weighted shortfall first.
+      required: [factor, subscore, value, unit, share, band_km]
+      additionalProperties: false
+      properties:
+        factor: {$ref: "#/components/schemas/FactorId"}
+        subscore: {type: number, minimum: 0, maximum: 100}
+        value: {type: [number, "null"]}
+        unit: {$ref: "#/components/schemas/Unit"}
+        share: {type: [number, "null"], minimum: 0, maximum: 1}
+        band_km: {type: [number, "null"]}
+    BestArea:
+      type: object
+      description: The highest-scoring eligible area of the city.
+      required: [id, name, score]
+      additionalProperties: false
+      properties:
+        id: {type: string, description: H3 cell id.}
+        name: {type: [string, "null"], description: "Null when OpenStreetMap names no place near the cell; the UI shows 'Area near ...'."}
+        score: {type: number, minimum: 0, maximum: 100}
+    FactorSummary:
+      type: object
+      required: [value, unit, share, band_km, subscore]
+      additionalProperties: false
+      properties:
+        value: {type: [number, "null"], description: Population-weighted median raw value.}
+        unit: {$ref: "#/components/schemas/Unit"}
+        share: {type: [number, "null"], minimum: 0, maximum: 1, description: Share of residents inside the headline band.}
+        band_km: {type: [number, "null"]}
+        subscore: {type: [number, "null"], minimum: 0, maximum: 100, description: Population-weighted mean of the areas' sub-scores.}
+    CityData:
+      type: object
+      required: [bus, metro_stations, rail_stations]
+      additionalProperties: false
+      properties:
+        bus:
+          description: The bus feed shown for the city; null when there is none (bus stops are never scored).
+          oneOf:
+            - type: "null"
+            - type: object
+              required: [operator, tier, stops]
+              additionalProperties: false
+              properties:
+                operator: {type: string}
+                tier: {type: string}
+                stops: {type: integer, minimum: 0}
+        metro_stations: {type: integer, minimum: 0}
+        rail_stations: {type: integer, minimum: 0}
+
+    CityBase:
+      type: object
+      description: What a city looks like for one preset - the ranked card without its rank.
+      required: [id, name, state, tier, population, score, access, momentum, coverage, confidence, drivers, gaps, best_area, source, source_ref, fetched_at, license]
+      properties:
+        id: {type: string, pattern: "^[a-z0-9-]{2,64}$"}
+        name: {type: string}
+        state: {type: string, pattern: "^[A-Z]{2}$", description: ISO state code; shown next to the name because names repeat across states.}
+        tier: {$ref: "#/components/schemas/Tier"}
+        population: {type: integer, description: People in the urban centre inside the state (WorldPop 2020).}
+        score: {type: number, minimum: 0, maximum: 100, description: Population-weighted mean of the city's area scores.}
+        access: {type: [number, "null"], minimum: 0, maximum: 100, description: The same mean over the access factors only.}
+        momentum: {type: [number, "null"], minimum: 0, maximum: 100, description: The built-up growth sub-score.}
+        coverage: {type: number, minimum: 0, maximum: 1, description: Share of the preset's weight backed by observed data.}
+        confidence: {type: number, minimum: 0, maximum: 1, description: 0.8 x coverage; 0.8 reflects community and modelled sources.}
+        drivers: {type: array, maxItems: 3, items: {$ref: "#/components/schemas/Driver"}}
+        gaps: {type: array, maxItems: 2, items: {$ref: "#/components/schemas/Gap"}}
+        best_area: {$ref: "#/components/schemas/BestArea"}
+        source: {type: string}
+        source_ref: {type: string}
+        fetched_at: {type: string, format: date}
+        license: {type: string}
+    CityCard:
+      description: A city in a ranked list.
+      allOf:
+        - $ref: "#/components/schemas/CityBase"
+        - type: object
+          required: [rank]
+          properties:
+            rank: {type: integer, minimum: 1, description: "Position in the list it appears in (in a comparison, in the compared set including the base city)."}
+      unevaluatedProperties: false
+    City:
+      description: One city with its factor summary and data flags.
+      allOf:
+        - $ref: "#/components/schemas/CityBase"
+        - type: object
+          required: [aliases, lat, lon, area_km2, cells, factors, data]
+          properties:
+            aliases: {type: array, items: {type: string}, description: Other big places inside the same urban centre.}
+            lat: {type: number}
+            lon: {type: number}
+            area_km2: {type: number}
+            cells: {type: integer, minimum: 1, description: Number of areas (H3 cells) of the city.}
+            factors:
+              type: object
+              required: [nh_access, rail_access, metro_access, road_strength, built_up_growth]
+              additionalProperties: false
+              properties:
+                nh_access: {$ref: "#/components/schemas/FactorSummary"}
+                rail_access: {$ref: "#/components/schemas/FactorSummary"}
+                metro_access: {$ref: "#/components/schemas/FactorSummary"}
+                road_strength: {$ref: "#/components/schemas/FactorSummary"}
+                built_up_growth: {$ref: "#/components/schemas/FactorSummary"}
+            data: {$ref: "#/components/schemas/CityData"}
+      unevaluatedProperties: false
+    StateCitiesResponse:
+      type: object
+      required: [state, preset, total, cities]
+      additionalProperties: false
+      properties:
+        state: {type: string, pattern: "^[A-Z]{2}$"}
+        preset: {$ref: "#/components/schemas/PresetId"}
+        total: {type: integer, minimum: 0, description: "Cities in the state, before `limit`."}
+        cities: {type: array, items: {$ref: "#/components/schemas/CityCard"}}
+    SearchHit:
+      type: object
+      required: [id, name, state, tier, population, matched]
+      additionalProperties: false
+      properties:
+        id: {type: string}
+        name: {type: string}
+        state: {type: string, pattern: "^[A-Z]{2}$"}
+        tier: {$ref: "#/components/schemas/Tier"}
+        population: {type: integer}
+        matched: {type: string, description: "The name or alias that matched, as stored."}
+    SearchResponse:
+      type: object
+      required: [cities]
+      additionalProperties: false
+      properties:
+        cities: {type: array, items: {$ref: "#/components/schemas/SearchHit"}}
+
+    # ---- areas ----------------------------------------------------------------------------------------
+    Position:
+      type: array
+      description: "[longitude, latitude], four decimals."
+      minItems: 2
+      maxItems: 2
+      items: {type: number}
+    PolygonGeometry:
+      type: object
+      required: [type, coordinates]
+      additionalProperties: false
+      properties:
+        type: {type: string, const: Polygon}
+        coordinates:
+          type: array
+          description: Rings of a hexagon, exterior ring first, counter-clockwise, closed.
+          items:
+            type: array
+            minItems: 4
+            items: {$ref: "#/components/schemas/Position"}
+    AreaDriver:
+      type: object
+      required: [factor, points, value, unit]
+      additionalProperties: false
+      properties:
+        factor: {$ref: "#/components/schemas/FactorId"}
+        points: {type: number}
+        value: {type: [number, "null"], description: "The cell's raw value, from `f`."}
+        unit: {$ref: "#/components/schemas/Unit"}
+    AreaGap:
+      type: object
+      required: [factor, subscore, value, unit]
+      additionalProperties: false
+      properties:
+        factor: {$ref: "#/components/schemas/FactorId"}
+        subscore: {type: number, minimum: 0, maximum: 100}
+        value: {type: [number, "null"], description: "The cell's raw value, from `f`."}
+        unit: {$ref: "#/components/schemas/Unit"}
+    FactorValues:
+      type: object
+      description: One entry per factor; null means the factor was not observed for the cell (it is left out of the score, never scored as 0).
+      required: [nh_access, rail_access, metro_access, road_strength, built_up_growth]
+      additionalProperties: false
+      properties:
+        nh_access: {type: [number, "null"]}
+        rail_access: {type: [number, "null"]}
+        metro_access: {type: [number, "null"]}
+        road_strength: {type: [number, "null"]}
+        built_up_growth: {type: [number, "null"]}
+    AreaProperties:
+      type: object
+      required: [id, name, pop, elig, bus_stops, rank, score, access, coverage, confidence, f, s, d, g, source, source_ref, fetched_at, license]
+      additionalProperties: false
+      properties:
+        id: {type: string, description: H3 resolution-7 cell id.}
+        name: {type: [string, "null"], description: "Null when no place is named near the cell; the UI shows 'Area near ...'."}
+        pop: {type: number, minimum: 0, description: Residents in the cell (WorldPop 2020).}
+        elig: {type: boolean, description: Eligible to be a best area; ineligible cells still draw on the map.}
+        bus_stops: {type: [number, "null"], minimum: 0, description: "Bus stops in the cell; null where the city has no feed, 0 where it has one and the cell has no stop."}
+        rank: {type: integer, minimum: 1, description: Position among all cells of the city for the requested preset.}
+        score: {type: number, minimum: 0, maximum: 100, description: For the requested preset.}
+        access: {type: [number, "null"], minimum: 0, maximum: 100, description: For the requested preset.}
+        coverage: {type: number, minimum: 0, maximum: 1}
+        confidence: {type: number, minimum: 0, maximum: 1}
+        f: {$ref: "#/components/schemas/FactorValues"}
+        s: {$ref: "#/components/schemas/FactorValues"}
+        d: {type: array, maxItems: 3, items: {$ref: "#/components/schemas/AreaDriver"}}
+        g: {type: array, maxItems: 2, items: {$ref: "#/components/schemas/AreaGap"}}
+        source: {type: string}
+        source_ref: {type: string, description: "`h3:<cell id>`."}
+        fetched_at: {type: string, format: date}
+        license: {type: string}
+    AreaFeature:
+      type: object
+      required: [type, geometry, properties]
+      additionalProperties: false
+      properties:
+        type: {type: string, const: Feature}
+        geometry: {$ref: "#/components/schemas/PolygonGeometry"}
+        properties: {$ref: "#/components/schemas/AreaProperties"}
+    AreaCollection:
+      type: object
+      required: [type, features]
+      additionalProperties: false
+      properties:
+        type: {type: string, const: FeatureCollection}
+        features: {type: array, items: {$ref: "#/components/schemas/AreaFeature"}}
+
+    # ---- assets ---------------------------------------------------------------------------------------
+    PointGeometry:
+      type: object
+      required: [type, coordinates]
+      additionalProperties: false
+      properties:
+        type: {type: string, const: Point}
+        coordinates: {$ref: "#/components/schemas/Position"}
+    LineGeometry:
+      type: object
+      required: [type, coordinates]
+      additionalProperties: false
+      properties:
+        type: {type: string, enum: [LineString, MultiLineString]}
+        coordinates:
+          type: array
+          description: Positions of a LineString, or a list of them for a MultiLineString.
+    StationCollection:
+      type: object
+      required: [type, features]
+      additionalProperties: false
+      properties:
+        type: {type: string, const: FeatureCollection}
+        features:
+          type: array
+          items:
+            type: object
+            required: [type, geometry, properties]
+            additionalProperties: false
+            properties:
+              type: {type: string, const: Feature}
+              geometry: {$ref: "#/components/schemas/PointGeometry"}
+              properties:
+                type: object
+                required: [name, mode, source]
+                additionalProperties: false
+                properties:
+                  name: {type: string}
+                  mode: {type: string, enum: [metro, rail]}
+                  source: {type: string}
+    NamedPointCollection:
+      type: object
+      description: Points with a name - bus stops or toll plazas.
+      required: [type, features]
+      additionalProperties: false
+      properties:
+        type: {type: string, const: FeatureCollection}
+        features:
+          type: array
+          items:
+            type: object
+            required: [type, geometry, properties]
+            additionalProperties: false
+            properties:
+              type: {type: string, const: Feature}
+              geometry: {$ref: "#/components/schemas/PointGeometry"}
+              properties:
+                type: object
+                required: [name]
+                additionalProperties: false
+                properties:
+                  name: {type: string}
+    HighwayCollection:
+      type: object
+      required: [type, features]
+      additionalProperties: false
+      properties:
+        type: {type: string, const: FeatureCollection}
+        features:
+          type: array
+          items:
+            type: object
+            required: [type, geometry, properties]
+            additionalProperties: false
+            properties:
+              type: {type: string, const: Feature}
+              geometry: {$ref: "#/components/schemas/LineGeometry"}
+              properties:
+                type: object
+                required: [ref, status, kind]
+                additionalProperties: false
+                properties:
+                  ref: {type: string, description: Road reference such as NH 48.}
+                  status: {type: string, enum: [operational, under_construction, proposed]}
+                  kind: {type: string, enum: [nh_segment, expressway_segment]}
+    BusSource:
+      type: object
+      required: [operator, tier, license, fetched_at]
+      additionalProperties: false
+      properties:
+        operator: {type: string}
+        tier: {type: string}
+        license: {type: string}
+        fetched_at: {type: string, format: date}
+    AssetsResponse:
+      type: object
+      description: Only the layers asked for are present.
+      additionalProperties: false
+      properties:
+        stations: {$ref: "#/components/schemas/StationCollection"}
+        bus_stops:
+          description: Null when the city has no bus feed.
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/NamedPointCollection"
+        bus_source:
+          description: Provenance of the bus stops; present with `bus_stops`, null when there is no feed.
+          oneOf:
+            - type: "null"
+            - $ref: "#/components/schemas/BusSource"
+        highways: {$ref: "#/components/schemas/HighwayCollection"}
+        toll_plazas: {$ref: "#/components/schemas/NamedPointCollection"}
+
+    # ---- compare --------------------------------------------------------------------------------------
+    FactorDelta:
+      type: object
+      description: A sub-score difference between the other city and the base city.
+      required: [factor, delta, base, other]
+      additionalProperties: false
+      properties:
+        factor: {$ref: "#/components/schemas/FactorId"}
+        delta: {type: number, description: "other minus base, one decimal."}
+        base: {type: number, minimum: 0, maximum: 100, description: The base city's sub-score.}
+        other: {type: number, minimum: 0, maximum: 100, description: The other city's sub-score.}
+    CompareRow:
+      type: object
+      required: [rank, id, name, state, tier, score, delta, better, worse]
+      additionalProperties: false
+      properties:
+        rank: {type: integer, minimum: 1, description: Position in the compared set including the base city.}
+        id: {type: string}
+        name: {type: string}
+        state: {type: string, pattern: "^[A-Z]{2}$"}
+        tier: {$ref: "#/components/schemas/Tier"}
+        score: {type: number, minimum: 0, maximum: 100}
+        delta: {type: number, description: "This city's score minus the base city's, one decimal."}
+        better: {type: array, maxItems: 2, items: {$ref: "#/components/schemas/FactorDelta"}, description: Where this city is stronger (delta above 0).}
+        worse: {type: array, maxItems: 2, items: {$ref: "#/components/schemas/FactorDelta"}, description: Where this city is weaker (delta below 0).}
+    CompareResponse:
+      type: object
+      required: [base, preset, scope, total, base_rank, others]
+      additionalProperties: false
+      properties:
+        base: {$ref: "#/components/schemas/CityCard"}
+        preset: {$ref: "#/components/schemas/PresetId"}
+        scope: {type: string, enum: [metros, peers, state, india]}
+        total: {type: integer, minimum: 0, description: "Other cities in scope, before `limit`."}
+        base_rank: {type: integer, minimum: 1, description: The base city's rank in the compared set including itself (also `base.rank`).}
+        others: {type: array, items: {$ref: "#/components/schemas/CompareRow"}}

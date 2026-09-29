@@ -1,0 +1,85 @@
+{
+  "type": "FeatureCollection",
+  "city": "delhi",
+  "source": "synthetic-test",
+  "fetched_at": "2026-09-29",
+  "license": "synthetic-test",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [77.183, 28.6164],
+            [77.1889, 28.6049],
+            [77.2038, 28.6036],
+            [77.2129, 28.6139],
+            [77.207, 28.6254],
+            [77.192, 28.6266],
+            [77.183, 28.6164]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "873da1146ffffff",
+        "name": "Dwarka",
+        "pop": 61000,
+        "elig": true,
+        "bus_stops": null,
+        "f": {"nh_access": 5.0, "rail_access": 1.8, "metro_access": 1.0, "road_strength": 1.8, "built_up_growth": 6.5},
+        "s": {"nh_access": 70.0, "rail_access": 80.0, "metro_access": 90.0, "road_strength": 85.0, "built_up_growth": 45.0},
+        "sc": {"balanced": 69.3, "commuter": 73.8, "highway": 66.0, "growth": 60.8},
+        "ac": {"balanced": 79.6, "commuter": 83.3, "highway": 75.0, "growth": 80.0},
+        "d": {
+          "balanced": [["nh_access", 17.5], ["metro_access", 13.5], ["road_strength", 12.8]],
+          "commuter": [["metro_access", 27.0], ["rail_access", 20.0], ["road_strength", 8.5]],
+          "highway": [["nh_access", 31.5], ["road_strength", 17.0], ["rail_access", 4.0]],
+          "growth": [["nh_access", 10.5], ["metro_access", 9.0], ["road_strength", 8.5]]
+        },
+        "g": {"balanced": [], "commuter": [], "highway": [], "growth": []},
+        "cov": 1.0,
+        "conf": 0.8,
+        "source_ref": "h3:873da1146ffffff"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [77.207, 28.6254],
+            [77.2129, 28.6139],
+            [77.2278, 28.6126],
+            [77.2368, 28.6228],
+            [77.231, 28.6344],
+            [77.216, 28.6356],
+            [77.207, 28.6254]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "873da1140ffffff",
+        "name": "Rohini",
+        "pop": 47000,
+        "elig": true,
+        "bus_stops": null,
+        "f": {"nh_access": 5.0, "rail_access": 1.8, "metro_access": 1.0, "road_strength": 1.8, "built_up_growth": 6.5},
+        "s": {"nh_access": 70.0, "rail_access": 80.0, "metro_access": 90.0, "road_strength": 85.0, "built_up_growth": 45.0},
+        "sc": {"balanced": 69.3, "commuter": 73.8, "highway": 66.0, "growth": 60.8},
+        "ac": {"balanced": 79.6, "commuter": 83.3, "highway": 75.0, "growth": 80.0},
+        "d": {
+          "balanced": [["nh_access", 17.5], ["metro_access", 13.5], ["road_strength", 12.8]],
+          "commuter": [["metro_access", 27.0], ["rail_access", 20.0], ["road_strength", 8.5]],
+          "highway": [["nh_access", 31.5], ["road_strength", 17.0], ["rail_access", 4.0]],
+          "growth": [["nh_access", 10.5], ["metro_access", 9.0], ["road_strength", 8.5]]
+        },
+        "g": {"balanced": [], "commuter": [], "highway": [], "growth": []},
+        "cov": 1.0,
+        "conf": 0.8,
+        "source_ref": "h3:873da1140ffffff"
+      }
+    }
+  ]
+}

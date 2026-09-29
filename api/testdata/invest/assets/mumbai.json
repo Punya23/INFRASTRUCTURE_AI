@@ -1,0 +1,65 @@
+{
+  "city": "mumbai",
+  "stations": {
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": {"type": "Point", "coordinates": [72.8977, 19.088]},
+        "properties": {"name": "Marol Naka", "mode": "metro", "source": "synthetic-test"}
+      },
+      {
+        "type": "Feature",
+        "geometry": {"type": "Point", "coordinates": [72.9077, 19.094]},
+        "properties": {"name": "Airport Road", "mode": "metro", "source": "synthetic-test"}
+      },
+      {
+        "type": "Feature",
+        "geometry": {"type": "Point", "coordinates": [72.9227, 19.084]},
+        "properties": {"name": "Saki Naka", "mode": "metro", "source": "synthetic-test"}
+      },
+      {
+        "type": "Feature",
+        "geometry": {"type": "Point", "coordinates": [72.8677, 19.086]},
+        "properties": {"name": "Andheri", "mode": "rail", "source": "synthetic-test"}
+      },
+      {
+        "type": "Feature",
+        "geometry": {"type": "Point", "coordinates": [72.9177, 19.061]},
+        "properties": {"name": "Kurla", "mode": "rail", "source": "synthetic-test"}
+      },
+      {
+        "type": "Feature",
+        "geometry": {"type": "Point", "coordinates": [72.8827, 19.036]},
+        "properties": {"name": "Dadar", "mode": "rail", "source": "synthetic-test"}
+      }
+    ]
+  },
+  "bus_stops": null,
+  "bus_source": null,
+  "highways": {
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": {"type": "LineString", "coordinates": [[72.8977, 19.136], [72.9077, 19.076], [72.9177, 19.026]]},
+        "properties": {"ref": "NH 48", "status": "operational", "kind": "nh_segment"}
+      },
+      {
+        "type": "Feature",
+        "geometry": {"type": "LineString", "coordinates": [[72.9377, 19.056], [72.9977, 19.016]]},
+        "properties": {"ref": "NE 4", "status": "operational", "kind": "expressway_segment"}
+      }
+    ]
+  },
+  "toll_plazas": {
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": {"type": "Point", "coordinates": [72.9477, 19.026]},
+        "properties": {"name": "Vashi Toll Plaza"}
+      }
+    ]
+  }
+}
