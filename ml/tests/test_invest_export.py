@@ -18,10 +18,28 @@ def synthetic_world():
     latlon = [h3.cell_to_latlng(c) for c in ids]
     cities = pd.DataFrame(
         [
-            {"id": "alpha", "name": "Alpha", "state": "MH", "aliases": ["Alpha East"], "lat": 18.5, "lon": 73.8,
-             "population": 300000.0, "tier": "mid", "geonameid": 1},
-            {"id": "beta", "name": "Beta", "state": "MH", "aliases": [], "lat": 18.6, "lon": 73.9,
-             "population": 200000.0, "tier": "mid", "geonameid": 2},
+            {
+                "id": "alpha",
+                "name": "Alpha",
+                "state": "MH",
+                "aliases": ["Alpha East"],
+                "lat": 18.5,
+                "lon": 73.8,
+                "population": 300000.0,
+                "tier": "mid",
+                "geonameid": 1,
+            },
+            {
+                "id": "beta",
+                "name": "Beta",
+                "state": "MH",
+                "aliases": [],
+                "lat": 18.6,
+                "lon": 73.9,
+                "population": 200000.0,
+                "tier": "mid",
+                "geonameid": 2,
+            },
         ]
     )
     cells = pd.DataFrame(
@@ -40,9 +58,18 @@ def synthetic_world():
         }
     )
     memberships = pd.DataFrame(
-        {"city_id": ["alpha"] * 3 + ["beta"] * 3, "cell": [ids[0], ids[1], ids[2], ids[2], ids[3], ids[4]]}
+        {
+            "city_id": ["alpha"] * 3 + ["beta"] * 3,
+            "cell": [ids[0], ids[1], ids[2], ids[2], ids[3], ids[4]],
+        }
     )  # ids[2] belongs to both cities
-    empty = {"stations": [], "bus_stops": None, "bus_source": None, "highways": [], "toll_plazas": []}
+    empty = {
+        "stations": [],
+        "bus_stops": None,
+        "bus_source": None,
+        "highways": [],
+        "toll_plazas": [],
+    }
     return cfg, cities, cells, memberships, {"alpha": dict(empty), "beta": dict(empty)}
 
 
@@ -66,6 +93,7 @@ def test_export_is_valid_deterministic_and_provenanced(tmp_path, synthetic_world
             expected = sum(weights[f] * s for f, s in obs.items()) / sum(weights[f] for f in obs)
             assert abs(p["sc"][preset] - expected) <= 0.15  # the parity rule the Go store re-checks
 
+
 def test_a_cell_shared_by_two_cities_has_identical_scores(tmp_path, synthetic_world):
     cfg, cities, cells, memberships, assets = synthetic_world
     write_fixtures(tmp_path, cfg, cities, cells, memberships, assets, "2026-09-29")
@@ -83,7 +111,11 @@ def test_unobserved_factor_is_null_and_lowers_coverage_never_zero(tmp_path, synt
     cfg, cities, cells, memberships, assets = synthetic_world
     write_fixtures(tmp_path, cfg, cities, cells, memberships, assets, "2026-09-29")
     raw = gzip.decompress((tmp_path / "areas" / "beta.geojson.gz").read_bytes())
-    unobserved = [f["properties"] for f in json.loads(raw)["features"] if f["properties"]["f"]["rail_access"] is None]
+    unobserved = [
+        f["properties"]
+        for f in json.loads(raw)["features"]
+        if f["properties"]["f"]["rail_access"] is None
+    ]
     assert unobserved and all(p["s"]["rail_access"] is None and p["cov"] < 1 for p in unobserved)
 
 
@@ -100,14 +132,27 @@ def _world_with_assets(synthetic_world):
     cfg, cities, cells, memberships, assets = synthetic_world
     assets["alpha"] = {
         "stations": [
-            (73.80, 18.50, {"name": "Alpha Metro", "mode": "metro", "source": "gtfs_bengaluru_bmrcl"}),
+            (
+                73.80,
+                18.50,
+                {"name": "Alpha Metro", "mode": "metro", "source": "gtfs_bengaluru_bmrcl"},
+            ),
             (73.81, 18.51, {"name": None, "mode": "rail", "source": "osm_india"}),
         ],
         "bus_stops": [(73.8, 18.5, {"name": "Stop A"}), (73.9, 18.6, {"name": "Stop B"})],
-        "bus_source": {"source": "gtfs_pune_pmpml", "operator": "PMPML", "tier": "secondary",
-                       "license": "MIT-0", "fetched_at": "2026-09-29"},
-        "highways": [([[(73.7, 18.4), (73.75, 18.45)], [(73.8, 18.5), (73.85, 18.55)]],
-                      {"ref": "NH48", "status": "operational", "kind": "nh_segment"})],
+        "bus_source": {
+            "source": "gtfs_pune_pmpml",
+            "operator": "PMPML",
+            "tier": "secondary",
+            "license": "MIT-0",
+            "fetched_at": "2026-09-29",
+        },
+        "highways": [
+            (
+                [[(73.7, 18.4), (73.75, 18.45)], [(73.8, 18.5), (73.85, 18.55)]],
+                {"ref": "NH48", "status": "operational", "kind": "nh_segment"},
+            )
+        ],
         "toll_plazas": [(73.77777, 18.33333, {"name": None})],
     }
     return cfg, cities, cells, memberships, assets
@@ -133,12 +178,16 @@ def test_city_record_reconciles_with_its_areas_and_assets(tmp_path, synthetic_wo
     nh = city["factors"]["nh_access"]
     assert nh == {"value": 1.0, "unit": "km", "share": 0.93, "band_km": 10, "subscore": 81.2}
     assert city["factors"]["road_strength"]["share"] is None
-    assert city["data"] == {"bus": {"operator": "PMPML", "tier": "secondary", "stops": 2},
-                            "metro_stations": 1, "rail_stations": 1}
+    assert city["data"] == {
+        "bus": {"operator": "PMPML", "tier": "secondary", "stops": 2},
+        "metro_stations": 1,
+        "rail_stations": 1,
+    }
     assert city["cells"] == 3 and city["population"] == 300000
     assert all(type(v) is int for v in (city["cells"], city["population"], *pops.values()))
     assert city["source"].endswith("+gtfs") and "MIT-0" in city["license"]
-    assert "Vonter/bmrcl-gtfs" in city["license"]  # a GTFS station's feed counts too, not only the bus
+    # a GTFS station's feed counts too, not only the bus
+    assert "Vonter/bmrcl-gtfs" in city["license"]
     beta = {c["id"]: c for c in _read(tmp_path, "cities.json")}["beta"]
     assert beta["data"]["bus"] is None and not beta["source"].endswith("+gtfs")
     # rail is unobserved for 8000 of beta's 14400 residents: the share is of the 6400 observed
@@ -146,14 +195,20 @@ def test_city_record_reconciles_with_its_areas_and_assets(tmp_path, synthetic_wo
     assert beta["factors"]["nh_access"]["share"] == 0.92  # 13200 / 14400, the 10 km cell included
 
 
-def test_assets_carry_provenance_and_the_bus_feed_only_as_its_public_fields(tmp_path, synthetic_world):
+def test_assets_carry_provenance_and_the_bus_feed_only_as_its_public_fields(
+    tmp_path, synthetic_world
+):
     cfg, cities, cells, memberships, assets = _world_with_assets(synthetic_world)
     write_fixtures(tmp_path, cfg, cities, cells, memberships, assets, "2026-09-29")
     a = _read(tmp_path, "assets/alpha.json.gz")
     assert (a["city"], a["source"], a["fetched_at"]) == ("alpha", "osm+gtfs", "2026-09-29")
     assert a["license"].startswith("ODbL-1.0") and "MIT-0" in a["license"]
-    assert a["bus_source"] == {"operator": "PMPML", "tier": "secondary", "license": "MIT-0",
-                               "fetched_at": "2026-09-29"}
+    assert a["bus_source"] == {
+        "operator": "PMPML",
+        "tier": "secondary",
+        "license": "MIT-0",
+        "fetched_at": "2026-09-29",
+    }
     (highway,) = a["highways"]["features"]
     assert highway["geometry"]["type"] == "MultiLineString"
     assert a["toll_plazas"]["features"][0]["geometry"]["coordinates"] == [73.7778, 18.3333]
@@ -161,7 +216,12 @@ def test_assets_carry_provenance_and_the_bus_feed_only_as_its_public_fields(tmp_
     b = _read(tmp_path, "assets/beta.json.gz")
     assert b["bus_stops"] is None and b["bus_source"] is None and b["license"] == "ODbL-1.0"
     sources = {s["id"]: s for s in _read(tmp_path, "meta.json")["sources"]}
-    assert {"osm_india", "worldpop_india_2020_1km", "gtfs_pune_pmpml", "gtfs_bengaluru_bmrcl"} <= set(sources)
+    assert {
+        "osm_india",
+        "worldpop_india_2020_1km",
+        "gtfs_pune_pmpml",
+        "gtfs_bengaluru_bmrcl",
+    } <= set(sources)
     assert all(s["name"] and s["license"] and s["attribution"] for s in sources.values())
 
 
@@ -181,10 +241,13 @@ def test_areas_become_eligible_only_from_best_area_min_population(tmp_path, synt
     extra = pd.DataFrame({"city_id": ["alpha", "alpha"], "cell": list(cells["cell"][3:])})
     memberships = pd.concat([memberships, extra], ignore_index=True)  # alpha: four cells >= 5,000
     cells.loc[1, "pop"] = 5000.0  # exactly the threshold: eligible
-    cells.loc[2, list(cfg.factors)] = [0.1, 0.1, 0.1, 3.0, 20.0]  # the 1,200-people cell scores best
+    best = [0.1, 0.1, 0.1, 3.0, 20.0]
+    cells.loc[2, list(cfg.factors)] = best  # the 1,200-people cell scores best
     write_fixtures(tmp_path, cfg, cities, cells, memberships, assets, "2026-09-29")
-    elig = {f["properties"]["pop"]: f["properties"]["elig"]
-            for f in _read(tmp_path, "areas/alpha.geojson.gz")["features"]}
+    elig = {
+        f["properties"]["pop"]: f["properties"]["elig"]
+        for f in _read(tmp_path, "areas/alpha.geojson.gz")["features"]
+    }
     assert elig == {9000: True, 5000: True, 1200: False, 8000: True, 5200: True}
     alpha = {c["id"]: c for c in _read(tmp_path, "cities.json")}["alpha"]
     assert all(s["best_area"]["id"] != cells.loc[2, "cell"] for s in alpha["scores"].values())
@@ -210,7 +273,9 @@ def test_values_are_rounded_and_never_negative_zero(tmp_path, synthetic_world):
     write_fixtures(tmp_path, cfg, cities, cells, memberships, assets, "2026-09-29")
     raw = gzip.decompress((tmp_path / "areas" / "alpha.geojson.gz").read_bytes()).decode()
     assert "-0.0" not in raw
-    (p,) = [f["properties"] for f in json.loads(raw)["features"] if f["properties"]["name"] == "Baner"]
+    (p,) = [
+        f["properties"] for f in json.loads(raw)["features"] if f["properties"]["name"] == "Baner"
+    ]
     assert p["f"]["built_up_growth"] == 0.0 and p["f"]["nh_access"] == 1.2
 
 
@@ -245,7 +310,9 @@ def test_a_tree_over_budget_is_never_published(tmp_path, synthetic_world):
     (tmp_path / "stale.json").write_text("{}")  # a re-run replaces the whole tree
     write_fixtures(tmp_path, cfg, cities, cells, memberships, assets, "2026-09-29")
     assert not (tmp_path / "stale.json").exists()
-    assert [p.name for p in tmp_path.parent.iterdir() if p.name.startswith(f".{tmp_path.name}.")] == []
+    assert [
+        p.name for p in tmp_path.parent.iterdir() if p.name.startswith(f".{tmp_path.name}.")
+    ] == []
     cfg.raw["pipeline"]["max_file_mb"] = 0.001  # 1,000 bytes: cities.json no longer fits
     with pytest.raises(ValueError, match="over 1,000 bytes"):
         write_fixtures(tmp_path, cfg, cities, cells, memberships, assets, "2026-09-30")
@@ -273,7 +340,8 @@ def test_piece_table_sums_people_and_weights_the_centre():
     labels = np.array([[1, 1, 0], [0, 2, 2]])
     people = np.array([[10.0, 30.0, 5.0], [7.0, 20.0, 20.0]])
     t = piece_table(people, labels, Affine(1, 0, 0, 0, -1, 2))  # pixel centres at x + 0.5
-    assert t["population"].tolist() == [40.0, 40.0]  # the 5 and 7 outside every piece are not counted
+    # the 5 and 7 outside every piece are not counted
+    assert t["population"].tolist() == [40.0, 40.0]
     assert t["centroid_lon"].tolist() == [1.25, 2.0] and t["centroid_lat"].tolist() == [1.5, 0.5]
 
 
@@ -283,7 +351,9 @@ def test_area_cells_are_the_core_and_its_rings_once_each():
     core = h3.latlng_to_cell(18.5, 73.8, 7)
     neighbour = h3.grid_ring(core, 1)[0]
     assert area_cells([core], 1) == sorted(h3.grid_disk(core, 1))
-    assert area_cells([core, neighbour], 1) == sorted(set(h3.grid_disk(core, 1)) | set(h3.grid_disk(neighbour, 1)))
+    assert area_cells([core, neighbour], 1) == sorted(
+        set(h3.grid_disk(core, 1)) | set(h3.grid_disk(neighbour, 1))
+    )
 
 
 def test_pixels_near_reaches_every_pixel_of_the_cell():
@@ -294,11 +364,19 @@ def test_pixels_near_reaches_every_pixel_of_the_cell():
     transform, shape = Affine(0.01, 0, 73.6, 0, -0.01, 18.8), (60, 60)  # ≈1.1 km pixels
     cell = h3.latlng_to_cell(18.5, 73.9, 7)
     lat, lon = h3.cell_to_latlng(cell)
-    rows, cols, plon, plat = pixels_near(pd.DataFrame({"lat": [lat], "lon": [lon]}), transform, "EPSG:4326", shape)
-    everywhere = [(r, c) for r in range(shape[0]) for c in range(shape[1])
-                  if h3.latlng_to_cell(18.8 - 0.01 * (r + 0.5), 73.6 + 0.01 * (c + 0.5), 7) == cell]
+    rows, cols, plon, plat = pixels_near(
+        pd.DataFrame({"lat": [lat], "lon": [lon]}), transform, "EPSG:4326", shape
+    )
+    everywhere = [
+        (r, c)
+        for r in range(shape[0])
+        for c in range(shape[1])
+        if h3.latlng_to_cell(18.8 - 0.01 * (r + 0.5), 73.6 + 0.01 * (c + 0.5), 7) == cell
+    ]
     assert everywhere and set(everywhere) <= set(zip(rows.tolist(), cols.tolist(), strict=True))
-    assert np.allclose(plon, 73.6 + 0.01 * (cols + 0.5)) and np.allclose(plat, 18.8 - 0.01 * (rows + 0.5))
+    assert np.allclose(plon, 73.6 + 0.01 * (cols + 0.5)) and np.allclose(
+        plat, 18.8 - 0.01 * (rows + 0.5)
+    )
 
 
 def test_highways_are_clipped_merged_per_road_and_keep_a_missing_ref_unknown():
@@ -309,8 +387,11 @@ def test_highways_are_clipped_merged_per_road_and_keep_a_missing_ref_unknown():
 
     segments = gpd.GeoDataFrame(
         {"ref": ["NH48", "NH48", None], "status": ["operational"] * 3, "kind": ["nh_segment"] * 3},
-        geometry=[shapely.LineString([(0, 0), (1, 0)]), shapely.LineString([(1, 0), (3, 0)]),
-                  shapely.LineString([(0, 1), (1, 1)])],
+        geometry=[
+            shapely.LineString([(0, 0), (1, 0)]),
+            shapely.LineString([(1, 0), (3, 0)]),
+            shapely.LineString([(0, 1), (1, 1)]),
+        ],
         crs="EPSG:4326",
     )
     out = _highways(segments, shapely.STRtree(segments.geometry.to_numpy()), (0.5, -1, 2, 2), 0.001)
@@ -330,7 +411,8 @@ def test_sensitivity_city_scores_are_the_exported_city_scores(tmp_path, syntheti
     ours = city_scores(cfg, cells, memberships, ["alpha", "beta"], weights)
     for i, city in enumerate(["alpha", "beta"]):
         for j, pid in enumerate(cfg.presets):
-            assert abs(ours[i, j] - exported[city][pid]["score"]) <= 0.05  # only the 1-decimal rounding
+            # only the 1-decimal rounding separates them
+            assert abs(ours[i, j] - exported[city][pid]["score"]) <= 0.05
 
 
 def test_sensitivity_report_covers_states_with_five_cities():
@@ -339,7 +421,9 @@ def test_sensitivity_report_covers_states_with_five_cities():
     cfg = load_config()
     rng = np.random.default_rng(0)
     ids = [h3.latlng_to_cell(18.0 + 0.1 * i, 74.0, 7) for i in range(7)]
-    cells = pd.DataFrame({"cell": ids, "pop": 2000.0, **{f: rng.uniform(0, 20, 7) for f in cfg.factors}})
+    cells = pd.DataFrame(
+        {"cell": ids, "pop": 2000.0, **{f: rng.uniform(0, 20, 7) for f in cfg.factors}}
+    )
     cities = pd.DataFrame({"id": [f"c{i}" for i in range(7)], "state": ["MH"] * 6 + ["GA"]})
     memberships = pd.DataFrame({"city_id": cities["id"], "cell": ids})
     report = sensitivity_report(cfg, cities, cells, memberships)
@@ -347,3 +431,14 @@ def test_sensitivity_report_covers_states_with_five_cities():
     assert len(rows) == 1 and "| GA |" not in report  # Goa has fewer than 5 cities
     assert all(0 <= float(v) <= 1 for v in rows[0].split("|")[3:-1])
     assert "| balanced | 1.00 |" in report  # a preset agrees with itself
+
+
+def test_bus_stops_are_null_outside_a_city_with_a_shown_feed():
+    from pipeline.invest.build import shown_bus_stops
+
+    stops = pd.Series([3.0, np.nan, 2.0, np.nan], index=["fed-a", "fed-b", "stray", "none"])
+    out = shown_bus_stops(stops, served={"fed-a", "fed-b"})
+    # fed-b: the city has a feed and the cell no stop -> 0; stray: a statewide feed's stop in a
+    # city with no feed -> null, like every cell of that city
+    assert out.isna().tolist() == [False, False, True, True]
+    assert out[["fed-a", "fed-b"]].tolist() == [3.0, 0.0]

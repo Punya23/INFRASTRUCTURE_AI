@@ -53,15 +53,19 @@ from pipeline.shared_layers import RAW, load_cities, load_states, read_ghsl_buil
 OUT = osm.OUT  # data/processed/invest
 WORLDPOP = RAW / "worldpop" / "ind_ppp_2020_1km_Aggregated_UNadj.tif"
 FIXTURES = ROOT / "web" / "fixtures" / "invest"
-GEONAMES_MIN_POPULATION = 15_000  # the smallest place in GeoNames cities15000
+# GeoNames cities15000 lists places from 15,000 people: the whole file names pieces (spec §5), and a
+# fixed property of the source, not a threshold to tune (so not in config, AGENTS invariant 8)
+GEONAMES_MIN_POPULATION = 15_000
 EARTH_KM = 6371.0  # mean Earth radius; a degree of latitude is EARTH_KM * pi / 180 km
 # Raster pixels tested for a cell lie within this many pixels of the cell's centre. A res-7 cell
 # reaches 1.4 km from its centre, and a pixel is at least 0.7 km across (WorldPop's 30" at 34° N;
 # GHSL's 1 km Mollweide is sheared at India's longitudes), so 4 leaves a margin; a wider reach
 # changes no cell (checked on the 2026-09 run).
 REACH_PX = 4
-SEED = 20260929  # sensitivity draws — spec §4
-DRAWS, SPREAD = 200, 0.30  # 200 draws of ±30 % weights per preset — spec §4
+# The sensitivity summary's definition, fixed by spec §4 ("200 random ±30 % weight perturbations")
+# and plan D5 step 6 (seed); a method, not a threshold, so not in config (AGENTS invariant 8)
+SEED = 20260929
+DRAWS, SPREAD = 200, 0.30
 
 
 def _log(msg: str, t0: float) -> None:
@@ -176,6 +180,15 @@ def cities() -> None:
         f"({unnamed.sum()} unnamed, {(no_state & ~unnamed).sum()} without a state) -> "
         f"{OUT / 'pieces.parquet'}"
     )
+    dropped = pieces[unnamed].sort_values("population", ascending=False)
+    print(
+        f"unnamed, not exported ({len(dropped)} pieces, {dropped['population'].sum() / 1e6:.2f} M "
+        f"people; all in review_unnamed_pieces.csv); largest 15:"
+    )
+    for r in dropped.head(15).itertuples():
+        print(
+            f"  {r.state_name}: {r.population:,.0f} at {r.centroid_lat:.2f}, {r.centroid_lon:.2f}"
+        )
     print("per state:", dict(sorted(Counter(kept["state"]).items())))
     print(
         "top 10:",
@@ -250,6 +263,13 @@ def _built_up_growth(centres: pd.DataFrame, res: int) -> pd.Series:
     return growth.reindex(centres["cell"])
 
 
+def shown_bus_stops(stops: pd.Series, served: set[str]) -> pd.Series:
+    """Bus stops per cell as the areas show them (spec §6): the count, or 0, in cells of a city
+    whose feed is shown; null everywhere else, even where a statewide feed has a stray stop, since
+    that city has no bus data."""
+    return stops.fillna(0.0).where(stops.index.isin(served))
+
+
 def _city_bus_feeds(
     memberships: pd.DataFrame, stops: pd.Series, res: int, min_stops: int
 ) -> pd.DataFrame:
@@ -320,8 +340,7 @@ def facts() -> None:
     stops = bus_stop_counts(list(kept), res)  # NaN where no stop
     city_bus = _city_bus_feeds(memberships, stops, res, pipe["bus_feed_min_stops"])
     served = set(memberships.loc[memberships["city_id"].isin(city_bus["city_id"]), "cell"])
-    stops[stops.isna() & stops.index.isin(served)] = 0.0  # a city with a feed: no stop is 0
-    cells["bus_stops"] = stops.to_numpy()
+    cells["bus_stops"] = shown_bus_stops(stops, served).to_numpy()
     _log("names and bus stops", t0)
 
     cells.to_parquet(OUT / "cells.parquet", index=False)
@@ -463,7 +482,9 @@ def city_assets(cfg: ScoringConfig, memberships: pd.DataFrame, city_bus: pd.Data
 
 def as_of(source_ids: list[str]) -> str:
     """The newest fetch date among the sources' manifests: re-running on the same data writes the
-    same date, so the fixtures stay byte-identical."""
+    same date, so the fixtures stay byte-identical. Every record's `fetched_at` is this date, so a
+    source fetched earlier (OSM, WorldPop and GHSL on 2026-09-28) reads a day newer than it is;
+    meta.sources names each source, and its manifest keeps the exact time."""
     return max(
         f["fetched_at"][:10]
         for s in source_ids
