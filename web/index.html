@@ -732,7 +732,9 @@
       .text-headline-lg { font-size: 1.5rem; line-height: 2rem; letter-spacing: -0.015em; }
     }
   </style>
+  <link rel="stylesheet" href="speech.css"/>
   <script src="i18n.js"></script>
+  <script src="speech.js"></script>
 </head>
 <body>
 
@@ -1417,7 +1419,14 @@
           </div>
           <div class="form-group">
             <label class="form-label text-label-md" for="need-description" data-i18n="formDescription">Describe the need</label>
-            <textarea class="form-textarea" id="need-description" placeholder="What is difficult, missing, or unsafe? Be specific about the location and the impact on your daily life." required></textarea>
+            <div class="speech-textarea-group">
+              <textarea class="form-textarea" id="need-description" placeholder="What is difficult, missing, or unsafe? Be specific about the location and the impact on your daily life." required></textarea>
+              <div id="mic-btn-container"></div>
+            </div>
+            <div class="speech-voice-label" id="voice-input-hint">
+              <span class="material-symbols-outlined">mic</span>
+              <span data-i18n="speechVoiceHint">Or tap the mic to speak your need</span>
+            </div>
           </div>
           <div class="form-group">
             <label class="form-label text-label-md" for="need-urgency" data-i18n="formUrgency">Urgency Level</label>
@@ -1696,6 +1705,95 @@
     }
     checkSearchHints();
     window.addEventListener('resize', checkSearchHints);
+
+    // =========================================================================
+    // SPEECH INTEGRATION
+    // =========================================================================
+    (function initSpeech() {
+      if (!window.INFRA_SPEECH) {
+        console.warn('[INFRA-AI] speech.js not loaded');
+        return;
+      }
+
+      // --- STT: Mic button on citizen request form ---
+      const micContainer = document.getElementById('mic-btn-container');
+      const descField = document.getElementById('need-description');
+      if (micContainer && descField) {
+        INFRA_SPEECH.createMicButton({
+          container: micContainer,
+          targetInput: descField,
+          onTranscript: function(text) {
+            console.log('[INFRA-AI STT] Final transcript:', text.substring(0, 50) + '…');
+          }
+        });
+      }
+
+      // --- TTS: Listen buttons on information sections ---
+      // Hero section
+      const heroSection = document.getElementById('hero-section') || document.querySelector('.hero-section');
+      if (heroSection) {
+        const heroDesc = heroSection.querySelector('.text-body-lg, .text-headline-xl');
+        if (heroDesc) {
+          const heroListenContainer = document.createElement('div');
+          heroListenContainer.style.marginTop = '0.75rem';
+          heroDesc.parentElement.appendChild(heroListenContainer);
+          INFRA_SPEECH.createListenButton({
+            container: heroListenContainer,
+            label: 'Listen',
+            getText: function() {
+              // Read the hero headline and description
+              const h1 = heroSection.querySelector('h1, .text-headline-xl');
+              const p = heroSection.querySelector('.text-body-lg');
+              return (h1 ? h1.textContent.trim() : '') + '. ' + (p ? p.textContent.trim() : '');
+            }
+          });
+        }
+      }
+
+      // Citizen Voice section
+      const voiceSection = document.getElementById('citizen-voice-section');
+      if (voiceSection) {
+        const voiceHeader = voiceSection.querySelector('.voice-header, h2');
+        if (voiceHeader) {
+          const voiceListenContainer = document.createElement('span');
+          voiceListenContainer.style.marginLeft = '0.5rem';
+          voiceListenContainer.style.display = 'inline-block';
+          voiceListenContainer.style.verticalAlign = 'middle';
+          voiceHeader.appendChild(voiceListenContainer);
+          INFRA_SPEECH.createListenButton({
+            container: voiceListenContainer,
+            label: 'Listen',
+            getText: function() {
+              var entries = voiceSection.querySelectorAll('.voice-entry, .voice-card');
+              var texts = [];
+              entries.forEach(function(e) {
+                var quote = e.querySelector('blockquote, .voice-quote, p');
+                if (quote) texts.push(quote.textContent.trim());
+              });
+              return texts.length ? texts.join('. ') : 'No citizen voice entries available.';
+            }
+          });
+        }
+      }
+
+      // Project info cards
+      document.querySelectorAll('.project-card, .chapter-card, article.priority-card').forEach(function(card) {
+        var title = card.querySelector('h3, .hotspot-title, .chapter-title');
+        if (!title) return;
+        var listenContainer = document.createElement('span');
+        listenContainer.style.marginLeft = '0.5rem';
+        listenContainer.style.display = 'inline-flex';
+        listenContainer.style.verticalAlign = 'middle';
+        title.appendChild(listenContainer);
+        INFRA_SPEECH.createListenButton({
+          container: listenContainer,
+          label: '🔊',
+          getText: function() {
+            return card.textContent.replace(/\s+/g, ' ').trim().substring(0, 500);
+          }
+        });
+      });
+    })();
   </script>
 </body>
 </html>
