@@ -1,10 +1,10 @@
-import pandas as pd
-import zipfile
-import os
 import io
-import json
-from pathlib import Path
+import os
 import xml.etree.ElementTree as ET
+import zipfile
+from pathlib import Path
+
+import pandas as pd
 
 RAW_DIR = Path("data/raw/metro")
 PROCESSED_DIR = Path("ml/fields/public_transport/metro/data/processed")
@@ -43,7 +43,7 @@ def generate_inventory():
                             "duplicate_percentage": round(df.duplicated().mean() * 100, 2) if not df.empty else 0,
                             "notes": f"Part of GTFS. {filename}"
                         })
-                    except Exception as e:
+                    except (OSError, ValueError, KeyError, zipfile.BadZipFile) as e:
                         print(f"Error reading {filename}: {e}")
 
     # Bengaluru KML

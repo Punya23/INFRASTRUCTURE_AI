@@ -461,7 +461,9 @@ def write_fixtures() -> None:
     _write_geojson(out, "nh_segments.geojson")
 
     plazas = gpd.read_parquet(OUT / "osm_toll_plazas.parquet")
-    ihmcl = pd.read_csv(OUT / "ihmcl_plazas.csv", dtype={"code": str}).set_index("code")
+    # a few dozen IHMCL rows carry no code (blank in the source PDF) — never a real match target,
+    # and left in they'd collapse to a duplicate-NaN index that pandas refuses to map() against.
+    ihmcl = pd.read_csv(OUT / "ihmcl_plazas.csv", dtype={"code": str}).dropna(subset=["code"]).set_index("code")
     code = plazas["ihmcl_code"]
     matched = code.notna()
     _write_geojson(gpd.GeoDataFrame({

@@ -5,10 +5,10 @@ Phases 8-18: Common data model, EDA, geospatial, LGD mapping, accessibility, fea
 
 from __future__ import annotations
 
-import pandas as pd
 import json
 from pathlib import Path
-from typing import Dict, List
+
+import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[5]
 PROCESSED = ROOT / "ml" / "fields" / "public_transport" / "metro" / "data" / "processed"
@@ -388,18 +388,18 @@ def main():
     
     systems_df, all_stations, chn_ridership = create_common_data_model()
     eda_df = generate_eda_statistics(systems_df, all_stations, chn_ridership)
-    geojson_path = create_geospatial_exports(all_stations)
-    features_df = generate_infrastructure_features(systems_df, all_stations)
+    create_geospatial_exports(all_stations)
+    generate_infrastructure_features(systems_df, all_stations)
     generate_data_quality_report(systems_df, all_stations, chn_ridership, eda_df)
     
     print("\n" + "="*60)
     print("Phases 8-16 Complete")
     print("="*60)
-    print(f"✓ Common data model created")
-    print(f"✓ EDA statistics generated")
-    print(f"✓ Geospatial exports created")
-    print(f"✓ Infrastructure features generated")
-    print(f"✓ Quality report complete")
+    print("✓ Common data model created")
+    print("✓ EDA statistics generated")
+    print("✓ Geospatial exports created")
+    print("✓ Infrastructure features generated")
+    print("✓ Quality report complete")
 
 
 if __name__ == "__main__":

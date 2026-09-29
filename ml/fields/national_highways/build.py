@@ -498,6 +498,11 @@ def parse_ihmcl_plazas(pdf_path) -> pd.DataFrame:
     serial = df["serial"].astype(int)
     if serial.tolist() != list(range(1, len(df) + 1)):
         raise ValueError("IHMCL list: serial numbers are not contiguous — table parse broke")
+    # newer plazas have no NETC code yet: give them a stable id from the list's serial number
+    missing = df["code"].isna() | (df["code"].str.strip() == "")
+    df.loc[missing, "code"] = "S" + df.loc[missing, "serial"].str.strip()
+    if df["code"].duplicated().any():
+        raise ValueError(f"IHMCL list: duplicate plaza codes {sorted(df.loc[df['code'].duplicated(), 'code'])}")
     df["state"] = df["state_raw"].map(normalize_state)
     if df["state"].isna().any():
         raise ValueError(f"IHMCL list: unknown states {sorted(df.loc[df['state'].isna(), 'state_raw'].unique())}")
@@ -540,7 +545,9 @@ def build_tolls() -> pd.DataFrame:
     plazas["ihmcl_code"] = None
     taken: set[str] = set()
     for i, row in plazas[plazas["key"] != ""].iterrows():
-        cand = ihmcl[(ihmcl["state"] == row["state"]) & ~ihmcl["code"].isin(taken)]
+        # a blank code (~2% of IHMCL rows) can't be recorded as a match — exclude it from candidates
+        # so it never silently swallows a real name+state match under an unusable NaN code.
+        cand = ihmcl[(ihmcl["state"] == row["state"]) & ihmcl["code"].notna() & ~ihmcl["code"].isin(taken)]
         best = max(((plaza_name_score(row["key"], k), c) for k, c in zip(cand["key"], cand["code"], strict=True)),
                    default=(0.0, None))
         if best[0] >= _CFG["toll_name_match"]:

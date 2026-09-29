@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+
 import pandas as pd
 
 PROCESSED_DIR = Path("ml/fields/public_transport/bus/data/processed")
@@ -69,8 +70,8 @@ try:
     print(f"Trips Integrity: {report['GTFS_Integrity_Trips']}")
     print(f"Stops Integrity: {report['GTFS_Integrity_Stops']}")
 
-except Exception as e:
-    report['GTFS_Integrity'] = f"FAIL ({str(e)})"
+except (OSError, KeyError, ValueError) as e:  # missing file/column or unparsable CSV
+    report['GTFS_Integrity'] = f"FAIL ({e!s})"
     print("FAILED GTFS Integrity Checks.")
 
 with open(REPORTS_DIR / "bus_validation_report.json", "w") as f:
@@ -78,5 +79,4 @@ with open(REPORTS_DIR / "bus_validation_report.json", "w") as f:
     
 with open(REPORTS_DIR / "bus_validation_report.md", "w") as f:
     f.write("# Bus Validation Report\n\n")
-    for k, v in report.items():
-        f.write(f"- **{k}**: {v}\n")
+    f.writelines(f"- **{k}**: {v}\n" for k, v in report.items())

@@ -1,6 +1,8 @@
-import pandas as pd
-import matplotlib.pyplot as plt
 from pathlib import Path
+
+import matplotlib.pyplot as plt
+import pandas as pd
+
 
 def main():
     proc_dir = Path("ml/fields/geography/data/processed")
@@ -9,7 +11,6 @@ def main():
     fig_dir.mkdir(parents=True, exist_ok=True)
     
     # Load processed data
-    states = pd.read_csv(proc_dir / "states_clean.csv")
     districts = pd.read_csv(proc_dir / "districts_clean.csv")
     ulbs = pd.read_csv(proc_dir / "ulbs_clean.csv")
     wards = pd.read_csv(proc_dir / "wards_all_available_clean.csv")

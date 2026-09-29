@@ -364,8 +364,8 @@ All spatial data uses **WGS84 (EPSG:4326)**:
     output_path.write_text(dictionary)
     
     print(f"✓ Metro data dictionary created: {output_path.relative_to(ROOT)}")
-    print(f"  Documented: 10 GTFS files, 2 Bengaluru files, 1 Chennai file")
-    print(f"  Total fields documented: ~80 fields with complete semantics")
+    print("  Documented: 10 GTFS files, 2 Bengaluru files, 1 Chennai file")
+    print("  Total fields documented: ~80 fields with complete semantics")
 
 
 if __name__ == "__main__":

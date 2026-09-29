@@ -1,6 +1,7 @@
-import pandas as pd
-from pathlib import Path
 import json
+from pathlib import Path
+
+import pandas as pd
 
 PROCESSED_DIR = Path("ml/fields/public_transport/bus/data/processed")
 REPORTS_DIR = Path("ml/fields/public_transport/bus/reports")

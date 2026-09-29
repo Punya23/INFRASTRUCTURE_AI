@@ -134,5 +134,20 @@
   "bricsInternational": "ബ്രിക്‌സ് / അന്താരാഷ്ട്ര",
   "policyTitle": "നയ നിർമ്മാതാവിന്റെ മുൻഗണന ഡാഷ്ബോർഡ്",
   "methodologyTitle": "രീതിശാസ്ത്രം & ഡേറ്റ ഉറവിടങ്ങൾ",
-  "explorePageTitle": "അടിസ്ഥാന സൗകര്യം പര്യവേക്ഷണം ചെയ്യുക"
+  "explorePageTitle": "അടിസ്ഥാന സൗകര്യം പര്യവേക്ഷണം ചെയ്യുക",
+  "speechVoiceHint": "Or tap the mic to speak your need",
+  "speechRecording": "Recording…",
+  "speechProcessing": "Processing…",
+  "speechListen": "Listen",
+  "speechPause": "Pause",
+  "speechResume": "Resume",
+  "speechStop": "Stop",
+  "speechMicPermDenied": "Microphone permission was denied. Please allow microphone access in your browser settings.",
+  "speechNoSpeech": "No speech was detected. Please try again and speak clearly.",
+  "speechNoMic": "No microphone was found. Please connect a microphone and try again.",
+  "speechNetworkError": "Network error during speech recognition. Please check your connection.",
+  "speechLangUnsupported": "Speech recognition is not available for the selected language. Please try English or switch to text input.",
+  "speechNotSupported": "Speech is not supported in this browser. Please use Chrome, Edge, or Safari.",
+  "speechListenNH": "Listen to NH Summary",
+  "speechTimeout": "Recording reached the 2-minute limit."
 }

@@ -134,5 +134,20 @@
   "bricsInternational": "ব্রিকস / আন্তর্জাতিক",
   "policyTitle": "নীতিনির্ধারক অগ্রাধিকার ড্যাশবোর্ড",
   "methodologyTitle": "পদ্ধতি ও ডেটা উৎস",
-  "explorePageTitle": "অবকাঠামো অন্বেষণ করুন"
+  "explorePageTitle": "অবকাঠামো অন্বেষণ করুন",
+  "speechVoiceHint": "অথবা মাইকে ট্যাপ করে আপনার প্রয়োজন বলুন",
+  "speechRecording": "রেকর্ডিং…",
+  "speechProcessing": "প্রক্রিয়াকরণ…",
+  "speechListen": "শুনুন",
+  "speechPause": "বিরতি",
+  "speechResume": "পুনরায় শুরু",
+  "speechStop": "বন্ধ করুন",
+  "speechMicPermDenied": "মাইক্রোফোনের অনুমতি প্রত্যাখ্যান করা হয়েছে।",
+  "speechNoSpeech": "কোনো কথা শনাক্ত হয়নি। স্পষ্টভাবে বলুন এবং আবার চেষ্টা করুন।",
+  "speechNoMic": "কোনো মাইক্রোফোন পাওয়া যায়নি।",
+  "speechNetworkError": "বাক্ সনাক্তকরণের সময় নেটওয়ার্ক ত্রুটি।",
+  "speechLangUnsupported": "নির্বাচিত ভাষার জন্য বাক্ সনাক্তকরণ উপলব্ধ নয়।",
+  "speechNotSupported": "এই ব্রাউজারে স্পিচ সমর্থিত নয়। Chrome, Edge বা Safari ব্যবহার করুন।",
+  "speechListenNH": "NH সারাংশ শুনুন",
+  "speechTimeout": "রেকর্ডিং ২ মিনিটের সীমায় পৌঁছেছে।"
 }

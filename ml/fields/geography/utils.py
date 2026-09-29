@@ -1,5 +1,7 @@
-import pandas as pd
 import re
+
+import pandas as pd
+
 
 def standardize_col_name(col):
     if not isinstance(col, str):
@@ -82,6 +84,6 @@ def safely_convert_to_int(df, columns):
             try:
                 # pandas Int64Dtype allows NA and integers
                 df[col] = pd.to_numeric(df[col], errors='coerce').astype('Int64')
-            except Exception:
-                pass
+            except (TypeError, ValueError) as e:  # non-integer codes (e.g. '1A'): keep the column as-is
+                print(f"warning: {col} left unconverted: {e}")
     return df
