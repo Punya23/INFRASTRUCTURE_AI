@@ -23,7 +23,20 @@ Three facts constrain it. ADR-0003 (Accepted) rules out prediction, the plan lis
 ## Consequences
 
 - Good: every number answers "why?"; the flow ships without waiting for M0; the API contract is fixed for the future Postgres store and the Next.js shell; the same pipeline output feeds both.
-- Bad: the score says nothing about price, rent or timing, and users who came for returns will not find them; weights are judgment calls (mitigated by the published sensitivity summary below and drivers on every card); OSM completeness varies by city and is only labelled, not corrected; growth favours the fringe while access favours the core, so the best cells sit in the middle ring; fixtures for about 470 cities add tens of MB to the repo (gzip, budget 25 MB).
+- Bad: the score says nothing about price, rent or timing, and users who came for returns will not find them; weights are judgment calls (mitigated by the published sensitivity summary below and drivers on every card); OSM completeness varies by city and is only labelled, not corrected; growth favours the fringe while access favours the core, so the best cells sit in the middle ring; the 381 cities of the first run add 9.2 MB of gzip fixtures to the repo (budget 25 MB); 40 urban-centre pieces of 100,000+ people that GeoNames cannot name are held back for review (Goa, Sikkim, Arunachal, Ladakh and the Lakshadweep have no city as a result), and in dense plains the 1,500 people-per-cell rule chains villages into very large "cities" (Muzaffarpur about 11 M), which the page shows as given.
+
+## Sensitivity summary
+
+Scoring changes must attach one (AGENTS.md, definition of done). The weights are judgment calls, so we measure how much they matter. For each state with at least five cities, every preset weight is moved by a random ±30 % and renormalised (200 draws per preset, seed 20260929); the table gives the mean share of the state's top five that stays in its top five. Source: `python -m pipeline.invest sensitivity` (`data/processed/invest/sensitivity.md`, git-ignored, regenerated with the fixtures).
+
+| preset | mean top-5 overlap (19 states, 366 cities) | lowest state |
+|---|---:|---|
+| balanced | 0.95 | HR 0.85, KL 0.86 |
+| commuter | 0.96 | TN 0.86, GJ 0.87, KL 0.87 |
+| highway | 0.97 | MP 0.83, GJ 0.91 |
+| growth | 0.97 | MH 0.90, PB 0.90 |
+
+Spearman rank correlation of city scores between presets is 0.89 (commuter vs highway) to 0.97 (balanced vs commuter). Reading: the shortlist is stable under weight noise (at least four of five cities survive on average), but presets are not interchangeable: commuter and highway disagree most, which is the point of offering them. A state whose overlap is below 0.9 has a close race for fifth place, and the drivers shown on each card, not the rank order, are what a reader should trust there.
 
 ## Alternatives considered
 

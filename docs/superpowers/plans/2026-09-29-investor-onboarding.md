@@ -10,6 +10,8 @@
 
 **Spec:** `docs/superpowers/specs/2026-09-29-investor-onboarding-design.md` — read it first; contracts in §4–§8 are binding.
 
+> **Status (2026-09-30):** implemented. The code blocks below are the initial versions; review rounds and real-data runs changed them (fail-closed store validation, config-held thresholds, twin-station merge, nullable asset names, CORS origin validation, and more). The committed code is authoritative; this plan is kept as the record of intent and task order.
+
 ## Global Constraints
 
 - **No returns, price, rent, yield or forecast numbers anywhere.** The words return(s), ROI, yield, profit, appreciation, guaranteed never appear in `web/invest/` or in `inv.*` locale keys. Every result page shows: "Scores describe existing infrastructure and past growth. They are not forecasts, price predictions or financial advice."

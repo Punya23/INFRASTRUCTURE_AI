@@ -8,7 +8,7 @@ osm_india:
   kind: pbf
   license: ODbL-1.0
   attribution: © OpenStreetMap contributors
-  used_by: [national_highways, metro_rail, bus]
+  used_by: [national_highways, metro_rail, bus, invest]
 
 worldpop_india_2020_1km:
   url: https://data.worldpop.org/GIS/Population/Global_2000_2020_1km_UNadj/2020/IND/ind_ppp_2020_1km_Aggregated_UNadj.tif
