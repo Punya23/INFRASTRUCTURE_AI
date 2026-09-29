@@ -1485,7 +1485,7 @@ components:
                 required: [name, mode, source]
                 additionalProperties: false
                 properties:
-                  name: {type: string}
+                  name: {type: [string, "null"], description: Null when the source gives the station no name.}
                   mode: {type: string, enum: [metro, rail]}
                   source: {type: string}
     NamedPointCollection:
@@ -1509,7 +1509,7 @@ components:
                 required: [name]
                 additionalProperties: false
                 properties:
-                  name: {type: string}
+                  name: {type: [string, "null"], description: Null when the source gives the stop or plaza no name.}
     HighwayCollection:
       type: object
       required: [type, features]
@@ -1530,7 +1530,7 @@ components:
                 required: [ref, status, kind]
                 additionalProperties: false
                 properties:
-                  ref: {type: string, description: Road reference such as NH 48.}
+                  ref: {type: [string, "null"], description: "Road reference such as NH 48; null when the source gives none."}
                   status: {type: string, enum: [operational, under_construction, proposed]}
                   kind: {type: string, enum: [nh_segment, expressway_segment]}
     BusSource:

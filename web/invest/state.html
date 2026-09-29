@@ -3,44 +3,73 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title data-i18n="inv.title.suffix">INFRA-AI Invest</title>
-  <meta name="description" content="The top cities of a state ranked on highways, metro and rail, main roads and built-up growth, with the numbers behind each score.">
+  <title>Top cities · INFRA-AI</title>
+  <meta name="description" content="The best-placed cities in a state, ranked from highway, rail and metro access, road network and built-up growth, with the evidence for each.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
   <link rel="stylesheet" href="invest.css">
-  <script src="../i18n.js"></script>
-  <script type="module" src="js/state.js"></script>
+  <link rel="stylesheet" href="state.css">
 </head>
 <body>
-  <a class="inv-skip" href="#main" data-i18n="inv.skip">Skip to main content</a>
-  <header id="inv-header"></header>
+  <a class="inv-skip" href="#state-main" data-i18n="inv.skip">Skip to main content</a>
 
-  <main id="main" class="inv-section">
-    <div class="inv-container inv-stack inv-stack--loose">
-      <div class="inv-stack inv-stack--tight">
-        <h1 id="page-title" tabindex="-1"></h1>
-        <p class="inv-muted" id="page-sub"></p>
-      </div>
-      <div class="inv-stack inv-stack--tight">
-        <span class="inv-visually-hidden" id="preset-label" data-i18n="inv.preset.label">What matters most</span>
-        <div class="inv-preset-bar" id="preset-bar" role="group" aria-labelledby="preset-label"></div>
-        <p class="inv-small inv-muted" id="preset-desc"></p>
-      </div>
-      <p class="inv-visually-hidden" id="list-status"></p>
-      <div class="inv-split">
-        <div id="cities" class="inv-stack"></div>
-        <aside id="aside" class="inv-stack" aria-labelledby="aside-title" hidden>
-          <h2 id="aside-title" style="font-size: var(--fs-lg)" data-i18n="inv.state.metros">Other metros to compare</h2>
-          <p class="inv-small inv-muted" data-i18n="inv.state.metros.hint">Cities scoring differently under the same view.</p>
-          <div id="aside-body"></div>
-        </aside>
-      </div>
-      <noscript><p class="inv-disclaimer" data-i18n="inv.noscript">This page needs JavaScript to load live scores. INFRA-AI Invest compares Indian cities on highways, metro and rail, main roads and built-up growth, using open data.</p></noscript>
+  <header class="inv-header">
+    <div class="inv-container inv-header__inner">
+      <a class="inv-brand" href="index.html">INFRA-AI <span class="inv-brand__product" data-i18n="inv.nav">Invest</span></a>
+      <nav class="inv-nav" aria-label="Investor pages">
+        <a href="../index.html" data-i18n="inv.nav.explore">Explore my area</a>
+      </nav>
+      <div class="lang-switcher" id="lang-switcher"></div>
     </div>
+  </header>
+
+  <main id="state-main" tabindex="-1">
+    <div class="inv-container inv-section">
+      <div class="inv-stack inv-stack--loose">
+        <div class="inv-stack">
+          <p class="inv-small"><a href="start.html" data-i18n="inv.state.change">Change my choices</a></p>
+          <h1 id="state-title" data-i18n="inv.state.headingPlain">Top cities</h1>
+          <p id="state-summary" class="inv-lead"></p>
+          <div id="preset-group" role="group" aria-labelledby="preset-label" class="inv-stack inv-stack--tight">
+            <span id="preset-label" class="inv-small inv-muted" data-i18n="inv.preset.label">What matters most</span>
+            <div id="presets" class="inv-cluster">
+              <button type="button" class="inv-chip inv-chip--choice" data-preset="balanced" aria-pressed="false" data-i18n="inv.preset.balanced">Balanced</button>
+              <button type="button" class="inv-chip inv-chip--choice" data-preset="commuter" aria-pressed="false" data-i18n="inv.preset.commuter">Commuter</button>
+              <button type="button" class="inv-chip inv-chip--choice" data-preset="highway" aria-pressed="false" data-i18n="inv.preset.highway">Highway</button>
+              <button type="button" class="inv-chip inv-chip--choice" data-preset="growth" aria-pressed="false" data-i18n="inv.preset.growth">Growth</button>
+            </div>
+            <p id="preset-desc" class="inv-small inv-muted"></p>
+          </div>
+        </div>
+
+        <div id="state-error"></div>
+        <p id="state-status" class="inv-visually-hidden"></p>
+
+        <div class="inv-split state-split" data-single>
+          <div id="state-results" class="state-results"></div>
+          <aside id="state-aside" class="inv-card inv-stack state-aside" aria-labelledby="aside-title" hidden>
+            <h2 id="aside-title" data-i18n="inv.state.compare.title">Other metros to compare</h2>
+            <p id="aside-sub" class="inv-small inv-muted"></p>
+            <div id="aside-body"></div>
+          </aside>
+        </div>
+
+        <p class="inv-disclaimer" data-i18n="inv.disclaimer">Scores describe existing infrastructure and past growth. They are not forecasts, price predictions or financial advice.</p>
+      </div>
+    </div>
+    <noscript><div class="inv-container"><p class="inv-muted" data-i18n="inv.state.noscript">This page needs JavaScript to load the ranked cities.</p></div></noscript>
   </main>
 
-  <footer id="inv-footer"></footer>
+  <footer class="inv-footer">
+    <div class="inv-container inv-stack inv-stack--tight">
+      <p data-i18n="inv.footer.attribution">Map data © OpenStreetMap contributors, ODbL. Population from WorldPop 2020, built-up area from GHSL 2020, place names from GeoNames.</p>
+      <p data-i18n="inv.footer.dpg">INFRA-AI is built as a Digital Public Good for India.</p>
+    </div>
+  </footer>
+
+  <script src="../i18n.js"></script>
+  <script type="module" src="js/state.js"></script>
 </body>
 </html>

@@ -8,7 +8,7 @@ osm_india:
   kind: pbf
   license: ODbL-1.0
   attribution: © OpenStreetMap contributors
-  used_by: [national_highways, metro_rail, bus]
+  used_by: [national_highways, metro_rail, bus, invest]
 
 worldpop_india_2020_1km:
   url: https://data.worldpop.org/GIS/Population/Global_2000_2020_1km_UNadj/2020/IND/ind_ppp_2020_1km_Aggregated_UNadj.tif
@@ -207,7 +207,7 @@ bus_tgsrtc_gtfs:
   attribution: TGSRTC (Telangana State Road Transport Corporation), via OpenCity.in — GTFS static feed, February 2026
   geography: Telangana (TGSRTC-operated intra-city and intercity routes)
   reference_year: 2026-02-08
-  used_by: [bus]
+  used_by: [bus, invest]
 
 bus_tgsrtc_stops_csv:
   url: https://data.opencity.in/dataset/88e2d145-7ec6-4666-88dd-6cf18b18312e/resource/1f531384-0f96-4d5f-b2ec-f5a2c772d758/download/hyd_stops.csv

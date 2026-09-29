@@ -534,6 +534,7 @@ Example (illustrative, not real data):
 3. **Policy dashboard** — drill-down from nation to state, district, city and ward; hotspot map; ranked recommendations with driver bars and evidence; misalignment scatter; silent gaps; impact tracker; CSV and GeoJSON export.
 4. **Citizen channels** — the WhatsApp / Telegram bot and the web "Report / Ask" page.
 5. **Review console** — low-confidence extractions and geocodes: approve, edit or reject.
+6. **Investor flow** (`web/invest/`, [ADR-0015](docs/adr/0015-investor-onboarding-scores-and-api.md)) — landing page, a three-step onboarding (home state, where to invest, what matters most), the top five cities of a state with the reasons behind each score, a city page with a hex heat map of areas, infrastructure layers and a best-areas list, and a right-hand panel that compares other cities. It ranks by an explainable Access + Momentum infrastructure score, never by returns or prices.
 
 The interface ships in English, Hindi and Kannada first; strings live in per-language dictionaries.
 
@@ -564,6 +565,16 @@ The interface ships in English, Hindi and Kannada first; strings live in per-lan
 | POST | `/webhooks/whatsapp`, `/webhooks/telegram` | Messaging intake (signature-verified) |
 | GET | `/v1/export/{dataset}.{format}` | Open, non-PII bulk exports (`geojson`, `csv`, `parquet`) |
 | — | `/open311/v2/…` | Open311 GeoReport v2 compatibility (Should) |
+
+Investor endpoints — live now as a stdlib Go server over pipeline-exported JSON (contract in `api/openapi.yaml`, [`api/README.md`](api/README.md)); they move onto Postgres at M0:
+
+| Method | Path | Purpose |
+|---|---|---|
+| GET | `/v1/meta` | Sources and licenses, factors, presets, grid and tier settings, `as_of` |
+| GET | `/v1/states`, `/v1/states/{code}/cities?preset=&limit=` | States with city counts; a state's top cities with score, drivers and watch-outs |
+| GET | `/v1/cities?q=` | Search by name or alias |
+| GET | `/v1/cities/{id}`, `/v1/cities/{id}/areas`, `/v1/cities/{id}/assets` | City detail; scored H3 areas as GeoJSON; stations, bus stops, highways and toll plazas |
+| GET | `/v1/cities/{id}/compare?preset=&scope=` | Other cities ranked by the same preset, with per-factor differences as the reason |
 
 Conventions: `api/openapi.yaml` is the contract, and the web client is generated from it; errors are `{"error": {"code": "...", "message": "..."}}`; cursor pagination; geometry as GeoJSON in EPSG:4326; rate limits on every public endpoint.
 
@@ -608,8 +619,8 @@ INFRA_AI/
 ├── db/migrations/               plain SQL, numbered, forward-only                     (M0)
 ├── api/                         Go                                                    (M0)
 │   ├── openapi.yaml             the contract
-│   ├── cmd/api/main.go
-│   └── internal/{http,tiles,webhook,store}/
+│   ├── cmd/api/main.go          serves the investor endpoints today (`go -C api run ./cmd/api`)
+│   └── internal/{http,tiles,webhook,store}/   (http and store exist; the rest at M0)
 ├── ml/                          Python                                                (M1)
 │   ├── app.py                   Flask: /brief, /healthz
 │   ├── worker.py                queue worker: intake and news jobs
@@ -622,7 +633,9 @@ INFRA_AI/
 │   └── tests/
 ├── web/                         Next.js App Router                                    (M0)
 │   ├── app/                     explore map + pin panel; policy/ dashboard
+│   ├── invest/                  investor flow: landing, start, state and city pages
 │   ├── fixtures/<field>/        simplified GeoJSON samples from field owners (≤ 5 MB each)
+│   ├── fixtures/invest/         city and area scores exported by `ml/pipeline/invest` (gzip, ≤ 25 MB)
 │   └── lib/api/                 client generated from api/openapi.yaml
 └── data/                        raw/ is gitignored; manifests/ is committed           (M1)
 ```
@@ -660,7 +673,7 @@ Shared work has named owners: the two field owners own `db/` and the shared pipe
 | **Must** | NH and metro fields done end to end (data, EDA, analysis, findings, layers, cited pipeline) · pin → area panel for both · one recommendation type per field (NH crossings or upgrades; metro catchment gaps) · citizen intake for transport categories in English, Hindi and Kannada, text and voice · policy dashboard |
 | **Should** | Field #3 (railways, or water canals) · time slider · misalignment view · silent gaps · review console · open exports · Open311 endpoints |
 | **Could** | IVR · voice replies · impact tracker · GTFS service-level analysis · toll analysis · TOD opportunity map · street-network access (pandana / OSRM) · photo attachments |
-| **Won't (this round)** | Price or demand forecasting · parcel-level recommendations · Aadhaar or any identity integration · every field at once |
+| **Won't (this round)** | Price or demand forecasting (the investor flow ranks by an explainable infrastructure score and shows no return, price or forecast — ADR-0015) · parcel-level recommendations · Aadhaar or any identity integration · every field at once |
 
 The layer contract in [`docs/fields/README.md`](docs/fields/README.md) and the OpenAPI spec are the contracts between the four roles, so nobody waits on anybody.
 

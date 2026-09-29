@@ -71,7 +71,7 @@ Bus stops are **shown, not scored**: GTFS exists for 5 cities only and a factor 
 | `rail_access` | 0→100, 1→90, 3→65, 8→25, 15→0 |
 | `metro_access` | 0→100, 1→90, 2→70, 5→30, 10→0 |
 | `road_strength` | 0→0, 0.3→30, 1→65, 2→90, 3→100 |
-| `built_up_growth` | 0→0, 3→30, 10→60, 25→90, 40→100 |
+| `built_up_growth` | 0→0, 1→30, 3→60, 8→90, 15→100 (re-anchored on the measured distribution — p50 0.9, p90 3.9, p99 12.1 pp; the initial 3/10/25/40 knots put about 94 % of areas below the watch-out line) |
 
 **Presets** (weights sum to 1, checked by a test): `balanced` 0.25 / 0.15 / 0.15 / 0.15 / 0.30 · `commuter` 0.10 / 0.25 / 0.30 / 0.10 / 0.25 · `highway` 0.45 / 0.05 / 0 / 0.20 / 0.30 · `growth` 0.15 / 0.10 / 0.10 / 0.10 / 0.55 (order: nh, rail, metro, roads, growth).
 
@@ -205,7 +205,7 @@ JSON over HTTP. Errors are always `{"error": {"code": "...", "message": "..."}}`
 ## 10. Testing and acceptance
 
 - **Pipeline (pytest):** sub-score interpolation at every knot and outside the range · weights sum to 1 · missing factor renormalises and lowers `coverage` (never zero) · driver points sum to the score · city score is the population-weighted mean · urban-centre labelling on a synthetic grid, including the state cut · slug collisions · fixture size and provenance keys · banned-word check on `web/invest/` and `inv.*` locale keys.
-- **Data spot checks** (run when the real fixtures exist): Maharashtra returns ≥ 5 cities including Mumbai, Pune, Nagpur and Nashik; the Pune areas include at least three of Hinjewadi, Kharadi, Hadapsar, Baner, Wakad, Wagholi; Haryana has a Gurugram-area city; Goa returns 2 cities; a state with none returns `total: 0`.
+- **Data spot checks** (run when the real fixtures exist): Maharashtra returns ≥ 5 cities including Mumbai, Pune, Nagpur and Nashik; the Pune areas include at least three of Hinjewadi, Kharadi, Hadapsar, Baner, Wakad, Wagholi; Haryana has a Gurugram-area city; a state whose largest urban centre is under 100,000 people returns `total: 0` (Goa: its largest contiguous zone at 1,500 people/km² holds about 82,000, so the first real run has none — the original "Goa returns 2" was not attainable under the city rule).
 - **API (`go test ./...`, `go vet`):** table-driven per endpoint — happy path and every validation error, rate limit, CORS, compare ordering and deltas, search order, fail-closed on a corrupt fixture; the parity test in §7.
 - **Web:** in the browser, walk landing → start → Maharashtra → Pune → toggle layers → switch preset → open Delhi from the compare panel; zero console errors; check 360 px and 1280 px; screenshots attached to the PR description.
 - **Definition of done:** `cd ml && uv run pytest && uv run ruff check .` · `cd api && go vet ./... && go test ./...` · fixtures regenerated · ADR-0015 with the sensitivity table · README §9, §10, §12 and the AGENTS.md status and commands updated.

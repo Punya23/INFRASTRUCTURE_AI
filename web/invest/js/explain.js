@@ -24,10 +24,13 @@ export function explain(kind, item, meta) {
   const prefix = PREFIX[kind];
   if (!prefix) throw new TypeError(`explain: kind must be "why" or "gap", got ${String(kind)}`);
   const { factor, value, share, band_km: bandKm } = item;
-  const unknown = { key: `${prefix}.${factor}.unknown`, params: {} };
+  // unknown: true marks "could not be measured" wording, so a page can leave it out of a list of reasons
+  const unknown = { key: `${prefix}.${factor}.unknown`, params: {}, unknown: true };
 
   if (DISTANCE_FACTORS.has(factor)) {
     if (known(share) && known(bandKm)) {
+      // a share that rounds to 0% would read "Only 0% ...", so it has its own wording
+      if (Math.round(share * 100) === 0) return { key: `${prefix}.${factor}.none`, params: { km: bandKm } };
       return { key: `${prefix}.${factor}.share`, params: { pct: Math.round(share * 100), km: bandKm } };
     }
     if (!known(value)) return unknown;

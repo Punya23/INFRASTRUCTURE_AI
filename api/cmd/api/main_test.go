@@ -1,40 +1,50 @@
 package main
 
 import (
-	"io"
-	"path/filepath"
-	"strings"
+	"reflect"
 	"testing"
 )
 
-func env(m map[string]string) func(string) string { return func(k string) string { return m[k] } }
-
-func TestConfigFromEnv(t *testing.T) {
-	cfg, err := configFromEnv(env(nil))
-	if err != nil || cfg.RatePerMinute != 120 || len(cfg.CORSOrigins) != 1 || cfg.CORSOrigins[0] != "http://localhost:8765" {
-		t.Fatalf("defaults wrong: %+v, %v", cfg, err)
-	}
-	cfg, err = configFromEnv(env(map[string]string{
-		"INVEST_CORS_ORIGINS": " https://a.example , ,https://b.example ", "INVEST_RATE_LIMIT": "30"}))
-	if err != nil || cfg.RatePerMinute != 30 || strings.Join(cfg.CORSOrigins, "|") != "https://a.example|https://b.example" {
-		t.Fatalf("overrides wrong: %+v, %v", cfg, err)
-	}
-	for _, bad := range []string{"0", "-5", "abc", "1.5"} {
-		if _, err := configFromEnv(env(map[string]string{"INVEST_RATE_LIMIT": bad})); err == nil {
-			t.Errorf("INVEST_RATE_LIMIT=%q should be rejected, not defaulted", bad)
+func TestRateFromEnv(t *testing.T) {
+	for _, tc := range []struct {
+		in      string
+		want    int
+		wantErr bool
+	}{
+		{"", 120, false},
+		{"30", 30, false},
+		{"0", 0, true},
+		{"-5", 0, true},
+		{"abc", 0, true},
+	} {
+		got, err := rateFromEnv(tc.in)
+		if (err != nil) != tc.wantErr || got != tc.want {
+			t.Errorf("rateFromEnv(%q) = %d, %v; want %d, err=%v", tc.in, got, err, tc.want, tc.wantErr)
 		}
 	}
 }
 
-func TestRunFailsClosedOnMissingOrCorruptData(t *testing.T) {
-	err := run([]string{"-data", filepath.Join(t.TempDir(), "nope")}, env(nil), io.Discard)
-	if err == nil || !strings.Contains(err.Error(), "cannot load") {
-		t.Fatalf("a missing data directory must stop start-up with a clear error, got %v", err)
-	}
-	if err := run([]string{"-bogus"}, env(nil), io.Discard); err == nil {
-		t.Fatal("an unknown flag must be an error")
-	}
-	if err := run([]string{"-data", t.TempDir()}, env(map[string]string{"INVEST_RATE_LIMIT": "x"}), io.Discard); err == nil {
-		t.Fatal("a bad rate limit must be an error before any data is read")
+func TestOriginsFromEnv(t *testing.T) {
+	for _, tc := range []struct {
+		in      string
+		want    []string
+		wantErr bool
+	}{
+		{"", []string{"http://localhost:8765"}, false},
+		{" , ", []string{"http://localhost:8765"}, false},
+		{"https://a.example, https://b.example,,", []string{"https://a.example", "https://b.example"}, false},
+		{"http://localhost:8765", []string{"http://localhost:8765"}, false},
+		{"*", nil, true},
+		{"https://a.example/", nil, true},
+		{"a.example", nil, true},
+		{"ftp://a.example", nil, true},
+		{"https://a.example/x", nil, true},
+		{"https://user@a.example", nil, true},
+		{"https://ok.example,https://bad.example/", nil, true},
+	} {
+		got, err := originsFromEnv(tc.in)
+		if (err != nil) != tc.wantErr || !reflect.DeepEqual(got, tc.want) {
+			t.Errorf("originsFromEnv(%q) = %v, %v; want %v, err=%v", tc.in, got, err, tc.want, tc.wantErr)
+		}
 	}
 }

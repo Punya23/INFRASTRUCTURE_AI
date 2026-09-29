@@ -1,54 +1,69 @@
-# Investor API
+# INFRA-AI investor API
 
-A small read-only JSON API over the fixtures the pipeline writes to `web/fixtures/invest/`. It holds the data in memory, computes nothing (scores come from the pipeline) and stops at start-up if a fixture is missing or malformed. The contract is [`openapi.yaml`](openapi.yaml).
+Read-only JSON API behind the "where should I invest?" flow. Go stdlib only. It loads the fixtures the pipeline
+exports (`web/fixtures/invest/`) into memory at start-up and serves them; it holds no scoring logic. The
+contract is [`openapi.yaml`](openapi.yaml). Scores describe existing infrastructure and past growth; they are
+not forecasts, price predictions or financial advice.
 
-## Run, test, point at the real data
+## Run, test, point at other data
 
 ```bash
-go -C api run ./cmd/api -addr :8080 -data ../web/fixtures/invest   # serve the real fixtures
-go -C api vet ./... && go -C api test ./... -race                  # checks before every commit
-go -C api run ./cmd/api -data testdata/invest                      # serve the small synthetic test world
+go -C api run ./cmd/api                                  # :8080, real fixtures (../web/fixtures/invest)
+go -C api vet ./... && go -C api test ./... -race        # checks before every commit
+go -C api run ./cmd/api -data testdata/invest            # the 5-city synthetic world used by the tests
 ```
+
+Paths are relative to `api/` because of `-C api`. The `api` entry in `.claude/launch.json` (`preview_start`
+name `api`) runs the first command. The synthetic world (`source: synthetic-test`) is invented data: use it for
+tests and demos of edge cases only, never show its numbers as real.
+
+Flags and environment:
 
 | Setting | Default | Meaning |
 |---|---|---|
-| `-addr` | `:8080` | listen address |
-| `-data` | `../web/fixtures/invest` | fixture directory (`meta.json`, `states.json`, `cities.json`, `areas/`, `assets/`) |
-| `INVEST_CORS_ORIGINS` | `http://localhost:8765` | comma-separated exact origins whose pages may read the responses |
-| `INVEST_RATE_LIMIT` | `120` | requests per client per minute (a value that is not a positive integer stops start-up) |
+| `-addr` | `:8080` | Listen address. |
+| `-data` | `../web/fixtures/invest` | Fixture directory. Any load or validation error is logged and the process exits 1. |
+| `INVEST_CORS_ORIGINS` | `http://localhost:8765` | Comma-separated exact origins allowed to read responses, written as the browser sends them: `scheme://host[:port]`, no `*`, no path, no trailing slash (anything else: exit 1). Blank means the default. |
+| `INVEST_RATE_LIMIT` | `120` | Requests per client per minute. Not a positive integer: exit 1. |
 
-To preview the pages from a second checkout, serve `web/` on `:8766` and run the API with `INVEST_CORS_ORIGINS=http://localhost:8766 ... -addr :8081`; the launch configurations `web-main` and `api-main` in `.claude/launch.json` do this.
+SIGINT/SIGTERM drain in-flight requests for up to 10 s, then exit.
 
 ## Endpoints
 
-| Method and path | Query | Returns |
-|---|---|---|
-| `GET /healthz` | none | `{"status","as_of"}` |
-| `GET /v1/meta` | none | factors, presets, tiers, sources and the disclaimer |
-| `GET /v1/states` | none | all 36 states and UTs with `city_count` |
-| `GET /v1/states/{code}/cities` | `preset`, `limit` 1 to 20 (5) | the state's cities ranked for the preset |
-| `GET /v1/cities` | `q` (2 to 64 characters), `limit` 1 to 20 (8) | city search over names and aliases |
-| `GET /v1/cities/{id}` | `preset` | one city with factors and provenance |
-| `GET /v1/cities/{id}/areas` | `preset`, `limit` 1 to 1000 (500) | GeoJSON of H3 areas, best first |
-| `GET /v1/cities/{id}/assets` | `layers` from `stations,bus_stops,highways,toll_plazas` | the requested map layers |
-| `GET /v1/cities/{id}/compare` | `preset`, `scope` (`metros`, `peers`, `state`, `india`), `limit` 1 to 10 (5) | the city against others, with the reasons |
+All `GET`. Presets are the ids in `/v1/meta`; omitted means the default (`balanced`).
 
-Codes and ids are checked against fixed patterns (`^[A-Z]{2}$`, `^[a-z0-9-]{2,64}$`) and looked up in memory. A value outside a limit is a 400, never clamped.
+| Path | Returns |
+|---|---|
+| `/healthz` | `{status, as_of}`. |
+| `/v1/meta` | The scoring model: factors, presets, tiers, sources, disclaimer. |
+| `/v1/states` | Every state and union territory with its city count. |
+| `/v1/states/{code}/cities?preset&limit` | Top cities of a state (limit 1-20, default 5). Fewer than `limit`, or none, is 200; `total` is the state's count. |
+| `/v1/cities?q&limit` | City search by name or alias (Devanagari works). |
+| `/v1/cities/{id}` | One city with its factor summary, flags and drivers. |
+| `/v1/cities/{id}/areas?preset&limit` | H3 cells as GeoJSON, ranked (limit 1-1000, default 500). |
+| `/v1/cities/{id}/assets?layers` | Stations, bus stops, highways, toll plazas. |
+| `/v1/cities/{id}/compare?preset&scope&limit` | The city against others (`metros`, `peers`, `state`, `india`), with reasons for each difference. |
+
+Data routes send `Cache-Control: public, max-age=300`; every response sends `X-Content-Type-Options: nosniff`.
 
 ## Errors
 
-Every error, from any layer, has one shape and leaks no internal detail:
-
-```json
-{"error": {"code": "not_found", "message": "city not found"}}
-```
+Always `{"error":{"code","message"}}`; the message is safe to show and carries no internal detail.
 
 | Code | Status | When |
 |---|---|---|
-| `bad_request` | 400 | a bad parameter or id |
-| `not_found` | 404 | an unknown state, city or route |
-| `rate_limited` | 429 | over the per-client limit (`Retry-After` is set) |
-| `timeout` | 503 | a request took longer than 5 seconds |
-| `internal` | 500 | anything unexpected, logged server-side only |
+| `bad_request` | 400 | Malformed state code (`^[A-Z]{2}$`) or city id (`^[a-z0-9-]{2,64}$`), unknown preset, out-of-range `limit`, `q` too short or too long. |
+| `not_found` | 404 | Unknown route, state or city. |
+| `rate_limited` | 429 | Over the per-client limit; `Retry-After` is set. |
+| `timeout` | 503 | The request outlived its 5 s budget. |
+| `internal` | 500 | A recovered panic. |
 
-Responses carry `X-Content-Type-Options: nosniff`, and data routes `Cache-Control: public, max-age=300`.
+## Deployment notes
+
+- **Rate limiter keys on the socket peer.** Behind a reverse proxy every user shares one bucket, so raise
+  `INVEST_RATE_LIMIT` or put per-client limiting in the proxy. `X-Forwarded-For` is deliberately not trusted.
+- **Responses are not compressed.** The largest real body is about 1.3 MB (Mumbai `/assets`); let the proxy or
+  CDN gzip.
+- **Start-up is slow on the full dataset.** Every fixture is parsed twice (about 4-7 s for 381 cities). The log
+  says `loading fixtures`, then `fixtures loaded` with `cities`, `areas`, `as_of` and `took`, then `listening`.
+  The port opens only after loading, so readiness is simply "port open" (a probe before that is refused).

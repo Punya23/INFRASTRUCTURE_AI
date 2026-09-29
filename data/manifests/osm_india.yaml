@@ -5,6 +5,7 @@ used_by:
 - national_highways
 - metro_rail
 - bus
+- invest
 files:
 - file: data/raw/osm/india-latest.osm.pbf
   url: https://download.geofabrik.de/asia/india-latest.osm.pbf

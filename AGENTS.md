@@ -8,7 +8,7 @@ A multilingual, location-first infrastructure intelligence platform for India, b
 
 ## Status
 
-Scope is field-first: **national highways** and **metro rail** across India (ADR-0013). National highways: M1 data and M2 analysis landed (`ml/fields/national_highways/`, findings in `docs/fields/national-highways.md`); metro starts M1. **Next: M0 — Foundation** (README §13: DB, API, UI shell). Update this line whenever a milestone lands.
+Scope is field-first: **national highways** and **metro rail** across India (ADR-0013). National highways: M1 data and M2 analysis landed (`ml/fields/national_highways/`, findings in `docs/fields/national-highways.md`); metro starts M1. **Investor flow landed ahead of M0** (ADR-0015): `ml/pipeline/invest` exports city and area scores to `web/fixtures/invest/`, a stdlib Go API (`api/`) serves them, and static pages in `web/invest/` show landing, onboarding, state and city views. It has no database and no login; the store package is the seam where Postgres slots in. **Next: M0 — Foundation** (README §13: DB, API, UI shell). Update this line whenever a milestone lands.
 ADR-0003 and ADR-0013 are Accepted; ADR-0001 is superseded; the others are Proposed pending team review — follow them as the working default.
 
 ## Read in this order
@@ -75,6 +75,16 @@ cd ml && uv run python -m common.fetch                  # download every source 
 cd ml && uv run python -m fields.national_highways all  # NH field: extract → … → analyze → fixtures
 cd ml && uv run python -m fields.public_transport.gtfs all  # GTFS feeds: validate → NH/toll link → fixtures
 cd ml && uv run pytest && uv run ruff check .           # checks before every commit
+cd ml && uv run python -m pipeline.invest all           # investor flow: cities → facts → export to web/fixtures/invest (also osm, sensitivity)
+```
+
+Go API and investor pages (repo root):
+
+```bash
+go -C api run ./cmd/api                                  # serve /v1/* on :8080 from web/fixtures/invest (see api/README.md)
+go -C api vet ./... && go -C api test ./... -race        # API checks before every commit
+python3 -m http.server 8765 --directory web              # pages at http://localhost:8765/invest/ (CORS default matches this port)
+node --test 'web/invest/js/*.test.mjs'                   # page logic tests
 ```
 
 Still to come at M0: `docker compose up`, `make migrate`, `make city CITY=<id>`, `make eval CAP=<capability>`. Document each one here the moment it exists.

@@ -41,6 +41,21 @@
         "../web/fixtures/invest"
       ],
       "port": 8081
+    },
+    {
+      "name": "api",
+      "runtimeExecutable": "go",
+      "runtimeArgs": [
+        "-C",
+        "api",
+        "run",
+        "./cmd/api",
+        "-addr",
+        ":8080",
+        "-data",
+        "../web/fixtures/invest"
+      ],
+      "port": 8080
     }
   ]
 }

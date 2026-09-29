@@ -72,3 +72,22 @@ test('saffron is never used as text on light backgrounds (2.7:1, fails AA)', () 
   assert.ok(contrast(tokens['accent-saffron'], tokens.surface) < 3);
   assert.doesNotMatch(css, /(?<![-\w])color:\s*var\(--accent-saffron\)/);
 });
+
+// Page stylesheets must take every colour from a token: a literal here would dodge the contrast pairs above
+// and the dark-mode or palette edits made in invest.css. (invest.css itself is where the literals live.)
+const PAGE_CSS = ['landing', 'start', 'state', 'city'];
+const COLOUR_LITERAL = /#[0-9a-fA-F]{3,8}\b|\b(?:rgb|rgba|hsl|hsla)\(/;
+
+test('the colour-literal check catches what it should', () => {
+  for (const bad of ['color: #fff;', 'color: #14202B', 'background: rgb(0 0 0 / 50%)', 'x: rgba(1,2,3,.4)', 'x: hsl(10 50% 50%)'])
+    assert.match(bad, COLOUR_LITERAL, bad);
+  for (const ok of ['color: var(--text-primary)', 'clip-path: var(--hex-clip)', 'color: transparent', 'a { color: currentColor }'])
+    assert.doesNotMatch(ok, COLOUR_LITERAL, ok);
+});
+
+test('page stylesheets use var(--token) colours only, no hex, rgb() or hsl() literals', () => {
+  for (const page of PAGE_CSS) {
+    const text = readFileSync(new URL(`../${page}.css`, import.meta.url), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
+    assert.doesNotMatch(text, COLOUR_LITERAL, `${page}.css`);
+  }
+});

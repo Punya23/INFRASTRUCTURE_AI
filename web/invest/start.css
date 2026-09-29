@@ -1,0 +1,160 @@
+/* The onboarding wizard. Colours come from the tokens in invest.css only. */
+
+.start { max-inline-size: 56rem; margin-inline: auto; }
+.start-intro { margin-block-end: var(--space-4); }
+.start-wizard > * + * { margin-block-start: var(--space-3); }
+
+/* ---------- Progress: three hexagons, the current one saffron (the one place to look) ---------- */
+
+.start-progress > * + * { margin-block-start: var(--space-1); }
+.start-progress__list { display: flex; gap: var(--space-1); }
+.start-progress__item {
+  display: flex;
+  flex: 1 1 0;
+  align-items: center;
+  gap: var(--space-1);
+  min-inline-size: 0;
+  padding-block-end: var(--space-1);
+  border-block-end: 3px solid var(--border-strong);
+  color: var(--text-secondary);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+}
+.start-progress__item.is-done { border-block-end-color: var(--brand-teal); color: var(--text-primary); }
+.start-progress__item.is-current { border-block-end-color: var(--accent-saffron); color: var(--text-primary); font-weight: 700; }
+.start-progress__hex {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  inline-size: 1.9rem;
+  block-size: 2.15rem;
+  clip-path: var(--hex-clip);
+  background: var(--border-strong);
+  color: var(--text-primary);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.start-progress__item.is-done .start-progress__hex { background: var(--brand-teal); color: var(--on-brand); }
+.start-progress__item.is-current .start-progress__hex { background: var(--accent-saffron); color: var(--text-primary); }
+.start-progress__label { overflow-wrap: anywhere; }
+@media (max-width: 30rem) {
+  /* at phone width only the current step keeps its words */
+  .start-progress__item:not(.is-current) .start-progress__label { display: none; }
+  .start-progress__item.is-current { flex: 3 1 0; }
+}
+
+/* ---------- Panel ---------- */
+
+.start-panel {
+  padding: var(--space-3);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+}
+.start-panel > * + * { margin-block-start: var(--space-2); }
+.start-panel h2:focus { outline: none; }
+.start-panel h2:focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 4px; border-radius: var(--radius-control); }
+@media (min-width: 48rem) { .start-panel { padding: var(--space-4); } }
+
+/* ---------- Fields ---------- */
+
+.start-label { display: block; margin-block-end: var(--space-half); font-weight: 600; }
+.start-input {
+  display: block;
+  inline-size: 100%;
+  min-block-size: 3rem;
+  padding: 0.5rem var(--space-2);
+  border: 1px solid var(--border-control);
+  border-radius: var(--radius-control);
+  background: var(--surface);
+}
+.start-input::placeholder { color: var(--text-secondary); opacity: 1; }
+.start-states > * + *, .start-city > * + * { margin-block-start: var(--space-1); }
+.start-reveal { padding-block-start: var(--space-1); border-block-start: 1px solid var(--border-subtle); }
+.start-reveal > * + * { margin-block-start: var(--space-1); }
+.start-city > .start-hint:empty { margin-block: 0; } /* stays in the tree (it is a live region) but takes no room */
+.start-selected { font-weight: 600; color: var(--brand-teal-hover); }
+
+/* ---------- Tiles: states, the three places, the four presets ---------- */
+
+.start-tiles { display: grid; gap: var(--space-1); grid-template-columns: repeat(auto-fill, minmax(min(100%, 11rem), 1fr)); }
+.start-options { display: grid; gap: var(--space-1); grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 48rem) { .start-options { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+.start-tile {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-half);
+  min-block-size: 3.25rem;
+  padding: 0.625rem var(--space-2);
+  border: 1px solid var(--border-control);
+  border-radius: var(--radius-control);
+  background: var(--surface);
+  text-align: start;
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s;
+}
+.start-tile:hover { background: var(--teal-tint); border-color: var(--brand-teal); }
+.start-tile--large { min-block-size: 4.5rem; justify-content: center; }
+.start-tile__name { font-weight: 600; }
+.start-tile--large .start-tile__name { font-size: var(--fs-md); }
+.start-tile__meta { color: var(--text-secondary); font-size: var(--fs-sm); line-height: 1.4; }
+.start-tile[aria-checked='true'] { background: var(--brand-teal); border-color: var(--brand-teal); color: var(--on-brand); }
+.start-tile[aria-checked='true'] .start-tile__meta { color: var(--on-brand); }
+
+/* ---------- City results ---------- */
+
+.start-results {
+  border: 1px solid var(--border-control);
+  border-radius: var(--radius-control);
+  background: var(--surface);
+  overflow: hidden;
+}
+.start-result {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-half) var(--space-1);
+  min-block-size: 3rem;
+  padding: 0.5rem var(--space-2);
+  border-inline-start: 4px solid transparent;
+  cursor: pointer;
+}
+.start-result + .start-result { border-block-start: 1px solid var(--border-subtle); }
+.start-result:hover { background: var(--surface-hover); }
+.start-result.is-active { border-inline-start-color: var(--brand-teal); background: var(--teal-tint); }
+.start-result__name { font-weight: 600; }
+.start-result__meta { color: var(--text-secondary); font-size: var(--fs-sm); }
+
+/* ---------- Back / Skip / Next ---------- */
+
+.start-message {
+  padding: var(--space-1) var(--space-2);
+  border-inline-start: 4px solid var(--accent-saffron);
+  border-radius: var(--radius-control);
+  background: var(--saffron-tint);
+  color: var(--saffron-ink);
+  font-weight: 600;
+}
+
+
+.start-nav { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-1); padding-block-start: var(--space-2); }
+.start-nav__forward { display: flex; flex-wrap: wrap; gap: var(--space-1); margin-inline-start: auto; }
+
+/* ---------- Continue where you left off ---------- */
+
+.start-resume {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border-subtle);
+  border-inline-start: 4px solid var(--accent-saffron);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+}
+.start-resume__title { font-size: var(--fs-md); }
+
+@media (prefers-reduced-motion: reduce) { .start-tile { transition: none; } }
