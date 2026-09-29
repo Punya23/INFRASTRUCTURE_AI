@@ -65,3 +65,10 @@ presets:                          # weights order: nh, rail, metro, roads, growt
   commuter: {weights: {nh_access: 0.10, rail_access: 0.25, metro_access: 0.30, road_strength: 0.10, built_up_growth: 0.25}}
   highway:  {weights: {nh_access: 0.45, rail_access: 0.05, metro_access: 0.00, road_strength: 0.20, built_up_growth: 0.30}}
   growth:   {weights: {nh_access: 0.15, rail_access: 0.10, metro_access: 0.10, road_strength: 0.10, built_up_growth: 0.55}}
+
+pipeline:                         # how the fixtures are built; nothing here changes a score
+  bus_feed_min_stops: 50          # a GTFS feed counts as a city's bus network only with this many stops in its areas — team judgment, 2026-09-29
+  highway_margin_km: 5            # highways and toll plazas drawn within the areas' bounding box plus this — spec §6
+  highway_simplify_deg: 0.001     # ≈100 m; a highway line at city zoom needs no finer detail — spec §6
+  max_file_mb: 5                  # per fixture file, MB of 10^6 bytes — spec §6
+  max_dir_mb: 25                  # web/fixtures/invest on disk, MB of 10^6 bytes — spec §6
