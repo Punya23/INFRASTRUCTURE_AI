@@ -152,8 +152,10 @@ func arr(v any) []any          { return v.([]any) }
 
 // TestOpenAPIExamples ties the handlers to the contract (spec section 9, invariant 10): every 200 example in
 // api/openapi.yaml, requested with the URL it describes, is what the server answers - value for value, with
-// [] and null kept apart. testdata/openapi_examples.json is those examples, extracted from the YAML; when an
-// example changes, regenerate it together with the handler.
+// [] and null kept apart. testdata/openapi_examples.json holds those examples, one entry per example:
+// name "<operationId>/<example name>", url the request the example describes (its summary says which), body the
+// example's value. It is extracted from the YAML (paths.*.get.responses."200".content."application/json".examples,
+// parsed with any YAML library); when an example changes, regenerate the file together with the handler.
 func TestOpenAPIExamples(t *testing.T) {
 	raw, err := os.ReadFile("testdata/openapi_examples.json")
 	if err != nil {
