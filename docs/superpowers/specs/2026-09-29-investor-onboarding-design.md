@@ -104,7 +104,7 @@ Bus stops are **shown, not scored**: GTFS exists for 5 cities only and a factor 
 
 ## 6. Fixture contract — `web/fixtures/invest/`
 
-Each file ≤ 5 MB and the directory ≤ 25 MB on disk (if over, raise `min_population` and record why). `areas/` and `assets/` files are **gzip** (`.geojson.gz`, `.json.gz`, level 9); the API store also accepts the plain name, which the synthetic test data uses. Every record carries provenance (invariant 1): `source`, `source_ref`, `fetched_at`, `license`, `confidence`. In area files the provenance sits once on the FeatureCollection (`source`, `fetched_at`, `license`) with `source_ref` (= the H3 id) and `conf` per feature; the API copies the collection-level fields into every feature it serves. Coordinates rounded to 4 decimals. Scores, sub-scores and raw values are numbers with one decimal.
+Each file ≤ 5 MB and the directory ≤ 25 MB on disk (if over, raise `min_population` and record why). `areas/` and `assets/` files are **gzip** (`.geojson.gz`, `.json.gz`, level 9); the API store also accepts the plain name, which the synthetic test data uses. Every record carries provenance (invariant 1): `source`, `source_ref`, `fetched_at`, `license`, `confidence`. In area files the provenance sits once on the FeatureCollection (`source`, `fetched_at`, `license`) with `source_ref` (= the H3 id) and `conf` per feature; the API copies the collection-level fields into every feature it serves. Coordinates rounded to 4 decimals. Scores, sub-scores and raw values are numbers with one decimal. Counts (`cells`, `city_count`, `data.bus.stops`, `data.metro_stations`, `data.rail_stations`) are JSON integers; `population`, `pop` and `bus_stops` are plain numbers. The API refuses to start on unknown fields, missing required numbers or a preset missing from `d`/`g`, so the exporter writes exactly these fields.
 
 | File | Content |
 |---|---|
@@ -147,12 +147,12 @@ Each file ≤ 5 MB and the directory ≤ 25 MB on disk (if over, raise `min_popu
    "s": {"nh_access": 88.0, "rail_access": 22.0, "metro_access": 65.0, "road_strength": 92.0, "built_up_growth": 100.0},  // sub-scores, null = unobserved
    "sc": {"balanced": 78.1, "commuter": 70.3, "highway": 85.0, "growth": 80.2},
    "ac": {"balanced": 72.0, "commuter": 66.5, "highway": 79.0, "growth": 68.0},
-   "d": {"balanced": [["built_up_growth", 30.0], ["road_strength", 13.8]]},   // drivers: factor, points (top 3)
-   "g": {"balanced": [["rail_access", 22.0]]},                                // gaps: factor, sub-score (up to 2)
+   "d": {"balanced": [["built_up_growth", 30.0], ["road_strength", 13.8]], "commuter": […], "highway": […], "growth": […]},   // drivers for EVERY preset: factor, points (top 3)
+   "g": {"balanced": [["rail_access", 22.0]], "commuter": […], "highway": […], "growth": […]},   // gaps for EVERY preset: factor, sub-score (up to 2)
    "cov": 1.0, "conf": 0.8, "source_ref": "h3:8760…"}}
 ```
 
-`assets/<city>.json`: `{"city", "stations": FeatureCollection<Point{name, mode: metro|rail, source}>, "bus_stops": FeatureCollection<Point{name}> | null, "bus_source": {operator, tier, license, fetched_at} | null, "highways": FeatureCollection<(Multi)LineString{ref, status, kind}> (simplified, bounding box of the areas + 5 km), "toll_plazas": FeatureCollection<Point{name}>}`. NHAI-derived numbers appear **only as aggregates** (ADR-0014); geometry is OSM.
+`assets/<city>.json`: `{"city", "source", "fetched_at", "license", "stations": FeatureCollection<Point{name, mode: metro|rail, source}>, "bus_stops": FeatureCollection<Point{name}> | null, "bus_source": {operator, tier, license, fetched_at} | null, "highways": FeatureCollection<(Multi)LineString{ref, status, kind}> (simplified, bounding box of the areas + 5 km), "toll_plazas": FeatureCollection<Point{name}>}`. NHAI-derived numbers appear **only as aggregates** (ADR-0014); geometry is OSM.
 
 ## 7. API contract — `api/openapi.yaml` is the source of truth
 
@@ -165,7 +165,7 @@ JSON over HTTP. Errors are always `{"error": {"code": "...", "message": "..."}}`
 | `GET /v1/states` | — | `{"as_of","states":[{code,name,city_count}]}` |
 | `GET /v1/states/{code}/cities` | `preset`, `limit` 1–20 (default 5) | `{"state","preset","total","cities":[ranked city cards]}` — card = rank, id, name, tier, population, `score`, `access`, `momentum`, `coverage`, `confidence`, `drivers`, `gaps`, `best_area`, provenance. Unknown code → 404 |
 | `GET /v1/cities` | `q` (≥ 2 chars, matches name and aliases, case-insensitive, prefix first), `limit` 1–20 (default 8) | `{"cities":[{id,name,state,tier,population,matched}]}` |
-| `GET /v1/cities/{id}` | `preset` | one city: everything in the card + `factors`, `aliases`, `lat`, `lon`, `area_km2`, `cells`, `data`, provenance |
+| `GET /v1/cities/{id}` | `preset` | one city: everything in the card except `rank`, plus `state`, `factors`, `aliases`, `lat`, `lon`, `area_km2`, `cells`, `data`, provenance |
 | `GET /v1/cities/{id}/areas` | `preset`, `limit` 1–1000 (default 500) | GeoJSON FeatureCollection sorted by that preset's score. Feature `properties` = `{id, name, pop, elig, bus_stops, rank, score, access, coverage, confidence, f, s, d, g, source, source_ref, fetched_at, license}` where `rank` runs over all cells, `score`/`access` are for the requested preset, `d` = `[{factor, points, value, unit}]` and `g` = `[{factor, subscore, value, unit}]` (values taken from `f`), and `source`, `fetched_at`, `license` are copied from the collection |
 | `GET /v1/cities/{id}/assets` | `layers` ⊆ `stations,bus_stops,highways,toll_plazas` (default all) | the requested collections, `bus_source` |
 | `GET /v1/cities/{id}/compare` | `preset`, `scope` ∈ `metros,peers,state,india`, `limit` 1–10 (default 5) | `{"base":{card},"preset","scope","total","base_rank","others":[{rank,id,name,state,tier,score,delta,better:[{factor,delta,base,other}],worse:[…]}]}` |
