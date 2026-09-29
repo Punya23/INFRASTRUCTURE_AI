@@ -149,5 +149,9 @@
   "speechLangUnsupported": "ಆಯ್ಕೆಮಾಡಿದ ಭಾಷೆಗೆ ವಾಕ್ ಗುರುತಿಸುವಿಕೆ ಲಭ್ಯವಿಲ್ಲ. ದಯವಿಟ್ಟು ಇಂಗ್ಲಿಷ್ ಪ್ರಯತ್ನಿಸಿ.",
   "speechNotSupported": "ಈ ಬ್ರೌಸರ್‌ನಲ್ಲಿ ಸ್ಪೀಚ್ ಬೆಂಬಲವಿಲ್ಲ. Chrome, Edge ಅಥವಾ Safari ಬಳಸಿ.",
   "speechListenNH": "NH ಸಾರಾಂಶ ಕೇಳಿ",
-  "speechTimeout": "ರೆಕಾರ್ಡಿಂಗ್ 2 ನಿಮಿಷಗಳ ಮಿತಿ ತಲುಪಿದೆ."
+  "speechTimeout": "ರೆಕಾರ್ಡಿಂಗ್ 2 ನಿಮಿಷಗಳ ಮಿತಿ ತಲುಪಿದೆ.",
+  "navHome": "ಮುಖಪುಟ",
+  "navNhMap": "NH ನಕ್ಷೆ",
+  "navMenu": "ಮೆನು",
+  "navExplorerSub": "ರಾಷ್ಟ್ರೀಯ ಹೆದ್ದಾರಿ ಎಕ್ಸ್‌ಪ್ಲೋರರ್"
 }

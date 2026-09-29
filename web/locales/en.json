@@ -215,5 +215,9 @@
   "inv.gap.road_strength": "Thin main-road network: {km} km per km²",
   "inv.gap.road_strength.unknown": "Road network could not be measured here",
   "inv.gap.built_up_growth": "Little built-up growth: share up only {pp} percentage points, 2000 to 2020",
-  "inv.gap.built_up_growth.unknown": "Built-up growth could not be measured here"
+  "inv.gap.built_up_growth.unknown": "Built-up growth could not be measured here",
+  "navHome": "Home",
+  "navNhMap": "NH Map",
+  "navMenu": "Menu",
+  "navExplorerSub": "National Highways Explorer"
 }

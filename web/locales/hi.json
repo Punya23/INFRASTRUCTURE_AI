@@ -149,5 +149,9 @@
   "speechLangUnsupported": "चयनित भाषा के लिए वाक् पहचान उपलब्ध नहीं है। कृपया अंग्रेज़ी आज़माएं।",
   "speechNotSupported": "इस ब्राउज़र में स्पीच सपोर्ट नहीं है। कृपया Chrome, Edge या Safari का उपयोग करें।",
   "speechListenNH": "NH सारांश सुनें",
-  "speechTimeout": "रिकॉर्डिंग 2 मिनट की सीमा तक पहुंच गई।"
+  "speechTimeout": "रिकॉर्डिंग 2 मिनट की सीमा तक पहुंच गई।",
+  "navHome": "मुख्य पृष्ठ",
+  "navNhMap": "NH मानचित्र",
+  "navMenu": "मेनू",
+  "navExplorerSub": "राष्ट्रीय राजमार्ग एक्सप्लोरर"
 }
