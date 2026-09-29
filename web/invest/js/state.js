@@ -36,7 +36,7 @@ export function listMode(total, shown) {
 export function whyChips(city, meta) {
   return (city.drivers ?? [])
     .map((driver) => explain('why', driver, meta))
-    .filter((chip) => !chip.key.endsWith('.unknown'))
+    .filter((chip) => !chip.unknown)
     .slice(0, MAX_WHY);
 }
 
@@ -63,11 +63,18 @@ export function meterView(x) {
   return { unknown: !known, value: known ? Math.min(100, Math.max(0, x)) : 0, text: formatScore(x) };
 }
 
-// "Based on N of M factors" when part of the score's weight was unobserved. coverage is a share of
-// weight, not a count, so N is the nearest whole number and is never allowed to equal M.
-export function factorsUsed(coverage, factorCount) {
-  if (!Number.isFinite(coverage) || coverage >= 1 || !(factorCount > 0)) return null;
-  return { n: Math.min(factorCount - 1, Math.max(0, Math.round(coverage * factorCount))), m: factorCount };
+// The share of the score's weight that was observed, as a whole percent, or null when it is all of it
+// (or unknown). Never 100 for a partial coverage, so "99%" is the most a note can say.
+export function coveragePct(coverage) {
+  if (!Number.isFinite(coverage) || coverage >= 1) return null;
+  return Math.min(99, Math.max(0, Math.round(coverage * 100)));
+}
+
+// Hands out a number per load; only the newest number is current, so an answer that arrives after a
+// newer request was made can be told apart and dropped.
+export function latestOnly() {
+  let latest = 0;
+  return { next: () => ++latest, isCurrent: (id) => id === latest, current: () => latest };
 }
 
 // ---------- page ----------
@@ -86,7 +93,7 @@ const view = {
   data: null,             // /v1/states/{code}/cities
   compare: null,          // { status: 'loading' | 'ok' | 'error', data?, error? }
 };
-let seq = 0; // each load gets a number; an answer for an older one is dropped
+const loads = latestOnly(); // an answer for an older load is dropped
 
 const stateName = () => view.ref?.names.get(view.code) ?? view.code;
 const cityHref = (id) => `city.html?c=${encodeURIComponent(id)}&preset=${encodeURIComponent(view.preset)}`;
@@ -104,12 +111,12 @@ function cityCard(city) {
   const why = whyChips(city, meta).map((c) => h('li', null, h('span', { class: 'inv-chip inv-chip--why' }, tt(c.key, c.params))));
   const gap = gapChip(city, meta);
   const area = bestAreaLine(city);
-  const used = factorsUsed(city.coverage, meta.factors?.length);
+  const pct = coveragePct(city.coverage);
   return h('li', { class: 'inv-card inv-card--lift state-card' },
     h('div', { class: 'state-card__head' },
       h('span', { class: `inv-rank${city.rank === 1 ? ' inv-rank--top' : ''}`, role: 'img', 'aria-label': tt('inv.state.rank', { n: city.rank }) }, String(city.rank)),
       h('div', { class: 'state-card__who' },
-        h('h3', null, city.name),
+        h('h2', null, city.name),
         h('p', { class: 'inv-small inv-muted' }, stateName(), ' · ', tt('inv.state.people', { n: formatCount(city.population) })),
         TIERS.has(city.tier) ? h('span', { class: 'inv-badge' }, tt(`inv.tier.${city.tier}`)) : null),
       h('div', { class: 'inv-ring', style: { '--value': meterView(city.score).value }, role: 'img', 'aria-label': tt('inv.state.score', { score: formatScore(city.score) }) },
@@ -124,7 +131,7 @@ function cityCard(city) {
       h('span', { class: 'state-gap__label' }, tt('inv.state.watch')),
       h('span', null, tt(gap.key, gap.params))) : null,
     area ? h('p', { class: 'inv-small' }, tt(area.key, area.params)) : null,
-    used ? h('p', { class: 'inv-small inv-muted' }, tt('inv.state.coverage', used)) : null,
+    pct != null ? h('p', { class: 'inv-small inv-muted' }, tt('inv.state.coverage', { pct })) : null,
     h('a', { class: 'inv-btn inv-btn--secondary state-card__go', href: cityHref(city.id) }, tt('inv.state.explore', { city: city.name })));
 }
 
@@ -179,7 +186,7 @@ function paintAside() {
   $('aside-sub').textContent = tt('inv.state.compare.sub', { city: top.name, state: stateName() });
   const { status, data, error } = view.compare;
   if (status === 'loading') return renderSkeleton(body, 3);
-  if (status === 'error') return renderError(body, error, () => loadCompare(top.id, view.preset, seq));
+  if (status === 'error') return renderError(body, error, () => loadCompare(top.id, view.preset, loads.current()));
   clear(body);
   if (!data.others?.length) {
     body.append(h('p', { class: 'inv-muted' }, tt('inv.state.compare.none')));
@@ -217,16 +224,16 @@ async function loadCompare(topId, preset, mine) {
   try {
     // scope is explicit: the aside is titled "metros", which the API default only gives to a metro
     const data = await api.compare(topId, { preset, scope: 'metros', limit: COMPARE_N });
-    if (mine === seq) view.compare = { status: 'ok', data };
+    if (loads.isCurrent(mine)) view.compare = { status: 'ok', data };
   } catch (error) {
-    if (mine !== seq || error.code === 'aborted') return;
+    if (!loads.isCurrent(mine) || error.code === 'aborted') return;
     view.compare = { status: 'error', error };
   }
-  if (mine === seq) paintAside();
+  if (loads.isCurrent(mine)) paintAside();
 }
 
 async function load(preset) {
-  const mine = ++seq;
+  const mine = loads.next();
   const results = $('state-results');
   clear($('state-error'));
   $('presets').querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.preset === preset)));
@@ -235,7 +242,7 @@ async function load(preset) {
   setStatus($('state-status'), tt('inv.loading'));
   try {
     const [, data] = await Promise.all([ensureRef(), api.stateCities(view.code, { preset, limit: TOP_N })]);
-    if (mine !== seq) return;
+    if (!loads.isCurrent(mine)) return;
     Object.assign(view, { mode: 'ok', preset, data, compare: null });
     results.removeAttribute('aria-busy');
     const url = new URL(location.href);
@@ -244,7 +251,7 @@ async function load(preset) {
     paint();
     if (data.cities.length) loadCompare(data.cities[0].id, preset, mine);
   } catch (error) {
-    if (mine !== seq || error.code === 'aborted') return;
+    if (!loads.isCurrent(mine) || error.code === 'aborted') return;
     results.removeAttribute('aria-busy');
     if (error.code === 'not_found' || error.code === 'bad_request') {
       Object.assign(view, { mode: 'notfound', data: null });

@@ -279,7 +279,7 @@
   "inv.state.watch": "Watch-out",
   "inv.state.bestArea": "Best area: {name} (score {score})",
   "inv.state.bestAreaUnnamed": "Best area: an unnamed area in {city} (score {score})",
-  "inv.state.coverage": "Based on {n} of {m} factors",
+  "inv.state.coverage": "Based on {pct}% of the score's weight",
   "inv.state.explore": "Explore {city}",
   "inv.state.compare.title": "Other metros to compare",
   "inv.state.compare.sub": "Compared with {city}, the top pick in {state}.",
@@ -399,5 +399,11 @@
   "inv.city.notfound.title": "We could not find that city",
   "inv.city.notfound.body": "The link may be out of date or mistyped. Choose a city again.",
   "inv.city.notfound.cta": "Choose a city",
-  "inv.city.aliases_more": "Also covers {names} and {n} more"
+  "inv.city.aliases_more": "Also covers {names} and {n} more",
+  "inv.gap.nh_access.none": "Almost no residents live within {km} km of a national highway",
+  "inv.gap.rail_access.none": "Almost no residents live within {km} km of a railway station",
+  "inv.gap.metro_access.none": "Almost no residents live within {km} km of a metro station",
+  "inv.why.nh_access.none": "Almost no residents live within {km} km of a national highway",
+  "inv.why.rail_access.none": "Almost no residents live within {km} km of a railway station",
+  "inv.why.metro_access.none": "Almost no residents live within {km} km of a metro station"
 }

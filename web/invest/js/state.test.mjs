@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { bestAreaLine, factorsUsed, gapChip, listMode, meterView, readParams, whyChips } from './state.js';
+import { bestAreaLine, coveragePct, gapChip, latestOnly, listMode, meterView, readParams, whyChips } from './state.js';
 
 test('readParams accepts a state code with a known or missing preset', () => {
   assert.deepEqual(readParams('?s=MH&preset=commuter'), { code: 'MH', preset: 'commuter' });
@@ -40,7 +40,7 @@ test('whyChips keeps at most three, in order, and drops unmeasured drivers', () 
 
 test('gapChip explains the first gap and is null without one', () => {
   const city = { gaps: [{ factor: 'metro_access', value: 192.9, share: 0, band_km: 2 }] };
-  assert.deepEqual(gapChip(city, META), { key: 'inv.gap.metro_access.share', params: { pct: 0, km: 2 } });
+  assert.deepEqual(gapChip(city, META), { key: 'inv.gap.metro_access.none', params: { km: 2 } });
   assert.equal(gapChip({ gaps: [] }, META), null);
   assert.equal(gapChip({}, META), null);
 });
@@ -62,11 +62,23 @@ test('meterView shows a dash and an empty fill for an unobserved value, never 0'
   assert.equal(meterView(140).value, 100);
 });
 
-test('factorsUsed reports N of M only when coverage is below 1 and never N = M', () => {
-  assert.equal(factorsUsed(1, 5), null);
-  assert.equal(factorsUsed(undefined, 5), null);
-  assert.equal(factorsUsed(0.8, 0), null);
-  assert.deepEqual(factorsUsed(0.85, 5), { n: 4, m: 5 });
-  assert.deepEqual(factorsUsed(0.98, 5), { n: 4, m: 5 });
-  assert.deepEqual(factorsUsed(0, 5), { n: 0, m: 5 });
+test('coveragePct is a whole percent of weight, hidden at full coverage, never 100 when partial', () => {
+  assert.equal(coveragePct(1), null);
+  assert.equal(coveragePct(undefined), null);
+  assert.equal(coveragePct(NaN), null);
+  assert.equal(coveragePct(0.7), 70);
+  assert.equal(coveragePct(0.85), 85);
+  assert.equal(coveragePct(0.996), 99);
+  assert.equal(coveragePct(0), 0);
+});
+
+test('latestOnly: an older load that finishes last is not current', () => {
+  const loads = latestOnly();
+  const first = loads.next();
+  const second = loads.next(); // the visitor clicked another preset before the first answer came back
+  const finished = [];
+  // the second answer arrives first, then the first (out of order)
+  for (const id of [second, first]) if (loads.isCurrent(id)) finished.push(id);
+  assert.deepEqual(finished, [second]);
+  assert.equal(loads.current(), second);
 });

@@ -37,7 +37,7 @@ test('growth and roads', () => {
 test('a distance factor with no value and no share is unknown, whatever the kind', () => {
   for (const kind of ['why', 'gap']) {
     assert.deepEqual(explain(kind, { factor: 'rail_access', value: null, share: null, band_km: null }, meta),
-      { key: `inv.${kind}.rail_access.unknown`, params: {} });
+      { key: `inv.${kind}.rail_access.unknown`, params: {}, unknown: true });
   }
 });
 test('NaN and undefined are unobserved too, not "NaN km"', () => {
@@ -46,7 +46,16 @@ test('NaN and undefined are unobserved too, not "NaN km"', () => {
 });
 test('a share of exactly zero is an observation, not a missing value', () => {
   assert.deepEqual(explain('gap', { factor: 'metro_access', value: 12, share: 0, band_km: 2 }, meta),
-    { key: 'inv.gap.metro_access.share', params: { pct: 0, km: 2 } });
+    { key: 'inv.gap.metro_access.none', params: { km: 2 } });
+  assert.deepEqual(explain('gap', { factor: 'nh_access', value: 12, share: 0.004, band_km: 10 }, meta),
+    { key: 'inv.gap.nh_access.none', params: { km: 10 } }); // rounds to 0%: same wording, never "Only 0%"
+  assert.deepEqual(explain('gap', { factor: 'nh_access', value: 12, share: 0.006, band_km: 10 }, meta),
+    { key: 'inv.gap.nh_access.share', params: { pct: 1, km: 10 } });
+});
+test('only unmeasured wording carries the unknown flag', () => {
+  assert.equal(explain('why', { factor: 'road_strength', value: null }, meta).unknown, true);
+  assert.equal(explain('why', { factor: 'road_strength', value: 1 }, meta).unknown, undefined);
+  assert.equal(explain('gap', { factor: 'metro_access', value: 5, share: 0, band_km: 2 }, meta).unknown, undefined);
 });
 test('a value exactly on the last knot is near, not far', () => {
   assert.deepEqual(explain('why', { factor: 'metro_access', value: 10 }, meta),
@@ -62,7 +71,7 @@ test('meta.factors keyed by id works as well as a list', () => {
   assert.equal(explain('gap', { factor: 'metro_access', value: 11 }, byId).key, 'inv.gap.metro_access.far');
 });
 test('a factor this build has no wording for gets a key that tt() shows verbatim', () => {
-  assert.deepEqual(explain('why', { factor: 'air_quality', value: 3 }, meta), { key: 'inv.why.air_quality.unknown', params: {} });
+  assert.deepEqual(explain('why', { factor: 'air_quality', value: 3 }, meta), { key: 'inv.why.air_quality.unknown', params: {}, unknown: true });
 });
 test('an unknown kind is a programming error', () => {
   assert.throws(() => explain('what', { factor: 'nh_access', value: 1 }, meta), TypeError);
@@ -76,6 +85,7 @@ test('every key explain() can return has English wording that its parameters fil
   const everyMeta = { factors: factors.map((id) => ({ id, bands: [[0, 100], [10, 0]] })) };
   const branches = factors.flatMap((factor) => [
     { factor, value: 1.2, share: 0.3, band_km: 2 }, // share
+    { factor, value: 40, share: 0, band_km: 2 },    // none (distance factors only)
     { factor, value: 1.2 },                         // near, or the plain wording for roads and growth
     { factor, value: 999 },                         // far
     { factor, value: null },                        // unknown
@@ -91,5 +101,5 @@ test('every key explain() can return has English wording that its parameters fil
   }
   const orphans = Object.keys(en).filter((k) => /^inv\.(why|gap)\./.test(k) && !used.has(k));
   assert.deepEqual(orphans, [], 'wording that explain() never asks for');
-  assert.equal(used.size, 32);
+  assert.equal(used.size, 38);
 });
