@@ -57,6 +57,8 @@ Field-specific properties are listed in each field plan. The UI must render any 
 
 **Fixtures** — field owners commit simplified samples that follow this contract to `web/fixtures/<field>/<layer>.geojson` (≤ 5 MB each) in the first days of M1, so the UI never waits for the API. Full datasets stay out of git.
 
+Fixtures under `web/fixtures/` are not all one field's. `web/fixtures/invest/` is cross-field: the investor flow (ADR-0015) scores cities and areas from the national highways, metro and rail, and public transport layers together, so no single field owns it. It is written by `ml/pipeline/invest`, served by the Go API in `api/`, and each file carries its own provenance. A field change that alters a layer the scores read (for example NH segments or transit stops) means regenerating it with `cd ml && uv run python -m pipeline.invest all`.
+
 ## Template for a new field plan
 
 Copy into `docs/fields/<field>.md` (kebab-case file name) and add a row to the index.

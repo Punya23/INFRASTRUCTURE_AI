@@ -14,6 +14,8 @@ test('served from the dev port 8765 the API is on localhost:8080', async (t) => 
   assert.equal(dev.API_BASE, 'http://localhost:8080');
   globalThis.location = { port: '' };
   assert.equal((await import('./config.js?other-port')).API_BASE, '');
+  globalThis.location = { port: '8766' };
+  assert.equal((await import('./config.js?second-checkout')).API_BASE, 'http://localhost:8081');
 });
 
 test('id patterns match spec section 7', () => {

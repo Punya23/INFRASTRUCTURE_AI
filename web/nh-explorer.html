@@ -4,10 +4,11 @@
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
   <title>National Highways Explorer — INFRA-AI</title>
+  <script src="i18n.js"></script>
   <meta name="description" content="Explore India's 146,194 km National Highway network — real data from OSM and MoRTH. Interactive map with toll plazas, access analysis, and state-level metrics."/>
   <link href="https://fonts.googleapis.com" rel="preconnect"/>
   <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Sans+Kannada:wght@400;500;600;700&display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
   <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet"/>
   <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
@@ -228,9 +229,20 @@
     @keyframes spin { to { transform: rotate(360deg); } }
     .loading-text { font-size: 0.8125rem; color: var(--text-secondary); }
 
+    .mobile-menu-btn { display: none; padding: 0.375rem; color: var(--text-primary); }
+    .mobile-nav {
+      display: none; flex-direction: column; gap: 0.25rem; padding: 0.75rem 1rem;
+      position: fixed; top: 56px; left: 0; right: 0; z-index: 99;
+      background: var(--surface); border-bottom: 1px solid var(--border-subtle);
+    }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav .nav-pill { font-size: 0.9375rem; padding: 0.5rem 0.75rem; }
+    .lang-switcher { display: flex; }
+    .lang-switcher .lang-btn { display: none; }  /* i18n.js swaps these for its dropdown; hidden if it fails to load */
     @media (max-width: 768px) {
       .app-layout { grid-template-columns: 1fr; grid-template-rows: 50vh 1fr; }
-      .nav-pills { display: none; }
+      .nav-pills, .header-actions > .policy-cta { display: none; }
+      .mobile-menu-btn { display: flex; }
     }
   </style>
 </head>
@@ -248,24 +260,40 @@
           </svg>
           <div>
             <div class="brand-name">INFRA-AI</div>
-            <div class="brand-sub">National Highways Explorer</div>
+            <div class="brand-sub" data-i18n="navExplorerSub">National Highways Explorer</div>
           </div>
         </a>
         <nav class="nav-pills">
-          <a class="nav-pill" href="index.html">Home</a>
-          <a class="nav-pill active" href="#">NH Map</a>
-          <a class="nav-pill" href="policymaker.html">Policymaker</a>
-          <a class="nav-pill" href="methodology.html">Methodology</a>
+          <a class="nav-pill" href="index.html" data-i18n="navHome">Home</a>
+          <a class="nav-pill active" href="nh-explorer.html" aria-current="page" data-i18n="navNhMap">NH Map</a>
+          <a class="nav-pill" href="policymaker.html" data-i18n="navPolicymaker">Policymaker View</a>
+          <a class="nav-pill" href="invest/" data-i18n="inv.nav">Invest</a>
+          <a class="nav-pill" href="methodology.html" data-i18n="navMethodology">Methodology</a>
         </nav>
       </div>
       <div class="header-actions">
-        <a href="policymaker.html" style="padding:0.375rem 0.75rem;border-radius:999px;background:var(--primary);color:var(--on-primary);font-size:0.8125rem;font-weight:600;">
+        <div class="lang-switcher" id="lang-switcher">
+          <button class="lang-btn" data-lang="en" type="button">English</button>
+          <button class="lang-btn" data-lang="hi" type="button">हिन्दी</button>
+          <button class="lang-btn" data-lang="kn" type="button">ಕನ್ನಡ</button>
+        </div>
+        <a class="policy-cta" href="policymaker.html" style="padding:0.375rem 0.75rem;border-radius:999px;background:var(--primary);color:var(--on-primary);font-size:0.8125rem;font-weight:600;">
           <span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;">dashboard</span>
           Policymaker Dashboard
         </a>
+        <button class="mobile-menu-btn" id="mobile-menu-btn" type="button" aria-label="Menu" data-i18n-aria-label="navMenu" aria-expanded="false" aria-controls="mobile-nav">
+          <span class="material-symbols-outlined" style="font-size:24px;">menu</span>
+        </button>
       </div>
     </div>
   </header>
+  <nav class="mobile-nav" id="mobile-nav">
+    <a class="nav-pill" href="index.html" data-i18n="navHome">Home</a>
+    <a class="nav-pill active" href="nh-explorer.html" aria-current="page" data-i18n="navNhMap">NH Map</a>
+    <a class="nav-pill" href="policymaker.html" data-i18n="navPolicymaker">Policymaker View</a>
+    <a class="nav-pill" href="invest/" data-i18n="inv.nav">Invest</a>
+    <a class="nav-pill" href="methodology.html" data-i18n="navMethodology">Methodology</a>
+  </nav>
 
   <div class="app-layout">
     <!-- MAP PANEL -->
@@ -903,6 +931,15 @@
       else { sortCol = col; sortAsc = col === 0; }
       renderStateTable();
     }
+
+    // Mobile menu
+    const menuBtn = document.getElementById('mobile-menu-btn');
+    const mobileNav = document.getElementById('mobile-nav');
+    menuBtn.addEventListener('click', () => {
+      const open = mobileNav.classList.toggle('open');
+      menuBtn.setAttribute('aria-expanded', String(open));
+      menuBtn.querySelector('.material-symbols-outlined').textContent = open ? 'close' : 'menu';
+    });
 
     // Start
     init();
