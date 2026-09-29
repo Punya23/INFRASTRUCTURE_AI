@@ -8,7 +8,7 @@ osm_india:
   kind: pbf
   license: ODbL-1.0
   attribution: © OpenStreetMap contributors
-  used_by: [national_highways, metro_rail]
+  used_by: [national_highways, metro_rail, bus]
 
 worldpop_india_2020_1km:
   url: https://data.worldpop.org/GIS/Population/Global_2000_2020_1km_UNadj/2020/IND/ind_ppp_2020_1km_Aggregated_UNadj.tif
@@ -155,3 +155,37 @@ rai_2020_2024_annual:
   license: Public domain (OpenCity); publisher MoRTH
   attribution: MoRTH, Road Accidents in India 2024 (via OpenCity)
   used_by: [national_highways]
+
+# ── PUBLIC TRANSPORT — BUS ────────────────────────────────────────────────────
+# Each bus source follows the same structure as all other sources above.
+# Fetch: cd ml && uv run python -m common.fetch bus_tgsrtc_gtfs
+
+bus_tgsrtc_gtfs:
+  url: https://data.opencity.in/dataset/88e2d145-7ec6-4666-88dd-6cf18b18312e/resource/1b0d18bb-b2fb-4a79-8ed0-1e071da5790c/download/telangana_opendata_gtfs_tgsrtc_08_february_2026.zip
+  dest: bus/tgsrtc/telangana_opendata_gtfs_tgsrtc_08_february_2026.zip
+  kind: zip
+  license: Terms of use on data.opencity.in — attribution required; non-commercial and research use permitted
+  attribution: TGSRTC (Telangana State Road Transport Corporation), via OpenCity.in — GTFS static feed, February 2026
+  geography: Telangana (TGSRTC-operated intra-city and intercity routes)
+  reference_year: 2026-02-08
+  used_by: [bus]
+
+bus_tgsrtc_stops_csv:
+  url: https://data.opencity.in/dataset/88e2d145-7ec6-4666-88dd-6cf18b18312e/resource/1f531384-0f96-4d5f-b2ec-f5a2c772d758/download/hyd_stops.csv
+  dest: bus/tgsrtc/hyd_stops.csv
+  kind: text
+  license: Terms of use on data.opencity.in — attribution required; non-commercial and research use permitted
+  attribution: TGSRTC (Telangana State Road Transport Corporation) via OpenCity.in — Hyderabad bus stops
+  geography: Hyderabad (Telangana)
+  reference_year: 2024
+  used_by: [bus]
+
+bus_smartcities_fleet_csv:
+  url: https://data.opencity.in/dataset/3ac374db-2406-4ca7-90e8-06bbc45fc34c/resource/f482bef5-e59d-4e79-99d9-bf5d643f9b2a/download/eb1fa0a4-e095-476b-af46-382094ddda53.csv
+  dest: bus/ogd/smartcities_bus_fleet.csv
+  kind: text
+  license: Public domain / Smart Cities Mission Open Data
+  attribution: Ministry of Housing and Urban Affairs (Smart Cities Mission), via OpenCity.in — bus fleet, terminals, stands and stops in Smart Cities
+  geography: India — Smart Cities (multiple cities, partial coverage)
+  reference_year: 2015-2018
+  used_by: [bus]
