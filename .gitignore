@@ -3,6 +3,8 @@
 .env.local
 data/raw/
 data/processed/
+data/raw
+data/processed
 ml/.venv/
 __pycache__/
 .pytest_cache/

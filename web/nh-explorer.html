@@ -332,10 +332,10 @@
           <div class="stat-source">[NHAI Datalake]</div>
         </div>
         <div class="stat-card">
-          <div class="stat-label">Crash Deaths (NHAI)</div>
+          <div class="stat-label">NH Deaths</div>
           <div class="stat-value" id="stat-deaths">—</div>
-          <div class="stat-unit">FY 2022-23</div>
-          <div class="stat-source">[NHAI 2022-23]</div>
+          <div class="stat-unit">2024 (<span id="stat-death-rate">—</span>/100km)</div>
+          <div class="stat-source">[RAI 2024, Annexures 9-10]</div>
         </div>
       </div>
 
@@ -373,12 +373,50 @@
                 <th onclick="sortTable(1)">NH km</th>
                 <th onclick="sortTable(2)">OSM %</th>
                 <th onclick="sortTable(3)">≤10 km</th>
-                <th onclick="sortTable(4)">Deaths/100km</th>
+                <th onclick="sortTable(4)" title="NH deaths per 100 km, RAI 2024">Deaths/100km</th>
               </tr>
             </thead>
             <tbody id="state-tbody"></tbody>
           </table>
         </div>
+      </div>
+
+      <!-- Corridor & connectivity -->
+      <div class="state-table-section">
+        <div class="layer-title">Corridor &amp; Connectivity</div>
+        <div class="stats-grid" id="connectivity-stats">
+          <div class="stat-card">
+            <div class="stat-label">City-Pair Circuity</div>
+            <div class="stat-value" id="stat-circuity-median">—</div>
+            <div class="stat-unit">median, <span id="stat-circuity-n">—</span> pairs</div>
+            <div class="stat-source">[OSM road network]</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Flagged Pairs</div>
+            <div class="stat-value" id="stat-circuity-flagged">—</div>
+            <div class="stat-unit">circuity &gt; <span id="stat-circuity-threshold">—</span></div>
+            <div class="stat-source">[possible missing link]</div>
+          </div>
+        </div>
+        <div class="layer-title" style="margin-top:0.75rem;">Worst City Pairs</div>
+        <div style="overflow-x:auto;">
+          <table class="state-table" id="city-pairs-table">
+            <thead>
+              <tr><th>City pair</th><th>Straight km</th><th>Network km</th><th>Circuity</th></tr>
+            </thead>
+            <tbody id="city-pairs-tbody"></tbody>
+          </table>
+        </div>
+        <div class="layer-title" style="margin-top:0.75rem;">Dated Expressway Corridors</div>
+        <div style="overflow-x:auto;">
+          <table class="state-table" id="corridors-table">
+            <thead>
+              <tr><th>Corridor</th><th>km</th><th>Opened</th></tr>
+            </thead>
+            <tbody id="corridors-tbody"></tbody>
+          </table>
+        </div>
+        <div class="stat-source" style="margin-top:0.5rem;" id="corridor-did-note">—</div>
       </div>
     </div>
   </div>
@@ -394,6 +432,8 @@
     let tollPlazasData = null;
     let nhAccessData = null;
     let stateMetrics = null;
+    let corridorEffect = null;
+    let cityPairs = null;
     let sortCol = 1, sortAsc = false;
 
     // Initialize map
@@ -434,21 +474,26 @@
     async function loadData() {
       try {
         // Load all fixtures in parallel
-        const [segRes, tollRes, accessRes, metricsRes] = await Promise.all([
+        const [segRes, tollRes, accessRes, metricsRes, corridorRes, pairsRes] = await Promise.all([
           fetch('fixtures/national_highways/nh_segments.geojson'),
           fetch('fixtures/national_highways/toll_plazas.geojson'),
           fetch('fixtures/national_highways/nh_access.geojson'),
-          fetch('fixtures/national_highways/nh_state_metrics.json')
+          fetch('fixtures/national_highways/nh_state_metrics.json'),
+          fetch('fixtures/national_highways/corridor_effect.json'),
+          fetch('fixtures/national_highways/city_pairs.json')
         ]);
 
         nhSegmentsData = await segRes.json();
         tollPlazasData = await tollRes.json();
         nhAccessData = await accessRes.json();
         stateMetrics = await metricsRes.json();
+        corridorEffect = await corridorRes.json();
+        cityPairs = await pairsRes.json();
 
         addMapLayers();
         hydrateStats();
         renderStateTable();
+        renderConnectivity();
 
         // Hide loading
         document.getElementById('loading-overlay').style.display = 'none';
@@ -568,11 +613,13 @@
       map.on('click', 'toll-plazas-circle', (e) => {
         const f = e.features[0];
         const p = f.properties;
+        const matched = !!p.ihmcl_code;
         const html = `
-          <div class="popup-title">${p.name || 'Toll Plaza'}</div>
+          <div class="popup-title">${p.name || 'Toll Plaza'} ${matched ? '<span class="popup-status status-operational">IHMCL match</span>' : ''}</div>
           ${p.ref ? `<div class="popup-row"><span>Highway:</span><strong>${p.ref}</strong></div>` : ''}
-          ${p.operator ? `<div class="popup-row"><span>Operator:</span><strong>${p.operator}</strong></div>` : ''}
-          <div style="font-size:0.625rem;color:var(--text-muted);margin-top:0.25rem;font-family:'JetBrains Mono',monospace;">Source: OSM</div>
+          ${p.agency ? `<div class="popup-row"><span>Agency:</span><strong>${p.agency}</strong></div>` : ''}
+          ${p.booths ? `<div class="popup-row"><span>Booths:</span><strong>${p.booths}</strong></div>` : ''}
+          <div style="font-size:0.625rem;color:var(--text-muted);margin-top:0.25rem;font-family:'JetBrains Mono',monospace;">Source: ${p.source || 'osm'} (confidence ${p.confidence ?? '—'})</div>
         `;
         new maplibregl.Popup({ maxWidth: '260px' }).setLngLat(e.lngLat).setHTML(html).addTo(map);
       });
@@ -619,8 +666,37 @@
       document.getElementById('stat-osm-km').textContent = Math.round(india.osm_nh_km).toLocaleString('en-IN');
       document.getElementById('stat-osm-ratio').textContent = (india.osm_ratio * 100).toFixed(1);
       document.getElementById('stat-uc-km').textContent = india.nhai_km_under_construction.toLocaleString('en-IN');
-      document.getElementById('stat-deaths').textContent = india.nhai_2022_23_deaths.toLocaleString('en-IN');
+      document.getElementById('stat-deaths').textContent = india.rai_2024_deaths.toLocaleString('en-IN');
+      document.getElementById('stat-death-rate').textContent = india.rai_2024_deaths_per_100km.toFixed(1);
       document.getElementById('nh-km-count').textContent = Math.round(india.osm_nh_km).toLocaleString('en-IN');
+    }
+
+    function renderConnectivity() {
+      if (!corridorEffect || !cityPairs) return;
+
+      document.getElementById('stat-circuity-median').textContent = cityPairs.median_circuity.toFixed(2);
+      document.getElementById('stat-circuity-n').textContent = cityPairs.total_pairs.toLocaleString('en-IN');
+      document.getElementById('stat-circuity-flagged').textContent = cityPairs.flagged_count.toLocaleString('en-IN');
+      document.getElementById('stat-circuity-threshold').textContent = cityPairs.circuity_flag.toFixed(1) + '×';
+
+      document.getElementById('city-pairs-tbody').innerHTML = cityPairs.worst.slice(0, 10).map(pr => `
+        <tr>
+          <td class="state-name">${pr.city_a} ↔ ${pr.city_b}</td>
+          <td>${pr.straight_km.toFixed(0)}</td>
+          <td>${pr.network_km.toFixed(0)}</td>
+          <td style="color:var(--status-stalled);font-weight:600;">${pr.circuity.toFixed(2)}</td>
+        </tr>`).join('');
+
+      document.getElementById('corridors-tbody').innerHTML = corridorEffect.dated_corridors.map(c => `
+        <tr>
+          <td class="state-name">${c.corridor}</td>
+          <td>${c.km.toFixed(0)}</td>
+          <td>${c.opened}</td>
+        </tr>`).join('');
+
+      const pp = corridorEffect.did_pp;
+      document.getElementById('corridor-did-note').textContent =
+        `Built-up growth near (0–2 km) vs far (2–10 km) from these corridors, relative to not-yet-open corridors: ${pp >= 0 ? '+' : ''}${pp.toFixed(3)} pp difference-in-differences.`;
     }
 
     function renderStateTable() {
@@ -635,7 +711,7 @@
           case 1: va = a.official_km || 0; vb = b.official_km || 0; break;
           case 2: va = a.osm_ratio || 0; vb = b.osm_ratio || 0; break;
           case 3: va = a.share_within_10km_now || 0; vb = b.share_within_10km_now || 0; break;
-          case 4: va = a.nhai_2022_23_deaths_per_100km_per_year || 0; vb = b.nhai_2022_23_deaths_per_100km_per_year || 0; break;
+          case 4: va = a.rai_2024_deaths_per_100km || 0; vb = b.rai_2024_deaths_per_100km || 0; break;
         }
         return sortAsc ? va - vb : vb - va;
       });
@@ -644,8 +720,8 @@
       const tbody = document.getElementById('state-tbody');
       tbody.innerHTML = states.map(s => {
         const barW = ((s.official_km || 0) / maxKm * 100).toFixed(1);
-        const deathRate = s.nhai_2022_23_deaths_per_100km_per_year;
-        const deathColor = deathRate > 6 ? 'var(--status-stalled)' : deathRate > 3 ? 'var(--status-construction)' : 'var(--status-operational)';
+        const deathRate = s.rai_2024_deaths_per_100km;
+        const deathColor = deathRate > 50 ? 'var(--status-stalled)' : deathRate > 20 ? 'var(--status-construction)' : 'var(--status-operational)';
         return `<tr>
           <td class="state-name">${s.state}</td>
           <td class="bar-cell">

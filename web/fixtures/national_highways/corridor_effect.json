@@ -1,0 +1,84 @@
+{
+ "field": "national_highways",
+ "method": "GHSL built-up growth 2000\u21922020, within 2 km vs 2\u201310 km of an expressway: corridors opened 2001\u20132019 vs corridors not yet open (difference-in-differences).",
+ "did_pp": 0.044,
+ "near_far": {
+  "not_yet_open": {
+   "near": 1.015,
+   "far": 1.075,
+   "near_minus_far": -0.06
+  },
+  "opened_2001_2019": {
+   "near": 1.921,
+   "far": 1.937,
+   "near_minus_far": -0.016
+  }
+ },
+ "dated_corridors": [
+  {
+   "corridor": "Outer Ring Road",
+   "km": 345.5,
+   "opened": 2008
+  },
+  {
+   "corridor": "Agra - Lucknow Expressway",
+   "km": 299.7,
+   "opened": 2016
+  },
+  {
+   "corridor": "Yamuna Expressway",
+   "km": 177.9,
+   "opened": 2012
+  },
+  {
+   "corridor": "Mumbai - Pune Expressway",
+   "km": 91.4,
+   "opened": 2002
+  },
+  {
+   "corridor": "Delhi-Gurugram Expressway",
+   "km": 27.1,
+   "opened": 2008
+  },
+  {
+   "corridor": "Chennai Bypass Expressway",
+   "km": 23.7,
+   "opened": 2010
+  },
+  {
+   "corridor": "Noida-Greater Noida Expressway",
+   "km": 23.4,
+   "opened": 2002
+  },
+  {
+   "corridor": "Belghoria Expressway",
+   "km": 12.2,
+   "opened": 2008
+  },
+  {
+   "corridor": "Hindon Elevated Road",
+   "km": 9.5,
+   "opened": 2018
+  },
+  {
+   "corridor": "Chennai Bypass",
+   "km": 6.4,
+   "opened": 2010
+  },
+  {
+   "corridor": "Mahipalpur Flyover",
+   "km": 2.0,
+   "opened": 2008
+  },
+  {
+   "corridor": "Delhi-Noida Direct Flyway",
+   "km": 0.6,
+   "opened": 2001
+  }
+ ],
+ "sources": [
+  "GHSL Built-up Surface 2000/2020",
+  "OSM opening_date/start_date",
+  "Wikipedia: Expressways of India (CC BY-SA)"
+ ]
+}

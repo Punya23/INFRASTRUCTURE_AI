@@ -1,0 +1,173 @@
+{
+ "field": "national_highways",
+ "method": "Network km \u00f7 straight-line km for city pairs 100\u2013600 km apart (population \u2265 3 lakh), routed on the full trunk-to-tertiary road graph.",
+ "circuity_flag": 1.5,
+ "total_pairs": 1543,
+ "median_circuity": 1.182,
+ "flagged_count": 70,
+ "worst": [
+  {
+   "city_a": "Bhavnagar",
+   "city_b": "Bilimora",
+   "straight_km": 138.303,
+   "network_km": 376.959,
+   "circuity": 2.726,
+   "pipeline_on_route": false
+  },
+  {
+   "city_a": "Virar",
+   "city_b": "Bhavnagar",
+   "straight_km": 264.457,
+   "network_km": 548.995,
+   "circuity": 2.076,
+   "pipeline_on_route": true
+  },
+  {
+   "city_a": "Nashik",
+   "city_b": "Bhavnagar",
+   "straight_km": 259.318,
+   "network_km": 533.996,
+   "circuity": 2.059,
+   "pipeline_on_route": true
+  },
+  {
+   "city_a": "Bhayandar",
+   "city_b": "Bhavnagar",
+   "straight_km": 282.041,
+   "network_km": 569.694,
+   "circuity": 2.02,
+   "pipeline_on_route": true
+  },
+  {
+   "city_a": "Dombivali",
+   "city_b": "Bhavnagar",
+   "straight_km": 298.116,
+   "network_km": 591.646,
+   "circuity": 1.985,
+   "pipeline_on_route": true
+  },
+  {
+   "city_a": "Borivli",
+   "city_b": "Bhavnagar",
+   "straight_km": 289.404,
+   "network_km": 570.186,
+   "circuity": 1.97,
+   "pipeline_on_route": true
+  },
+  {
+   "city_a": "Bhiwandi",
+   "city_b": "Bhavnagar",
+   "straight_km": 288.53,
+   "network_km": 566.348,
+   "circuity": 1.963,
+   "pipeline_on_route": true
+  },
+  {
+   "city_a": "Thane",
+   "city_b": "Bhavnagar",
+   "straight_km": 296.371,
+   "network_km": 579.414,
+   "circuity": 1.955,
+   "pipeline_on_route": true
+  },
+  {
+   "city_a": "Kalyan",
+   "city_b": "Bhavnagar",
+   "straight_km": 297.119,
+   "network_km": 580.167,
+   "circuity": 1.953,
+   "pipeline_on_route": true
+  },
+  {
+   "city_a": "Bhavnagar",
+   "city_b": "Ulhasnagar",
+   "straight_km": 300.451,
+   "network_km": 581.478,
+   "circuity": 1.935,
+   "pipeline_on_route": true
+  },
+  {
+   "city_a": "Dharavi",
+   "city_b": "Bhavnagar",
+   "straight_km": 309.43,
+   "network_km": 595.927,
+   "circuity": 1.926,
+   "pipeline_on_route": true
+  },
+  {
+   "city_a": "Mumbai",
+   "city_b": "Bhavnagar",
+   "straight_km": 307.384,
+   "network_km": 590.708,
+   "circuity": 1.922,
+   "pipeline_on_route": true
+  },
+  {
+   "city_a": "Navi Mumbai",
+   "city_b": "Bhavnagar",
+   "straight_km": 314.939,
+   "network_km": 599.259,
+   "circuity": 1.903,
+   "pipeline_on_route": true
+  },
+  {
+   "city_a": "Bhavnagar",
+   "city_b": "Malegaon",
+   "straight_km": 281.442,
+   "network_km": 525.159,
+   "circuity": 1.866,
+   "pipeline_on_route": true
+  },
+  {
+   "city_a": "Guwahati",
+   "city_b": "Bhatpara",
+   "straight_km": 499.886,
+   "network_km": 912.205,
+   "circuity": 1.825,
+   "pipeline_on_route": true
+  },
+  {
+   "city_a": "Pimpri-Chinchwad",
+   "city_b": "Bhavnagar",
+   "straight_km": 388.471,
+   "network_km": 703.28,
+   "circuity": 1.81,
+   "pipeline_on_route": true
+  },
+  {
+   "city_a": "Pimpri",
+   "city_b": "Bhavnagar",
+   "straight_km": 388.198,
+   "network_km": 702.695,
+   "circuity": 1.81,
+   "pipeline_on_route": true
+  },
+  {
+   "city_a": "Shivaji Nagar",
+   "city_b": "Bhavnagar",
+   "straight_km": 399.538,
+   "network_km": 713.904,
+   "circuity": 1.787,
+   "pipeline_on_route": true
+  },
+  {
+   "city_a": "Kolkata",
+   "city_b": "Guwahati",
+   "straight_km": 527.871,
+   "network_km": 942.781,
+   "circuity": 1.786,
+   "pipeline_on_route": true
+  },
+  {
+   "city_a": "Pune",
+   "city_b": "Bhavnagar",
+   "straight_km": 400.718,
+   "network_km": 714.914,
+   "circuity": 1.784,
+   "pipeline_on_route": true
+  }
+ ],
+ "sources": [
+  "OSM road network (trunk\u2013tertiary)"
+ ]
+}

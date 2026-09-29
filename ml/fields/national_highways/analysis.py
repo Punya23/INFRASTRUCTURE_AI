@@ -502,3 +502,34 @@ def write_fixtures() -> None:
                     "WorldPop 2020 1 km", "MoRTH Road Accidents in India 2024 (Annexures 9-10)", "NHAI Datalake (aggregates only, ADR-0014)"],
         "states": records}, indent=1))
     print(f"fixture nh_state_metrics.json: {len(records)} rows")
+
+    corridor_diff = pd.read_csv(A / "corridor_effect.csv", index_col=0)
+    corridors = pd.read_csv(A / "corridor_effect_corridors.csv")
+    corridors["opened"] = corridors["opened"].astype(int)
+    did_pp = float(corridor_diff.loc["opened_2001_2019", "near_minus_far"]
+                   - corridor_diff.loc["not_yet_open", "near_minus_far"])
+    (FIXTURES / "corridor_effect.json").write_text(json.dumps({
+        "field": "national_highways",
+        "method": "GHSL built-up growth 2000→2020, within 2 km vs 2–10 km of an expressway: corridors "
+                   "opened 2001–2019 vs corridors not yet open (difference-in-differences).",
+        "did_pp": round(did_pp, 3),
+        "near_far": {g: {"near": round(r["near"], 3), "far": round(r["far"], 3),
+                         "near_minus_far": round(r["near_minus_far"], 3)}
+                    for g, r in corridor_diff.iterrows()},
+        "dated_corridors": json.loads(corridors.round({"km": 1}).to_json(orient="records")),
+        "sources": ["GHSL Built-up Surface 2000/2020", "OSM opening_date/start_date",
+                    "Wikipedia: Expressways of India (CC BY-SA)"]}, indent=1))
+    print(f"fixture corridor_effect.json: {len(corridors)} dated corridors, {did_pp:.3f} pp diff-in-diff")
+
+    pairs = pd.read_csv(A / "city_pairs.csv")
+    (FIXTURES / "city_pairs.json").write_text(json.dumps({
+        "field": "national_highways",
+        "method": "Network km ÷ straight-line km for city pairs 100–600 km apart (population ≥ 3 "
+                   "lakh), routed on the full trunk-to-tertiary road graph.",
+        "circuity_flag": CFG["circuity_flag"],
+        "total_pairs": len(pairs),
+        "median_circuity": round(float(pairs["circuity"].median()), 3),
+        "flagged_count": int((pairs["circuity"] > CFG["circuity_flag"]).sum()),
+        "worst": json.loads(pairs.head(20).round(3).to_json(orient="records")),
+        "sources": ["OSM road network (trunk–tertiary)"]}, indent=1))
+    print(f"fixture city_pairs.json: {len(pairs)} pairs, median circuity {pairs['circuity'].median():.3f}")

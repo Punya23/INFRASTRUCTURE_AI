@@ -1253,12 +1253,20 @@
     // REAL NH ANALYTICS (from ML pipeline)
     // ========================================
     let nhMetrics = null;
+    let nhCorridorEffect = null;
+    let nhCityPairs = null;
     let nhSortCol = 1, nhSortAsc = false;
 
     async function loadNHAnalytics() {
       try {
-        const res = await fetch('fixtures/national_highways/nh_state_metrics.json');
-        nhMetrics = await res.json();
+        const [metricsRes, corridorRes, pairsRes] = await Promise.all([
+          fetch('fixtures/national_highways/nh_state_metrics.json'),
+          fetch('fixtures/national_highways/corridor_effect.json'),
+          fetch('fixtures/national_highways/city_pairs.json')
+        ]);
+        nhMetrics = await metricsRes.json();
+        nhCorridorEffect = await corridorRes.json();
+        nhCityPairs = await pairsRes.json();
         renderNHKPIs();
         renderNHTable();
       } catch (err) {
@@ -1276,9 +1284,16 @@
         { label: 'OSM Mapped', value: Math.round(india.osm_nh_km).toLocaleString('en-IN'), unit: `km (${(india.osm_ratio*100).toFixed(1)}%)`, source: '© OSM contributors', color: 'var(--primary)' },
         { label: 'Pop. within 10 km', value: (india.share_within_10km_now*100).toFixed(0), unit: '% of Indians', source: 'WorldPop 2020', color: 'var(--status-operational)' },
         { label: 'Under Construction', value: india.nhai_km_under_construction.toLocaleString('en-IN'), unit: 'km', source: 'NHAI Datalake', color: 'var(--status-construction)' },
-        { label: 'NHAI Crashes (FY23)', value: india.nhai_2022_23_crashes.toLocaleString('en-IN'), unit: 'incidents', source: 'NHAI 2022-23', color: 'var(--status-stalled)' },
-        { label: 'NHAI Deaths (FY23)', value: india.nhai_2022_23_deaths.toLocaleString('en-IN'), unit: `(${india.nhai_2022_23_deaths_per_100km_per_year.toFixed(1)}/100km/yr)`, source: 'NHAI 2022-23', color: 'var(--status-stalled)' },
+        { label: 'NH Accidents (2024)', value: india.rai_2024_accidents.toLocaleString('en-IN'), unit: 'incidents', source: 'RAI 2024', color: 'var(--status-stalled)' },
+        { label: 'NH Deaths (2024)', value: india.rai_2024_deaths.toLocaleString('en-IN'), unit: `(${india.rai_2024_deaths_per_100km.toFixed(1)}/100km)`, source: 'RAI 2024, Annexures 9-10', color: 'var(--status-stalled)' },
       ];
+      if (nhCityPairs) {
+        kpis.push({ label: 'City-Pair Circuity', value: nhCityPairs.median_circuity.toFixed(2), unit: `median, ${nhCityPairs.flagged_count} of ${nhCityPairs.total_pairs} flagged`, source: 'OSM road network', color: 'var(--status-construction)' });
+      }
+      if (nhCorridorEffect) {
+        const pp = nhCorridorEffect.did_pp;
+        kpis.push({ label: 'Corridor Effect', value: `${pp >= 0 ? '+' : ''}${pp.toFixed(3)}`, unit: `pp built-up growth, ${nhCorridorEffect.dated_corridors.length} dated corridors`, source: 'GHSL 2000/2020', color: 'var(--primary)' });
+      }
 
       const grid = document.getElementById('nh-kpi-grid');
       grid.innerHTML = kpis.map(k => `
@@ -1303,7 +1318,7 @@
           case 2: va = a.osm_nh_km || 0; vb = b.osm_nh_km || 0; break;
           case 3: va = a.osm_ratio || 0; vb = b.osm_ratio || 0; break;
           case 4: va = a.share_within_10km_now || 0; vb = b.share_within_10km_now || 0; break;
-          case 5: va = a.nhai_2022_23_deaths_per_100km_per_year || 0; vb = b.nhai_2022_23_deaths_per_100km_per_year || 0; break;
+          case 5: va = a.rai_2024_deaths_per_100km || 0; vb = b.rai_2024_deaths_per_100km || 0; break;
           case 6: va = a.nhai_km_under_construction || 0; vb = b.nhai_km_under_construction || 0; break;
         }
         return nhSortAsc ? va - vb : vb - va;
@@ -1313,8 +1328,8 @@
       const tbody = document.getElementById('nh-state-tbody');
       tbody.innerHTML = states.map(s => {
         const barW = ((s.official_km || 0) / maxKm * 100).toFixed(1);
-        const deathRate = s.nhai_2022_23_deaths_per_100km_per_year;
-        const deathColor = deathRate > 6 ? 'var(--status-stalled)' : deathRate > 3 ? '#D97706' : 'var(--status-operational)';
+        const deathRate = s.rai_2024_deaths_per_100km;
+        const deathColor = deathRate > 50 ? 'var(--status-stalled)' : deathRate > 20 ? '#D97706' : 'var(--status-operational)';
         const covColor = (s.osm_ratio || 0) >= 0.95 ? 'var(--status-operational)' : (s.osm_ratio || 0) >= 0.8 ? '#D97706' : 'var(--status-stalled)';
         return `<tr style="border-bottom:1px solid rgba(0,0,0,0.04);">
           <td style="padding:0.375rem 0.5rem;font-weight:500;color:var(--on-surface);font-size:0.75rem;">${s.state}</td>
@@ -1339,12 +1354,12 @@
 
     function exportNHData() {
       if (!nhMetrics || !nhMetrics.states) return;
-      const headers = ['State','Official_km','OSM_km','Coverage_pct','Pop_within_10km_pct','Deaths_per_100km','Under_construction_km'];
+      const headers = ['State','Official_km','OSM_km','Coverage_pct','Pop_within_10km_pct','Deaths_per_100km_RAI2024','Under_construction_km'];
       const rows = nhMetrics.states.filter(s => s.state !== 'India').map(s => [
         s.state, s.official_km || '', Math.round(s.osm_nh_km || 0),
         s.osm_ratio ? (s.osm_ratio*100).toFixed(1) : '',
         s.share_within_10km_now ? (s.share_within_10km_now*100).toFixed(1) : '',
-        s.nhai_2022_23_deaths_per_100km_per_year || '',
+        s.rai_2024_deaths_per_100km || '',
         s.nhai_km_under_construction || ''
       ]);
       const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
@@ -1387,7 +1402,7 @@
               'which is ' + (india.osm_ratio * 100).toFixed(1) + ' percent coverage. ' +
               (india.share_within_10km_now * 100).toFixed(0) + ' percent of Indians live within 10 kilometres of a national highway. ' +
               india.nhai_km_under_construction.toLocaleString() + ' kilometres are under construction. ' +
-              'In fiscal year 2022-23, there were ' + india.nhai_2022_23_deaths.toLocaleString() + ' crash deaths on NHAI highways.';
+              'In 2024, there were ' + india.rai_2024_deaths.toLocaleString() + ' deaths on National Highways across India.';
           }
         });
       }
