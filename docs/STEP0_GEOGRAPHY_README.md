@@ -7,11 +7,11 @@ Build a clean, reproducible, India-wide geographic foundation for the LokDrishti
 Government of India Local Government Directory (LGD). Raw files are Excel exports representing states, districts, subdistricts, ULBs, and wards.
 
 ## Folder Structure
-- `data/raw/geography/`: Original downloaded Excel files.
-- `data/processed/geography/`: Cleaned, standardized CSV outputs.
-- `src/geography/`: Python scripts for data loading, cleaning, validation, and reporting.
-- `reports/`: Data quality, missing values, duplicates, coverage reports, and charts.
-- `notebooks/`: EDA notebooks for geography analysis.
+- `ml/fields/geography/data/raw/`: Original downloaded Excel files.
+- `ml/fields/geography/data/processed/`: Cleaned, standardized CSV outputs.
+- `ml/fields/geography/`: Python scripts for data loading, cleaning, validation, and reporting.
+- `ml/fields/geography/reports/`: Data quality, missing values, duplicates, coverage reports, and charts.
+- `ml/fields/geography/notebooks/`: EDA notebooks for geography analysis.
 
 ## Cleaning Process
 - Standardized all column names (snake_case, lowercased, removed parentheses).
@@ -36,15 +36,15 @@ Wards do not represent India-wide coverage. Missing districts, subdistricts or v
 ## How to Rerun
 Execute the following sequentially from the root project directory:
 ```bash
-python src/geography/01_load_raw.py
-python src/geography/02_clean_states.py
-python src/geography/03_clean_districts.py
-python src/geography/04_clean_subdistricts.py
-python src/geography/05_clean_ulbs.py
-python src/geography/06_clean_wards.py
-python src/geography/07_validate_relationships.py
-python src/geography/08_generate_reports.py
-python src/geography/validate_geography.py
+python ml/fields/geography/01_load_raw.py
+python ml/fields/geography/02_clean_states.py
+python ml/fields/geography/03_clean_districts.py
+python ml/fields/geography/04_clean_subdistricts.py
+python ml/fields/geography/05_clean_ulbs.py
+python ml/fields/geography/06_clean_wards.py
+python ml/fields/geography/07_validate_relationships.py
+python ml/fields/geography/08_generate_reports.py
+python ml/fields/geography/validate_geography.py
 ```
 
 ## Outputs

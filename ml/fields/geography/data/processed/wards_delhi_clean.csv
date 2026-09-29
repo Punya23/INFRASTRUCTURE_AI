@@ -1,0 +1,474 @@
+local_body_code,ward_code,local_body_name,ward_number,ward_name,district_code,district_name,district_census_code,subdistrict_code,subdistrict_name,subdistrict_census_code,village_code,village_name,village_census_code,ward_source_state
+276403,1293209,Delhi Cantonment Board,1,Ward No. 1,0,,0,0,,0,0,,0,delhi
+276403,1293210,Delhi Cantonment Board,2,Ward No. 2,0,,0,0,,0,0,,0,delhi
+276403,1293211,Delhi Cantonment Board,3,Ward No. 3,0,,0,0,,0,0,,0,delhi
+276403,1293212,Delhi Cantonment Board,4,Ward No. 4,0,,0,0,,0,0,,0,delhi
+276403,1293213,Delhi Cantonment Board,5,Ward No. 5,0,,0,0,,0,0,,0,delhi
+276403,1293214,Delhi Cantonment Board,6,Ward No. 6,0,,0,0,,0,0,,0,delhi
+276403,1293215,Delhi Cantonment Board,7,Ward No. 7,0,,0,0,,0,0,,0,delhi
+276403,1293216,Delhi Cantonment Board,8,Ward No. 8,0,,0,0,,0,0,,0,delhi
+276400,1289803,East Delhi Municipal Corporation,018-E,Anand Vihar,0,,0,0,,0,0,,0,delhi
+276400,1289807,East Delhi Municipal Corporation,022-E,Anarkali,0,,0,0,,0,0,,0,delhi
+276400,1289821,East Delhi Municipal Corporation,036-E,Ashok Nagar,0,,0,0,,0,0,,0,delhi
+276400,1289835,East Delhi Municipal Corporation,050-E,Babarpur,0,,0,0,,0,0,,0,delhi
+276400,1289829,East Delhi Municipal Corporation,044-E,Bhajan Pura,0,,0,0,,0,0,,0,delhi
+276400,1289832,East Delhi Municipal Corporation,047-E,Braham Puri,0,,0,0,,0,0,,0,delhi
+276400,1289826,East Delhi Municipal Corporation,041-E,Chauhan Banger,0,,0,0,,0,0,,0,delhi
+276400,1289790,East Delhi Municipal Corporation,005-E,Dallupura,0,,0,0,,0,0,,0,delhi
+276400,1289813,East Delhi Municipal Corporation,028-E,Dilshad Colony,0,,0,0,,0,0,,0,delhi
+276400,1289820,East Delhi Municipal Corporation,035-E,Dilshad Garden,0,,0,0,,0,0,,0,delhi
+276400,1289828,East Delhi Municipal Corporation,043-E,Gautam Puri,0,,0,0,,0,0,,0,delhi
+276400,1289809,East Delhi Municipal Corporation,024-E,Geeta Colony,0,,0,0,,0,0,,0,delhi
+276400,1289791,East Delhi Municipal Corporation,006-E,Gharoli,0,,0,0,,0,0,,0,delhi
+276400,1289831,East Delhi Municipal Corporation,046-E,Ghonda,0,,0,0,,0,0,,0,delhi
+276400,1289808,East Delhi Municipal Corporation,023-E,Ghondli,0,,0,0,,0,0,,0,delhi
+276400,1289838,East Delhi Municipal Corporation,053-E,Gokal Puri,0,,0,0,,0,0,,0,delhi
+276400,1289840,East Delhi Municipal Corporation,055-E,Harsh Vihar,0,,0,0,,0,0,,0,delhi
+276400,1289804,East Delhi Municipal Corporation,019-E,I.P. Extension,0,,0,0,,0,0,,0,delhi
+276400,1289836,East Delhi Municipal Corporation,051-E,Janta Colony,0,,0,0,,0,0,,0,delhi
+276400,1289815,East Delhi Municipal Corporation,030-E,Jhilmil,0,,0,0,,0,0,,0,delhi
+276400,1289837,East Delhi Municipal Corporation,052-E,Joharipur,0,,0,0,,0,0,,0,delhi
+276400,1289793,East Delhi Municipal Corporation,008-E,Kalyan Puri,0,,0,0,,0,0,,0,delhi
+276400,1289811,East Delhi Municipal Corporation,026-E,Kanti Nagar,0,,0,0,,0,0,,0,delhi
+276400,1289842,East Delhi Municipal Corporation,057-E,Karawal Nagar-East,0,,0,0,,0,0,,0,delhi
+276400,1289846,East Delhi Municipal Corporation,061-E,Karawal Nagar-West,0,,0,0,,0,0,,0,delhi
+276400,1289834,East Delhi Municipal Corporation,049-E,Kardam Puri,0,,0,0,,0,0,,0,delhi
+276400,1289848,East Delhi Municipal Corporation,063-E,Khajoori Khas,0,,0,0,,0,0,,0,delhi
+276400,1289798,East Delhi Municipal Corporation,013-E,Kishan Kunj,0,,0,0,,0,0,,0,delhi
+276400,1289792,East Delhi Municipal Corporation,007-E,Kondli,0,,0,0,,0,0,,0,delhi
+276400,1289806,East Delhi Municipal Corporation,021-E,Krishna Nagar,0,,0,0,,0,0,,0,delhi
+276400,1289799,East Delhi Municipal Corporation,014-E,Lakshmi Nagar,0,,0,0,,0,0,,0,delhi
+276400,1289794,East Delhi Municipal Corporation,009-E,Mandawali,0,,0,0,,0,0,,0,delhi
+276400,1289825,East Delhi Municipal Corporation,040-E,Maujpur,0,,0,0,,0,0,,0,delhi
+276400,1289786,East Delhi Municipal Corporation,001-E,Mayur Vihar Phase-I,0,,0,0,,0,0,,0,delhi
+276400,1289796,East Delhi Municipal Corporation,011-E,Mayur Vihar Phase-Ii,0,,0,0,,0,0,,0,delhi
+276400,1289843,East Delhi Municipal Corporation,058-E,Mustafabad,0,,0,0,,0,0,,0,delhi
+276400,1289817,East Delhi Municipal Corporation,032-E,Nand Nagri,0,,0,0,,0,0,,0,delhi
+276400,1289844,East Delhi Municipal Corporation,059-E,Nehru Vihar,0,,0,0,,0,0,,0,delhi
+276400,1289789,East Delhi Municipal Corporation,004-E,New Ashok Nagar,0,,0,0,,0,0,,0,delhi
+276400,1289819,East Delhi Municipal Corporation,034-E,New Seemapuri,0,,0,0,,0,0,,0,delhi
+276400,1289801,East Delhi Municipal Corporation,016-E,Pandav Nagar,0,,0,0,,0,0,,0,delhi
+276400,1289797,East Delhi Municipal Corporation,012-E,Patpar Ganj,0,,0,0,,0,0,,0,delhi
+276400,1289805,East Delhi Municipal Corporation,020-E,Preet Vihar,0,,0,0,,0,0,,0,delhi
+276400,1289812,East Delhi Municipal Corporation,027-E,Raghubarpura,0,,0,0,,0,0,,0,delhi
+276400,1289822,East Delhi Municipal Corporation,037-E,Ram Nagar,0,,0,0,,0,0,,0,delhi
+276400,1289823,East Delhi Municipal Corporation,038-E,Rohtash Nagar,0,,0,0,,0,0,,0,delhi
+276400,1289839,East Delhi Municipal Corporation,054-E,Saboli,0,,0,0,,0,0,,0,delhi
+276400,1289847,East Delhi Municipal Corporation,062-E,Sadatpur,0,,0,0,,0,0,,0,delhi
+276400,1289827,East Delhi Municipal Corporation,042-E,Seelampur,0,,0,0,,0,0,,0,delhi
+276400,1289816,East Delhi Municipal Corporation,031-E,Shahdara,0,,0,0,,0,0,,0,delhi
+276400,1289800,East Delhi Municipal Corporation,015-E,Shakarpur,0,,0,0,,0,0,,0,delhi
+276400,1289810,East Delhi Municipal Corporation,025-E,Shastri Park,0,,0,0,,0,0,,0,delhi
+276400,1289841,East Delhi Municipal Corporation,056-E,Shiv Vihar,0,,0,0,,0,0,,0,delhi
+276400,1289845,East Delhi Municipal Corporation,060-E,Sonia Vihar,0,,0,0,,0,0,,0,delhi
+276400,1289849,East Delhi Municipal Corporation,064-E,Sri Ram Colony,0,,0,0,,0,0,,0,delhi
+276400,1289833,East Delhi Municipal Corporation,048-E,Subhash Mohalla,0,,0,0,,0,0,,0,delhi
+276400,1289818,East Delhi Municipal Corporation,033-E,Sunder Nagri,0,,0,0,,0,0,,0,delhi
+276400,1289787,East Delhi Municipal Corporation,002-E,Trilokpuri-East,0,,0,0,,0,0,,0,delhi
+276400,1289788,East Delhi Municipal Corporation,003-E,Trilokpuri-West,0,,0,0,,0,0,,0,delhi
+276400,1289795,East Delhi Municipal Corporation,010-E,Vinod Nagar,0,,0,0,,0,0,,0,delhi
+276400,1289802,East Delhi Municipal Corporation,017-E,Vishwas Nagar,0,,0,0,,0,0,,0,delhi
+276400,1289814,East Delhi Municipal Corporation,029-E,Vivek Vihar,0,,0,0,,0,0,,0,delhi
+276400,1289824,East Delhi Municipal Corporation,039-E,Welcome Colony,0,,0,0,,0,0,,0,delhi
+276400,1289830,East Delhi Municipal Corporation,045-E,Yamuna Vihar,0,,0,0,,0,0,,0,delhi
+276401,1289866,North Delhi Municipal Corporation,017-N,Adarsh Nagar,0,,0,0,,0,0,,0,delhi
+276401,1289935,North Delhi Municipal Corporation,086-N,Ajmeri Gate,0,,0,0,,0,0,,0,delhi
+276401,1289852,North Delhi Municipal Corporation,003-N,Alipur,794,Outer North,0,430,Narela,430,63907,Tikri Khurd (Ct),63907,delhi
+276401,1289852,North Delhi Municipal Corporation,003-N,Alipur,794,Outer North,0,430,Narela,430,63907,Tikri Khurd (Ct),63907,delhi
+276401,1289852,North Delhi Municipal Corporation,003-N,Alipur,794,Outer North,0,430,Narela,430,63907,Tikri Khurd (Ct),63907,delhi
+276401,1289852,North Delhi Municipal Corporation,003-N,Alipur,794,Outer North,0,430,Narela,430,63907,Tikri Khurd (Ct),63907,delhi
+276401,1289852,North Delhi Municipal Corporation,003-N,Alipur,794,Outer North,0,430,Narela,430,63907,Tikri Khurd (Ct),63907,delhi
+276401,1289852,North Delhi Municipal Corporation,003-N,Alipur,794,Outer North,0,430,Narela,430,63907,Tikri Khurd (Ct),63907,delhi
+276401,1289852,North Delhi Municipal Corporation,003-N,Alipur,794,Outer North,0,430,Narela,430,63907,Tikri Khurd (Ct),63907,delhi
+276401,1289852,North Delhi Municipal Corporation,003-N,Alipur,794,Outer North,0,430,Narela,430,63907,Tikri Khurd (Ct),63907,delhi
+276401,1289852,North Delhi Municipal Corporation,003-N,Alipur,794,Outer North,0,430,Narela,430,63907,Tikri Khurd (Ct),63907,delhi
+276401,1289890,North Delhi Municipal Corporation,041-N,Aman Vihar,0,,0,0,,0,0,,0,delhi
+276401,1289931,North Delhi Municipal Corporation,082-N,Anand Parbat,0,,0,0,,0,0,,0,delhi
+276401,1289924,North Delhi Municipal Corporation,075-N,Ashok Vihar,0,,0,0,,0,0,,0,delhi
+276401,1289851,North Delhi Municipal Corporation,002-N,Bakhtawarpur,0,,0,6076,,0,0,,0,delhi
+276401,1289851,North Delhi Municipal Corporation,002-N,Bakhtawarpur,0,,0,6076,,0,0,,0,delhi
+276401,1289851,North Delhi Municipal Corporation,002-N,Bakhtawarpur,0,,0,6076,,0,0,,0,delhi
+276401,1289851,North Delhi Municipal Corporation,002-N,Bakhtawarpur,0,,0,6076,,0,0,,0,delhi
+276401,1289851,North Delhi Municipal Corporation,002-N,Bakhtawarpur,0,,0,6076,,0,0,,0,delhi
+276401,1289851,North Delhi Municipal Corporation,002-N,Bakhtawarpur,0,,0,6076,,0,0,,0,delhi
+276401,1289851,North Delhi Municipal Corporation,002-N,Bakhtawarpur,0,,0,6076,,0,0,,0,delhi
+276401,1289851,North Delhi Municipal Corporation,002-N,Bakhtawarpur,0,,0,6076,,0,0,,0,delhi
+276401,1289851,North Delhi Municipal Corporation,002-N,Bakhtawarpur,0,,0,6076,,0,0,,0,delhi
+276401,1289851,North Delhi Municipal Corporation,002-N,Bakhtawarpur,0,,0,6076,,0,0,,0,delhi
+276401,1289851,North Delhi Municipal Corporation,002-N,Bakhtawarpur,0,,0,6076,,0,0,,0,delhi
+276401,1289851,North Delhi Municipal Corporation,002-N,Bakhtawarpur,0,,0,6076,,0,0,,0,delhi
+276401,1289851,North Delhi Municipal Corporation,002-N,Bakhtawarpur,0,,0,6076,,0,0,,0,delhi
+276401,1289851,North Delhi Municipal Corporation,002-N,Bakhtawarpur,0,,0,6076,,0,0,,0,delhi
+276401,1289851,North Delhi Municipal Corporation,002-N,Bakhtawarpur,0,,0,6076,,0,0,,0,delhi
+276401,1289851,North Delhi Municipal Corporation,002-N,Bakhtawarpur,0,,0,6076,,0,0,,0,delhi
+276401,1289851,North Delhi Municipal Corporation,002-N,Bakhtawarpur,0,,0,6076,,0,0,,0,delhi
+276401,1289946,North Delhi Municipal Corporation,097-N,Baljit Nagar,0,,0,0,,0,0,,0,delhi
+276401,1289939,North Delhi Municipal Corporation,090-N,Ballimaran,0,,0,0,,0,0,,0,delhi
+276401,1289854,North Delhi Municipal Corporation,005-N,Bankner,794,Outer North,0,430,Narela,430,0,,0,delhi
+276401,1289854,North Delhi Municipal Corporation,005-N,Bankner,794,Outer North,0,430,Narela,430,0,,0,delhi
+276401,1289854,North Delhi Municipal Corporation,005-N,Bankner,794,Outer North,0,430,Narela,430,0,,0,delhi
+276401,1289854,North Delhi Municipal Corporation,005-N,Bankner,794,Outer North,0,430,Narela,430,0,,0,delhi
+276401,1289879,North Delhi Municipal Corporation,030-N,Bawana,794,Outer North,0,430,Narela,430,0,,0,delhi
+276401,1289879,North Delhi Municipal Corporation,030-N,Bawana,794,Outer North,0,430,Narela,430,0,,0,delhi
+276401,1289879,North Delhi Municipal Corporation,030-N,Bawana,794,Outer North,0,430,Narela,430,0,,0,delhi
+276401,1289936,North Delhi Municipal Corporation,087-N,Bazar Sita Ram,0,,0,0,,0,0,,0,delhi
+276401,1289882,North Delhi Municipal Corporation,033-N,Begumpur,0,,0,0,,0,0,,0,delhi
+276401,1289871,North Delhi Municipal Corporation,022-N,Bhalswa,0,,0,0,,0,0,,0,delhi
+276401,1289876,North Delhi Municipal Corporation,027-N,Budh Vhar,0,,0,0,,0,0,,0,delhi
+276401,1289856,North Delhi Municipal Corporation,007-N,Burari,81,North East,92,6083,Karawal Nagar,0,63952,Badar Pur Majra Burari,63952,delhi
+276401,1289856,North Delhi Municipal Corporation,007-N,Burari,81,North East,92,6083,Karawal Nagar,0,63952,Badar Pur Majra Burari,63952,delhi
+276401,1289856,North Delhi Municipal Corporation,007-N,Burari,81,North East,92,6083,Karawal Nagar,0,63952,Badar Pur Majra Burari,63952,delhi
+276401,1289856,North Delhi Municipal Corporation,007-N,Burari,81,North East,92,6083,Karawal Nagar,0,63952,Badar Pur Majra Burari,63952,delhi
+276401,1289856,North Delhi Municipal Corporation,007-N,Burari,81,North East,92,6083,Karawal Nagar,0,63952,Badar Pur Majra Burari,63952,delhi
+276401,1289933,North Delhi Municipal Corporation,084-N,Chandni Chowk,0,,0,0,,0,0,,0,delhi
+276401,1289932,North Delhi Municipal Corporation,083-N,Civil Lines,0,,0,0,,0,0,,0,delhi
+276401,1289937,North Delhi Municipal Corporation,088-N,Delhi Gate,0,,0,0,,0,0,,0,delhi
+276401,1289943,North Delhi Municipal Corporation,094-N,Dev Nagar,0,,0,0,,0,0,,0,delhi
+276401,1289867,North Delhi Municipal Corporation,018-N,Dhirpur,0,,0,0,,0,0,,0,delhi
+276401,1289944,North Delhi Municipal Corporation,095-N,East Patel Nagar,0,,0,0,,0,0,,0,delhi
+276401,1289863,North Delhi Municipal Corporation,014-N,G.T.B. Nagar,0,,0,0,,0,0,,0,delhi
+276401,1289910,North Delhi Municipal Corporation,061-N,Haiderpur,0,,0,0,,0,0,,0,delhi
+276401,1289853,North Delhi Municipal Corporation,004-N,Holambi Khurd,0,,0,0,,0,0,,0,delhi
+276401,1289952,North Delhi Municipal Corporation,103-N,Inder Puri,0,,0,0,,0,0,,0,delhi
+276401,1289870,North Delhi Municipal Corporation,021-N,Jahangir Puri,0,,0,0,,0,0,,0,delhi
+276401,1289934,North Delhi Municipal Corporation,085-N,Jama Masjid,0,,0,0,,0,0,,0,delhi
+276401,1289857,North Delhi Municipal Corporation,008-N,Jharoda,80,North,91,7569,Burari,0,63958,Jharoda Majra Burari (Ct),63958,delhi
+276401,1289857,North Delhi Municipal Corporation,008-N,Jharoda,80,North,91,7569,Burari,0,63958,Jharoda Majra Burari (Ct),63958,delhi
+276401,1289857,North Delhi Municipal Corporation,008-N,Jharoda,80,North,91,7569,Burari,0,63958,Jharoda Majra Burari (Ct),63958,delhi
+276401,1289857,North Delhi Municipal Corporation,008-N,Jharoda,80,North,91,7569,Burari,0,63958,Jharoda Majra Burari (Ct),63958,delhi
+276401,1289855,North Delhi Municipal Corporation,006-N,Kadipur,0,,0,6076,,0,0,,0,delhi
+276401,1289855,North Delhi Municipal Corporation,006-N,Kadipur,0,,0,6076,,0,0,,0,delhi
+276401,1289855,North Delhi Municipal Corporation,006-N,Kadipur,0,,0,6076,,0,0,,0,delhi
+276401,1289855,North Delhi Municipal Corporation,006-N,Kadipur,0,,0,6076,,0,0,,0,delhi
+276401,1289855,North Delhi Municipal Corporation,006-N,Kadipur,0,,0,6076,,0,0,,0,delhi
+276401,1289858,North Delhi Municipal Corporation,009-N,Kamalpur,0,,0,0,,0,0,,0,delhi
+276401,1289927,North Delhi Municipal Corporation,078-N,Kamla Nagar,0,,0,0,,0,0,,0,delhi
+276401,1289884,North Delhi Municipal Corporation,035-N,Kanjhawala,0,,0,0,,0,63931,,0,delhi
+276401,1289884,North Delhi Municipal Corporation,035-N,Kanjhawala,0,,0,0,,0,63931,,0,delhi
+276401,1289948,North Delhi Municipal Corporation,099-N,Karampura,0,,0,0,,0,0,,0,delhi
+276401,1289941,North Delhi Municipal Corporation,092-N,Karol Bagh,0,,0,0,,0,0,,0,delhi
+276401,1289891,North Delhi Municipal Corporation,042-N,Kirari Suleman Nagar,82,North West,90,6077,Rohini,0,0,,0,delhi
+276401,1289891,North Delhi Municipal Corporation,042-N,Kirari Suleman Nagar,82,North West,90,6077,Rohini,0,0,,0,delhi
+276401,1289930,North Delhi Municipal Corporation,081-N,Kishan Ganj,0,,0,0,,0,0,,0,delhi
+276401,1289917,North Delhi Municipal Corporation,068-N,Kohat Enclave,0,,0,0,,0,0,,0,delhi
+276401,1289901,North Delhi Municipal Corporation,052-N,Lakshmi Park,0,,0,0,,0,0,,0,delhi
+276401,1289862,North Delhi Municipal Corporation,013-N,Malka Ganj,0,,0,0,,0,0,,0,delhi
+276401,1289903,North Delhi Municipal Corporation,054-N,Mangolpuri-A,0,,0,0,,0,0,,0,delhi
+276401,1289904,North Delhi Municipal Corporation,055-N,Mangolpuri-B,0,,0,0,,0,0,,0,delhi
+276401,1289905,North Delhi Municipal Corporation,056-N,Mangolpuri-C,0,,0,0,,0,0,,0,delhi
+276401,1289895,North Delhi Municipal Corporation,046-N,Mangolpuri-D,0,,0,0,,0,0,,0,delhi
+276401,1289926,North Delhi Municipal Corporation,077-N,Model Town,0,,0,0,,0,0,,0,delhi
+276401,1289949,North Delhi Municipal Corporation,100-N,Moti Nagar,0,,0,0,,0,0,,0,delhi
+276401,1289893,North Delhi Municipal Corporation,044-N,Mubarak Pur Dabas,82,North West,90,6077,Rohini,0,0,,0,delhi
+276401,1289893,North Delhi Municipal Corporation,044-N,Mubarak Pur Dabas,82,North West,90,6077,Rohini,0,0,,0,delhi
+276401,1289864,North Delhi Municipal Corporation,015-N,Mukherjee Nagar,0,,0,0,,0,0,,0,delhi
+276401,1289860,North Delhi Municipal Corporation,011-N,Mukundpur,0,,0,0,,0,0,,0,delhi
+276401,1289888,North Delhi Municipal Corporation,039-N,Mundka,794,Outer North,0,7583,Mundka,0,64003,Tikri Kalan (Ct),64003,delhi
+276401,1289888,North Delhi Municipal Corporation,039-N,Mundka,794,Outer North,0,7583,Mundka,0,64003,Tikri Kalan (Ct),64003,delhi
+276401,1289888,North Delhi Municipal Corporation,039-N,Mundka,794,Outer North,0,7583,Mundka,0,64003,Tikri Kalan (Ct),64003,delhi
+276401,1289888,North Delhi Municipal Corporation,039-N,Mundka,794,Outer North,0,7583,Mundka,0,64003,Tikri Kalan (Ct),64003,delhi
+276401,1289888,North Delhi Municipal Corporation,039-N,Mundka,794,Outer North,0,7583,Mundka,0,64003,Tikri Kalan (Ct),64003,delhi
+276401,1289878,North Delhi Municipal Corporation,029-N,Nangal Thakran,794,Outer North,0,430,Narela,430,0,,0,delhi
+276401,1289878,North Delhi Municipal Corporation,029-N,Nangal Thakran,794,Outer North,0,430,Narela,430,0,,0,delhi
+276401,1289878,North Delhi Municipal Corporation,029-N,Nangal Thakran,794,Outer North,0,430,Narela,430,0,,0,delhi
+276401,1289878,North Delhi Municipal Corporation,029-N,Nangal Thakran,794,Outer North,0,430,Narela,430,0,,0,delhi
+276401,1289878,North Delhi Municipal Corporation,029-N,Nangal Thakran,794,Outer North,0,430,Narela,430,0,,0,delhi
+276401,1289878,North Delhi Municipal Corporation,029-N,Nangal Thakran,794,Outer North,0,430,Narela,430,0,,0,delhi
+276401,1289878,North Delhi Municipal Corporation,029-N,Nangal Thakran,794,Outer North,0,430,Narela,430,0,,0,delhi
+276401,1289878,North Delhi Municipal Corporation,029-N,Nangal Thakran,794,Outer North,0,430,Narela,430,0,,0,delhi
+276401,1289878,North Delhi Municipal Corporation,029-N,Nangal Thakran,794,Outer North,0,430,Narela,430,0,,0,delhi
+276401,1289878,North Delhi Municipal Corporation,029-N,Nangal Thakran,794,Outer North,0,430,Narela,430,0,,0,delhi
+276401,1289878,North Delhi Municipal Corporation,029-N,Nangal Thakran,794,Outer North,0,430,Narela,430,0,,0,delhi
+276401,1289878,North Delhi Municipal Corporation,029-N,Nangal Thakran,794,Outer North,0,430,Narela,430,0,,0,delhi
+276401,1289878,North Delhi Municipal Corporation,029-N,Nangal Thakran,794,Outer North,0,430,Narela,430,0,,0,delhi
+276401,1289878,North Delhi Municipal Corporation,029-N,Nangal Thakran,794,Outer North,0,430,Narela,430,0,,0,delhi
+276401,1289878,North Delhi Municipal Corporation,029-N,Nangal Thakran,794,Outer North,0,430,Narela,430,0,,0,delhi
+276401,1289886,North Delhi Municipal Corporation,037-N,Nangloi,82,North West,90,7595,Nangloi Jat,0,63999,Nangloi Jat (Ct),63999,delhi
+276401,1289886,North Delhi Municipal Corporation,037-N,Nangloi,82,North West,90,7595,Nangloi Jat,0,63999,Nangloi Jat (Ct),63999,delhi
+276401,1289898,North Delhi Municipal Corporation,049-N,Nangloi Jat,0,,0,0,,0,0,,0,delhi
+276401,1289953,North Delhi Municipal Corporation,104-N,Naraina,0,,0,0,,0,0,,0,delhi
+276401,1289850,North Delhi Municipal Corporation,001-N,Narela,794,Outer North,0,430,Narela,430,63867,Mamoor Pur,63867,delhi
+276401,1289850,North Delhi Municipal Corporation,001-N,Narela,794,Outer North,0,430,Narela,430,63867,Mamoor Pur,63867,delhi
+276401,1289850,North Delhi Municipal Corporation,001-N,Narela,794,Outer North,0,430,Narela,430,63867,Mamoor Pur,63867,delhi
+276401,1289900,North Delhi Municipal Corporation,051-N,Nihal Vihar,0,,0,0,,0,0,,0,delhi
+276401,1289887,North Delhi Municipal Corporation,038-N,Nilothi,0,,0,450,,0,0,,0,delhi
+276401,1289887,North Delhi Municipal Corporation,038-N,Nilothi,0,,0,450,,0,0,,0,delhi
+276401,1289887,North Delhi Municipal Corporation,038-N,Nilothi,0,,0,450,,0,0,,0,delhi
+276401,1289923,North Delhi Municipal Corporation,074-N,Nimri Colony,0,,0,0,,0,0,,0,delhi
+276401,1289889,North Delhi Municipal Corporation,040-N,Nithari,82,North West,90,6077,Rohini,0,0,,0,delhi
+276401,1289889,North Delhi Municipal Corporation,040-N,Nithari,82,North West,90,6077,Rohini,0,0,,0,delhi
+276401,1289942,North Delhi Municipal Corporation,093-N,Pahar Ganj,0,,0,0,,0,0,,0,delhi
+276401,1289916,North Delhi Municipal Corporation,067-N,Paschim Vihar,0,,0,0,,0,0,,0,delhi
+276401,1289899,North Delhi Municipal Corporation,050-N,Peera Garhi,0,,0,0,,0,0,,0,delhi
+276401,1289913,North Delhi Municipal Corporation,064-N,Pitampura,0,,0,0,,0,0,,0,delhi
+276401,1289880,North Delhi Municipal Corporation,031-N,Pooth Khurd,794,Outer North,0,7582,Bawana,0,63918,Pehlad Pur Bangar (Ct),63918,delhi
+276401,1289880,North Delhi Municipal Corporation,031-N,Pooth Khurd,794,Outer North,0,7582,Bawana,0,63918,Pehlad Pur Bangar (Ct),63918,delhi
+276401,1289880,North Delhi Municipal Corporation,031-N,Pooth Khurd,794,Outer North,0,7582,Bawana,0,63918,Pehlad Pur Bangar (Ct),63918,delhi
+276401,1289880,North Delhi Municipal Corporation,031-N,Pooth Khurd,794,Outer North,0,7582,Bawana,0,63918,Pehlad Pur Bangar (Ct),63918,delhi
+276401,1289880,North Delhi Municipal Corporation,031-N,Pooth Khurd,794,Outer North,0,7582,Bawana,0,63918,Pehlad Pur Bangar (Ct),63918,delhi
+276401,1289880,North Delhi Municipal Corporation,031-N,Pooth Khurd,794,Outer North,0,7582,Bawana,0,63918,Pehlad Pur Bangar (Ct),63918,delhi
+276401,1289880,North Delhi Municipal Corporation,031-N,Pooth Khurd,794,Outer North,0,7582,Bawana,0,63918,Pehlad Pur Bangar (Ct),63918,delhi
+276401,1289892,North Delhi Municipal Corporation,043-N,Prem Nagar,0,,0,0,,0,0,,0,delhi
+276401,1289938,North Delhi Municipal Corporation,089-N,Quraish Nagar,0,,0,0,,0,0,,0,delhi
+276401,1289951,North Delhi Municipal Corporation,102-N,Rajinder Nagar,0,,0,0,,0,0,,0,delhi
+276401,1289950,North Delhi Municipal Corporation,101-N,Ramesh Nagar,0,,0,0,,0,0,,0,delhi
+276401,1289940,North Delhi Municipal Corporation,091-N,Ram Nagar,0,,0,0,,0,0,,0,delhi
+276401,1289919,North Delhi Municipal Corporation,070-N,Ram Pura,0,,0,0,,0,0,,0,delhi
+276401,1289915,North Delhi Municipal Corporation,066-N,Rani Bagh,0,,0,0,,0,0,,0,delhi
+276401,1289885,North Delhi Municipal Corporation,036-N,Rani Khera,794,Outer North,0,7583,Mundka,0,63930,Rasool Pur,63930,delhi
+276401,1289885,North Delhi Municipal Corporation,036-N,Rani Khera,794,Outer North,0,7583,Mundka,0,63930,Rasool Pur,63930,delhi
+276401,1289885,North Delhi Municipal Corporation,036-N,Rani Khera,794,Outer North,0,7583,Mundka,0,63930,Rasool Pur,63930,delhi
+276401,1289885,North Delhi Municipal Corporation,036-N,Rani Khera,794,Outer North,0,7583,Mundka,0,63930,Rasool Pur,63930,delhi
+276401,1289885,North Delhi Municipal Corporation,036-N,Rani Khera,794,Outer North,0,7583,Mundka,0,63930,Rasool Pur,63930,delhi
+276401,1289885,North Delhi Municipal Corporation,036-N,Rani Khera,794,Outer North,0,7583,Mundka,0,63930,Rasool Pur,63930,delhi
+276401,1289885,North Delhi Municipal Corporation,036-N,Rani Khera,794,Outer North,0,7583,Mundka,0,63930,Rasool Pur,63930,delhi
+276401,1289945,North Delhi Municipal Corporation,096-N,Ranjit Nagar,0,,0,0,,0,0,,0,delhi
+276401,1289877,North Delhi Municipal Corporation,028-N,Rithala,0,,0,0,,0,0,,0,delhi
+276401,1289873,North Delhi Municipal Corporation,024-N,Rohini-A,0,,0,0,,0,0,,0,delhi
+276401,1289874,North Delhi Municipal Corporation,025-N,Rohini-B,0,,0,0,,0,0,,0,delhi
+276401,1289881,North Delhi Municipal Corporation,032-N,Rohini-C,0,,0,0,,0,0,,0,delhi
+276401,1289883,North Delhi Municipal Corporation,034-N,Rohini-D,794,Outer North,0,7582,Bawana,0,63947,Pooth Kalan (Ct),63947,delhi
+276401,1289883,North Delhi Municipal Corporation,034-N,Rohini-D,794,Outer North,0,7582,Bawana,0,63947,Pooth Kalan (Ct),63947,delhi
+276401,1289902,North Delhi Municipal Corporation,053-N,Rohini-E,0,,0,0,,0,0,,0,delhi
+276401,1289906,North Delhi Municipal Corporation,057-N,Rohini-F,0,,0,0,,0,0,,0,delhi
+276401,1289907,North Delhi Municipal Corporation,058-N,Rohini-G,0,,0,0,,0,0,,0,delhi
+276401,1289908,North Delhi Municipal Corporation,059-N,Rohini-H,0,,0,0,,0,0,,0,delhi
+276401,1289909,North Delhi Municipal Corporation,060-N,Rohini-I,0,,0,0,,0,0,,0,delhi
+276401,1289929,North Delhi Municipal Corporation,080-N,Sadar Bazar,0,,0,0,,0,0,,0,delhi
+276401,1289872,North Delhi Municipal Corporation,023-N,Samaypur Badli,0,,0,0,,0,0,,0,delhi
+276401,1289925,North Delhi Municipal Corporation,076-N,Sangam Park,0,,0,0,,0,0,,0,delhi
+276401,1289859,North Delhi Municipal Corporation,010-N,Sant Nagar,0,,0,433,,0,0,,0,delhi
+276401,1289859,North Delhi Municipal Corporation,010-N,Sant Nagar,0,,0,433,,0,0,,0,delhi
+276401,1289865,North Delhi Municipal Corporation,016-N,Sarai Pipal Thala,0,,0,0,,0,0,,0,delhi
+276401,1289914,North Delhi Municipal Corporation,065-N,Saraswati Vihar,0,,0,0,,0,0,,0,delhi
+276401,1289868,North Delhi Municipal Corporation,019-N,Sarup Nagar,80,North,91,7570,Badli,0,63915,Siras Pur (Ct),63915,delhi
+276401,1289868,North Delhi Municipal Corporation,019-N,Sarup Nagar,80,North,91,7570,Badli,0,63915,Siras Pur (Ct),63915,delhi
+276401,1289868,North Delhi Municipal Corporation,019-N,Sarup Nagar,80,North,91,7570,Badli,0,63915,Siras Pur (Ct),63915,delhi
+276401,1289922,North Delhi Municipal Corporation,073-N,Sawan Park,0,,0,0,,0,0,,0,delhi
+276401,1289918,North Delhi Municipal Corporation,069-N,Shakur Pur,0,,0,0,,0,0,,0,delhi
+276401,1289911,North Delhi Municipal Corporation,062-N,Shalimar Bagh -North,0,,0,0,,0,0,,0,delhi
+276401,1289912,North Delhi Municipal Corporation,063-N,Shalimar Bagh -South,0,,0,0,,0,0,,0,delhi
+276401,1289928,North Delhi Municipal Corporation,079-N,Shastri Nagar,0,,0,0,,0,0,,0,delhi
+276401,1289894,North Delhi Municipal Corporation,045-N,Sultanpuri-A,0,,0,0,,0,0,,0,delhi
+276401,1289896,North Delhi Municipal Corporation,047-N,Sultanpuri-B,82,North West,90,7594,Kirari,0,63948,Sultan Pur Majra (Ct),63948,delhi
+276401,1289896,North Delhi Municipal Corporation,047-N,Sultanpuri-B,82,North West,90,7594,Kirari,0,63948,Sultan Pur Majra (Ct),63948,delhi
+276401,1289897,North Delhi Municipal Corporation,048-N,Sultanpuri-C,0,,0,0,,0,0,,0,delhi
+276401,1289869,North Delhi Municipal Corporation,020-N,Swami Sharda Nand Colony,80,North,91,7570,Badli,0,63950,Bhalswa Jahangir Pur (Ct),63950,delhi
+276401,1289869,North Delhi Municipal Corporation,020-N,Swami Sharda Nand Colony,80,North,91,7570,Badli,0,63950,Bhalswa Jahangir Pur (Ct),63950,delhi
+276401,1289861,North Delhi Municipal Corporation,012-N,Timarpur,0,,0,0,,0,0,,0,delhi
+276401,1289920,North Delhi Municipal Corporation,071-N,Tri Nagar,0,,0,0,,0,0,,0,delhi
+276401,1289875,North Delhi Municipal Corporation,026-N,Vijay Vihar,0,,0,0,,0,0,,0,delhi
+276401,1289921,North Delhi Municipal Corporation,072-N,Wazir Pur,0,,0,0,,0,0,,0,delhi
+276401,1289947,North Delhi Municipal Corporation,098-N,West Patel Nagar,0,,0,0,,0,0,,0,delhi
+276402,1290055,South Delhi Municipal Corporation,102-S,Abul Fazal Enclave,0,,0,0,,0,0,,0,delhi
+276402,1290012,South Delhi Municipal Corporation,059-S,Andrews Ganj,670,South East,0,0,,0,0,,0,delhi
+276402,1290012,South Delhi Municipal Corporation,059-S,Andrews Ganj,670,South East,0,0,,0,0,,0,delhi
+276402,1290012,South Delhi Municipal Corporation,059-S,Andrews Ganj,670,South East,0,0,,0,0,,0,delhi
+276402,1290026,South Delhi Municipal Corporation,073-S,Aya Nagar,83,South,98,7587,Chhatarpur,0,64065,Aya Nagar (Ct),64065,delhi
+276402,1290026,South Delhi Municipal Corporation,073-S,Aya Nagar,83,South,98,7587,Chhatarpur,0,64065,Aya Nagar (Ct),64065,delhi
+276402,1290026,South Delhi Municipal Corporation,073-S,Aya Nagar,83,South,98,7587,Chhatarpur,0,64065,Aya Nagar (Ct),64065,delhi
+276402,1290026,South Delhi Municipal Corporation,073-S,Aya Nagar,83,South,98,7587,Chhatarpur,0,64065,Aya Nagar (Ct),64065,delhi
+276402,1290026,South Delhi Municipal Corporation,073-S,Aya Nagar,83,South,98,7587,Chhatarpur,0,64065,Aya Nagar (Ct),64065,delhi
+276402,1290048,South Delhi Municipal Corporation,095-S,Badarpur,670,South East,0,0,,0,0,,0,delhi
+276402,1290048,South Delhi Municipal Corporation,095-S,Badarpur,670,South East,0,0,,0,0,,0,delhi
+276402,1290048,South Delhi Municipal Corporation,095-S,Badarpur,670,South East,0,0,,0,0,,0,delhi
+276402,1289977,South Delhi Municipal Corporation,024-S,Bapraula,0,,0,0,,0,0,,0,delhi
+276402,1290025,South Delhi Municipal Corporation,072-S,Bhati,83,South,98,0,,0,0,,0,delhi
+276402,1290025,South Delhi Municipal Corporation,072-S,Bhati,83,South,98,0,,0,0,,0,delhi
+276402,1290025,South Delhi Municipal Corporation,072-S,Bhati,83,South,98,0,,0,0,,0,delhi
+276402,1290025,South Delhi Municipal Corporation,072-S,Bhati,83,South,98,0,,0,0,,0,delhi
+276402,1290025,South Delhi Municipal Corporation,072-S,Bhati,83,South,98,0,,0,0,,0,delhi
+276402,1290025,South Delhi Municipal Corporation,072-S,Bhati,83,South,98,0,,0,0,,0,delhi
+276402,1290025,South Delhi Municipal Corporation,072-S,Bhati,83,South,98,0,,0,0,,0,delhi
+276402,1290025,South Delhi Municipal Corporation,072-S,Bhati,83,South,98,0,,0,0,,0,delhi
+276402,1290025,South Delhi Municipal Corporation,072-S,Bhati,83,South,98,0,,0,0,,0,delhi
+276402,1290001,South Delhi Municipal Corporation,048-S,Bijwasan,84,South West,97,7581,Matiala,0,64037,Jain Pur(Un-Inhabited),64037,delhi
+276402,1290001,South Delhi Municipal Corporation,048-S,Bijwasan,84,South West,97,7581,Matiala,0,64037,Jain Pur(Un-Inhabited),64037,delhi
+276402,1289982,South Delhi Municipal Corporation,029-S,Bindapur,0,,0,0,,0,0,,0,delhi
+276402,1290023,South Delhi Municipal Corporation,070-S,Chhatarpur,83,South,98,6080,Mehrauli,0,0,,0,delhi
+276402,1290023,South Delhi Municipal Corporation,070-S,Chhatarpur,83,South,98,6080,Mehrauli,0,0,,0,delhi
+276402,1290023,South Delhi Municipal Corporation,070-S,Chhatarpur,83,South,98,6080,Mehrauli,0,0,,0,delhi
+276402,1290023,South Delhi Municipal Corporation,070-S,Chhatarpur,83,South,98,6080,Mehrauli,0,0,,0,delhi
+276402,1290023,South Delhi Municipal Corporation,070-S,Chhatarpur,83,South,98,6080,Mehrauli,0,0,,0,delhi
+276402,1290023,South Delhi Municipal Corporation,070-S,Chhatarpur,83,South,98,6080,Mehrauli,0,0,,0,delhi
+276402,1290023,South Delhi Municipal Corporation,070-S,Chhatarpur,83,South,98,6080,Mehrauli,0,0,,0,delhi
+276402,1290023,South Delhi Municipal Corporation,070-S,Chhatarpur,83,South,98,6080,Mehrauli,0,0,,0,delhi
+276402,1289992,South Delhi Municipal Corporation,039-S,Chhawla,84,South West,97,7581,Matiala,0,64027,Daulat Pur,64027,delhi
+276402,1289992,South Delhi Municipal Corporation,039-S,Chhawla,84,South West,97,7581,Matiala,0,64027,Daulat Pur,64027,delhi
+276402,1289992,South Delhi Municipal Corporation,039-S,Chhawla,84,South West,97,7581,Matiala,0,64027,Daulat Pur,64027,delhi
+276402,1289992,South Delhi Municipal Corporation,039-S,Chhawla,84,South West,97,7581,Matiala,0,64027,Daulat Pur,64027,delhi
+276402,1289992,South Delhi Municipal Corporation,039-S,Chhawla,84,South West,97,7581,Matiala,0,64027,Daulat Pur,64027,delhi
+276402,1289992,South Delhi Municipal Corporation,039-S,Chhawla,84,South West,97,7581,Matiala,0,64027,Daulat Pur,64027,delhi
+276402,1289992,South Delhi Municipal Corporation,039-S,Chhawla,84,South West,97,7581,Matiala,0,64027,Daulat Pur,64027,delhi
+276402,1289992,South Delhi Municipal Corporation,039-S,Chhawla,84,South West,97,7581,Matiala,0,64027,Daulat Pur,64027,delhi
+276402,1289992,South Delhi Municipal Corporation,039-S,Chhawla,84,South West,97,7581,Matiala,0,64027,Daulat Pur,64027,delhi
+276402,1289992,South Delhi Municipal Corporation,039-S,Chhawla,84,South West,97,7581,Matiala,0,64027,Daulat Pur,64027,delhi
+276402,1289992,South Delhi Municipal Corporation,039-S,Chhawla,84,South West,97,7581,Matiala,0,64027,Daulat Pur,64027,delhi
+276402,1289992,South Delhi Municipal Corporation,039-S,Chhawla,84,South West,97,7581,Matiala,0,64027,Daulat Pur,64027,delhi
+276402,1289992,South Delhi Municipal Corporation,039-S,Chhawla,84,South West,97,7581,Matiala,0,64027,Daulat Pur,64027,delhi
+276402,1289992,South Delhi Municipal Corporation,039-S,Chhawla,84,South West,97,7581,Matiala,0,64027,Daulat Pur,64027,delhi
+276402,1289992,South Delhi Municipal Corporation,039-S,Chhawla,84,South West,97,7581,Matiala,0,64027,Daulat Pur,64027,delhi
+276402,1289992,South Delhi Municipal Corporation,039-S,Chhawla,84,South West,97,7581,Matiala,0,64027,Daulat Pur,64027,delhi
+276402,1289992,South Delhi Municipal Corporation,039-S,Chhawla,84,South West,97,7581,Matiala,0,64027,Daulat Pur,64027,delhi
+276402,1289992,South Delhi Municipal Corporation,039-S,Chhawla,84,South West,97,7581,Matiala,0,64027,Daulat Pur,64027,delhi
+276402,1289992,South Delhi Municipal Corporation,039-S,Chhawla,84,South West,97,7581,Matiala,0,64027,Daulat Pur,64027,delhi
+276402,1289992,South Delhi Municipal Corporation,039-S,Chhawla,84,South West,97,7581,Matiala,0,64027,Daulat Pur,64027,delhi
+276402,1289992,South Delhi Municipal Corporation,039-S,Chhawla,84,South West,97,7581,Matiala,0,64027,Daulat Pur,64027,delhi
+276402,1290041,South Delhi Municipal Corporation,088-S,Chirag Delhi,0,,0,0,,0,0,,0,delhi
+276402,1290040,South Delhi Municipal Corporation,087-S,Chitaranjan Park,0,,0,0,,0,0,,0,delhi
+276402,1289983,South Delhi Municipal Corporation,030-S,Dabri,0,,0,0,,0,0,,0,delhi
+276402,1290027,South Delhi Municipal Corporation,074-S,Dakshin Puri Extension,0,,0,0,,0,0,,0,delhi
+276402,1290008,South Delhi Municipal Corporation,055-S,Daryaganj,0,,0,0,,0,0,,0,delhi
+276402,1290029,South Delhi Municipal Corporation,076-S,Deoli,0,,0,454,,0,0,,0,delhi
+276402,1290029,South Delhi Municipal Corporation,076-S,Deoli,0,,0,454,,0,0,,0,delhi
+276402,1289995,South Delhi Municipal Corporation,042-S,Dichaon Kalan,84,South West,97,451,Najafgarh,451,64045,Jharoda Kalan (Ct),64045,delhi
+276402,1289995,South Delhi Municipal Corporation,042-S,Dichaon Kalan,84,South West,97,451,Najafgarh,451,64045,Jharoda Kalan (Ct),64045,delhi
+276402,1289995,South Delhi Municipal Corporation,042-S,Dichaon Kalan,84,South West,97,451,Najafgarh,451,64045,Jharoda Kalan (Ct),64045,delhi
+276402,1289989,South Delhi Municipal Corporation,036-S,Dwarka - A,0,,0,0,,0,0,,0,delhi
+276402,1289991,South Delhi Municipal Corporation,038-S,Dwarka-B,0,,0,0,,0,0,,0,delhi
+276402,1290000,South Delhi Municipal Corporation,047-S,Dwarka-C,0,,0,0,,0,0,,0,delhi
+276402,1289993,South Delhi Municipal Corporation,040-S,Ghuman Hera,84,South West,97,7581,Matiala,0,64039,Jhuljhuli,64039,delhi
+276402,1289993,South Delhi Municipal Corporation,040-S,Ghuman Hera,84,South West,97,7581,Matiala,0,64039,Jhuljhuli,64039,delhi
+276402,1289993,South Delhi Municipal Corporation,040-S,Ghuman Hera,84,South West,97,7581,Matiala,0,64039,Jhuljhuli,64039,delhi
+276402,1289993,South Delhi Municipal Corporation,040-S,Ghuman Hera,84,South West,97,7581,Matiala,0,64039,Jhuljhuli,64039,delhi
+276402,1289993,South Delhi Municipal Corporation,040-S,Ghuman Hera,84,South West,97,7581,Matiala,0,64039,Jhuljhuli,64039,delhi
+276402,1289993,South Delhi Municipal Corporation,040-S,Ghuman Hera,84,South West,97,7581,Matiala,0,64039,Jhuljhuli,64039,delhi
+276402,1289993,South Delhi Municipal Corporation,040-S,Ghuman Hera,84,South West,97,7581,Matiala,0,64039,Jhuljhuli,64039,delhi
+276402,1289994,South Delhi Municipal Corporation,041-S,Gopal Nagar,0,,0,0,,0,0,,0,delhi
+276402,1290044,South Delhi Municipal Corporation,091-S,Govind Puri,0,,0,0,,0,0,,0,delhi
+276402,1290039,South Delhi Municipal Corporation,086-S,Greater Kailash,0,,0,0,,0,0,,0,delhi
+276402,1289963,South Delhi Municipal Corporation,010-S,Hari Nagar-A,0,,0,0,,0,0,,0,delhi
+276402,1290050,South Delhi Municipal Corporation,097-S,Hari Nagar-B,0,,0,0,,0,0,,0,delhi
+276402,1290045,South Delhi Municipal Corporation,092-S,Harkesh Nagar,0,,0,0,,0,0,,0,delhi
+276402,1289974,South Delhi Municipal Corporation,021-S,Hastsal,85,West,96,0,,0,0,,0,delhi
+276402,1289974,South Delhi Municipal Corporation,021-S,Hastsal,85,West,96,0,,0,0,,0,delhi
+276402,1289974,South Delhi Municipal Corporation,021-S,Hastsal,85,West,96,0,,0,0,,0,delhi
+276402,1289974,South Delhi Municipal Corporation,021-S,Hastsal,85,West,96,0,,0,0,,0,delhi
+276402,1289974,South Delhi Municipal Corporation,021-S,Hastsal,85,West,96,0,,0,0,,0,delhi
+276402,1289974,South Delhi Municipal Corporation,021-S,Hastsal,85,West,96,0,,0,0,,0,delhi
+276402,1290015,South Delhi Municipal Corporation,062-S,Hauz Khas,0,,0,0,,0,0,,0,delhi
+276402,1289998,South Delhi Municipal Corporation,045-S,Isapur,84,South West,97,7581,Matiala,0,64009,Kharkhari Nahar,64009,delhi
+276402,1289998,South Delhi Municipal Corporation,045-S,Isapur,84,South West,97,7581,Matiala,0,64009,Kharkhari Nahar,64009,delhi
+276402,1289998,South Delhi Municipal Corporation,045-S,Isapur,84,South West,97,7581,Matiala,0,64009,Kharkhari Nahar,64009,delhi
+276402,1289998,South Delhi Municipal Corporation,045-S,Isapur,84,South West,97,7581,Matiala,0,64009,Kharkhari Nahar,64009,delhi
+276402,1289998,South Delhi Municipal Corporation,045-S,Isapur,84,South West,97,7581,Matiala,0,64009,Kharkhari Nahar,64009,delhi
+276402,1290051,South Delhi Municipal Corporation,098-S,Jaitpur,670,South East,0,0,,0,0,,0,delhi
+276402,1290051,South Delhi Municipal Corporation,098-S,Jaitpur,670,South East,0,0,,0,0,,0,delhi
+276402,1290051,South Delhi Municipal Corporation,098-S,Jaitpur,670,South East,0,0,,0,0,,0,delhi
+276402,1289969,South Delhi Municipal Corporation,016-S,Janakpuri South,0,,0,0,,0,0,,0,delhi
+276402,1289968,South Delhi Municipal Corporation,015-S,Janakpuri West,0,,0,6085,,0,0,,0,delhi
+276402,1289968,South Delhi Municipal Corporation,015-S,Janakpuri West,0,,0,6085,,0,0,,0,delhi
+276402,1289988,South Delhi Municipal Corporation,035-S,Kakraula,0,,0,0,,0,0,,0,delhi
+276402,1290043,South Delhi Municipal Corporation,090-S,Kalkaji,0,,0,0,,0,0,,0,delhi
+276402,1290002,South Delhi Municipal Corporation,049-S,Kapashera,84,South West,97,7580,Bijwasan,0,64059,Kapas Hera (Ct),64059,delhi
+276402,1290002,South Delhi Municipal Corporation,049-S,Kapashera,84,South West,97,7580,Bijwasan,0,64059,Kapas Hera (Ct),64059,delhi
+276402,1290002,South Delhi Municipal Corporation,049-S,Kapashera,84,South West,97,7580,Bijwasan,0,64059,Kapas Hera (Ct),64059,delhi
+276402,1290002,South Delhi Municipal Corporation,049-S,Kapashera,84,South West,97,7580,Bijwasan,0,64059,Kapas Hera (Ct),64059,delhi
+276402,1290011,South Delhi Municipal Corporation,058-S,Kasturba Nagar,0,,0,0,,0,0,,0,delhi
+276402,1289965,South Delhi Municipal Corporation,012-S,Keshopur,0,,0,0,,0,0,,0,delhi
+276402,1290034,South Delhi Municipal Corporation,081-S,Khanpur,0,,0,0,,0,0,,0,delhi
+276402,1289961,South Delhi Municipal Corporation,008-S,Khyala,0,,0,0,,0,0,,0,delhi
+276402,1290013,South Delhi Municipal Corporation,060-S,Kotla Mubarakpur,0,,0,0,,0,0,,0,delhi
+276402,1290020,South Delhi Municipal Corporation,067-S,Lado Sarai,0,,0,0,,0,0,,0,delhi
+276402,1290010,South Delhi Municipal Corporation,057-S,Lajpat Nagar,0,,0,0,,0,0,,0,delhi
+276402,1290032,South Delhi Municipal Corporation,079-S,Madangir,0,,0,0,,0,0,,0,delhi
+276402,1290056,South Delhi Municipal Corporation,103-S,Madanpur Khadar East,670,South East,0,456,Kalkaji,456,64086,Aali (Ct),64086,delhi
+276402,1290056,South Delhi Municipal Corporation,103-S,Madanpur Khadar East,670,South East,0,456,Kalkaji,456,64086,Aali (Ct),64086,delhi
+276402,1290056,South Delhi Municipal Corporation,103-S,Madanpur Khadar East,670,South East,0,456,Kalkaji,456,64086,Aali (Ct),64086,delhi
+276402,1290057,South Delhi Municipal Corporation,104-S,Madanpur Khadar West,0,,0,0,,0,0,,0,delhi
+276402,1290004,South Delhi Municipal Corporation,051-S,Madhu Vihar,0,,0,0,,0,0,,0,delhi
+276402,1289954,South Delhi Municipal Corporation,001-S,Madipur,0,,0,0,,0,0,,0,delhi
+276402,1290005,South Delhi Municipal Corporation,052-S,Mahavir Enclave,0,,0,0,,0,0,,0,delhi
+276402,1289967,South Delhi Municipal Corporation,014-S,Mahavir Nagar,0,,0,0,,0,0,,0,delhi
+276402,1290003,South Delhi Municipal Corporation,050-S,Mahipalpur,79,New Delhi,94,0,,0,0,,0,delhi
+276402,1290003,South Delhi Municipal Corporation,050-S,Mahipalpur,79,New Delhi,94,0,,0,0,,0,delhi
+276402,1290003,South Delhi Municipal Corporation,050-S,Mahipalpur,79,New Delhi,94,0,,0,0,,0,delhi
+276402,1290016,South Delhi Municipal Corporation,063-S,Malviya Nagar,0,,0,0,,0,0,,0,delhi
+276402,1289986,South Delhi Municipal Corporation,033-S,Manglapuri,0,,0,0,,0,0,,0,delhi
+276402,1289990,South Delhi Municipal Corporation,037-S,Matiala,0,,0,0,,0,0,,0,delhi
+276402,1290021,South Delhi Municipal Corporation,068-S,Mehrauli,0,,0,0,,0,0,,0,delhi
+276402,1289971,South Delhi Municipal Corporation,018-S,Milap Nagar,0,,0,0,,0,0,,0,delhi
+276402,1289979,South Delhi Municipal Corporation,026-S,Mohan Garden-North,0,,0,0,,0,0,,0,delhi
+276402,1289978,South Delhi Municipal Corporation,025-S,Mohan Garden-South,0,,0,0,,0,0,,0,delhi
+276402,1290049,South Delhi Municipal Corporation,096-S,Molarband,670,South East,0,0,,0,0,,0,delhi
+276402,1290049,South Delhi Municipal Corporation,096-S,Molarband,670,South East,0,0,,0,0,,0,delhi
+276402,1290049,South Delhi Municipal Corporation,096-S,Molarband,670,South East,0,0,,0,0,,0,delhi
+276402,1290019,South Delhi Municipal Corporation,066-S,Munirka,0,,0,0,,0,0,,0,delhi
+276402,1289996,South Delhi Municipal Corporation,043-S,Najafgarh,84,South West,97,451,Najafgarh,451,0,,0,delhi
+276402,1289996,South Delhi Municipal Corporation,043-S,Najafgarh,84,South West,97,451,Najafgarh,451,0,,0,delhi
+276402,1289996,South Delhi Municipal Corporation,043-S,Najafgarh,84,South West,97,451,Najafgarh,451,0,,0,delhi
+276402,1289996,South Delhi Municipal Corporation,043-S,Najafgarh,84,South West,97,451,Najafgarh,451,0,,0,delhi
+276402,1289996,South Delhi Municipal Corporation,043-S,Najafgarh,84,South West,97,451,Najafgarh,451,0,,0,delhi
+276402,1289996,South Delhi Municipal Corporation,043-S,Najafgarh,84,South West,97,451,Najafgarh,451,0,,0,delhi
+276402,1289996,South Delhi Municipal Corporation,043-S,Najafgarh,84,South West,97,451,Najafgarh,451,0,,0,delhi
+276402,1289996,South Delhi Municipal Corporation,043-S,Najafgarh,84,South West,97,451,Najafgarh,451,0,,0,delhi
+276402,1289996,South Delhi Municipal Corporation,043-S,Najafgarh,84,South West,97,451,Najafgarh,451,0,,0,delhi
+276402,1289996,South Delhi Municipal Corporation,043-S,Najafgarh,84,South West,97,451,Najafgarh,451,0,,0,delhi
+276402,1289996,South Delhi Municipal Corporation,043-S,Najafgarh,84,South West,97,451,Najafgarh,451,0,,0,delhi
+276402,1289996,South Delhi Municipal Corporation,043-S,Najafgarh,84,South West,97,451,Najafgarh,451,0,,0,delhi
+276402,1289996,South Delhi Municipal Corporation,043-S,Najafgarh,84,South West,97,451,Najafgarh,451,0,,0,delhi
+276402,1289987,South Delhi Municipal Corporation,034-S,Nangli Sakrawati,84,South West,97,7581,Matiala,0,64011,Goela Khurd,64011,delhi
+276402,1289987,South Delhi Municipal Corporation,034-S,Nangli Sakrawati,84,South West,97,7581,Matiala,0,64011,Goela Khurd,64011,delhi
+276402,1289987,South Delhi Municipal Corporation,034-S,Nangli Sakrawati,84,South West,97,7581,Matiala,0,64011,Goela Khurd,64011,delhi
+276402,1289987,South Delhi Municipal Corporation,034-S,Nangli Sakrawati,84,South West,97,7581,Matiala,0,64011,Goela Khurd,64011,delhi
+276402,1289987,South Delhi Municipal Corporation,034-S,Nangli Sakrawati,84,South West,97,7581,Matiala,0,64011,Goela Khurd,64011,delhi
+276402,1289987,South Delhi Municipal Corporation,034-S,Nangli Sakrawati,84,South West,97,7581,Matiala,0,64011,Goela Khurd,64011,delhi
+276402,1289987,South Delhi Municipal Corporation,034-S,Nangli Sakrawati,84,South West,97,7581,Matiala,0,64011,Goela Khurd,64011,delhi
+276402,1289987,South Delhi Municipal Corporation,034-S,Nangli Sakrawati,84,South West,97,7581,Matiala,0,64011,Goela Khurd,64011,delhi
+276402,1289980,South Delhi Municipal Corporation,027-S,Nawada,0,,0,0,,0,0,,0,delhi
+276402,1290052,South Delhi Municipal Corporation,099-S,Om Vihar,670,South East,0,0,,0,0,,0,delhi
+276402,1290052,South Delhi Municipal Corporation,099-S,Om Vihar,670,South East,0,0,,0,0,,0,delhi
+276402,1290052,South Delhi Municipal Corporation,099-S,Om Vihar,670,South East,0,0,,0,0,,0,delhi
+276402,1290007,South Delhi Municipal Corporation,054-S,Palam,0,,0,0,,0,0,,0,delhi
+276402,1289964,South Delhi Municipal Corporation,011-S,Pratap Nagar,0,,0,0,,0,0,,0,delhi
+276402,1290047,South Delhi Municipal Corporation,094-S,Pul Pehladpur,670,South East,0,456,Kalkaji,456,0,,0,delhi
+276402,1290047,South Delhi Municipal Corporation,094-S,Pul Pehladpur,670,South East,0,456,Kalkaji,456,0,,0,delhi
+276402,1290047,South Delhi Municipal Corporation,094-S,Pul Pehladpur,670,South East,0,456,Kalkaji,456,0,,0,delhi
+276402,1289955,South Delhi Municipal Corporation,002-S,Punjabi Bagh,0,,0,0,,0,0,,0,delhi
+276402,1290033,South Delhi Municipal Corporation,080-S,Pushp Vihar,0,,0,0,,0,0,,0,delhi
+276402,1289957,South Delhi Municipal Corporation,004-S,Raghubir Nagar,0,,0,0,,0,0,,0,delhi
+276402,1289956,South Delhi Municipal Corporation,003-S,Raja Garden,0,,0,0,,0,0,,0,delhi
+276402,1289999,South Delhi Municipal Corporation,046-S,Raj Nagar,0,,0,0,,0,0,,0,delhi
+276402,1289958,South Delhi Municipal Corporation,005-S,Rajouri Garden,0,,0,0,,0,0,,0,delhi
+276402,1289972,South Delhi Municipal Corporation,019-S,Ranhola,0,,0,0,,0,0,,0,delhi
+276402,1290018,South Delhi Municipal Corporation,065-S,R.K. Puram,0,,0,0,,0,0,,0,delhi
+276402,1289997,South Delhi Municipal Corporation,044-S,Roshanpura,0,,0,0,,0,0,,0,delhi
+276402,1290006,South Delhi Municipal Corporation,053-S,Sadh Nagar,0,,0,0,,0,0,,0,delhi
+276402,1290014,South Delhi Municipal Corporation,061-S,Safdarjung Enclave,0,,0,0,,0,0,,0,delhi
+276402,1289985,South Delhi Municipal Corporation,032-S,Sagarpur-East,0,,0,0,,0,0,,0,delhi
+276402,1289984,South Delhi Municipal Corporation,031-S,Sagarpur-West,0,,0,0,,0,0,,0,delhi
+276402,1290024,South Delhi Municipal Corporation,071-S,Said-Ul-Ajaib,83,South,98,7587,Chhatarpur,0,64075,Raj Pur Khurd (Ct),64075,delhi
+276402,1290024,South Delhi Municipal Corporation,071-S,Said-Ul-Ajaib,83,South,98,7587,Chhatarpur,0,64075,Raj Pur Khurd (Ct),64075,delhi
+276402,1290024,South Delhi Municipal Corporation,071-S,Said-Ul-Ajaib,83,South,98,7587,Chhatarpur,0,64075,Raj Pur Khurd (Ct),64075,delhi
+276402,1290024,South Delhi Municipal Corporation,071-S,Said-Ul-Ajaib,83,South,98,7587,Chhatarpur,0,64075,Raj Pur Khurd (Ct),64075,delhi
+276402,1290024,South Delhi Municipal Corporation,071-S,Said-Ul-Ajaib,83,South,98,7587,Chhatarpur,0,64075,Raj Pur Khurd (Ct),64075,delhi
+276402,1290024,South Delhi Municipal Corporation,071-S,Said-Ul-Ajaib,83,South,98,7587,Chhatarpur,0,64075,Raj Pur Khurd (Ct),64075,delhi
+276402,1289975,South Delhi Municipal Corporation,022-S,Sainik Enclave,0,,0,0,,0,0,,0,delhi
+276402,1290030,South Delhi Municipal Corporation,077-S,Sangam Vihar-A,0,,0,0,,0,0,,0,delhi
+276402,1290031,South Delhi Municipal Corporation,078-S,Sangam Vihar-B,0,,0,0,,0,0,,0,delhi
+276402,1290036,South Delhi Municipal Corporation,083-S,Sangam Vihar-C,670,South East,0,456,Kalkaji,456,64081,Kotla Mahigiran (Ct),64081,delhi
+276402,1290036,South Delhi Municipal Corporation,083-S,Sangam Vihar-C,670,South East,0,456,Kalkaji,456,64081,Kotla Mahigiran (Ct),64081,delhi
+276402,1290036,South Delhi Municipal Corporation,083-S,Sangam Vihar-C,670,South East,0,456,Kalkaji,456,64081,Kotla Mahigiran (Ct),64081,delhi
+276402,1290037,South Delhi Municipal Corporation,084-S,Sangam Vihar-D,0,,0,0,,0,0,,0,delhi
+276402,1290038,South Delhi Municipal Corporation,085-S,Sangam Vihar-E,0,,0,0,,0,0,,0,delhi
+276402,1290054,South Delhi Municipal Corporation,101-S,Sarita Vihar,0,,0,0,,0,0,,0,delhi
+276402,1290009,South Delhi Municipal Corporation,056-S,Sidharth Nagar,0,,0,0,,0,0,,0,delhi
+276402,1289970,South Delhi Municipal Corporation,017-S,Sitapuri,0,,0,0,,0,0,,0,delhi
+276402,1290042,South Delhi Municipal Corporation,089-S,Sri Niwas Puri,0,,0,0,,0,0,,0,delhi
+276402,1289962,South Delhi Municipal Corporation,009-S,Subhash Nagar,0,,0,0,,0,0,,0,delhi
+276402,1289959,South Delhi Municipal Corporation,006-S,Tagore Garden,0,,0,0,,0,0,,0,delhi
+276402,1290028,South Delhi Municipal Corporation,075-S,Tigri,83,South,98,7588,Deoli,0,64079,Tigri (Ct),64079,delhi
+276402,1290028,South Delhi Municipal Corporation,075-S,Tigri,83,South,98,7588,Deoli,0,64079,Tigri (Ct),64079,delhi
+276402,1289966,South Delhi Municipal Corporation,013-S,Tilak Nagar,0,,0,0,,0,0,,0,delhi
+276402,1290046,South Delhi Municipal Corporation,093-S,Tughlakabad,0,,0,0,,0,0,,0,delhi
+276402,1290035,South Delhi Municipal Corporation,082-S,Tughlakabad Extension,0,,0,0,,0,0,,0,delhi
+276402,1289981,South Delhi Municipal Corporation,028-S,Uttam Nagar,0,,0,0,,0,0,,0,delhi
+276402,1290022,South Delhi Municipal Corporation,069-S,Vasant Kunj,79,New Delhi,94,0,,0,0,,0,delhi
+276402,1290022,South Delhi Municipal Corporation,069-S,Vasant Kunj,79,New Delhi,94,0,,0,0,,0,delhi
+276402,1290022,South Delhi Municipal Corporation,069-S,Vasant Kunj,79,New Delhi,94,0,,0,0,,0,delhi
+276402,1290022,South Delhi Municipal Corporation,069-S,Vasant Kunj,79,New Delhi,94,0,,0,0,,0,delhi
+276402,1290017,South Delhi Municipal Corporation,064-S,Vasant Vihar,0,,0,0,,0,0,,0,delhi
+276402,1289976,South Delhi Municipal Corporation,023-S,Vikas Nagar,0,,0,0,,0,0,,0,delhi
+276402,1289973,South Delhi Municipal Corporation,020-S,Vikaspuri,0,,0,0,,0,0,,0,delhi
+276402,1289960,South Delhi Municipal Corporation,007-S,Vishnu Garden,0,,0,0,,0,0,,0,delhi
+276402,1290053,South Delhi Municipal Corporation,100-S,Zakir Nagar,0,,0,0,,0,0,,0,delhi
