@@ -553,9 +553,12 @@ def build_tolls() -> pd.DataFrame:
         if best[0] >= _CFG["toll_name_match"]:
             plazas.at[i, "ihmcl_code"] = best[1]
             taken.add(best[1])
+    codeless = ihmcl.loc[ihmcl["code"].isna(), ["name", "state", "district", "section", "nh"]]
+    codeless.to_csv(OUT / "ihmcl_codeless_plazas.csv", index=False)
     ihmcl.to_csv(OUT / "ihmcl_plazas.csv", index=False)
     plazas.to_parquet(OUT / "osm_toll_plazas.parquet")
-    print(f"tolls: IHMCL {len(ihmcl):,} plazas; OSM {len(plazas):,} plazas from {len(pts):,} booths; "
+    print(f"tolls: IHMCL {len(ihmcl):,} plazas ({len(codeless)} with no code, unmatchable — see "
+          f"ihmcl_codeless_plazas.csv); OSM {len(plazas):,} plazas from {len(pts):,} booths; "
           f"{plazas['ihmcl_code'].notna().sum():,} matched by name")
     return plazas
 

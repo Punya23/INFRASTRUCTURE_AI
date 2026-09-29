@@ -132,7 +132,7 @@ Every recommendation carries drivers and evidence (README §8.3).
 - [x] **M1 — fixtures (first two days):** `web/fixtures/national_highways/nh_segments.geojson` and `toll_plazas.geojson`, simplified, ≤ 5 MB each.
 - [x] **M2 — analysis:** notebooks 01–04 and 06; `nh_access` metrics; first findings; city-pair routing on the full road graph (trunk to tertiary).
 - [x] **M2 — corridor effect:** notebook 05 with 12 dated openings (2001–2019) from Wikipedia's "Expressways of India".
-- [ ] **M3 — pipeline:** projects and cited events (press releases, news, tenders, 3A/3D notifications); notebook 07; delay flags.
+- [ ] **M3 — pipeline:** projects (`07_pipeline` and `nhai_project_stages` land in M2) and cited events (press releases, news, tenders, 3A/3D notifications) still open. _Delay flags blocked: NHAI's `upc_wise_alignments_wfs_layer` has no date field at all (checked its full schema via WFS `DescribeFeatureType`, not just our keep-list) — only a free-text `current_st` stage string. A real delay flag needs a planned-vs-actual date; inventing one would violate AGENTS.md's "AI never originates facts". Needs a dated source (a project-level table on data.gov.in/PIB, or NHAI's own dashboard UI) before this is buildable._
 - [ ] **M4 — recommendations:** crossings and upgrades with drivers; the area-profile section is live.
 - [ ] **Done bar:** every item in [`README.md`](README.md#the-done-bar--every-field-delivers-all-of-this); 5–10 findings below.
 
@@ -149,7 +149,7 @@ As of 2026-09-29, from the OSM extract of 2026-09-28. Notebooks are in `ml/noteb
 7. **NH road deaths rose every year, 2020–2024:** from 50,251 to 64,772. That is 36.6% of all road deaths on about 2% of road length. 77% of NH deaths in 2024 were on NHAI-managed NHs. — `06_safety` (RAI 2024, Tables 2.5 and 2.10)
 8. **City-pair circuity drops once routing uses the full road graph.** Median 1.18 over 1,543 pairs (was 1.31 on the NH-only graph, which broke where NHs cross cities on untagged roads). — `04_access`
 9. **Corridor effect, now with dated openings:** 12 expressways opened 2001–2019 (999 eff-km — Outer Ring Road, Agra–Lucknow, Yamuna, Mumbai–Pune among the largest), matched by name to Wikipedia's "Expressways of India" since OSM tags `opening_date`/`start_date` on only 5,218 of 32,302 expressway segments. Near-minus-far built-up growth (0–2 km vs 2–10 km, GHSL 2000→2020) is −0.02 pp for these corridors and −0.06 pp for ones not yet open: a difference of 0.04 pp, i.e. no measurable concentration of growth right along new expressways at 1 km resolution (descriptive, not causal; growth rose about equally across the whole 0–10 km band — 1.9 pp vs 1.0 pp around unopened corridors). — `05_corridor_effect`
-10. **Toll coverage: OSM has 90.1% of the IHMCL plaza count nationally**, with 151 of 1,044 OSM plazas matched to an IHMCL code by name; Bihar (56%) and Odisha (69%) lag. — toll_coverage_by_state
+10. **Toll coverage: OSM has 90.1% of the IHMCL plaza count nationally**, with 151 of 1,044 OSM plazas matched to an IHMCL code by name; Bihar (56%) and Odisha (69%) lag. `build_tolls` now excludes any IHMCL row with a blank code from name matching before it can silently absorb a real match (`ihmcl_codeless_plazas.csv` lists them — usually none on this PDF's current parse, but the crash it once caused with `write_fixtures`' `set_index("code")` is worth guarding regardless). — toll_coverage_by_state
 11. **State NH death rates, now from RAI's own annexures, not NHAI's partial crash layer.** Delhi (164/100 km) and Puducherry (164/100 km) are the highest; the state annexures were OCR'd (gridlines stripped) and verified against RAI's printed Table 2.5 total. — `06_safety`
 
 ## Open questions
@@ -159,3 +159,4 @@ As of 2026-09-29, from the OSM extract of 2026-09-28. Notebooks are in `ml/noteb
 - Lanes: OSM tags lanes on 48.7% of NH length; NHAI's layer covers every completed stretch. Use NHAI bands for analysis and OSM only for display — or wait for the data.gov.in state lane table?
 - Traffic volumes are not public — which proxies for capacity analysis (night lights, population, toll density)?
 - State-built expressways: inside this field with `owner_level` (default), or a separate field?
+- Delay flags (M3): which source actually carries a per-project planned-completion or award date — data.gov.in, PIB, or scraping NHAI's dashboard UI (the GeoServer layer has none)?
