@@ -406,7 +406,7 @@
       display: flex; flex-direction: column; gap: var(--space-md);
     }
     @media (min-width: 768px) { .explorer-header { flex-direction: row; align-items: flex-end; justify-content: space-between; } }
-    .explorer-header .see-all-btn { align-self: flex-start; display: inline-flex; align-items: center; gap: .375rem; white-space: nowrap; }
+    .explorer-header .see-all-btn { width: auto; flex: 0 0 auto; padding-inline: 1rem; align-self: flex-start; display: inline-flex; align-items: center; gap: .375rem; white-space: nowrap; }
     @media (min-width: 768px) { .explorer-header .see-all-btn { align-self: flex-end; } }
     .city-rail-wrap { position: relative; margin-top: var(--space-lg); }
     .city-rail {
@@ -432,7 +432,7 @@
     .city-card a.city-link { color: inherit; text-decoration: none; }
 
     /* All-cities overlay */
-    .cities-overlay { position: fixed; inset: 0; z-index: 300; background: rgba(20,32,43,.55); display: flex; align-items: stretch; justify-content: center; padding: 0; }
+    .cities-overlay { position: fixed; inset: 0; z-index: 1100; background: rgba(20,32,43,.55); display: flex; align-items: stretch; justify-content: center; padding: 0; }
     .cities-overlay[hidden] { display: none; }
     .cities-panel { background: var(--surface-container-lowest); width: 100%; max-width: 90rem; display: flex; flex-direction: column; }
     @media (min-width: 900px) { .cities-overlay { padding: 1.5rem; } .cities-panel { border-radius: var(--radius-xl); overflow: hidden; } }
@@ -451,7 +451,7 @@
     .cities-list .meta { flex: 1; min-width: 0; }
     .cities-list .meta div:first-child { font-weight: 600; }
     .cities-list .meta div:last-child { color: var(--on-surface-variant); }
-    .cities-list .sc { font-family: var(--font-mono, monospace); color: var(--primary); }
+    .cities-list .sc { font-family: 'JetBrains Mono', monospace; color: var(--primary); }
     .cities-empty { padding: var(--space-md); color: var(--on-surface-variant); }
     .city-card {
       background: var(--surface-container-lowest); border-radius: var(--radius-xl);
@@ -1132,24 +1132,190 @@
       if (e.key === 'Escape') searchOverlay.classList.remove('open');
     });
 
-    // --- City cards: real scores from /v1/cities/{id} (balanced preset) ---
-    document.querySelectorAll('.city-card[data-city]').forEach(async (card) => {
-      const set = (f, text) => { card.querySelector(`[data-f="${f}"]`).textContent = text; };
-      try {
-        const r = await fetch(`${API_BASE}/v1/cities/${encodeURIComponent(card.dataset.city)}?preset=balanced`);
-        if (!r.ok) throw new Error(`HTTP ${r.status}`);
-        const c = await r.json();
-        set('name', c.name);
-        set('state', await stateName(c.state));
-        set('score', `Score ${c.score} / 100`);
-        set('best', c.best_area && c.best_area.name ? `Top area: ${c.best_area.name} (${c.best_area.score})` : '');
-        set('transit', `${c.data.metro_stations} metro · ${c.data.rail_stations} rail stations`);
-        set('pop', `Population ${(c.population / 1e5).toFixed(1)} lakh`);
-      } catch (err) {
-        console.error('city card', card.dataset.city, err);
-        set('score', 'Data unavailable');
+    // --- City rail + all-cities map: one flat fixture (scripts/build_city_index.py), balanced preset ---
+    // Only four cities have licensed photos (credited under the rail); the rest get a generated tile, never a borrowed image.
+    const PHOTOS = {
+      pune: 'Shaniwar Wada fort gateway in Pune', bengaluru: 'Vidhana Soudha, the state legislature building in Bengaluru',
+      lucknow: 'Rumi Darwaza gateway in Lucknow', ahmedabad: 'Sabarmati riverfront and Atal Pedestrian Bridge in Ahmedabad',
+    };
+    const RAIL_LIMIT = 24; // photo cities first, then the top scorers; everything else is under "See all"
+    const SKYLINE = 'M0 100V70h8V50h10v20h6V38h12v32h8V58h10v12h6V30h10v40h8V55h12v15h6V44h10v26h8V62h12v8h8V48h10v22h6V36h12v34h8V60h10v10h6V52h12v18h8V42h10v28h8V64h10v6h6V56h12v14V100z';
+    const hueOf = (name) => [...name].reduce((h, ch) => (h * 31 + ch.charCodeAt(0)) % 360, 7);
+    const mk = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+    const lakh = (n) => `${(n / 1e5).toFixed(1)} lakh`;
+
+    // Photo if we have one, else a tinted skyline with the city's initial. Sized by the parent.
+    function cityArt(c) {
+      if (PHOTOS[c.id]) {
+        const img = mk('img', 'city-photo');
+        Object.assign(img, { src: `img/cities/${c.id}.jpg`, alt: PHOTOS[c.id], loading: 'lazy' });
+        return img;
       }
+      const art = mk('div', 'city-art');
+      art.style.setProperty('--h', hueOf(c.state));
+      art.innerHTML = `<svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="${SKYLINE}"/></svg>`;
+      art.append(mk('b', '', c.name[0]));
+      art.setAttribute('role', 'img');
+      art.setAttribute('aria-label', `${c.name}, ${c.state}`);
+      return art;
+    }
+
+    const cityHref = (c) => `invest/city.html?c=${encodeURIComponent(c.id)}&preset=balanced`;
+
+    function cityCard(c) {
+      const card = mk('div', 'city-card');
+      card.dataset.city = c.id;
+      const img = mk('div', 'city-image');
+      img.append(cityArt(c), mk('div', 'city-state-badge text-body-sm', c.state), mk('div', 'city-sites-badge text-data-mono', `Score ${c.score} / 100`));
+      const row = mk('div', 'city-name-row');
+      row.append(mk('h3', 'text-headline-md', c.name));
+      const arrow = mk('span', 'material-symbols-outlined', 'east'); arrow.style.color = 'var(--outline)';
+      row.append(arrow);
+      const best = mk('p', 'text-body-sm', c.best ? `Top area: ${c.best[0]} (${c.best[1]})` : '');
+      best.style.color = 'var(--on-surface-variant)';
+      const metrics = mk('div', 'city-metrics');
+      for (const [dot, text] of [['teal', c.metro != null ? `${c.metro} metro · ${c.rail} rail stations` : null], ['saffron', `Population ${lakh(c.pop)}`]]) {
+        if (!text) continue;
+        const m = mk('div', 'city-metric text-body-sm'); m.append(mk('span', `city-metric-dot ${dot}`), mk('span', '', text));
+        metrics.append(m);
+      }
+      const info = mk('div', 'city-info'); info.append(row, best, metrics);
+      const top = mk('div'); top.append(img, info);
+      const cta = mk('div', 'city-cta'), a = mk('a', 'btn-ghost text-body-sm', `Explore ${c.name} scores`);
+      a.href = cityHref(c); cta.append(a);
+      card.append(top, cta);
+      return card;
+    }
+
+    const railEl = $('city-rail');
+    const seeAllBtn = $('see-all-cities');
+    let cityRows = []; // every city, best score first
+
+    function updateRailButtons() {
+      $('rail-prev').disabled = railEl.scrollLeft < 4;
+      $('rail-next').disabled = railEl.scrollLeft + railEl.clientWidth >= railEl.scrollWidth - 4;
+    }
+    const scrollRail = (dir) => railEl.scrollBy({ left: dir * railEl.clientWidth * 0.85 });
+    $('rail-prev').addEventListener('click', () => scrollRail(-1));
+    $('rail-next').addEventListener('click', () => scrollRail(1));
+    railEl.addEventListener('scroll', updateRailButtons, { passive: true });
+    railEl.addEventListener('keydown', (e) => { if (e.key === 'ArrowRight') scrollRail(1); if (e.key === 'ArrowLeft') scrollRail(-1); });
+
+    // --- all-cities overlay: MapLibre circles, one per city, sized by population and shaded by score ---
+    const overlay = $('cities-overlay');
+    const listEl = $('cities-list');
+    let citiesMap = null; // promise of { map, popup }, built on first open (the container is hidden before that)
+
+    function openPopup(ctl, c) {
+      const box = mk('div');
+      const link = mk('a', '', 'Explore scores'); link.href = cityHref(c);
+      const live = mk('button', '', 'Show on live map'); live.type = 'button';
+      live.style.cssText = 'display:block;margin-top:.25rem;background:none;border:0;padding:0;color:var(--primary);text-decoration:underline;cursor:pointer;font:inherit;';
+      live.addEventListener('click', () => { closeCities(); searchInput.value = c.name; searchMsg.textContent = ''; loadPlace(c.id); goToMap(); });
+      box.append(mk('strong', '', c.name), mk('div', '', `${c.state} · Score ${c.score} / 100`), mk('div', '', `Population ${lakh(c.pop)}`), link, live);
+      ctl.popup.setLngLat([c.lon, c.lat]).setDOMContent(box).addTo(ctl.map);
+    }
+
+    const geo = (rows) => ({ type: 'FeatureCollection', features: rows.map((c) => ({ type: 'Feature', properties: { id: c.id, score: c.score, pop: c.pop }, geometry: { type: 'Point', coordinates: [c.lon, c.lat] } })) });
+
+    async function initCitiesMap() {
+      const [{ baseLayers, RAMP, BREAKS }, style] = await Promise.all([import('./invest/js/map.js'), getJSON('https://tiles.openfreemap.org/styles/liberty')]);
+      const map = new maplibregl.Map({
+        container: 'cities-map', style: { ...style, layers: baseLayers(style.layers) },
+        bounds: [[67.5, 6], [98, 36]], fitBoundsOptions: { padding: 20 }, attributionControl: { compact: true },
+      });
+      map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
+      await new Promise((resolve, reject) => { map.once('load', resolve); map.once('error', (e) => reject(e.error)); });
+      map.addSource('cities', { type: 'geojson', data: geo(cityRows) });
+      map.addLayer({
+        id: 'cities', type: 'circle', source: 'cities',
+        paint: {
+          'circle-radius': ['interpolate', ['linear'], ['zoom'], 3, ['interpolate', ['linear'], ['get', 'pop'], 1e5, 3, 2e7, 9], 8, ['interpolate', ['linear'], ['get', 'pop'], 1e5, 7, 2e7, 18]],
+          'circle-color': ['step', ['get', 'score'], RAMP[0], BREAKS[0], RAMP[1], BREAKS[1], RAMP[2], BREAKS[2], RAMP[3], BREAKS[3], RAMP[4]],
+          'circle-stroke-color': RAMP[4], 'circle-stroke-width': 1, 'circle-opacity': 0.9,
+        },
+      });
+      const ctl = { map, popup: new maplibregl.Popup({ maxWidth: '16rem' }) };
+      map.on('click', 'cities', (e) => { const c = cityRows.find((r) => r.id === e.features[0].properties.id); if (c) openPopup(ctl, c); });
+      map.on('mouseenter', 'cities', () => { map.getCanvas().style.cursor = 'pointer'; });
+      map.on('mouseleave', 'cities', () => { map.getCanvas().style.cursor = ''; });
+      return ctl;
+    }
+
+    function renderList(rows) {
+      if (!rows.length) { listEl.replaceChildren(mk('li', 'cities-empty text-body-md', 'No city matches that filter.')); return; }
+      listEl.replaceChildren(...rows.map((c) => {
+        const li = mk('li'), b = mk('button'), thumb = mk('span', 'thumb'), meta = mk('span', 'meta');
+        b.type = 'button';
+        thumb.append(cityArt(c));
+        meta.append(mk('div', 'text-body-md', c.name), mk('div', 'text-label-sm', c.state));
+        b.append(thumb, meta, mk('span', 'sc text-data-mono', String(c.score)));
+        b.addEventListener('click', async () => {
+          if (matchMedia('(max-width: 899px)').matches) document.querySelector('.cities-map').scrollIntoView({ block: 'nearest' });
+          const ctl = await citiesMap;
+          if (!ctl) return;
+          ctl.map.flyTo({ center: [c.lon, c.lat], zoom: 8.5, duration: 900 });
+          openPopup(ctl, c);
+        });
+        li.append(b);
+        return li;
+      }));
+    }
+
+    let lastFocus = null;
+    function openCities() {
+      lastFocus = document.activeElement;
+      overlay.hidden = false;
+      document.body.style.overflow = 'hidden';
+      renderList(cityRows);
+      $('cities-search').value = '';
+      $('cities-search').focus();
+      citiesMap ??= initCitiesMap().catch((err) => {
+        console.error('[cities map]', err);
+        const n = mk('p', 'text-body-md', 'The map could not load. The list still works; check your connection and reload for the map.');
+        n.style.cssText = 'padding:1rem;color:var(--on-surface-variant);';
+        $('cities-map').replaceChildren(n);
+        return null;
+      });
+      citiesMap.then((ctl) => ctl?.map.resize());
+    }
+    function closeCities() {
+      overlay.hidden = true;
+      document.body.style.overflow = '';
+      lastFocus?.focus?.();
+    }
+    $('cities-close').addEventListener('click', closeCities);
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) closeCities(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !overlay.hidden) closeCities(); });
+    seeAllBtn.addEventListener('click', openCities);
+    $('cities-search').addEventListener('input', async (e) => {
+      const q = e.target.value.trim().toLowerCase();
+      const rows = q ? cityRows.filter((c) => c.name.toLowerCase().includes(q) || c.state.toLowerCase().includes(q)) : cityRows;
+      renderList(rows);
+      const ctl = await citiesMap;
+      ctl?.map.getSource('cities')?.setData(geo(rows)); // pins follow the filter
     });
+
+    (async function initCityRail() {
+      try {
+        const idx = await getJSON('fixtures/city-index.json');
+        cityRows = idx.cities;
+        $('cities-title').textContent = `All ${cityRows.length} cities`;
+        $('see-all-label').textContent = `See all ${cityRows.length} cities`;
+        const photo = cityRows.filter((c) => PHOTOS[c.id]);
+        const rest = cityRows.filter((c) => !PHOTOS[c.id]).slice(0, RAIL_LIMIT - photo.length);
+        const end = mk('button', 'city-card see-all');
+        end.type = 'button';
+        end.append(mk('span', 'material-symbols-outlined', 'map'), mk('h3', 'text-headline-md', `See all ${cityRows.length} cities`), mk('p', 'text-body-sm', 'Pin any city on the map'));
+        end.addEventListener('click', openCities);
+        railEl.replaceChildren(...[...photo, ...rest].map(cityCard), end);
+        updateRailButtons();
+      } catch (err) {
+        console.error('[city rail]', err);
+        railEl.replaceChildren(mk('p', 'text-body-md', 'Cities could not load. Reload to try again.'));
+        seeAllBtn.disabled = true;
+      }
+    })();
 
     // --- Place panel: any city, from /v1/cities/{id} and /v1/cities/{id}/projects ---
     let placeSeq = 0;
