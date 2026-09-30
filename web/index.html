@@ -1455,7 +1455,7 @@
   <!-- SEARCH OVERLAY -->
   <div class="search-overlay" id="search-overlay">
     <div class="search-modal">
-      <input class="search-modal-input" id="search-modal-input" type="text" placeholder="Search infrastructure, gazettes, corridors..." autofocus/>
+      <input class="search-modal-input" id="search-modal-input" type="text" placeholder="Search for a city..." autofocus/>
       <div class="search-results" id="search-results"></div>
       <div class="text-body-sm" style="color:var(--on-surface-variant);margin-top:var(--space-md);text-align:center;">Press <kbd class="kbd-hint text-data-mono" style="padding:2px 6px;">Esc</kbd> to close</div>
     </div>
@@ -1548,31 +1548,49 @@
     const searchOverlay = document.getElementById('search-overlay');
     const searchModalInput = document.getElementById('search-modal-input');
     const searchResults = document.getElementById('search-results');
-    const searchData = [
-      { icon: "location_city", name: "Pune, Maharashtra", type: "City", count: "14 projects" },
-      { icon: "location_city", name: "Bengaluru (East), Karnataka", type: "City", count: "19 projects" },
-      { icon: "location_city", name: "Lucknow, Uttar Pradesh", type: "City", count: "9 projects" },
-      { icon: "train", name: "Pune Metro Line 3 (Hinjawadi–Shivajinagar)", type: "Project", count: "Under Construction" },
-      { icon: "directions_car", name: "NH-48 Pune–Mumbai Bypass", type: "Corridor", count: "In Progress" },
-      { icon: "water_drop", name: "Mula-Mutha Riverfront Development", type: "Project", count: "Planned" },
-      { icon: "directions_bus", name: "Hadapsar Feeder Bus Network", type: "Citizen Need", count: "83 petitions" },
-      { icon: "article", name: "MoRTH Gazette 2024 — National Highway Expansion", type: "Gazette", count: "Published" },
-      { icon: "location_city", name: "Ahmedabad, Gujarat", type: "City", count: "11 projects" },
-    ];
+    // Real city search: /v1/cities?q= (same API the invest pages use; see web/invest/js/config.js for the dev ports).
+    const SEARCH_API = ({ 8765: 'http://localhost:8080', 8766: 'http://localhost:8081' })[location.port] || '';
+    let searchSeq = 0;
+    let searchTimer;
+
+    function searchMessage(text) {
+      const p = document.createElement('p');
+      p.className = 'text-body-md';
+      p.style.cssText = 'color:var(--on-surface-variant);padding:0.75rem;';
+      p.textContent = text;
+      searchResults.replaceChildren(p);
+    }
 
     function renderSearchResults(query) {
-      const q = query.toLowerCase();
-      const filtered = q ? searchData.filter(d => d.name.toLowerCase().includes(q) || d.type.toLowerCase().includes(q)) : searchData;
-      searchResults.innerHTML = filtered.map(d => `
-        <div class="search-result-item" onclick="document.getElementById('civic-search-input').value='${d.name}';searchOverlay.classList.remove('open');">
-          <span class="material-symbols-outlined" style="font-size:20px;color:var(--primary);">${d.icon}</span>
-          <div style="flex:1;">
-            <div class="text-body-md" style="font-weight:500;">${d.name}</div>
-            <div class="text-label-sm" style="color:var(--on-surface-variant);">${d.type} · ${d.count}</div>
-          </div>
-          <span class="material-symbols-outlined" style="font-size:16px;color:var(--outline);">arrow_forward</span>
-        </div>
-      `).join('');
+      clearTimeout(searchTimer);
+      const seq = ++searchSeq; // an answer still on its way for an older query is dropped
+      const q = query.trim();
+      if (q.length < 2) return searchMessage('Type at least 2 letters of a city name.');
+      searchMessage('Searching…');
+      searchTimer = setTimeout(async () => {
+        try {
+          const res = await fetch(`${SEARCH_API}/v1/cities?q=${encodeURIComponent(q)}&limit=8`);
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          const { cities } = await res.json();
+          if (seq !== searchSeq) return;
+          if (!cities.length) return searchMessage(`No city matches "${q}".`);
+          searchResults.replaceChildren(...cities.map((c) => {
+            const a = document.createElement('a');
+            a.className = 'search-result-item';
+            a.href = `invest/city.html?c=${encodeURIComponent(c.id)}`;
+            a.style.cssText = 'color:inherit;text-decoration:none;';
+            a.innerHTML = `<span class="material-symbols-outlined" style="font-size:20px;color:var(--primary);">location_city</span>
+              <div style="flex:1;"><div class="text-body-md" style="font-weight:500;"></div><div class="text-label-sm" style="color:var(--on-surface-variant);"></div></div>
+              <span class="material-symbols-outlined" style="font-size:16px;color:var(--outline);">arrow_forward</span>`;
+            const [name, meta] = a.querySelectorAll('div > div');
+            name.textContent = c.name;
+            meta.textContent = `City · ${c.state}${c.matched && c.matched !== c.name ? ` · ${c.matched}` : ''}`;
+            return a;
+          }));
+        } catch {
+          if (seq === searchSeq) searchMessage('Search is unavailable right now. Check that the API is running, then try again.');
+        }
+      }, 200);
     }
 
     document.getElementById('search-trigger-btn').addEventListener('click', () => {
