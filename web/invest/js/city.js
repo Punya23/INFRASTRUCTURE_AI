@@ -225,7 +225,7 @@ function boot() {
   // One data section: a sequence number drops answers that a newer request has replaced, the
   // skeleton shows only until there is something to keep, and a failure keeps the last good view.
   // run() resolves to true when it rendered, false when it failed, undefined when a newer run took over.
-  function section({ body, msg, skeleton = body, rows, load, render, onError }) {
+  function section({ body, msg, skeleton = body, rows, load, render, onError, decidesCity = false }) {
     let seq = 0;
     let hasData = false;
     const run = async () => {
@@ -247,8 +247,9 @@ function boot() {
         if (!hasData || skeleton !== body) clear(skeleton); // never the last good view
         // a bug in this page, not a failed request: say so in the console, the visitor still gets Retry
         if (!(error instanceof ApiError)) console.error('[invest] city page:', error);
-        // the id passed the pattern but no such city exists (or the server refused it)
-        if (error?.code === 'not_found' || error?.code === 'bad_request') { showNotFound(); return false; }
+        // the id passed the pattern but no such city exists (or the server refused it). Only the header
+        // request says so: a not_found from another section (an older API without that route) is that section's error.
+        if (decidesCity && (error?.code === 'not_found' || error?.code === 'bad_request')) { showNotFound(); return false; }
         onError?.();
         renderError(msg, error, run);
         setStatusKey(el.status, errorKey(error)); // else a "Loading…" set by a preset switch stays announced
@@ -262,7 +263,7 @@ function boot() {
   const stateName = (code) => s.states?.get(code) ?? code;
 
   const loadHead = section({
-    body: el.head, msg: el.headMsg, rows: 3,
+    body: el.head, msg: el.headMsg, rows: 3, decidesCity: true,
     load: async () => {
       // the state name is a nicety: without it the header shows the code
       const [city, states] = await Promise.all([api.city(s.id, { preset: s.preset }), s.states ?? api.states().catch(() => null)]);
