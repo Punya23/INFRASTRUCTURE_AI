@@ -1,0 +1,32 @@
+/* Shared header nav for index, policymaker and methodology. Rules are scoped under .site-header
+   so they beat the pages' own and script-injected styles. The desktop nav stays on one line:
+   small type, no wrapping, tighter side padding, and the hamburger takes over below 1200px.
+   Widths were measured: nav ~680px at 13px type, brand ~190px, actions ~205px icon-only. */
+.site-header .container { padding-left: 1.5rem; padding-right: 1.5rem; }
+@media (min-width: 1600px) { .site-header .container { padding-left: 3rem; padding-right: 3rem; } }
+.site-header .brand-group, .site-header .brand-link, .site-header .header-actions { flex-shrink: 0; }
+.site-header .brand-sub { display: none; }
+@media (min-width: 1600px) { .site-header .brand-sub { display: inline; font-size: 0.6875rem; } }
+
+.site-header .main-nav { display: none; align-items: center; flex-wrap: nowrap; gap: 0.125rem; margin-left: 0; }
+@media (min-width: 1200px) { .site-header .main-nav { display: flex; } }
+.site-header .main-nav .nav-link {
+  padding: 0.375rem 0.5rem; font-size: 0.8125rem; font-weight: 500; line-height: 1.25rem;
+  white-space: nowrap; border-radius: var(--radius-lg);
+  transition: color 0.2s, background 0.2s;
+}
+.site-header .main-nav .nav-link:hover { background: var(--surface-container); }
+.site-header .main-nav .nav-link.active { font-weight: 600; }
+@media (min-width: 1440px) { .site-header .main-nav .nav-link { font-size: 0.875rem; padding: 0.375rem 0.625rem; } }
+
+.site-header .mobile-menu-btn { display: flex; }
+@media (min-width: 1200px) { .site-header .mobile-menu-btn { display: none; } }
+
+/* Extras give way before the nav would wrap: the avatar and the "Report a Need" label. */
+.site-header .btn-primary { white-space: nowrap; }
+.site-header .avatar { display: none; }
+@media (min-width: 1440px) { .site-header .avatar { display: flex; } }
+@media (max-width: 1599px) {
+  .site-header .btn-primary [data-i18n="reportNeed"] { display: none; }
+  .site-header .btn-primary { padding: 0.375rem 0.5rem; }
+}
