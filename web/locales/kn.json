@@ -416,6 +416,8 @@
   "inv.city.map.zoom_in": "ಹಿಗ್ಗಿಸಿ",
   "inv.city.map.zoom_out": "ಕುಗ್ಗಿಸಿ",
   "inv.city.map.close": "ಮುಚ್ಚಿ",
+  "inv.city.map.satellite": "ಉಪಗ್ರಹ",
+  "inv.city.map.streets": "ನಕ್ಷೆ",
   "inv.city.map.gesture_ctrl": "ನಕ್ಷೆಯನ್ನು ಜೂಮ್ ಮಾಡಲು Ctrl ಒತ್ತಿ ಹಿಡಿದು ಸ್ಕ್ರಾಲ್ ಮಾಡಿ",
   "inv.city.map.gesture_cmd": "ನಕ್ಷೆಯನ್ನು ಜೂಮ್ ಮಾಡಲು ⌘ ಒತ್ತಿ ಹಿಡಿದು ಸ್ಕ್ರಾಲ್ ಮಾಡಿ",
   "inv.city.map.gesture_touch": "ನಕ್ಷೆಯನ್ನು ಸರಿಸಲು ಎರಡು ಬೆರಳುಗಳನ್ನು ಬಳಸಿ",

@@ -177,6 +177,8 @@ export const mapStrings = (t = tt) => ({
   'NavigationControl.ZoomIn': t('inv.city.map.zoom_in'),
   'NavigationControl.ZoomOut': t('inv.city.map.zoom_out'),
   'Popup.Close': t('inv.city.map.close'),
+  'Basemap.Satellite': t('inv.city.map.satellite'),
+  'Basemap.Streets': t('inv.city.map.streets'),
   'CooperativeGesturesHandler.WindowsHelpText': t('inv.city.map.gesture_ctrl'),
   'CooperativeGesturesHandler.MacHelpText': t('inv.city.map.gesture_cmd'),
   'CooperativeGesturesHandler.MobileHelpText': t('inv.city.map.gesture_touch'),

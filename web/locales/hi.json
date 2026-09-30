@@ -416,6 +416,8 @@
   "inv.city.map.zoom_in": "ज़ूम इन",
   "inv.city.map.zoom_out": "ज़ूम आउट",
   "inv.city.map.close": "बंद करें",
+  "inv.city.map.satellite": "सैटेलाइट",
+  "inv.city.map.streets": "नक्शा",
   "inv.city.map.gesture_ctrl": "नक्शा ज़ूम करने के लिए Ctrl दबाकर स्क्रॉल करें",
   "inv.city.map.gesture_cmd": "नक्शा ज़ूम करने के लिए ⌘ दबाकर स्क्रॉल करें",
   "inv.city.map.gesture_touch": "नक्शा हिलाने के लिए दो उंगलियों का इस्तेमाल करें",
