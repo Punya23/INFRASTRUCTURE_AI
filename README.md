@@ -4,11 +4,35 @@
 
 A multilingual, location-first infrastructure intelligence platform, designed as a Digital Public Good (DPG).
 
-> **Status:** planning — no code yet. This README is the master plan.
+> **Status:** national highways and the investor flow are built on real data; the database, citizen intake and metro are not (see [What we built so far](#what-we-built-so-far)). This README is still the master plan.
 > Why each decision was made: [`docs/adr/`](docs/adr/README.md) · How to work in this repo (humans and AI agents): [`AGENTS.md`](AGENTS.md) · Step-by-step workflows: [`.claude/skills/`](.claude/skills/) · Field plans: [`docs/fields/`](docs/fields/README.md)
 > Team research already in the repo: [India_Existing_Project_Gaps.md](India_Existing_Project_Gaps.md) (where existing systems fall short, with audit evidence) · [LokDristi_Datasets.md](LokDristi_Datasets.md) (dataset catalog and LGD join architecture). Where they differ from this plan: [§18](#18-open-questions-and-assumptions).
 
 **Contents:** [0 TL;DR](#0-tldr) · [1 Problem](#1-problem-and-our-angle) · [2 Users](#2-users-and-what-they-get) · [3 PS coverage](#3-problem-statement-coverage) · [4 Data scope](#4-data-scope-what-we-build-first) · [5 Sources](#5-data-sources) · [6 Architecture](#6-architecture) · [7 Data model](#7-data-model) · [8 Pipelines and analytics](#8-pipelines-and-analytics) · [9 Product and demo](#9-product-surfaces-and-demo) · [10 API](#10-api) · [11 Stack](#11-tech-stack) · [12 Layout](#12-repository-layout) · [13 Build plan](#13-build-plan) · [14 Evaluation](#14-evaluation) · [15 DPG and privacy](#15-digital-public-good-privacy-and-responsible-ai) · [16 Risks](#16-risks-and-mitigations) · [17 Scaling](#17-scaling-to-all-of-india) · [18 Open questions](#18-open-questions-and-assumptions) · [19 Working here](#19-working-on-this-repo) · [A Config](#appendix-a-config-examples) · [B Glossary](#appendix-b-glossary)
+
+---
+
+## What we built so far
+
+Everything below runs today from files in this repo. No database, login or hosted AI yet (next: M0, §13).
+
+| Piece | What it does | Where |
+|---|---|---|
+| **Explore** | Type a city, see its map (bus and metro routes for 5 cities), scores and projects in the news. 18 UI languages, voice input | `web/index.html` |
+| **NH Explorer** | 1,42,905 km of national highways, 1,044 toll plazas, 10 km population access layer, bus and metro layers | `web/nh-explorer.html` |
+| **Policymaker View** | State-wise highway length, OSM coverage, deaths per 100 km, tolls, traffic counts; CSV export | `web/policymaker.html` |
+| **Invest flow** | 381 cities in 36 states and UTs scored on four presets (Balanced, Commuter, Highway, Growth), area hexagons, compare view, onboarding. Every score shows its drivers | `web/invest/`, `ml/pipeline/invest` |
+| **Go API** | 9 read endpoints under `/v1`, contract in `api/openapi.yaml`, same data from `mock_api.py` if Go is missing | `api/`, `mock_api.py` |
+| **BRICS page** | Upcoming. Runs the pipeline on invented sample data for a pilot city in each of ten members: verified quote, redaction, score, cited brief. Nothing fetched; scope stays India until an ADR says otherwise | `web/brics.html`, `web/brics-sim.js` |
+| **Methodology** | What the pipeline really does, in plain words | `web/methodology.html` |
+| **NH field data** | OSM + MoRTH + NHAI + WorldPop joined; 16 findings; delay flags; dated, cited events from PIB | `ml/fields/national_highways/`, `docs/fields/national-highways.md` |
+| **Public transport** | 8 GTFS feeds (38,797 stops) for Bengaluru, Chennai, Hyderabad, Mumbai, Pune; 44 upcoming bus and metro projects from news | `ml/fields/public_transport/` |
+| **Geography** | LGD states, districts, sub-districts, ULBs and wards, validated | `ml/fields/geography/` |
+| **Pitch deck** | 8 slides: problem, solution, real screenshots, feasibility, BRICS | `docs/INFRA-AI-pitch.pptx` |
+
+Checks: `ml` pytest and ruff, `go -C api test ./... -race`, `node --test 'web/invest/js/*.test.mjs' web/links.test.mjs web/brics-sim.test.mjs`. Deploy: `scripts/deploy-vercel.sh`. Commands are in [AGENTS.md](AGENTS.md).
+
+Not built: Postgres, citizen intake (voice, WhatsApp), AI briefs on live data, metro field, tenders and land-acquisition notices, hotspots and recommendations.
 
 ---
 
