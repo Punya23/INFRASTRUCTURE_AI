@@ -5,6 +5,8 @@
   "buildCommand": "",
   "outputDirectory": "public",
   "cleanUrls": false,
+  "redirects": [{ "source": "/index.html", "destination": "/", "permanent": true }],
+  "redirects": [{ "source": "/index.html", "destination": "/", "permanent": true }],
   "rewrites": [{ "source": "/v1/:path*", "destination": "/api/v1?__p=:path*" }],
   "functions": {
     "api/v1.py": { "maxDuration": 10, "includeFiles": "api/_lib/**" }
