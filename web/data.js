@@ -961,7 +961,6 @@
     totalSubmissions: 184200,
     submissionsLabel: "184,200 Submissions",
     gazetteMatchPercent: 98.4,
-    registeredRegions: 800,
     activeSitesNationwide: 3400
   };
 

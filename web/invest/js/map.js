@@ -4,7 +4,13 @@
 //
 // The pure helpers (cellCentre, bounds, baseLayers) run in Node for the tests.
 
-const STYLE_URL = 'https://tiles.openfreemap.org/styles/positron';
+// OpenFreeMap "liberty": full OSM detail (buildings, every road class, landuse, labels). Positron was too
+// sparse to read a city's structure through the hexagons.
+const STYLE_URL = 'https://tiles.openfreemap.org/styles/liberty';
+// Open satellite imagery: EOX Sentinel-2 cloudless (CC BY 4.0, 10 m/pixel, so sharp to about z14; MapLibre
+// over-zooms it beyond). Roads and labels of the vector style stay on top of it.
+const SATELLITE_TILES = 'https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2021_3857/default/g/{z}/{y}/{x}.jpg';
+const SATELLITE_ATTRIBUTION = 'Sentinel-2 cloudless by <a href="https://s2maps.eu" target="_blank" rel="noopener noreferrer">EOX</a> (Contains modified Copernicus Sentinel data 2021)';
 const STYLE_TIMEOUT_MS = 6000;
 const LOAD_TIMEOUT_MS = 15000;
 const ATTRIBUTION = '© OpenStreetMap contributors';
@@ -79,6 +85,10 @@ async function loadStyle(colours) {
     clearTimeout(timer);
   }
 }
+
+// Fill opacity of the hexagons: light on the street map, a little stronger on imagery where a pale
+// tint would vanish.
+const fillOpacity = (satelliteOn) => ['case', ['get', 'elig'], satelliteOn ? 0.4 : 0.3, satelliteOn ? 0.15 : 0.1];
 
 // Asset layer id -> the /assets collection it draws. Toggles in the page name these ids.
 export const ASSET_SOURCE = {
@@ -157,18 +167,53 @@ export async function createMap(container, { popupContent, strings }) {
     await whenLoaded(map, LOAD_TIMEOUT_MS);
   }
 
+  // Satellite sits above the vector land, water and building fills (hidden while it shows) and below the
+  // base map's roads and labels, so the imagery keeps street names and the road grid.
+  map.addSource('satellite', { type: 'raster', tiles: [SATELLITE_TILES], tileSize: 256, maxzoom: 14, attribution: SATELLITE_ATTRIBUTION });
+  const baseStack = map.getStyle().layers;
+  const firstRoadOrLabel = baseStack.find((l) => l.type === 'line' || l.type === 'symbol')?.id;
+  map.addLayer({ id: 'satellite', type: 'raster', source: 'satellite', layout: { visibility: 'none' } }, firstRoadOrLabel);
+  const landIds = baseStack.filter((l) => ['background', 'fill', 'fill-extrusion'].includes(l.type)).map((l) => l.id);
+  let satellite = false;
+  const setSatellite = (on) => {
+    satellite = on;
+    map.setLayoutProperty('satellite', 'visibility', on ? 'visible' : 'none');
+    for (const id of landIds) map.setLayoutProperty(id, 'visibility', on ? 'none' : 'visible');
+    map.setPaintProperty('areas-fill', 'fill-opacity', fillOpacity(on));
+    map.setPaintProperty('areas-line', 'line-width', on ? 1.6 : 1.2);
+  };
+
   const fillColour = ['step', ['coalesce', ['get', 'score'], -1], colours.none, 0, RAMP[0],
     ...BREAKS.flatMap((b, i) => [b, RAMP[i + 1]])];
   map.addSource('areas', { type: 'geojson', data: { type: 'FeatureCollection', features: [] }, promoteId: 'id' });
   map.addLayer({ id: 'areas-fill', type: 'fill', source: 'areas', paint: {
     'fill-color': fillColour,
-    // cells with too few residents to rank stay visible but step back
-    'fill-opacity': ['case', ['get', 'elig'], 0.78, 0.3],
+    // light enough to read the streets beneath; cells with too few residents to rank step further back
+    'fill-opacity': fillOpacity(false),
   } });
-  map.addLayer({ id: 'areas-line', type: 'line', source: 'areas', paint: { 'line-color': colours.paper, 'line-width': 0.6, 'line-opacity': 0.8 } });
+  // the outline carries the cell in the score colour, so streets show through a light fill
+  map.addLayer({ id: 'areas-line', type: 'line', source: 'areas', paint: { 'line-color': fillColour, 'line-width': 1.2, 'line-opacity': 0.95 } });
   map.addLayer({ id: 'areas-selected', type: 'line', source: 'areas', paint: {
     'line-color': colours.ink, 'line-width': ['case', ['boolean', ['feature-state', 'selected'], false], 3, 0],
   } });
+
+  // Streets / Satellite switch, top-left. Two-state button; labels come from the page language.
+  const switcher = document.createElement('div');
+  switcher.className = 'maplibregl-ctrl maplibregl-ctrl-group city-basemap';
+  const basemapButton = (label, on) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.textContent = label;
+    b.setAttribute('aria-pressed', String(satellite === on));
+    b.addEventListener('click', () => { setSatellite(on); refreshBasemap(); });
+    return b;
+  };
+  const refreshBasemap = () => {
+    const t = strings();
+    switcher.replaceChildren(basemapButton(t['Basemap.Streets'], false), basemapButton(t['Basemap.Satellite'], true));
+  };
+  refreshBasemap();
+  map.addControl({ onAdd: () => switcher, onRemove: () => switcher.remove() }, 'top-left');
 
   const hover = new gl.Popup({ closeButton: false, closeOnClick: false, focusAfterOpen: false, className: 'city-popup', maxWidth: '18rem', offset: 8 });
   // closeOnClick stays off: the click handler below decides, otherwise MapLibre's own close runs after
@@ -196,6 +241,7 @@ export async function createMap(container, { popupContent, strings }) {
     set('.maplibregl-desktop-message', (d) => { d.textContent = t[navigator.userAgent.includes('Mac') ? 'CooperativeGesturesHandler.MacHelpText' : 'CooperativeGesturesHandler.WindowsHelpText']; });
     set('.maplibregl-mobile-message', (d) => { d.textContent = t['CooperativeGesturesHandler.MobileHelpText']; });
     map.getCanvas().setAttribute('aria-label', t['Map.Title']);
+    refreshBasemap();
   };
   const pin = (lngLat, content) => {
     pinned.setLngLat(lngLat).setDOMContent(content);
