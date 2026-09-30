@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>BRICS: one infrastructure lens — INFRA-AI</title>
+  <meta name="description" content="Upcoming: the INFRA-AI pipeline run on sample data for a pilot city in each of the ten BRICS members. A simulation, not a product yet."/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Noto+Sans:wght@400;600&family=Noto+Sans+Arabic:wght@400;600&family=Noto+Sans+SC:wght@400;600&family=Noto+Sans+Devanagari:wght@400;600&family=Noto+Sans+Ethiopic:wght@400;600&display=swap" rel="stylesheet"/>
+  <script src="i18n.js"></script>
+  <style>
+    :root {
+      --canvas: #F7F6F2; --surface: #FFFFFF; --ink: #14202B; --ink-2: #5B6773; --ink-3: #6B7785;
+      --line: #E3E1DA; --line-strong: #C8C5BB; --teal: #0E5A66; --teal-deep: #0A444D; --teal-wash: #E8F1F2;
+      --saffron: #E08A1E; --saffron-wash: #FCF1E1; --bad: #B3382C; --bad-wash: #FBEAE7;
+      --land: #DDE3E3; --sea: #F1F5F5;
+      --r: 14px;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--canvas); color: var(--ink); font-family: 'Inter', system-ui, sans-serif; line-height: 1.5; }
+    main { max-width: 80rem; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+    h1 { font-size: clamp(2rem, 4.5vw, 3rem); line-height: 1.1; margin: 0 0 .5rem; letter-spacing: -.02em; }
+    h2 { font-size: 1.25rem; margin: 0 0 .75rem; }
+    .lede { color: var(--ink-2); max-width: 46rem; margin: 0 0 1.25rem; font-size: 1.0625rem; }
+    .badge { display: inline-block; background: var(--saffron); color: #fff; font-weight: 700; font-size: .75rem; letter-spacing: .06em; text-transform: uppercase; padding: .3rem .8rem; border-radius: 999px; margin-bottom: 1rem; }
+    .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 1.25rem; }
+    .layout { display: grid; gap: 1.25rem; grid-template-columns: 1fr; align-items: start; }
+    @media (min-width: 64rem) { .layout { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); } .sticky { position: sticky; top: calc(var(--site-header-h, 64px) + 1rem); } }
+
+    /* map */
+    .map { width: 100%; height: auto; display: block; background: var(--sea); border-radius: 10px; }
+    .map .c { fill: var(--land); stroke: #fff; stroke-width: .6; }
+    .map .c.m { fill: var(--teal); cursor: pointer; }
+    .map .c.m.in { fill: var(--saffron); }
+    .map .c.m:hover { fill: var(--teal-deep); } .map .c.m.in:hover { fill: #C4730F; }
+    .map .c.sel { stroke: var(--ink); stroke-width: 1.6; }
+    .map .c.m:focus-visible { outline: none; stroke: var(--ink); stroke-width: 2.2; }
+    .map .pin { fill: #fff; stroke: var(--ink); stroke-width: 1.4; pointer-events: none; }
+    .map .pin.sel { fill: var(--ink); }
+    .map .pulse { fill: none; stroke: var(--ink); stroke-width: 1.2; pointer-events: none; transform-box: fill-box; transform-origin: center; animation: pulse 1.8s ease-out infinite; }
+    @keyframes pulse { from { transform: scale(1); opacity: .9; } to { transform: scale(3.2); opacity: 0; } }
+    .legend { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; margin: .75rem 0; font-size: .875rem; color: var(--ink-2); }
+    .legend i { display: inline-block; width: .8rem; height: .8rem; border-radius: 50%; margin-right: .4rem; vertical-align: -1px; }
+    .chips { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .75rem; }
+    .chip { font: inherit; font-size: .875rem; font-weight: 600; padding: .4rem .85rem; border-radius: 999px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); cursor: pointer; }
+    .chip:hover { border-color: var(--teal); }
+    .chip[aria-pressed="true"] { background: var(--teal); border-color: var(--teal); color: #fff; }
+    .chip[data-live="1"][aria-pressed="true"] { background: var(--saffron); border-color: var(--saffron); }
+    .chip:focus-visible, .btn:focus-visible { outline: 3px solid #90cfdd; outline-offset: 2px; }
+
+    /* controls + steps */
+    .who { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; justify-content: space-between; margin-bottom: 1rem; }
+    .who small { color: var(--ink-2); display: block; }
+    .btn { font: inherit; font-weight: 600; padding: .55rem 1.1rem; border-radius: 10px; border: 1px solid var(--teal); background: var(--teal); color: #fff; cursor: pointer; }
+    .btn.ghost { background: var(--surface); color: var(--teal); }
+    .btn:disabled { opacity: .55; cursor: default; }
+    .live-note { background: var(--saffron-wash); border: 1px solid #F1D3A3; border-radius: 10px; padding: .6rem .85rem; font-size: .9rem; margin-bottom: 1rem; }
+    .live-note a { color: #8A5100; font-weight: 600; }
+    ol.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: .75rem; }
+    .step { display: grid; grid-template-columns: 2rem 1fr; gap: .75rem; padding: .85rem; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+    .step .n { width: 2rem; height: 2rem; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: .875rem; background: var(--canvas); border: 1px solid var(--line-strong); color: var(--ink-3); }
+    .step.done .n { background: var(--teal); border-color: var(--teal); color: #fff; }
+    .step h3 { margin: 0; font-size: 1rem; }
+    .step .what { margin: .1rem 0 0; font-size: .85rem; color: var(--ink-2); }
+    .step .out { margin-top: .6rem; font-size: .9rem; display: none; }
+    .step.done .out { display: block; }
+    .out > * + * { margin-top: .5rem; }
+    .mono { white-space: pre-wrap; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: .78rem; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: .5rem .65rem; overflow-wrap: anywhere; }
+    .native, .claim q { font-family: 'Noto Sans', 'Noto Sans Arabic', 'Noto Sans SC', 'Noto Sans Devanagari', 'Noto Sans Ethiopic', system-ui, sans-serif; }
+    .native { font-size: 1rem; background: var(--teal-wash); border-radius: 8px; padding: .55rem .7rem; }
+    .gloss { color: var(--ink-2); font-size: .85rem; }
+    .tag { display: inline-block; font-size: .72rem; font-weight: 700; padding: .1rem .5rem; border-radius: 999px; margin-inline-end: .4rem; }
+    .tag.ok { background: var(--teal-wash); color: var(--teal-deep); } .tag.no { background: var(--bad-wash); color: var(--bad); }
+    .claim { padding: .5rem .65rem; border: 1px solid var(--line); border-radius: 8px; }
+    .claim.no { border-color: #E9BDB6; background: #FDF6F4; }
+    .bar { display: grid; grid-template-columns: minmax(8rem, 12rem) 1fr 3.5rem; gap: .5rem; align-items: center; font-size: .85rem; }
+    .bar .track { height: .6rem; background: var(--canvas); border-radius: 99px; overflow: hidden; border: 1px solid var(--line); }
+    .bar .fill { height: 100%; background: var(--teal); }
+    .bar .fill.weak { background: var(--saffron); }
+    .big { font-size: 1.75rem; font-weight: 800; color: var(--teal-deep); }
+    s { color: var(--ink-3); }
+    .brief { border-inline-start: 4px solid var(--teal); padding: .4rem .8rem; background: var(--teal-wash); border-radius: 4px 10px 10px 4px; }
+
+    /* table + notes */
+    .wide { margin-top: 1.5rem; }
+    table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+    th, td { text-align: start; padding: .55rem .6rem; border-bottom: 1px solid var(--line); }
+    th { color: var(--ink-2); font-weight: 600; font-size: .8rem; text-transform: uppercase; letter-spacing: .04em; }
+    .scroll { overflow-x: auto; }
+    .three { display: grid; gap: 1rem; grid-template-columns: 1fr; } @media (min-width: 48rem) { .three { grid-template-columns: repeat(3, 1fr); } }
+    .three ul { margin: 0; padding-inline-start: 1.1rem; } .three li { margin: .25rem 0; }
+    .fine { color: var(--ink-2); font-size: .8rem; margin-top: 1.5rem; }
+    @media (prefers-reduced-motion: reduce) { .map .pulse { animation: none; } }
+  </style>
+</head>
+<body>
+  <script src="site-header.js"></script>
+  <main>
+    <span class="badge">Upcoming · simulation only</span>
+    <h1>BRICS: one infrastructure lens</h1>
+    <p class="lede">Today INFRA-AI covers India. Pick any of the ten BRICS members and run the same pipeline end to end on sample data for one pilot city: from a pinned place to a cited brief. The checks are the real ones. The data is invented, and nothing is fetched.</p>
+
+    <div class="layout">
+      <section class="card sticky" aria-labelledby="map-h">
+        <h2 id="map-h">Pick a member</h2>
+        <svg id="map" class="map" viewBox="0 0 1000 500" role="group" aria-label="World map of the ten BRICS members"></svg>
+        <div class="legend">
+          <span><i style="background:var(--saffron)"></i>India: live today</span>
+          <span><i style="background:var(--teal)"></i>Other members: proposed</span>
+          <span><i style="background:var(--land)"></i>Not in scope</span>
+        </div>
+        <div class="chips" id="chips" role="group" aria-label="Members"></div>
+      </section>
+
+      <section aria-labelledby="sim-h">
+        <div class="card">
+          <div class="who">
+            <div><h2 id="sim-h" style="margin:0">Pipeline run</h2><small id="who"></small></div>
+            <div><button class="btn" id="run" type="button">Run simulation</button> <button class="btn ghost" id="reset" type="button">Reset</button></div>
+          </div>
+          <div class="live-note" id="live" hidden>India is live today, with real data. <a href="invest/">Open the investor flow</a> to see it for real; this panel shows the same steps on sample data.</div>
+          <ol class="steps" id="steps" aria-live="polite"></ol>
+        </div>
+      </section>
+    </div>
+
+    <section class="card wide" aria-labelledby="cmp-h">
+      <h2 id="cmp-h">Same scorecard, ten cities</h2>
+      <p class="gloss" style="margin-top:0">Sorted by country name. This describes infrastructure access in one pilot city each; it does not rank countries.</p>
+      <div class="scroll"><table id="cmp"><thead><tr><th>Country</th><th>Pilot city</th><th>Language</th><th>Access score (sample)</th><th>Weakest driver</th></tr></thead><tbody></tbody></table></div>
+    </section>
+
+    <section class="wide three" aria-label="What it would take">
+      <div class="card"><h2>Why it can travel</h2><ul><li>A new place is one config file.</li><li>Global open data: OSM, WorldPop, GHSL.</li><li>Open-source DPG; the UI already has pt, ru, zh, ar, id.</li></ul></div>
+      <div class="card"><h2>What we can do</h2><ul><li>Pilot one city per member.</li><li>Comparable access scores across countries.</li><li>Voice and text intake in national languages.</li></ul></div>
+      <div class="card"><h2>Before any of it is real</h2><ul><li>An ADR: scope is India only today.</li><li>Licences, boundaries and privacy law, per country.</li><li>A gold-set quality check per language.</li></ul></div>
+    </section>
+
+    <p class="fine">Borders: Natural Earth 110m, generalised; not the official Survey of India layer. Members as of 2025. Articles, requests and factor values on this page are invented for the demo; the extractor is a fixture and no model is called. Nothing here is built yet.</p>
+  </main>
+
+  <script type="module">
+    import { COUNTRIES, DEMO_REQUESTS, candidateClaims, verifyClaims, redact, score, publicCount, buildBrief } from './brics-sim.js';
+
+    const $ = (id) => document.getElementById(id);
+    const NS = 'http://www.w3.org/2000/svg';
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const byId = Object.fromEntries(COUNTRIES.map((c) => [c.id, c]));
+    let sel = 'IND', running = 0; // running is a run token: a newer run, a reset or another pick cancels an older run
+
+    // Small DOM helper: text is always set with textContent semantics, never parsed as HTML.
+    function h(tag, attrs = {}, ...kids) {
+      const e = document.createElement(tag);
+      for (const [k, v] of Object.entries(attrs)) if (v !== undefined && v !== false) e.setAttribute(k, v);
+      for (const k of kids.flat()) e.append(k instanceof Node ? k : document.createTextNode(k));
+      return e;
+    }
+    const tag = (ok, text) => h('span', { class: `tag ${ok ? 'ok' : 'no'}` }, text);
+    const native = (c, content) => h('div', { class: 'native', dir: c.dir }, content);
+
+    // ---- map ----
+    const mapEl = $('map');
+    const pins = {};
+    async function drawMap() {
+      let world;
+      try {
+        const res = await fetch('brics-world.json');
+        if (!res.ok) throw new Error(res.status);
+        world = await res.json();
+      } catch (e) {
+        mapEl.replaceWith(h('p', { class: 'gloss' }, 'The map could not load. Pick a member with the buttons below.'));
+        return;
+      }
+      const members = [];
+      for (const ct of world.c) {
+        const p = document.createElementNS(NS, 'path');
+        p.setAttribute('d', ct.d);
+        p.setAttribute('class', 'c' + (ct.m ? ' m' : '') + (ct.m === 'IND' ? ' in' : ''));
+        const t = document.createElementNS(NS, 'title'); t.textContent = ct.n; p.append(t);
+        if (ct.m) {
+          p.dataset.id = ct.m;
+          p.setAttribute('tabindex', '0'); p.setAttribute('role', 'button'); p.setAttribute('aria-label', `${ct.n}: run the simulation`);
+          p.addEventListener('click', () => pick(ct.m));
+          p.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(ct.m); } });
+          members.push(p);
+        } else {
+          mapEl.append(p);
+        }
+      }
+      members.forEach((p) => mapEl.append(p)); // members last so their outline is not hidden by neighbours
+      for (const c of COUNTRIES) {
+        const x = (c.lonlat[0] + 180) / 360 * world.w, y = (84 - c.lonlat[1]) / 142 * world.h;
+        const mk = (cls) => { const e = document.createElementNS(NS, 'circle'); e.setAttribute('class', cls); e.setAttribute('cx', x); e.setAttribute('cy', y); e.setAttribute('r', 4); return e; };
+        const pulse = mk('pulse'), dot = mk('pin');
+        mapEl.append(pulse, dot); pins[c.id] = { dot, pulse };
+      }
+      paint();
+    }
+
+    function paint() {
+      mapEl.querySelectorAll('.c.m').forEach((p) => p.classList.toggle('sel', p.dataset.id === sel));
+      for (const [id, p] of Object.entries(pins)) { p.dot.classList.toggle('sel', id === sel); p.pulse.style.display = id === sel ? '' : 'none'; }
+      document.querySelectorAll('#chips .chip').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.id === sel)));
+    }
+
+    // ---- steps ----
+    const STEPS = [
+      ['Pin a place', 'A resident or analyst picks a city on the map.'],
+      ['Ingest with provenance', 'Open data and local-language news come in; every record says where it is from and its licence.'],
+      ['Extract claims, verify quotes', 'A claim is kept only if its evidence quote is in the source. Otherwise it goes to review.'],
+      ['Score: explainable only', 'A weighted sum of observable facts, with every driver stored. No predictive model.'],
+      ['Hear residents, privately', 'Requests arrive in the national language. Phone numbers are removed first; small counts are hidden.'],
+      ['Brief, with citations', 'Only numbers present in the facts are allowed. A failed check falls back to a template.'],
+    ];
+    const stepEls = STEPS.map(([title, what], i) => h('li', { class: 'step' },
+      h('span', { class: 'n' }, String(i + 1)),
+      h('div', {}, h('h3', {}, title), h('p', { class: 'what' }, what), h('div', { class: 'out' }))));
+    $('steps').append(...stepEls);
+
+    function results(c) {
+      const claims = verifyClaims(candidateClaims(c), c.article);
+      const sc = score(c.v);
+      const weakest = sc.drivers.reduce((a, b) => (b.value < a.value ? b : a));
+      return { claims, sc, weakest, brief: buildBrief(c, sc, claims.kept, DEMO_REQUESTS.feeder) };
+    }
+
+    const FILL = [
+      (c) => [h('div', {}, h('b', {}, `${c.city}, ${c.name}`)),
+              h('div', { class: 'mono' }, `lon ${c.lonlat[0].toFixed(2)}, lat ${c.lonlat[1].toFixed(2)}  ·  language: ${c.lang}`),
+              h('div', { class: 'gloss' }, 'In the real system this is one file in config/cities/, with no city name in code.')],
+      (c) => [h('div', { class: 'gloss' }, 'Sources: OpenStreetMap (roads, stops; ODbL, attribution kept), WorldPop (people per cell), one news article.'),
+              h('div', { class: 'mono' }, `source: sample-news\nsource_ref: demo-${c.id}-1\nfetched_at: demo run\nlicense: none (invented sample)\nconfidence: n/a`)],
+      (c, r) => [native(c, c.article), h('div', { class: 'gloss' }, `Reading: ${c.gloss}`),
+        ...candidateClaims(c).map((cl) => {
+          const ok = r.claims.kept.some((k) => k.id === cl.id);
+          return h('div', { class: `claim${ok ? '' : ' no'}` }, tag(ok, ok ? 'kept' : 'rejected, sent to review'), cl.text,
+            h('div', { class: 'gloss' }, 'evidence: ', h('q', { dir: c.dir }, cl.quote), ok ? ' is in the article' : ' is not in the article'));
+        })],
+      (c, r) => [h('div', {}, h('span', { class: 'big' }, String(r.sc.score)), ' / 100 access score (sample inputs)'),
+        ...r.sc.drivers.map((d) => h('div', { class: 'bar' }, h('span', {}, `${d.label} (${Math.round(d.weight * 100)}%)`),
+          h('div', { class: 'track' }, h('div', { class: 'fill' + (d === r.weakest ? ' weak' : ''), style: `width:${d.value * 100}%` })), h('span', {}, `${d.points} pts`))),
+        h('div', { class: 'gloss' }, `Gap: ${r.weakest.label.toLowerCase()} is the weakest driver.`)],
+      (c) => {
+        const feeder = publicCount(DEMO_REQUESTS.feeder), foot = publicCount(DEMO_REQUESTS.footpath);
+        return [h('div', { class: 'gloss' }, 'Arrives:'), native(c, h('s', {}, c.request)),
+          h('div', { class: 'gloss' }, 'Stored, and the only version any model sees:'), native(c, redact(c.request)), h('div', { class: 'gloss' }, `Reading: ${c.requestGloss}`),
+          h('div', { class: 'mono' }, `feeder bus to station: ${feeder.shown ? feeder.n + ' residents' : 'hidden (under 5)'}\nfootpaths near station: ${foot.shown ? foot.n + ' residents' : 'hidden (under 5)'}`)];
+      },
+      (c, r) => [h('div', { class: 'brief' }, r.brief.text),
+        h('div', { class: 'gloss' }, r.brief.templated ? 'A number was not in the facts, so the templated brief was used.' : 'Checked: every number in this brief is in the fact set. [S1] score, [F1] verified claim, [R1] resident requests.')],
+    ];
+
+    function setStep(i, c, r, on) {
+      const el = stepEls[i]; el.classList.toggle('done', on);
+      el.querySelector('.out').replaceChildren(...(on ? FILL[i](c, r) : []));
+    }
+
+    function resetSteps() { running++; stepEls.forEach((_, i) => setStep(i, null, null, false)); $('run').disabled = false; }
+
+    async function run() {
+      resetSteps();
+      const token = running, c = byId[sel], r = results(c);
+      $('run').disabled = true;
+      for (let i = 0; i < STEPS.length; i++) {
+        if (!reduce) await new Promise((ok) => setTimeout(ok, 650));
+        if (token !== running) return; // reset, or another member picked mid-run
+        setStep(i, c, r, true);
+      }
+      $('run').disabled = false;
+    }
+
+    function pick(id) {
+      sel = id; const c = byId[id];
+      $('who').textContent = `${c.city}, ${c.name} · ${c.lang}`;
+      $('live').hidden = !c.live;
+      paint(); resetSteps();
+    }
+
+    // ---- static bits ----
+    for (const c of COUNTRIES) {
+      const b = h('button', { class: 'chip', type: 'button', 'data-id': c.id, 'data-live': c.live ? '1' : '0', 'aria-pressed': 'false' }, c.name);
+      b.addEventListener('click', () => pick(c.id));
+      $('chips').append(b);
+    }
+    document.querySelector('#cmp tbody').append(...[...COUNTRIES].sort((a, b) => a.name.localeCompare(b.name)).map((c) => {
+      const r = results(c);
+      return h('tr', {}, h('td', {}, c.name), h('td', {}, c.city), h('td', {}, c.lang), h('td', {}, `${r.sc.score} / 100`), h('td', {}, r.weakest.label));
+    }));
+    $('run').addEventListener('click', run);
+    $('reset').addEventListener('click', resetSteps);
+    pick('IND');
+    drawMap();
+  </script>
+</body>
+</html>

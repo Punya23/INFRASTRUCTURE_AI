@@ -29,7 +29,7 @@ for (const page of pages) {
 test('every page mounts the shared header and its links resolve', () => {
   const js = readFileSync(join(root, 'site-header.js'), 'utf8');
   const hrefs = [...js.matchAll(/href: '([^']+)',\s+key:/g)].map((m) => m[1]);
-  assert.equal(hrefs.length, 5);
+  assert.equal(hrefs.length, 6);
   for (const href of hrefs) {
     const file = join(root, href);
     assert.ok(existsSync(statSync(file, { throwIfNoEntry: false })?.isDirectory() ? join(file, 'index.html') : file), href);

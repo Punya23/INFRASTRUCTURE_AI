@@ -8,7 +8,7 @@ A multilingual, location-first infrastructure intelligence platform for India, b
 
 ## Status
 
-Scope is field-first: **national highways** and **metro rail** across India (ADR-0013). National highways: M1 data and M2 analysis landed (`ml/fields/national_highways/`, findings in `docs/fields/national-highways.md`), and M3 is half done — delay flags and cited events from PIB press releases; news, tenders and land-acquisition notices are still open; metro starts M1. **Investor flow landed ahead of M0** (ADR-0015): `ml/pipeline/invest` exports city and area scores to `web/fixtures/invest/`, a stdlib Go API (`api/`) serves them, and static pages in `web/invest/` show landing, onboarding, state and city views. It has no database and no login; the store package is the seam where Postgres slots in. **Next: M0 — Foundation** (README §13: DB, API, UI shell). Update this line whenever a milestone lands.
+Scope is field-first: **national highways** and **metro rail** across India (ADR-0013). National highways: M1 data and M2 analysis landed (`ml/fields/national_highways/`, findings in `docs/fields/national-highways.md`), and M3 is half done — delay flags and cited events from PIB press releases; news, tenders and land-acquisition notices are still open; metro starts M1. **Investor flow landed ahead of M0** (ADR-0015): `ml/pipeline/invest` exports city and area scores to `web/fixtures/invest/`, a stdlib Go API (`api/`) serves them, and static pages in `web/invest/` show landing, onboarding, state and city views. It has no database and no login; the store package is the seam where Postgres slots in. A static **BRICS page** (`web/brics.html`, upcoming, simulation on invented sample data for ten pilot cities; nothing ingested) previews the ten-member idea; scope stays India only until an ADR says otherwise. **Next: M0 — Foundation** (README §13: DB, API, UI shell). Update this line whenever a milestone lands.
 ADR-0003 and ADR-0013 are Accepted; ADR-0001 is superseded; the others are Proposed pending team review — follow them as the working default.
 
 ## Read in this order
@@ -89,6 +89,8 @@ python3 mock_api.py                                      # no Go? same /v1/* fro
 python3 -m http.server 8765 --directory web              # pages at http://localhost:8765/invest/ (CORS default matches this port)
 node --test 'web/invest/js/*.test.mjs'                   # page logic tests
 node --test web/links.test.mjs                         # every page link resolves (no bare #, missing file or anchor)
+node --test web/brics-sim.test.mjs                     # BRICS page simulation checks (quote, redaction, score, brief)
+cd ml && uv run python ../scripts/build_brics_map.py   # rebuild web/brics-world.json (Natural Earth 110m, generalised)
 scripts/deploy-vercel.sh [--prod]                        # stage web/ + /v1 function (mock_api.py) → Vercel deploy → smoke test; --stage-only / --smoke URL
 ```
 

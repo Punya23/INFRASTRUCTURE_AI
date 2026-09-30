@@ -1,5 +1,5 @@
 /* The one site header. Every page adds <script src="site-header.js"></script> (path relative to the page) as the
-   first thing in <body>; this script renders the brand, the five main links (current page marked), the language
+   first thing in <body>; this script renders the brand, the six main links (current page marked), the language
    switcher slot that i18n.js fills, and the mobile menu. Change the links here and every page follows. */
 (function () {
   var script = document.currentScript;
@@ -9,7 +9,8 @@
     { id: 'invest', href: 'invest/',           key: 'inv.nav',        label: 'Invest' },
     { id: 'nh',     href: 'nh-explorer.html',  key: 'navNhMap',       label: 'NH Map' },
     { id: 'policy', href: 'policymaker.html',  key: 'navPolicymaker', label: 'Policymaker View' },
-    { id: 'method', href: 'methodology.html',  key: 'navMethodology', label: 'Methodology' }
+    { id: 'method', href: 'methodology.html',  key: 'navMethodology', label: 'Methodology' },
+    { id: 'brics',  href: 'brics.html',        key: 'navBrics',       label: 'BRICS' }
   ];
 
   var rel = location.pathname.slice(new URL(base).pathname.length);
