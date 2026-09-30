@@ -18,8 +18,29 @@
   <a class="inv-skip" href="#main" data-i18n="inv.skip">Skip to main content</a>
 
   <script src="../site-header.js"></script>
+  <script src="../onboard.js" data-auto></script>
 
   <main id="main" tabindex="-1">
+    <!-- Shown instead of the hero once this browser has onboarding answers (landing.js toggles hidden). -->
+    <section id="yours" class="yours" aria-labelledby="yours-title" hidden>
+      <div class="inv-container yours__grid">
+        <div class="yours__intro">
+          <p class="yours__eyebrow" data-i18n="inv.you.eyebrow">Your shortlist</p>
+          <h1 id="yours-title" class="inv-display yours__title"></h1>
+          <p id="yours-sub" class="inv-lead"></p>
+          <div class="inv-cluster">
+            <a id="yours-open" class="inv-btn inv-btn--primary inv-btn--lg" href="state.html"></a>
+            <button id="yours-change" type="button" class="inv-btn inv-btn--secondary inv-btn--lg" data-i18n="inv.you.change">Change my answers</button>
+          </div>
+          <p id="yours-city" class="yours__city inv-small" hidden></p>
+        </div>
+        <div class="inv-card yours__card">
+          <p id="yours-status" class="inv-visually-hidden" role="status" aria-live="polite"></p>
+          <div id="yours-body"></div>
+        </div>
+      </div>
+    </section>
+
     <section class="landing-hero" aria-labelledby="hero-title">
       <div class="inv-container landing-hero__grid">
         <div class="landing-hero__copy">

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { cityHref, sampleDrivers, uniqueSources } from './landing.js';
+import { cityHref, sampleDrivers, shortlistState, uniqueSources } from './landing.js';
 
 test('uniqueSources keeps each distinct credit once, in order', () => {
   const ghsl = { name: 'European Commission, JRC', license: 'CC-BY-4.0', attribution: 'European Commission, JRC — GHSL GHS-BUILT-S R2023A' };
@@ -46,4 +46,12 @@ test('sampleDrivers shows a different factor on each row while one is left', () 
 test('cityHref links only ids the city page accepts', () => {
   assert.equal(cityHref('pune'), 'city.html?c=pune&preset=balanced');
   for (const bad of ['../etc/passwd', 'Pune', 'a', '<script>', null, 7]) assert.equal(cityHref(bad), null, String(bad));
+});
+
+test('shortlistState: state target wins, a city uses its own state, home state is the fallback', () => {
+  const p = (target, homeState = null) => ({ target, homeState });
+  assert.equal(shortlistState(p({ type: 'state', code: 'KA' }, 'MH')), 'KA');
+  assert.equal(shortlistState(p({ type: 'city', id: 'pune' }, 'KA'), 'MH'), 'MH');
+  assert.equal(shortlistState(p({ type: 'city', id: 'pune' }, 'KA'), null), 'KA');
+  assert.equal(shortlistState(p(null, null), null), null);
 });

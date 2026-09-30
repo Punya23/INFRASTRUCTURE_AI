@@ -428,5 +428,13 @@
   "inv.city.projects.stage.stalled": "ಸ್ಥಗಿತಗೊಂಡಿದೆ",
   "inv.city.projects.popup.metro": "ಮುಂಬರುವ ಮೆಟ್ರೋ ಯೋಜನೆಗಳು ({n})",
   "inv.city.projects.popup.bus": "ಮುಂಬರುವ ಬಸ್ ಯೋಜನೆಗಳು ({n})",
-  "inv.city.projects.popup.more": "ಮತ್ತು ನಕ್ಷೆಯ ಕೆಳಗಿನ ಪಟ್ಟಿಯಲ್ಲಿ {n} ಇನ್ನಷ್ಟು"
+  "inv.city.projects.popup.more": "ಮತ್ತು ನಕ್ಷೆಯ ಕೆಳಗಿನ ಪಟ್ಟಿಯಲ್ಲಿ {n} ಇನ್ನಷ್ಟು",
+  "onboard.title": "ನಿಮ್ಮ ಹುಡುಕಾಟ ಹೊಂದಿಸಿ",
+  "onboard.close": "ಮುಚ್ಚಿ",
+  "inv.you.eyebrow": "ನಿಮ್ಮ ಶಾರ್ಟ್‌ಲಿಸ್ಟ್",
+  "inv.you.title": "{place} ಅಗ್ರ ನಗರಗಳು",
+  "inv.you.sub": "ನಿಮಗೆ ಮುಖ್ಯವಾದುದರ ಪ್ರಕಾರ ಶ್ರೇಣಿ: {preset}. ಅಂಕಗಳು 100 ರಲ್ಲಿ.",
+  "inv.you.open": "{place} ಪಟ್ಟಿ ತೆರೆಯಿರಿ",
+  "inv.you.change": "ನನ್ನ ಉತ್ತರಗಳನ್ನು ಬದಲಿಸಿ",
+  "inv.you.city": "ನಿಮ್ಮ ನಗರ: {name}"
 }

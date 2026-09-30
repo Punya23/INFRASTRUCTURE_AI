@@ -531,6 +531,11 @@ function finish() {
     return;
   }
   savePrefs(toPrefs(model.answers)); // a blocked or full storage only means the choices are not remembered
+  // Inside the home-page dialog the parent takes over (it re-reads the saved choices); no data crosses.
+  if (window.parent !== window && new URLSearchParams(location.search).has('embed')) {
+    window.parent.postMessage({ type: 'infra:onboarded' }, location.origin);
+    return;
+  }
   location.assign(url);
 }
 

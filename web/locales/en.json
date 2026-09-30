@@ -429,5 +429,13 @@
   "inv.city.projects.stage.stalled": "Stalled",
   "inv.city.projects.popup.metro": "Upcoming metro projects ({n})",
   "inv.city.projects.popup.bus": "Upcoming bus projects ({n})",
-  "inv.city.projects.popup.more": "and {n} more in the list below the map"
+  "inv.city.projects.popup.more": "and {n} more in the list below the map",
+  "onboard.title": "Set up your search",
+  "onboard.close": "Close",
+  "inv.you.eyebrow": "Your shortlist",
+  "inv.you.title": "Top cities in {place}",
+  "inv.you.sub": "Ranked for what matters to you: {preset}. Scores are out of 100.",
+  "inv.you.open": "Open the {place} list",
+  "inv.you.change": "Change my answers",
+  "inv.you.city": "Your city: {name}"
 }

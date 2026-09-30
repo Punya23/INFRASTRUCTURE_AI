@@ -32,6 +32,12 @@ export function loadPrefs(storage) {
   }
 }
 
+// True once the visitor has finished onboarding in this browser (loadPrefs alone cannot say: it always
+// returns defaults). A valid target is what finishing requires, so a bare or corrupt entry counts as none.
+export function hasSavedPrefs(storage) {
+  return loadPrefs(storage).target !== null;
+}
+
 // Reports whether it was saved. A failure is not an error for the visitor: private mode or a full
 // quota just means the choices are not remembered.
 export function savePrefs(prefs, storage) {

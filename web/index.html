@@ -406,10 +406,53 @@
       display: flex; flex-direction: column; gap: var(--space-md);
     }
     @media (min-width: 768px) { .explorer-header { flex-direction: row; align-items: flex-end; justify-content: space-between; } }
-    .cities-grid {
-      display: grid; grid-template-columns: 1fr; gap: var(--space-lg); margin-top: var(--space-lg);
+    .explorer-header .see-all-btn { align-self: flex-start; display: inline-flex; align-items: center; gap: .375rem; white-space: nowrap; }
+    @media (min-width: 768px) { .explorer-header .see-all-btn { align-self: flex-end; } }
+    .city-rail-wrap { position: relative; margin-top: var(--space-lg); }
+    .city-rail {
+      display: flex; gap: var(--space-lg); overflow-x: auto; scroll-snap-type: x proximity; scroll-behavior: smooth;
+      padding: .5rem .25rem 1.25rem; margin: 0 -.25rem; scrollbar-width: thin;
     }
-    @media (min-width: 768px) { .cities-grid { grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); } }
+    .city-rail > * { flex: 0 0 min(17rem, 80%); scroll-snap-align: start; }
+    .rail-btn {
+      display: none; align-items: center; justify-content: center; width: 2.5rem; height: 2.5rem; border-radius: 50%;
+      border: 1px solid var(--border-subtle); background: var(--surface-container-lowest); color: var(--primary);
+      box-shadow: var(--shadow-2); cursor: pointer;
+    }
+    .rail-btn:disabled { opacity: .35; cursor: default; }
+    #cities-close { display: inline-flex; }
+    @media (min-width: 768px) {
+      .city-rail-wrap .rail-btn { display: inline-flex; position: absolute; top: 40%; z-index: 2; }
+      #rail-prev { left: -1.25rem; } #rail-next { right: -1.25rem; }
+    }
+    .city-card.see-all { justify-content: center; align-items: center; text-align: center; gap: var(--space-sm); padding: var(--space-lg); cursor: pointer; background: var(--surface-container-high); border: 0; font: inherit; color: var(--primary); }
+    .city-art { position: absolute; inset: 0; background: linear-gradient(160deg, hsl(var(--h) 45% 32%), hsl(calc(var(--h) + 40) 50% 18%)); }
+    .city-art svg { position: absolute; left: 0; bottom: 0; width: 100%; height: 55%; fill: rgba(255,255,255,.16); }
+    .city-art b { position: absolute; left: var(--space-md); bottom: var(--space-sm); font-size: 3.25rem; line-height: 1; color: rgba(255,255,255,.85); font-weight: 700; }
+    .city-card a.city-link { color: inherit; text-decoration: none; }
+
+    /* All-cities overlay */
+    .cities-overlay { position: fixed; inset: 0; z-index: 300; background: rgba(20,32,43,.55); display: flex; align-items: stretch; justify-content: center; padding: 0; }
+    .cities-overlay[hidden] { display: none; }
+    .cities-panel { background: var(--surface-container-lowest); width: 100%; max-width: 90rem; display: flex; flex-direction: column; }
+    @media (min-width: 900px) { .cities-overlay { padding: 1.5rem; } .cities-panel { border-radius: var(--radius-xl); overflow: hidden; } }
+    .cities-bar { display: flex; align-items: center; gap: var(--space-md); padding: var(--space-md); border-bottom: 1px solid var(--border-subtle); }
+    .cities-bar h2 { margin-right: auto; }
+    .cities-search { flex: 0 1 18rem; min-width: 0; padding: .5rem .75rem; border: 1px solid var(--border-subtle); border-radius: var(--radius); background: var(--surface-container-lowest); }
+    .cities-body { flex: 1; min-height: 0; display: grid; grid-template-rows: 45% 1fr; }
+    @media (min-width: 900px) { .cities-body { grid-template-rows: none; grid-template-columns: 1fr 24rem; } }
+    .cities-map { position: relative; min-height: 0; background: var(--surface-container-high); }
+    .cities-list { overflow-y: auto; margin: 0; padding: 0; }
+    .cities-list li button { display: flex; width: 100%; gap: var(--space-sm); align-items: center; padding: .5rem var(--space-md); border: 0; border-bottom: 1px solid var(--border-subtle); background: none; text-align: left; cursor: pointer; font: inherit; color: inherit; }
+    .cities-list li button:hover, .cities-list li button:focus-visible { background: var(--surface-container-high); }
+    .cities-list .thumb { position: relative; flex: 0 0 3.25rem; height: 2.5rem; border-radius: .5rem; overflow: hidden; }
+    .cities-list .thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .cities-list .thumb .city-art b { font-size: 1.25rem; left: .35rem; bottom: .15rem; }
+    .cities-list .meta { flex: 1; min-width: 0; }
+    .cities-list .meta div:first-child { font-weight: 600; }
+    .cities-list .meta div:last-child { color: var(--on-surface-variant); }
+    .cities-list .sc { font-family: var(--font-mono, monospace); color: var(--primary); }
+    .cities-empty { padding: var(--space-md); color: var(--on-surface-variant); }
     .city-card {
       background: var(--surface-container-lowest); border-radius: var(--radius-xl);
       overflow: hidden; box-shadow: var(--shadow-2);
@@ -534,6 +577,7 @@
        HEADER
        ============================ -->
   <script src="site-header.js"></script>
+  <script src="onboard.js" data-auto></script>
 
   <main>
     <!-- Notice Bar -->
@@ -745,92 +789,12 @@
             <h2 class="text-headline-lg" style="color:var(--on-surface);margin-top:0.25rem;" data-i18n="explorerTitle">Start with a place you care about.</h2>
             <p class="text-body-md" style="color:var(--on-surface-variant);margin-top:0.25rem;" data-i18n="explorerSubtitle">High-density infrastructure dossiers maintained with continuous citizen updates.</p>
           </div>
+          <button class="btn-ghost text-body-sm see-all-btn" type="button" id="see-all-cities"><span class="material-symbols-outlined" style="font-size:18px;">map</span><span id="see-all-label">See all cities</span></button>
         </div>
-        <div class="cities-grid">
-          <div class="city-card" data-city="pune">
-            <div>
-              <div class="city-image">
-                <img class="city-photo" src="img/cities/pune.jpg" alt="Shaniwar Wada fort gateway in Pune" loading="lazy" width="900" height="600"/>
-                <div class="city-state-badge text-body-sm" data-f="state">&nbsp;</div>
-                <div class="city-sites-badge text-data-mono" data-f="score">Loading…</div>
-              </div>
-              <div class="city-info">
-                <div class="city-name-row">
-                  <h3 class="text-headline-md" data-f="name">Pune</h3>
-                  <span class="material-symbols-outlined" style="color:var(--outline);">east</span>
-                </div>
-                <p class="text-body-sm" style="color:var(--on-surface-variant);" data-f="best"></p>
-                <div class="city-metrics">
-                  <div class="city-metric text-body-sm"><span class="city-metric-dot teal"></span><span data-f="transit"></span></div>
-                  <div class="city-metric text-body-sm"><span class="city-metric-dot saffron"></span><span data-f="pop"></span></div>
-                </div>
-              </div>
-            </div>
-            <div class="city-cta"><a class="btn-ghost text-body-sm" href="invest/city.html?c=pune&preset=balanced">Explore Pune scores</a></div>
-          </div>
-          <div class="city-card" data-city="bengaluru">
-            <div>
-              <div class="city-image">
-                <img class="city-photo" src="img/cities/bengaluru.jpg" alt="Vidhana Soudha, the state legislature building in Bengaluru" loading="lazy" width="900" height="600"/>
-                <div class="city-state-badge text-body-sm" data-f="state">&nbsp;</div>
-                <div class="city-sites-badge text-data-mono" data-f="score">Loading…</div>
-              </div>
-              <div class="city-info">
-                <div class="city-name-row">
-                  <h3 class="text-headline-md" data-f="name">Bengaluru</h3>
-                  <span class="material-symbols-outlined" style="color:var(--outline);">east</span>
-                </div>
-                <p class="text-body-sm" style="color:var(--on-surface-variant);" data-f="best"></p>
-                <div class="city-metrics">
-                  <div class="city-metric text-body-sm"><span class="city-metric-dot teal"></span><span data-f="transit"></span></div>
-                  <div class="city-metric text-body-sm"><span class="city-metric-dot saffron"></span><span data-f="pop"></span></div>
-                </div>
-              </div>
-            </div>
-            <div class="city-cta"><a class="btn-ghost text-body-sm" href="invest/city.html?c=bengaluru&preset=balanced">Explore Bengaluru scores</a></div>
-          </div>
-          <div class="city-card" data-city="lucknow">
-            <div>
-              <div class="city-image">
-                <img class="city-photo" src="img/cities/lucknow.jpg" alt="Rumi Darwaza gateway in Lucknow" loading="lazy" width="900" height="600"/>
-                <div class="city-state-badge text-body-sm" data-f="state">&nbsp;</div>
-                <div class="city-sites-badge text-data-mono" data-f="score">Loading…</div>
-              </div>
-              <div class="city-info">
-                <div class="city-name-row">
-                  <h3 class="text-headline-md" data-f="name">Lucknow</h3>
-                  <span class="material-symbols-outlined" style="color:var(--outline);">east</span>
-                </div>
-                <p class="text-body-sm" style="color:var(--on-surface-variant);" data-f="best"></p>
-                <div class="city-metrics">
-                  <div class="city-metric text-body-sm"><span class="city-metric-dot teal"></span><span data-f="transit"></span></div>
-                  <div class="city-metric text-body-sm"><span class="city-metric-dot saffron"></span><span data-f="pop"></span></div>
-                </div>
-              </div>
-            </div>
-            <div class="city-cta"><a class="btn-ghost text-body-sm" href="invest/city.html?c=lucknow&preset=balanced">Explore Lucknow scores</a></div>
-          </div>
-          <div class="city-card" data-city="ahmedabad">
-            <div>
-              <div class="city-image">
-                <img class="city-photo" src="img/cities/ahmedabad.jpg" alt="Sabarmati riverfront and Atal Pedestrian Bridge in Ahmedabad" loading="lazy" width="900" height="600"/>
-                <div class="city-state-badge text-body-sm" data-f="state">&nbsp;</div>
-                <div class="city-sites-badge text-data-mono" data-f="score">Loading…</div>
-              </div>
-              <div class="city-info">
-                <div class="city-name-row">
-                  <h3 class="text-headline-md" data-f="name">Ahmedabad</h3>
-                  <span class="material-symbols-outlined" style="color:var(--outline);">east</span>
-                </div>
-                <p class="text-body-sm" style="color:var(--on-surface-variant);" data-f="best"></p>
-                <div class="city-metrics">
-                  <div class="city-metric text-body-sm"><span class="city-metric-dot teal"></span><span data-f="transit"></span></div>
-                  <div class="city-metric text-body-sm"><span class="city-metric-dot saffron"></span><span data-f="pop"></span></div>
-                </div>
-              </div>
-            </div>
-            <div class="city-cta"><a class="btn-ghost text-body-sm" href="invest/city.html?c=ahmedabad&preset=balanced">Explore Ahmedabad scores</a></div>
-          </div>
+        <div class="city-rail-wrap">
+          <button class="rail-btn" type="button" id="rail-prev" aria-label="Previous cities"><span class="material-symbols-outlined">chevron_left</span></button>
+          <div class="city-rail" id="city-rail" tabindex="0" aria-label="Cities, scroll sideways"></div>
+          <button class="rail-btn" type="button" id="rail-next" aria-label="Next cities"><span class="material-symbols-outlined">chevron_right</span></button>
         </div>
         <p class="city-credits text-body-sm">Photos via Wikimedia Commons — Pune: <a href="https://commons.wikimedia.org/wiki/File:Shaniwar_wada_(pune).jpg" rel="noopener">Samrudhi shelagaonkar</a>, CC BY-SA 4.0 · Bengaluru: <a href="https://commons.wikimedia.org/wiki/File:Vidhana_Soudha,_Bengaluru_3.jpg" rel="noopener">Quantumtunneling</a>, CC BY-SA 4.0 · Lucknow: <a href="https://commons.wikimedia.org/wiki/File:Rumi_Darwaza,_Lucknow.jpg" rel="noopener">Sapna2020</a>, CC BY-SA 4.0 · Ahmedabad: <a href="https://commons.wikimedia.org/wiki/File:Sabarmati_riverfront_and_Atal_Pedestrian_Bridge_01.jpg" rel="noopener">Pravega</a>, CC0.</p>
       </div>
@@ -901,6 +865,21 @@
   </footer>
 
   <!-- SEARCH OVERLAY -->
+  <!-- ALL CITIES: map with a pin per city + searchable list -->
+  <div class="cities-overlay" id="cities-overlay" role="dialog" aria-modal="true" aria-label="All cities" hidden>
+    <div class="cities-panel">
+      <div class="cities-bar">
+        <h2 class="text-headline-md" id="cities-title">All cities</h2>
+        <input class="cities-search text-body-md" id="cities-search" type="search" placeholder="Filter by city or state" aria-label="Filter cities"/>
+        <button class="rail-btn" type="button" id="cities-close" aria-label="Close"><span class="material-symbols-outlined">close</span></button>
+      </div>
+      <div class="cities-body">
+        <div class="cities-map" id="cities-map"></div>
+        <ul class="cities-list" id="cities-list"></ul>
+      </div>
+    </div>
+  </div>
+
   <div class="search-overlay" id="search-overlay">
     <div class="search-modal">
       <input class="search-modal-input" id="search-modal-input" type="text" placeholder="Search for a city..." autofocus/>

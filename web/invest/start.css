@@ -158,3 +158,10 @@
 .start-resume__title { font-size: var(--fs-md); }
 
 @media (prefers-reduced-motion: reduce) { .start-tile { transition: none; } }
+
+/* ---------- Embedded in the home-page dialog (?embed): no site chrome, tighter spacing ---------- */
+
+html.embed .sh,
+html.embed .inv-footer,
+html.embed .inv-skip { display: none; }
+html.embed .inv-section { padding-block: var(--space-3); }

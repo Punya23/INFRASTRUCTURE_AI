@@ -264,3 +264,19 @@
 @media (prefers-reduced-motion: reduce) {
   .hive i { animation: none; }
 }
+
+/* ---------- "Yours": the page for a visitor who has answered the onboarding questions ---------- */
+
+.yours { background: var(--brand-teal); color: var(--on-brand); padding-block: var(--space-5); }
+@media (min-width: 60rem) { .yours { padding-block: var(--space-6); } }
+.yours__grid { display: grid; gap: var(--space-4); grid-template-columns: minmax(0, 1fr); align-items: start; }
+@media (min-width: 60rem) { .yours__grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: var(--space-6); } }
+.yours__intro > * + * { margin-block-start: var(--space-3); }
+.yours__eyebrow { font-size: var(--fs-sm); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent-saffron); }
+.yours__title { font-size: var(--fs-2xl); }
+.yours .inv-lead { color: inherit; opacity: 0.9; }
+.yours .inv-btn--secondary { background: transparent; color: inherit; border-color: currentColor; }
+.yours__city a { color: inherit; font-weight: 600; }
+.yours__card { color: var(--text-primary); min-block-size: 22rem; }
+.yours__card .inv-ring { --size: 3.25rem; --thickness: 0.375rem; }
+.yours .inv-btn--primary { background: var(--accent-saffron); color: var(--text-primary); }

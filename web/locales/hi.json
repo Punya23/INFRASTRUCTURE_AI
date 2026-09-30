@@ -428,5 +428,13 @@
   "inv.city.projects.stage.stalled": "रुकी हुई",
   "inv.city.projects.popup.metro": "आने वाली मेट्रो परियोजनाएं ({n})",
   "inv.city.projects.popup.bus": "आने वाली बस परियोजनाएं ({n})",
-  "inv.city.projects.popup.more": "और {n} नक्शे के नीचे की सूची में"
+  "inv.city.projects.popup.more": "और {n} नक्शे के नीचे की सूची में",
+  "onboard.title": "अपनी खोज शुरू करें",
+  "onboard.close": "बंद करें",
+  "inv.you.eyebrow": "आपकी शॉर्टलिस्ट",
+  "inv.you.title": "{place} के शीर्ष शहर",
+  "inv.you.sub": "आपकी प्राथमिकता के अनुसार क्रम: {preset}। स्कोर 100 में से हैं।",
+  "inv.you.open": "{place} की सूची खोलें",
+  "inv.you.change": "मेरे उत्तर बदलें",
+  "inv.you.city": "आपका शहर: {name}"
 }

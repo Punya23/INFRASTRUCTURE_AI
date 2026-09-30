@@ -6,6 +6,7 @@ import { api } from './api.js';
 import { CITY_ID, DEFAULT_PRESET } from './config.js';
 import { explain } from './explain.js';
 import { formatCount, formatScore, tt } from './format.js';
+import { hasSavedPrefs, loadPrefs } from './prefs.js';
 import { clear, h, onLangChange, renderError, renderSkeleton, setStatus, setStatusKey } from './ui.js';
 
 // The state the sample shows. Its name is in the locale strings inv.landing.sample.title and .more.
@@ -50,6 +51,15 @@ export function sampleDrivers(cities) {
   });
 }
 
+// The state whose top cities the personalised view lists: the saved state target, or the home state
+// behind a saved city (looked up by the caller, since only the API knows a city's state), else the home
+// state. null when there is none.
+export function shortlistState(prefs, cityState) {
+  const t = prefs.target;
+  if (t?.type === 'state') return t.code;
+  return (t?.type === 'city' ? cityState : null) ?? prefs.homeState ?? null;
+}
+
 // Link to a city page, or null when the id is not one the city page would accept.
 export const cityHref = (id) =>
   typeof id === 'string' && CITY_ID.test(id) ? `city.html?c=${id}&preset=${DEFAULT_PRESET}` : null;
@@ -62,6 +72,14 @@ function boot(doc) {
 
   let meta = null;   // last good /v1/meta; also sharpens the "no station within N km" wording
   let sample = null; // last good list of city cards
+  let yours = null;  // { code, city, states } behind the personalised heading
+
+  // With saved onboarding answers the page shows "yours" (their place, their preset, five cities) instead
+  // of the generic Maharashtra sample; the same row renderer and loader serve both.
+  const prefs = hasSavedPrefs() ? loadPrefs() : null;
+  const list = prefs
+    ? { body: doc.getElementById('yours-body'), status: doc.getElementById('yours-status'), size: 5, preset: prefs.preset }
+    : { body: sampleBody, status: sampleStatus, size: SAMPLE_SIZE, preset: undefined };
 
   function cityRow(city, driver) {
     const href = cityHref(city.id);
@@ -87,27 +105,55 @@ function boot(doc) {
 
   function renderSample() {
     if (!sample) return;
-    clear(sampleBody);
-    setStatus(sampleStatus, '');
+    clear(list.body);
+    setStatus(list.status, '');
     const drivers = sampleDrivers(sample);
-    sampleBody.append(sample.length
+    list.body.append(sample.length
       ? h('ol', { class: 'landing-sample__list', role: 'list' }, sample.map((city, i) => cityRow(city, drivers[i])))
       : h('p', { class: 'inv-empty', dataset: { i18n: 'inv.landing.sample.empty' } }, tt('inv.landing.sample.empty')));
   }
 
   async function loadSample() {
     sample = null;
-    renderSkeleton(sampleBody, SAMPLE_SIZE);
-    setStatusKey(sampleStatus, 'inv.loading');
+    renderSkeleton(list.body, list.size);
+    setStatusKey(list.status, 'inv.loading');
     try {
-      const data = await api.stateCities(SAMPLE_STATE, { limit: SAMPLE_SIZE });
+      let code = SAMPLE_STATE;
+      if (prefs) {
+        // a saved city only carries its id, so its state comes from the API
+        const city = prefs.target?.type === 'city' ? await api.city(prefs.target.id) : null;
+        code = shortlistState(prefs, typeof city?.state === 'string' ? city.state : null);
+        if (!code) throw new Error('no state to show');
+        yours = { code, city, states: (await api.states()).states };
+        paintYours();
+      }
+      const data = await api.stateCities(code, { limit: list.size, preset: list.preset });
       if (!Array.isArray(data?.cities)) throw new Error('unexpected state cities response');
-      sample = data.cities.slice(0, SAMPLE_SIZE);
+      sample = data.cities.slice(0, list.size);
       renderSample();
     } catch (error) {
       if (error?.code === 'aborted') return;
-      setStatus(sampleStatus, '');
-      renderError(sampleBody, error, loadSample);
+      setStatus(list.status, '');
+      renderError(list.body, error, loadSample);
+    }
+  }
+
+  // Heading, sub line and buttons of the personalised block. Names come from the API, never from storage.
+  function paintYours() {
+    if (!yours) return;
+    const { code, city, states } = yours;
+    const stateName = states?.find((s) => s.code === code)?.name ?? code;
+    const presetName = tt(`inv.preset.${prefs.preset}`);
+    doc.getElementById('yours-title').textContent = tt('inv.you.title', { place: stateName });
+    doc.getElementById('yours-sub').textContent = tt('inv.you.sub', { preset: presetName });
+    const open = doc.getElementById('yours-open');
+    open.textContent = tt('inv.you.open', { place: stateName });
+    open.setAttribute('href', `state.html?s=${code}&preset=${prefs.preset}`);
+    const cityLine = doc.getElementById('yours-city');
+    clear(cityLine);
+    cityLine.hidden = !(city && typeof city.name === 'string' && cityHref(prefs.target.id));
+    if (!cityLine.hidden) {
+      cityLine.append(h('a', { href: `city.html?c=${prefs.target.id}&preset=${prefs.preset}` }, tt('inv.you.city', { name: city.name })));
     }
   }
 
@@ -139,7 +185,15 @@ function boot(doc) {
     doc.title = `${tt('inv.landing.headline')} | INFRA-AI`; // the static <title> stays English, so it is rebuilt like the rest
     renderSample();
     renderSources();
+    paintYours();
   });
+  if (prefs) {
+    doc.getElementById('yours').hidden = false;
+    doc.querySelector('.landing-hero').hidden = true;
+    doc.getElementById('yours-change').addEventListener('click', () => globalThis.InfraOnboard?.open());
+  }
+  // finishing the popup saves new answers; reload to rebuild the page from them
+  globalThis.addEventListener('infra:onboarded', () => globalThis.location.reload());
   loadSample();
   loadMeta();
 }
