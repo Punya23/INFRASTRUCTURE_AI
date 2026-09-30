@@ -1503,20 +1503,39 @@
       });
     });
 
-    // --- Voice Search Simulation ---
+    // --- Voice Search (Web Speech API; locale follows the selected UI language) ---
     const voiceBtn = document.getElementById('voice-bhashini-btn');
     const speakLangBtn = document.getElementById('speak-language-btn');
-    function simulateVoice() {
+    const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+    let recognizer = null;
+    function startVoice() {
       const input = document.getElementById('civic-search-input');
-      voiceBtn.classList.add('listening');
-      input.value = "🎤 Listening...";
-      setTimeout(() => {
-        input.value = "Hadapsar Flyover, Pune, Maharashtra";
+      if (recognizer) { recognizer.stop(); return; } // second click = stop
+      if (!SpeechRec) { alert('Voice search is not supported in this browser. Try Chrome or Safari.'); return; }
+      const previous = input.value, prevPlaceholder = input.placeholder;
+      const rec = recognizer = new SpeechRec();
+      rec.lang = window.InfraI18n ? InfraI18n.getSpeechLocale() : 'en-IN';
+      rec.interimResults = true;
+      rec.maxAlternatives = 1;
+      let heard = false;
+      rec.onstart = () => { voiceBtn.classList.add('listening'); input.value = ''; input.placeholder = '🎤 Listening…'; };
+      rec.onresult = (e) => {
+        heard = true;
+        input.value = Array.from(e.results).map((r) => r[0].transcript).join(' ').trim();
+      };
+      rec.onerror = (e) => {
+        if (e.error === 'not-allowed' || e.error === 'service-not-allowed') alert('Microphone access is blocked. Allow it in the browser and try again.');
+      };
+      rec.onend = () => {
         voiceBtn.classList.remove('listening');
-      }, 1800);
+        if (!heard) input.value = previous; // nothing recognised: never leave a made-up value
+        input.placeholder = prevPlaceholder;
+        recognizer = null;
+      };
+      rec.start();
     }
-    voiceBtn.addEventListener('click', simulateVoice);
-    speakLangBtn.addEventListener('click', simulateVoice);
+    voiceBtn.addEventListener('click', startVoice);
+    speakLangBtn.addEventListener('click', startVoice);
 
     // --- Tabs ---
     const tabBar = document.getElementById('tab-bar');
