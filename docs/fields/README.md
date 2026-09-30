@@ -6,7 +6,7 @@ A **field** is one type of infrastructure — national highways, metro rail, …
 
 | Field | Id | Status | Owner | Plan |
 |---|---|---|---|---|
-| National Highways | `national_highways` | Active — data, EDA and analysis done; pipeline news and recommendations next | Punya | [national-highways.md](national-highways.md) |
+| National Highways | `national_highways` | Active — data, EDA and analysis done; pipeline half done (delay flags, cited press-release events); news, tenders, land-acquisition notices and recommendations next | Punya | [national-highways.md](national-highways.md) |
 | Metro rail | `metro_rail` | Active — starts at M1 | _data teammate — add your name_ | [metro-rail.md](metro-rail.md) |
 | Railways | `railways` | Candidate | — | — |
 | Airports | `airports` | Candidate | — | — |

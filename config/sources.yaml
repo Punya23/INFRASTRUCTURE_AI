@@ -148,6 +148,23 @@ nhai_black_spots:
   attribution: National Highways Authority of India — Datalake GeoServer
   used_by: [national_highways]
 
+nhai_projects_schedule:
+  url: https://datalakew.nhai.gov.in/geoserver/NHAI/ows
+  tls_max: "1.2"  # server drops OpenSSL 3.5's TLS 1.3 hello (UNEXPECTED_EOF)
+  layer: NHAI:adv_upc_wise_alignments_wfs_layers
+  # the sibling of nhai_projects that the NHAI dashboard's project table reads: adds appointed and
+  # scheduled-completion dates, LOA date, capital cost and physical/financial progress (dd-mm-yyyy, % and Rs crore as text).
+  # Not kept (ADR-0011): PD/RO phone numbers, drone-video names and the piu/ro office fields.
+  keep: [upc, length, lane_2, scheme, mode, state, phase, project_ty, project_na, current_st, nh_new, green_brown_field,
+         concession, district_name, adv_pkg_name, adv_total_capital_cost, adv_cumphysical_progress_tilllastmonth,
+         adv_cumfinancial_progress_tilllastmonth, adv_appointed_date, adv_scheduled_completion_date, loa_date]
+  dest: nhai/upc_projects_schedule.geojson
+  kind: wfs
+  srs: null  # attribute-only layer (no geometry)
+  license: none stated — analysis use by team decision (ADR-0014); not redistributed
+  attribution: National Highways Authority of India — Datalake GeoServer (project dashboard layer)
+  used_by: [national_highways]
+
 nhai_projects:
   url: https://datalakew.nhai.gov.in/geoserver/NHAI/ows
   tls_max: "1.2"  # server drops OpenSSL 3.5's TLS 1.3 hello (UNEXPECTED_EOF)
@@ -193,6 +210,17 @@ wikipedia_expressways_of_india:
   kind: html
   license: CC BY-SA 4.0 — Wikipedia contributors; stored as metadata + short quote per ADR-0012
   attribution: Wikipedia, "Expressways of India" (retrieved 2026-09-29)
+  used_by: [national_highways]
+
+morth_press_releases:
+  url: https://morth.nic.in/backend/api/press-release
+  dest: morth/press-release.json
+  kind: text
+  # The listing behind morth.nic.in/press-release: title, PIB link and date of each MoRTH release since
+  # about March 2026. The release pages themselves are fetched from PIB by `fields.national_highways press`
+  # (manifest pib_morth_press_releases). robots.txt: none on either site (the path returns the app shell).
+  license: Government of India public record; PIB Copyright Policy (pib.gov.in/content/102_2_Copyright-Policy.aspx) allows free reproduction with the source acknowledged
+  attribution: Ministry of Road Transport and Highways, press releases (morth.nic.in) via Press Information Bureau, Government of India
   used_by: [national_highways]
 
 # ── PUBLIC TRANSPORT — BUS ────────────────────────────────────────────────────

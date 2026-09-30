@@ -8,16 +8,19 @@ import argparse
 import sys
 import time
 
-from fields.national_highways import analysis, build
+from fields.national_highways import analysis, build, events, ingest_pib, schedule
 
 STEPS = {
     "extract": build.extract_osm,
     "segments": build.build_segments,
     "graph": build.build_graph,
     "nhai": build.build_nhai,
+    "schedule": schedule.build_schedule,
     "official": build.build_official,
     "rai": build.build_rai,
     "tolls": build.build_tolls,
+    "press": ingest_pib.fetch_press,
+    "events": events.build_events,
     "analyze": analysis.run_all,
     "fixtures": analysis.write_fixtures,
 }

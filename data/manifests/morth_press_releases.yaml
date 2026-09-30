@@ -1,0 +1,13 @@
+id: morth_press_releases
+license: Government of India public record; PIB Copyright Policy (pib.gov.in/content/102_2_Copyright-Policy.aspx)
+  allows free reproduction with the source acknowledged
+attribution: Ministry of Road Transport and Highways, press releases (morth.nic.in)
+  via Press Information Bureau, Government of India
+used_by:
+- national_highways
+files:
+- file: data/raw/morth/press-release.json
+  url: https://morth.nic.in/backend/api/press-release
+  bytes: 83948
+  sha256: 1add5179063ba4592c8659651eb53e1e5fdea8d0fed1a7ff3a78062d7caba591
+  fetched_at: '2026-09-29T21:57:49Z'

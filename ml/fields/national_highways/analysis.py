@@ -27,6 +27,7 @@ from fields.national_highways.normalize import (
     parse_year,
     road_lanes,
 )
+from fields.national_highways.schedule import as_of_date, delay_table
 from pipeline.fixtures import write_geojson
 from pipeline.shared_layers import (
     INDIA_CRS,
@@ -468,6 +469,9 @@ def run_all() -> dict:
     diff.to_csv(A / "corridor_effect.csv")
     per_corridor.to_csv(A / "corridor_effect_corridors.csv")
     results["corridor_did_pp"] = diff.attrs["did_pp"]
+    delays = delay_table(pd.read_parquet(OUT / "nhai_schedule.parquet"))
+    delays.to_csv(A / "delay_by_state.csv")
+    results["delay_india"] = delays.loc["India"].to_dict()
     (A / "summary.json").write_text(json.dumps(results, indent=2, default=float))
     print(json.dumps(results, indent=2, default=float))
     return results
@@ -581,3 +585,42 @@ def write_fixtures() -> None:
         "worst": json.loads(pairs.head(20).round(3).to_json(orient="records")),
         "sources": ["OSM road network (trunk–tertiary)"]}, indent=1))
     print(f"fixture city_pairs.json: {len(pairs)} pairs, median circuity {pairs['circuity'].median():.3f}")
+
+    delays = pd.read_csv(A / "delay_by_state.csv", index_col=0)
+    (FIXTURES / "nh_delays.json").write_text(json.dumps({
+        "field": "national_highways",
+        "as_of": as_of_date().isoformat(),
+        "method": ("NHAI projects under construction whose scheduled completion date, as recorded on NHAI's "
+                   "project dashboard, has passed are overdue; awarded projects never appointed are not_started. "
+                   "Projects holding a provisional completion certificate are not assessed (no certificate date is "
+                   "published)."),
+        "caveats": [("The scheduled date may already include time extensions, so overdue counts slippage against "
+                     "the current recorded schedule, not the original contract date."),
+                    "Projects spanning several states are grouped as 'Multiple states'."],
+        "india": json.loads(delays.loc[["India"]].round(3).to_json(orient="records"))[0],
+        "states": json.loads(delays.drop(index="India").round(3).reset_index().rename(
+            columns={"index": "state"}).to_json(orient="records")),
+        "sources": ["NHAI Datalake project dashboard layer (aggregates only, ADR-0014)"]}, indent=1))
+    print(f"fixture nh_delays.json: {len(delays) - 1} state rows, as of {as_of_date()}")
+
+    ev = pd.read_parquet(OUT / "nh_events.parquet").sort_values("event_date", ascending=False)
+
+    def number(value):
+        return None if pd.isna(value) else float(value)
+
+    (FIXTURES / "nh_events.json").write_text(json.dumps({
+        "field": "national_highways",
+        "method": "Stage events read by rules from MoRTH press releases on PIB. Each carries the verbatim sentence "
+                   "that states the stage and a link to the release; nothing is inferred beyond that sentence and title.",
+        "attribution": "Press Information Bureau, Government of India — reproduced under the PIB Copyright Policy",
+        "events": [{
+            "id": r.id, "field": "national_highways", "kind": "nh_project_event", "name": r.name,
+            "ref": r.nh_refs[0] if len(r.nh_refs) else None, "status": r.stage, "opened_on": None,
+            "expected_completion": None, "agency": None, "source": r.source, "source_ref": r.source_ref,
+            "fetched_at": r.fetched_at, "license": r.license, "confidence": r.confidence,
+            "event_type": r.event_type, "event_date": r.event_date, "nh_refs": list(r.nh_refs),
+            "states": list(r.states), "cost_crore": number(r.cost_crore), "length_km": number(r.length_km),
+            "modes": list(r.modes), "evidence": r.evidence, "source_url": r.source_url,
+            "language": r.language, "extractor": r.extractor,
+        } for r in ev.itertuples()]}, indent=1, ensure_ascii=False))
+    print(f"fixture nh_events.json: {len(ev)} cited events")

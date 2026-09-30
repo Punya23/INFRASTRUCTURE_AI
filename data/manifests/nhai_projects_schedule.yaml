@@ -1,0 +1,12 @@
+id: nhai_projects_schedule
+license: none stated — analysis use by team decision (ADR-0014); not redistributed
+attribution: National Highways Authority of India — Datalake GeoServer (project dashboard
+  layer)
+used_by:
+- national_highways
+files:
+- file: data/raw/nhai/upc_projects_schedule.geojson
+  url: https://datalakew.nhai.gov.in/geoserver/NHAI/ows
+  bytes: 1858518
+  sha256: 6dbb386015f9d45457a01cb7f8e60c5e013caa07bf1210a963380301e80d1a05
+  fetched_at: '2026-09-29T21:47:24Z'

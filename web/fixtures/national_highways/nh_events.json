@@ -1,0 +1,705 @@
+{
+ "field": "national_highways",
+ "method": "Stage events read by rules from MoRTH press releases on PIB. Each carries the verbatim sentence that states the stage and a link to the release; nothing is inferred beyond that sentence and title.",
+ "attribution": "Press Information Bureau, Government of India — reproduced under the PIB Copyright Policy",
+ "events": [
+  {
+   "id": "nh_project_event:pib_morth:2305502",
+   "field": "national_highways",
+   "kind": "nh_project_event",
+   "name": "NHAI Receives Overwhelming Response from Bidders for Construction of Coastal Corridor from Rameshwar to Paradeep in Odisha",
+   "ref": null,
+   "status": "tendered",
+   "opened_on": null,
+   "expected_completion": null,
+   "agency": null,
+   "source": "pib_morth",
+   "source_ref": "2305502",
+   "fetched_at": "2026-09-29T22:00:03Z",
+   "license": "Government of India public record; PIB Copyright Policy (pib.gov.in/content/102_2_Copyright-Policy.aspx) allows free reproduction with the source acknowledged",
+   "confidence": 0.8,
+   "event_type": "bids_received",
+   "event_date": "2026-09-01",
+   "nh_refs": [],
+   "states": [
+    "Odisha"
+   ],
+   "cost_crore": null,
+   "length_km": 160.0,
+   "modes": [],
+   "evidence": "National Highways Authority of India (NHAI) has received an overwhelming response from the bidders for the implementation of 160 km long Access Controlled Greenfield Coastal National Highway from Rameshwar to Paradeep in Odisha.",
+   "source_url": "https://pib.gov.in/PressReleasePage.aspx?PRID=2305502",
+   "language": "en",
+   "extractor": "rules:nh_events:v1"
+  },
+  {
+   "id": "nh_project_event:pib_morth:2301145",
+   "field": "national_highways",
+   "kind": "nh_project_event",
+   "name": "Cabinet approves Upgradation of the Muzaffarpur-Sitamarhi-Sonbarsa Section of NH-22 to 4-Lane Standard in Bihar on Hybrid Annuity Mode (HAM) at total Capital Cost of Rs.3590.73 crore",
+   "ref": "NH22",
+   "status": "approved",
+   "opened_on": null,
+   "expected_completion": null,
+   "agency": null,
+   "source": "pib_morth",
+   "source_ref": "2301145",
+   "fetched_at": "2026-09-29T22:00:11Z",
+   "license": "Government of India public record; PIB Copyright Policy (pib.gov.in/content/102_2_Copyright-Policy.aspx) allows free reproduction with the source acknowledged",
+   "confidence": 0.9,
+   "event_type": "cabinet_approval",
+   "event_date": "2026-08-19",
+   "nh_refs": [
+    "NH22"
+   ],
+   "states": [
+    "Bihar"
+   ],
+   "cost_crore": 3590.73,
+   "length_km": null,
+   "modes": [
+    "HAM"
+   ],
+   "evidence": "The Cabinet Committee on Economic Affairs, chaired by the Prime Minister Shri Narendra Modi, today has approved the Upgradation of the Muzaffarpur-Sitamarhi-Sonbarsa Section of NH-22 to four-Lane Standard in Bihar.",
+   "source_url": "https://pib.gov.in/PressReleasePage.aspx?PRID=2301145",
+   "language": "en",
+   "extractor": "rules:nh_events:v1"
+  },
+  {
+   "id": "nh_project_event:pib_morth:2290462",
+   "field": "national_highways",
+   "kind": "nh_project_event",
+   "name": "NHAI Undertakes DPR Preparation to Decongest Sarai Kale Khan Loop on DND–Sohna National Highway Corridor",
+   "ref": "NH148NA",
+   "status": "proposed",
+   "opened_on": null,
+   "expected_completion": null,
+   "agency": null,
+   "source": "pib_morth",
+   "source_ref": "2290462",
+   "fetched_at": "2026-09-29T22:00:45Z",
+   "license": "Government of India public record; PIB Copyright Policy (pib.gov.in/content/102_2_Copyright-Policy.aspx) allows free reproduction with the source acknowledged",
+   "confidence": 0.8,
+   "event_type": "dpr_preparation",
+   "event_date": "2026-07-28",
+   "nh_refs": [
+    "NH148NA"
+   ],
+   "states": [],
+   "cost_crore": null,
+   "length_km": null,
+   "modes": [],
+   "evidence": "In order to improve traffic flow and enhance commuter convenience in the National Capital Region (NCR), NHAI has undertaken preparation of the Detailed Project Report (DPR) to address traffic congestion at the Sarai Kale Khan Loop, which is a critical junction of the DND–Sohna section on NH-148NA.",
+   "source_url": "https://pib.gov.in/PressReleasePage.aspx?PRID=2290462",
+   "language": "en",
+   "extractor": "rules:nh_events:v1"
+  },
+  {
+   "id": "nh_project_event:pib_morth:2279822",
+   "field": "national_highways",
+   "kind": "nh_project_event",
+   "name": "Cabinet approves the construction of 4/6 lane Access-Controlled Kanpur-Kabrai section of NH-34 in Uttar Pradesh on BOT (Toll) Mode at total Capital Cost of Rs.7145.14 crore",
+   "ref": "NH34",
+   "status": "approved",
+   "opened_on": null,
+   "expected_completion": null,
+   "agency": null,
+   "source": "pib_morth",
+   "source_ref": "2279822",
+   "fetched_at": "2026-09-29T22:01:30Z",
+   "license": "Government of India public record; PIB Copyright Policy (pib.gov.in/content/102_2_Copyright-Policy.aspx) allows free reproduction with the source acknowledged",
+   "confidence": 0.9,
+   "event_type": "cabinet_approval",
+   "event_date": "2026-07-01",
+   "nh_refs": [
+    "NH34"
+   ],
+   "states": [
+    "Uttar Pradesh"
+   ],
+   "cost_crore": 7145.14,
+   "length_km": 117.7,
+   "modes": [
+    "BOT"
+   ],
+   "evidence": "The Cabinet Committee on Economic Affairs, chaired by the Prime Minister Shri Narendra Modi, today has approved the construction of 117.7 km Kanpur–Kabrai Access-Controlled Greenfield Highway, a four-lane access-controlled corridor with structures designed for future six-laning, forming a key segment of the Bhopal–Kanpur Economic Corridor under the National Highways (O) Programme.",
+   "source_url": "https://pib.gov.in/PressReleasePage.aspx?PRID=2279822",
+   "language": "en",
+   "extractor": "rules:nh_events:v1"
+  },
+  {
+   "id": "nh_project_event:pib_morth:2279820",
+   "field": "national_highways",
+   "kind": "nh_project_event",
+   "name": "Cabinet approves Construction of 6 Lane Road Tunnel For NH-148AE connecting Dwarka Expressway (NH 248 BB) with Nelson Mandela Marg, Vasant Kunj in Delhi with a Total Project Length of 8.1 Km worth Rs. 6969.67 crore on Hybrid Annuity Mode (HAM) under NH (O) scheme",
+   "ref": "NH148AE",
+   "status": "approved",
+   "opened_on": null,
+   "expected_completion": null,
+   "agency": null,
+   "source": "pib_morth",
+   "source_ref": "2279820",
+   "fetched_at": "2026-09-29T22:01:32Z",
+   "license": "Government of India public record; PIB Copyright Policy (pib.gov.in/content/102_2_Copyright-Policy.aspx) allows free reproduction with the source acknowledged",
+   "confidence": 0.9,
+   "event_type": "cabinet_approval",
+   "event_date": "2026-07-01",
+   "nh_refs": [
+    "NH148AE",
+    "NH248BB"
+   ],
+   "states": [
+    "Delhi"
+   ],
+   "cost_crore": 6969.67,
+   "length_km": 8.1,
+   "modes": [
+    "HAM"
+   ],
+   "evidence": "The Cabinet Committee on Economic Affairs, chaired by the Prime Minister Shri Narendra Modi, today has approved the construction of 6 Lane Road Tunnel For NH-148AE connecting Dwarka Expressway (NH 248 BB) with Nelson Mandela Marg, Vasant Kunj in Delhi with a total project length of 8.1 Km and total capital cost of Rs.6969.67 crore on Hybrid Annuity Mode (HAM) under NH (O) scheme.",
+   "source_url": "https://pib.gov.in/PressReleasePage.aspx?PRID=2279820",
+   "language": "en",
+   "extractor": "rules:nh_events:v1"
+  },
+  {
+   "id": "nh_project_event:pib_morth:2270874",
+   "field": "national_highways",
+   "kind": "nh_project_event",
+   "name": "Historic Breakthrough Achieved at Zojila Tunnel Project; Shri Nitin Gadkari Highlights Transformational Connectivity Initiatives Across Jammu & Kashmir and Ladakh",
+   "ref": null,
+   "status": "under_construction",
+   "opened_on": null,
+   "expected_completion": null,
+   "agency": null,
+   "source": "pib_morth",
+   "source_ref": "2270874",
+   "fetched_at": "2026-09-29T22:02:14Z",
+   "license": "Government of India public record; PIB Copyright Policy (pib.gov.in/content/102_2_Copyright-Policy.aspx) allows free reproduction with the source acknowledged",
+   "confidence": 0.8,
+   "event_type": "tunnel_breakthrough",
+   "event_date": "2026-06-09",
+   "nh_refs": [],
+   "states": [
+    "Jammu and Kashmir",
+    "Ladakh"
+   ],
+   "cost_crore": null,
+   "length_km": null,
+   "modes": [],
+   "evidence": "Union Minister of Road Transport & Highways Shri Nitin Gadkari today witnessed the historic breakthrough of the main tunnel at the eastern portal of the Zojila Tunnel Project at Minamarg in Kargil district.",
+   "source_url": "https://pib.gov.in/PressReleasePage.aspx?PRID=2270874",
+   "language": "en",
+   "extractor": "rules:nh_events:v1"
+  },
+  {
+   "id": "nh_project_event:pib_morth:2268353",
+   "field": "national_highways",
+   "kind": "nh_project_event",
+   "name": "Cabinet approves Upgradation of the existing intermediate lane to 2 Lane with Paved Shoulder Standard (125.01 kms) of Hiwarkhedi -Roshni-Ashapur-Rudhy Section of NH-347B and widening of existing 2 lane to 4 lane from Deshgaon-Julwaniya Section of NH-347B of length (108. 643 kms) in Madhya Pradesh on Hybrid Annuity Mode",
+   "ref": "NH347B",
+   "status": "approved",
+   "opened_on": null,
+   "expected_completion": null,
+   "agency": null,
+   "source": "pib_morth",
+   "source_ref": "2268353",
+   "fetched_at": "2026-09-29T22:02:16Z",
+   "license": "Government of India public record; PIB Copyright Policy (pib.gov.in/content/102_2_Copyright-Policy.aspx) allows free reproduction with the source acknowledged",
+   "confidence": 0.9,
+   "event_type": "cabinet_approval",
+   "event_date": "2026-06-03",
+   "nh_refs": [
+    "NH347B"
+   ],
+   "states": [
+    "Madhya Pradesh"
+   ],
+   "cost_crore": 4415.6,
+   "length_km": null,
+   "modes": [
+    "HAM"
+   ],
+   "evidence": "The Cabinet Committee on Economic Affairs, chaired by the Prime Minister Shri Narendra Modi, today has approved upgradation of the existing intermediate lane to 2 Lane with Paved Shoulder Standard (125.01 kms) of Hiwarkhedi -Roshni-Ashapur-Rudhy Section of NH-347B and widening of existing 2 lane to 4 lanes from Deshgaon-Julwaniya Section of NH-347B of length (108. 643 kms) in the State of Madhya Pradesh on Hybrid Annuity Mode at a cost of Rs.4,415.60 Crore.",
+   "source_url": "https://pib.gov.in/PressReleasePage.aspx?PRID=2268353",
+   "language": "en",
+   "extractor": "rules:nh_events:v1"
+  },
+  {
+   "id": "nh_project_event:pib_morth:2268347",
+   "field": "national_highways",
+   "kind": "nh_project_event",
+   "name": "Cabinet approves the construction of new coastal Highway from Rameshwar to Paradeep (Part of Coastal Highway having total length of 163.180 Km in 2 Packages) on Hybrid Annuity Mode in Odisha",
+   "ref": null,
+   "status": "approved",
+   "opened_on": null,
+   "expected_completion": null,
+   "agency": null,
+   "source": "pib_morth",
+   "source_ref": "2268347",
+   "fetched_at": "2026-09-29T22:02:20Z",
+   "license": "Government of India public record; PIB Copyright Policy (pib.gov.in/content/102_2_Copyright-Policy.aspx) allows free reproduction with the source acknowledged",
+   "confidence": 0.85,
+   "event_type": "cabinet_approval",
+   "event_date": "2026-06-03",
+   "nh_refs": [],
+   "states": [
+    "Odisha"
+   ],
+   "cost_crore": 8300.79,
+   "length_km": null,
+   "modes": [
+    "HAM"
+   ],
+   "evidence": "The Cabinet Committee on Economic Affairs, chaired by the Prime Minister Shri Narendra Modi, today has approved the construction of new coastal Highway from Rameshwar to Paradeep on Hybrid Annuity Model (HAM) in Odisha under two packages with a combined total length of 160.18 km and combined total capital cost of Rs.8300.79 crore.",
+   "source_url": "https://pib.gov.in/PressReleasePage.aspx?PRID=2268347",
+   "language": "en",
+   "extractor": "rules:nh_events:v1"
+  },
+  {
+   "id": "nh_project_event:pib_morth:2268349",
+   "field": "national_highways",
+   "kind": "nh_project_event",
+   "name": "Cabinet approves Upgradation of the Khagaria-Purnea Section of NH-31 and NH-231 to the 4-Lane Standard (143. 529 kms) at a cost of Rs.3936.05 crore in Bihar on BOT (Toll) Mode",
+   "ref": "NH31",
+   "status": "approved",
+   "opened_on": null,
+   "expected_completion": null,
+   "agency": null,
+   "source": "pib_morth",
+   "source_ref": "2268349",
+   "fetched_at": "2026-09-29T22:02:22Z",
+   "license": "Government of India public record; PIB Copyright Policy (pib.gov.in/content/102_2_Copyright-Policy.aspx) allows free reproduction with the source acknowledged",
+   "confidence": 0.9,
+   "event_type": "cabinet_approval",
+   "event_date": "2026-06-03",
+   "nh_refs": [
+    "NH31",
+    "NH231"
+   ],
+   "states": [
+    "Bihar"
+   ],
+   "cost_crore": 3936.05,
+   "length_km": 143.529,
+   "modes": [
+    "BOT"
+   ],
+   "evidence": "The Cabinet Committee on Economic Affairs, chaired by the Prime Minister Shri Narendra Modi, today has approved upgradation of the Khagaria-Purnea Section of NH-31 and NH-231 to the 4-Lane Standard (143. 529 kms) in Bihar on BOT (Toll) Mode at a cost of Rs.3936.05 crore.",
+   "source_url": "https://pib.gov.in/PressReleasePage.aspx?PRID=2268349",
+   "language": "en",
+   "extractor": "rules:nh_events:v1"
+  },
+  {
+   "id": "nh_project_event:pib_morth:2268352",
+   "field": "national_highways",
+   "kind": "nh_project_event",
+   "name": "Cabinet approves the widening of the Armoor-Jagtial-Mancherial Section of National Highway (NH)-63 on Hybrid Annuity Model (HAM) and the Jagtial-Karimnagar Section of National Highway (NH)–563 on Build-Operate-Transfer (Toll) (BOT (Toll)) to the 4-Lane Standard in Telangana with a Total Project Length of 190.76 km and cost of Rs.7597.16 crore",
+   "ref": "NH63",
+   "status": "approved",
+   "opened_on": null,
+   "expected_completion": null,
+   "agency": null,
+   "source": "pib_morth",
+   "source_ref": "2268352",
+   "fetched_at": "2026-09-29T22:02:24Z",
+   "license": "Government of India public record; PIB Copyright Policy (pib.gov.in/content/102_2_Copyright-Policy.aspx) allows free reproduction with the source acknowledged",
+   "confidence": 0.9,
+   "event_type": "cabinet_approval",
+   "event_date": "2026-06-03",
+   "nh_refs": [
+    "NH63",
+    "NH563"
+   ],
+   "states": [
+    "Telangana"
+   ],
+   "cost_crore": 7597.16,
+   "length_km": 190.76,
+   "modes": [
+    "HAM",
+    "BOT"
+   ],
+   "evidence": "The Cabinet Committee on Economic Affairs, chaired by the Prime Minister Shri Narendra Modi, today has approved the widening of the existing Armoor-Jagtial-Mancherial Section of National Highway (NH)-63 on Hybrid Annuity Model (HAM) and Jagtial-Karimnagar Section of National Highway (NH)-563 on Build-Operate-Transfer (Toll) [BOT (Toll)] to the 4-lane standard under three work packages with a combined total length of 190.76 km and combined total capital cost of Rs.7597.16 crore.",
+   "source_url": "https://pib.gov.in/PressReleasePage.aspx?PRID=2268352",
+   "language": "en",
+   "extractor": "rules:nh_events:v1"
+  },
+  {
+   "id": "nh_project_event:pib_morth:2265553",
+   "field": "national_highways",
+   "kind": "nh_project_event",
+   "name": "Union Minister Shri Nitin Gadkari approves ₹1,427.61 Crore for 4-Lane Thiruvarur Bypass and Additional ROBs in Tamil Nadu",
+   "ref": "NH83",
+   "status": "approved",
+   "opened_on": null,
+   "expected_completion": null,
+   "agency": null,
+   "source": "pib_morth",
+   "source_ref": "2265553",
+   "fetched_at": "2026-09-29T22:02:38Z",
+   "license": "Government of India public record; PIB Copyright Policy (pib.gov.in/content/102_2_Copyright-Policy.aspx) allows free reproduction with the source acknowledged",
+   "confidence": 0.9,
+   "event_type": "minister_approval",
+   "event_date": "2026-05-26",
+   "nh_refs": [
+    "NH83"
+   ],
+   "states": [
+    "Tamil Nadu"
+   ],
+   "cost_crore": 1427.61,
+   "length_km": null,
+   "modes": [],
+   "evidence": "Union Minister Shri Nitin Gadkari has approved ₹1,427.61 crore for the construction of a 4-lane Thiruvarur Bypass on the Nagapattinam–Thanjavur section of NH-83 in Tamil Nadu.",
+   "source_url": "https://pib.gov.in/PressReleasePage.aspx?PRID=2265553",
+   "language": "en",
+   "extractor": "rules:nh_events:v1"
+  },
+  {
+   "id": "nh_project_event:pib_morth:2246440",
+   "field": "national_highways",
+   "kind": "nh_project_event",
+   "name": "NHAI Awards Contract for Four Laning of Gudebellur to Mahabubnagar Section of NH-167 in Telangana",
+   "ref": "NH167",
+   "status": "tendered",
+   "opened_on": null,
+   "expected_completion": null,
+   "agency": null,
+   "source": "pib_morth",
+   "source_ref": "2246440",
+   "fetched_at": "2026-09-29T22:03:51Z",
+   "license": "Government of India public record; PIB Copyright Policy (pib.gov.in/content/102_2_Copyright-Policy.aspx) allows free reproduction with the source acknowledged",
+   "confidence": 0.85,
+   "event_type": "contract_awarded",
+   "event_date": "2026-03-28",
+   "nh_refs": [
+    "NH167"
+   ],
+   "states": [
+    "Telangana"
+   ],
+   "cost_crore": null,
+   "length_km": null,
+   "modes": [],
+   "evidence": "NHAI has issued Letter of Award (LOA) for the Four Laning of Gudebellur to Mahabubnagar Section of NH-167 in Telangana.",
+   "source_url": "https://pib.gov.in/PressReleasePage.aspx?PRID=2246440",
+   "language": "en",
+   "extractor": "rules:nh_events:v1"
+  },
+  {
+   "id": "nh_project_event:pib_morth:2246429",
+   "field": "national_highways",
+   "kind": "nh_project_event",
+   "name": "NHAI Awards Contract for Construction of Flyovers and Underpasses at Jaipur Bypass Junction on NH-48",
+   "ref": "NH48",
+   "status": "tendered",
+   "opened_on": null,
+   "expected_completion": null,
+   "agency": null,
+   "source": "pib_morth",
+   "source_ref": "2246429",
+   "fetched_at": "2026-09-29T22:03:54Z",
+   "license": "Government of India public record; PIB Copyright Policy (pib.gov.in/content/102_2_Copyright-Policy.aspx) allows free reproduction with the source acknowledged",
+   "confidence": 0.85,
+   "event_type": "contract_awarded",
+   "event_date": "2026-03-28",
+   "nh_refs": [
+    "NH48"
+   ],
+   "states": [
+    "Rajasthan"
+   ],
+   "cost_crore": null,
+   "length_km": null,
+   "modes": [],
+   "evidence": "NHAI has issued a Letter of Award (LoA) for the construction of underpasses and flyovers at Jaipur Bypass Junction on the Delhi–Jaipur–Ajmer Expressway (NH-48) in Rajasthan.",
+   "source_url": "https://pib.gov.in/PressReleasePage.aspx?PRID=2246429",
+   "language": "en",
+   "extractor": "rules:nh_events:v1"
+  },
+  {
+   "id": "nh_project_event:pib_morth:2244035",
+   "field": "national_highways",
+   "kind": "nh_project_event",
+   "name": "NHAI Awards Contract for Construction of South–East Bypass for Azamgarh City in Uttar Pradesh",
+   "ref": null,
+   "status": "tendered",
+   "opened_on": null,
+   "expected_completion": null,
+   "agency": null,
+   "source": "pib_morth",
+   "source_ref": "2244035",
+   "fetched_at": "2026-09-29T22:04:02Z",
+   "license": "Government of India public record; PIB Copyright Policy (pib.gov.in/content/102_2_Copyright-Policy.aspx) allows free reproduction with the source acknowledged",
+   "confidence": 0.8,
+   "event_type": "contract_awarded",
+   "event_date": "2026-03-23",
+   "nh_refs": [],
+   "states": [
+    "Uttar Pradesh"
+   ],
+   "cost_crore": null,
+   "length_km": 15.0,
+   "modes": [],
+   "evidence": "NHAI has issued a Letter of Award (LOA) for the construction of a 15 km long four-lane South–East Bypass for Azamgarh city in Uttar Pradesh.",
+   "source_url": "https://pib.gov.in/PressReleasePage.aspx?PRID=2244035",
+   "language": "en",
+   "extractor": "rules:nh_events:v1"
+  },
+  {
+   "id": "nh_project_event:pib_morth:2241817",
+   "field": "national_highways",
+   "kind": "nh_project_event",
+   "name": "Cabinet approves construction of 4-Lane Access-Controlled National Highway-927 from Barabanki to Bahraich (101.515 km) in Uttar Pradesh on Hybrid Annuity Mode at a cost of Rs.6969.04 crore",
+   "ref": "NH927",
+   "status": "approved",
+   "opened_on": null,
+   "expected_completion": null,
+   "agency": null,
+   "source": "pib_morth",
+   "source_ref": "2241817",
+   "fetched_at": "2026-09-29T22:04:19Z",
+   "license": "Government of India public record; PIB Copyright Policy (pib.gov.in/content/102_2_Copyright-Policy.aspx) allows free reproduction with the source acknowledged",
+   "confidence": 0.9,
+   "event_type": "cabinet_approval",
+   "event_date": "2026-03-18",
+   "nh_refs": [
+    "NH927"
+   ],
+   "states": [
+    "Uttar Pradesh"
+   ],
+   "cost_crore": 6969.04,
+   "length_km": 101.515,
+   "modes": [
+    "HAM"
+   ],
+   "evidence": "The Cabinet Committee on Economic Affairs chaired by the Prime Minister Shri Narendra Modi has approved construction of 4-Lane Access-Controlled National Highway-927 from Barabanki to Bahraich (101.515 km) in Uttar Pradesh on Hybrid Annuity Mode (HAM) at a cost of Rs.6969.04 crore.",
+   "source_url": "https://pib.gov.in/PressReleasePage.aspx?PRID=2241817",
+   "language": "en",
+   "extractor": "rules:nh_events:v1"
+  },
+  {
+   "id": "nh_project_event:pib_morth:2240918",
+   "field": "national_highways",
+   "kind": "nh_project_event",
+   "name": "NHAI Receives Nine Bids for Six-Laning of Jaipur–Kishangarh Section of NH-48 in Rajasthan",
+   "ref": "NH48",
+   "status": "tendered",
+   "opened_on": null,
+   "expected_completion": null,
+   "agency": null,
+   "source": "pib_morth",
+   "source_ref": "2240918",
+   "fetched_at": "2026-09-29T22:04:21Z",
+   "license": "Government of India public record; PIB Copyright Policy (pib.gov.in/content/102_2_Copyright-Policy.aspx) allows free reproduction with the source acknowledged",
+   "confidence": 0.85,
+   "event_type": "bids_received",
+   "event_date": "2026-03-16",
+   "nh_refs": [
+    "NH48"
+   ],
+   "states": [
+    "Rajasthan"
+   ],
+   "cost_crore": null,
+   "length_km": 90.0,
+   "modes": [],
+   "evidence": "In a step towards strengthening National Highway infrastructure in the state of Rajasthan, NHAI has received nine bids from the National Highway developers for the project involving upgradation to six lanes of around 90 km long Jaipur–Kishangarh section of NH-48 in Rajasthan.",
+   "source_url": "https://pib.gov.in/PressReleasePage.aspx?PRID=2240918",
+   "language": "en",
+   "extractor": "rules:nh_events:v1"
+  },
+  {
+   "id": "nh_project_event:pib_morth:2239586",
+   "field": "national_highways",
+   "kind": "nh_project_event",
+   "name": "NHAI Receives Overwhelming Response from Bidders for Construction of Kaliabor to Numaligarh Section of NH-715 in Assam",
+   "ref": "NH715",
+   "status": "tendered",
+   "opened_on": null,
+   "expected_completion": null,
+   "agency": null,
+   "source": "pib_morth",
+   "source_ref": "2239586",
+   "fetched_at": "2026-09-29T22:04:25Z",
+   "license": "Government of India public record; PIB Copyright Policy (pib.gov.in/content/102_2_Copyright-Policy.aspx) allows free reproduction with the source acknowledged",
+   "confidence": 0.85,
+   "event_type": "bids_received",
+   "event_date": "2026-03-13",
+   "nh_refs": [
+    "NH715"
+   ],
+   "states": [
+    "Assam"
+   ],
+   "cost_crore": null,
+   "length_km": 85.0,
+   "modes": [
+    "EPC"
+   ],
+   "evidence": "The National Highways Authority of India (NHAI) has received an overwhelming response from bidders for the construction of the over 85 km long Kaliabor to Numaligarh section of NH-715, passing through Kaziranga National Park and Tiger Reserve, on Engineering, Procurement and Construction (EPC) mode.",
+   "source_url": "https://pib.gov.in/PressReleasePage.aspx?PRID=2239586",
+   "language": "en",
+   "extractor": "rules:nh_events:v1"
+  },
+  {
+   "id": "nh_project_event:pib_morth:2238961",
+   "field": "national_highways",
+   "kind": "nh_project_event",
+   "name": "NHAI Awards Contract for Construction of Gangaikonda Cholapuram Bypass on Kallagam to Meensurutti Section of NH-81 in Tamil Nadu",
+   "ref": "NH81",
+   "status": "tendered",
+   "opened_on": null,
+   "expected_completion": null,
+   "agency": null,
+   "source": "pib_morth",
+   "source_ref": "2238961",
+   "fetched_at": "2026-09-29T22:04:29Z",
+   "license": "Government of India public record; PIB Copyright Policy (pib.gov.in/content/102_2_Copyright-Policy.aspx) allows free reproduction with the source acknowledged",
+   "confidence": 0.85,
+   "event_type": "contract_awarded",
+   "event_date": "2026-03-12",
+   "nh_refs": [
+    "NH81"
+   ],
+   "states": [
+    "Tamil Nadu"
+   ],
+   "cost_crore": null,
+   "length_km": 7.0,
+   "modes": [],
+   "evidence": "NHAI has issued Letter of Award (LOA) for the construction of 7 km long two-lane with paved shoulder Greenfield Bypass to Gangaikonda Cholapuram in Kallagam to Meensurutti section of NH-81 in Tamil Nadu.",
+   "source_url": "https://pib.gov.in/PressReleasePage.aspx?PRID=2238961",
+   "language": "en",
+   "extractor": "rules:nh_events:v1"
+  },
+  {
+   "id": "nh_project_event:pib_morth:2238413",
+   "field": "national_highways",
+   "kind": "nh_project_event",
+   "name": "NHAI Receives Overwhelming Response from Bidders for Four-Laning of Dhamasiya–Bitada/ Movi and Nasarpore–Malotha Sections of NH-56 in Gujarat",
+   "ref": "NH56",
+   "status": "tendered",
+   "opened_on": null,
+   "expected_completion": null,
+   "agency": null,
+   "source": "pib_morth",
+   "source_ref": "2238413",
+   "fetched_at": "2026-09-29T22:04:31Z",
+   "license": "Government of India public record; PIB Copyright Policy (pib.gov.in/content/102_2_Copyright-Policy.aspx) allows free reproduction with the source acknowledged",
+   "confidence": 0.85,
+   "event_type": "bids_received",
+   "event_date": "2026-03-11",
+   "nh_refs": [
+    "NH56"
+   ],
+   "states": [
+    "Gujarat"
+   ],
+   "cost_crore": null,
+   "length_km": null,
+   "modes": [
+    "HAM"
+   ],
+   "evidence": "NHAI received an overwhelming response from the bidders for implementation of the 4-laning of the 47.46 km long Dhamasiya–Bitada/Movi section and the 60.21 km long Nasarpore–Malotha section in Gujarat on Hybrid Annuity Model (HAM) mode.",
+   "source_url": "https://pib.gov.in/PressReleasePage.aspx?PRID=2238413",
+   "language": "en",
+   "extractor": "rules:nh_events:v1"
+  },
+  {
+   "id": "nh_project_event:pib_morth:2237570",
+   "field": "national_highways",
+   "kind": "nh_project_event",
+   "name": "Cabinet approves construction of 4 Lanning of Badnawar-Petlawad-Thandla-Timarwani section of (NH-752D) of Delhi Mumbai expressway in Madhya Pradesh on Hybrid Annuity Mode worth Rs.3,839.42 crore",
+   "ref": "NH752D",
+   "status": "approved",
+   "opened_on": null,
+   "expected_completion": null,
+   "agency": null,
+   "source": "pib_morth",
+   "source_ref": "2237570",
+   "fetched_at": "2026-09-29T22:04:36Z",
+   "license": "Government of India public record; PIB Copyright Policy (pib.gov.in/content/102_2_Copyright-Policy.aspx) allows free reproduction with the source acknowledged",
+   "confidence": 0.9,
+   "event_type": "cabinet_approval",
+   "event_date": "2026-03-10",
+   "nh_refs": [
+    "NH752D"
+   ],
+   "states": [
+    "Madhya Pradesh"
+   ],
+   "cost_crore": 3839.42,
+   "length_km": 80.45,
+   "modes": [
+    "HAM"
+   ],
+   "evidence": "The Cabinet Committee on Economic Affairs, chaired by the Prime Minister Shri Narendra Modi, today has approved the development of a 4-lane corridor from Badnawar-Petlawad-Thandla-Timarwani section of NH-752D having a length of 80.45 kilometer with a total capital cost of Rs.3,839.42 crore.",
+   "source_url": "https://pib.gov.in/PressReleasePage.aspx?PRID=2237570",
+   "language": "en",
+   "extractor": "rules:nh_events:v1"
+  },
+  {
+   "id": "nh_project_event:pib_morth:2237579",
+   "field": "national_highways",
+   "kind": "nh_project_event",
+   "name": "Cabinet approves Revised Cost estimate for the Construction of Greenfield Connectivity to Jewar International Airport from Delhi-Faridabad-Ballabhgarh-Sohna Spur of the Delhi-Mumbai Expressway on Hybrid Annuity Mode in Uttar Pradesh and Haryana",
+   "ref": null,
+   "status": "approved",
+   "opened_on": null,
+   "expected_completion": null,
+   "agency": null,
+   "source": "pib_morth",
+   "source_ref": "2237579",
+   "fetched_at": "2026-09-29T22:04:37Z",
+   "license": "Government of India public record; PIB Copyright Policy (pib.gov.in/content/102_2_Copyright-Policy.aspx) allows free reproduction with the source acknowledged",
+   "confidence": 0.85,
+   "event_type": "cabinet_cost_revision",
+   "event_date": "2026-03-10",
+   "nh_refs": [],
+   "states": [
+    "Uttar Pradesh",
+    "Haryana"
+   ],
+   "cost_crore": 3630.77,
+   "length_km": null,
+   "modes": [
+    "HAM"
+   ],
+   "evidence": "The Cabinet Committee on Economic Affairs, chaired by the Prime Minister Shri Narendra Modi, today has approved the Revised Total Capital Cost of Rs.3630.77 crore for the Construction of Greenfield Connectivity to Jewar International Airport from Delhi-Faridabad-Ballabhgarh-Sohna Spur of the Delhi-Mumbai Expressway on Hybrid Annuity Mode in the States of Uttar Pradesh and Haryana.",
+   "source_url": "https://pib.gov.in/PressReleasePage.aspx?PRID=2237579",
+   "language": "en",
+   "extractor": "rules:nh_events:v1"
+  },
+  {
+   "id": "nh_project_event:pib_morth:2235072",
+   "field": "national_highways",
+   "kind": "nh_project_event",
+   "name": "NHAI Awards Contract for Construction of Bhubaneswar Capital Region Ring Road Project",
+   "ref": null,
+   "status": "tendered",
+   "opened_on": null,
+   "expected_completion": null,
+   "agency": null,
+   "source": "pib_morth",
+   "source_ref": "2235072",
+   "fetched_at": "2026-09-29T22:04:46Z",
+   "license": "Government of India public record; PIB Copyright Policy (pib.gov.in/content/102_2_Copyright-Policy.aspx) allows free reproduction with the source acknowledged",
+   "confidence": 0.8,
+   "event_type": "contract_awarded",
+   "event_date": "2026-03-03",
+   "nh_refs": [],
+   "states": [
+    "Odisha"
+   ],
+   "cost_crore": null,
+   "length_km": null,
+   "modes": [],
+   "evidence": "NHAI has issued a Letter of Award (LOA) for the construction of the six-lane access-controlled Greenfield Capital Region Ring Road (Bhubaneswar Bypass) Project in Odisha.",
+   "source_url": "https://pib.gov.in/PressReleasePage.aspx?PRID=2235072",
+   "language": "en",
+   "extractor": "rules:nh_events:v1"
+  }
+ ]
+}

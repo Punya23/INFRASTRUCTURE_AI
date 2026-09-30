@@ -33,3 +33,44 @@ toll_ratio_tolerance: 0.10         # ±10% on the median ratio — team judgment
 traffic_columns: [traffic_1, traffic_2, traffic_3, traffic_4, traffic_5, traffic_6, traffic_7, traffic_8,
                   traffic_9, traffic_10, traffic_11, traffic_12, traffic_13, traffic_14]
                                    # unlabelled NHAI counts: profiled only, never interpreted, until NHAI gives the legend
+
+# Cited project events from MoRTH press releases on PIB (events.py; ADR-0008, ADR-0012). Rules, not a model:
+# a release becomes an event only if its title matches a rule and one sentence of the opening paragraphs states
+# the stage; the quote is copied verbatim and checked against the page. Everything else is listed in
+# press_releases.csv with its reason — never dropped, never guessed.
+events:
+  evidence_max_chars: 500          # one sentence of a public press release (the longest of the 22 events is 482
+                                   #   characters); ADR-0012 allows a short quote and PIB allows free reproduction
+  opening_paragraphs: 4            # the stage sentence must sit in the first four paragraphs — PIB releases state the news first
+  languages: [en]                  # Hindi and other-script releases are listed, not extracted, until a labelled gold set exists (README §14)
+  max_listing_date_gap_days: 1     # MoRTH listing date vs the page's "Posted On" date
+  confidence: {base: 0.75, nh_ref: 0.05, state: 0.05, cost: 0.05}  # official release + verified quote; +0.05 per anchor field found — team judgment, 2026-09-30
+  review_below: 0.6                # README §8.4 step 11
+  rules:                           # first title match wins; `evidence` picks the sentence that states the stage.
+                                   #   The lifecycle enum (README §7) has no "awarded": a letter of award follows
+                                   #   the tender, so bids received and contracts awarded both map to `tendered`
+    - {type: cabinet_cost_revision, stage: approved, title: '^Cabinet approves Revised Cost', evidence: '\bapproved\b'}
+    - {type: cabinet_approval, stage: approved, title: '^Cabinet approves', evidence: '\bapproved\b'}
+    - {type: minister_approval, stage: approved, title: '\bapproves\s+(?:₹|Rs)', evidence: '\bapproved\b'}
+    - {type: contract_awarded, stage: tendered, title: '\bAwards? Contract', evidence: 'Letter of Award|\bawarded\b'}
+    - {type: bids_received, stage: tendered, title: '\bReceives? .*(?:Bidders|Bids)\b', evidence: '\bbid(?:s|ders)\b'}
+    - {type: dpr_preparation, stage: proposed, title: '\bDPR Preparation\b', evidence: '\bDPR\b|Detailed Project Report'}
+    - {type: foundation_stone, stage: under_construction, title: 'Foundation Stones?', evidence: 'foundation stone'}
+    - {type: tunnel_breakthrough, stage: under_construction, title: 'Breakthrough .*Tunnel', evidence: 'breakthrough'}
+    - {type: inaugurated, stage: operational, title: 'inaugurat|dedicat\w+ to (?:the )?nation|opens? to traffic', evidence: 'inaugurat|dedicat\w+|opened'}
+
+# Project schedule and delay flags (schedule.py). Source: NHAI dashboard layer, ADR-0014 — aggregates only in git.
+schedule:
+  stage_groups:                    # NHAI `current_st` label -> group; a label not listed is "unknown", never guessed.
+                                   #   PCC / CC = provisional / final completion certificate, AD = appointed date
+                                   #   (NHAI EPC and HAM contract terms); 2026-09 extract has these nine labels
+    not_awarded: ["Balance for Award"]
+    awarded_not_started: ["Awarded, Not Appointed"]
+    under_construction: ["Under Construction (AD issued)"]
+    provisionally_complete: ["PCC Issued, CC Pending"]
+    completed: ["CC Issued & O&M by Construction Agency", "Under O&M through OMT/TOT/O&M Agency at Site",
+                "Completed & Agency Demobilised (Civil/O&M)", "O&M on Project no more required"]
+    terminated: ["Terminated"]
+  in_execution: [awarded_not_started, under_construction]  # delay flags apply only here. PCC-issued projects are left
+                                   #   out: the layer has no PCC date, so a passed scheduled date does not show lateness
+  date_year_range: [2000, 2040]    # the 2026-09 extract holds a 1999 and a 2051 scheduled date — read as data errors

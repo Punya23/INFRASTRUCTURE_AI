@@ -81,11 +81,12 @@ def tls_context(tls_max: str | None) -> ssl.SSLContext | None:
     return ctx
 
 
-def _get(url: str, attempts: int = 3, context: ssl.SSLContext | None = None) -> bytes:
+def _get(url: str, attempts: int = 3, context: ssl.SSLContext | None = None,
+         user_agent: str = USER_AGENT) -> bytes:
     last_error: Exception | None = None
     for attempt in range(1, attempts + 1):
         try:
-            request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
+            request = urllib.request.Request(url, headers={"User-Agent": user_agent})
             with urllib.request.urlopen(request, timeout=180, context=context) as response:
                 return response.read()
         except (OSError, http.client.HTTPException) as exc:  # network errors: retry, then fail loudly

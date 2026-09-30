@@ -8,7 +8,7 @@ A multilingual, location-first infrastructure intelligence platform for India, b
 
 ## Status
 
-Scope is field-first: **national highways** and **metro rail** across India (ADR-0013). National highways: M1 data and M2 analysis landed (`ml/fields/national_highways/`, findings in `docs/fields/national-highways.md`); metro starts M1. **Investor flow landed ahead of M0** (ADR-0015): `ml/pipeline/invest` exports city and area scores to `web/fixtures/invest/`, a stdlib Go API (`api/`) serves them, and static pages in `web/invest/` show landing, onboarding, state and city views. It has no database and no login; the store package is the seam where Postgres slots in. **Next: M0 — Foundation** (README §13: DB, API, UI shell). Update this line whenever a milestone lands.
+Scope is field-first: **national highways** and **metro rail** across India (ADR-0013). National highways: M1 data and M2 analysis landed (`ml/fields/national_highways/`, findings in `docs/fields/national-highways.md`), and M3 is half done — delay flags and cited events from PIB press releases; news, tenders and land-acquisition notices are still open; metro starts M1. **Investor flow landed ahead of M0** (ADR-0015): `ml/pipeline/invest` exports city and area scores to `web/fixtures/invest/`, a stdlib Go API (`api/`) serves them, and static pages in `web/invest/` show landing, onboarding, state and city views. It has no database and no login; the store package is the seam where Postgres slots in. **Next: M0 — Foundation** (README §13: DB, API, UI shell). Update this line whenever a milestone lands.
 ADR-0003 and ADR-0013 are Accepted; ADR-0001 is superseded; the others are Proposed pending team review — follow them as the working default.
 
 ## Read in this order
