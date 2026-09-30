@@ -88,6 +88,14 @@
     .scroll { overflow-x: auto; }
     .three { display: grid; gap: 1rem; grid-template-columns: 1fr; } @media (min-width: 48rem) { .three { grid-template-columns: repeat(3, 1fr); } }
     .three ul { margin: 0; padding-inline-start: 1.1rem; } .three li { margin: .25rem 0; }
+    .prof { display: grid; gap: .75rem 1.5rem; grid-template-columns: 1fr; margin: 0 0 1rem; } @media (min-width: 48rem) { .prof { grid-template-columns: repeat(2, 1fr); } }
+    .prof dt { font-size: .75rem; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; color: var(--ink-2); }
+    .prof dd { margin: .1rem 0 0; }
+    .sub { font-size: 1rem; margin: 1rem 0 .4rem; }
+    .ready { list-style: none; margin: 0 0 .75rem; padding: 0; display: grid; gap: .35rem; }
+    .ready li { display: flex; gap: .5rem; align-items: baseline; font-size: .9rem; }
+    .ready .tag { background: var(--canvas); color: var(--ink-2); border: 1px solid var(--line-strong); }
+    .ready .tag.ok { background: var(--teal-wash); color: var(--teal-deep); border-color: var(--teal-wash); }
     .fine { color: var(--ink-2); font-size: .8rem; margin-top: 1.5rem; }
     @media (prefers-reduced-motion: reduce) { .map .pulse { animation: none; } }
   </style>
@@ -123,10 +131,19 @@
       </section>
     </div>
 
+    <section class="card wide" aria-labelledby="prof-h">
+      <h2 id="prof-h">Country profile</h2>
+      <p class="gloss" style="margin-top:0" id="prof-sub"></p>
+      <dl class="prof" id="prof"></dl>
+      <h3 class="sub">Readiness before a pilot</h3>
+      <ul class="ready" id="ready"></ul>
+      <p class="gloss">Agency and law names are planning pointers from public records, not legal advice; confirm each with local counsel before any real work.</p>
+    </section>
+
     <section class="card wide" aria-labelledby="cmp-h">
       <h2 id="cmp-h">Same scorecard, ten cities</h2>
       <p class="gloss" style="margin-top:0">Sorted by country name. This describes infrastructure access in one pilot city each; it does not rank countries.</p>
-      <div class="scroll"><table id="cmp"><thead><tr><th>Country</th><th>Pilot city</th><th>Language</th><th>Access score (sample)</th><th>Weakest driver</th></tr></thead><tbody></tbody></table></div>
+      <div class="scroll"><table id="cmp"><thead><tr><th>Country</th><th>Pilot city</th><th>Language</th><th>Access score (sample)</th><th>Weakest driver</th><th>Privacy regime</th><th>Official boundaries</th></tr></thead><tbody></tbody></table></div>
     </section>
 
     <section class="wide three" aria-label="What it would take">
@@ -139,7 +156,7 @@
   </main>
 
   <script type="module">
-    import { COUNTRIES, DEMO_REQUESTS, candidateClaims, verifyClaims, redact, score, publicCount, buildBrief } from './brics-sim.js';
+    import { COUNTRIES, PROFILES, READINESS, DEMO_REQUESTS, candidateClaims, verifyClaims, redact, score, publicCount, buildBrief } from './brics-sim.js';
 
     const $ = (id) => document.getElementById(id);
     const NS = 'http://www.w3.org/2000/svg';
@@ -268,10 +285,20 @@
       $('run').disabled = false;
     }
 
+    function renderProfile(c) {
+      const p = PROFILES[c.id];
+      $('prof-sub').textContent = `${c.name}: pilot city ${c.city}, ${c.lang}.`;
+      $('prof').replaceChildren(...[['Official statistics', p.stats], ['Official boundaries', p.boundary], ['Privacy regime', p.privacy],
+        ['Script and direction', p.script], ['Note for a pilot', p.note]].flatMap(([k, v]) => [h('dt', {}, k), h('dd', {}, v)]));
+      // India's own steps are live; for every other member nothing is started, so the checklist says so.
+      $('ready').replaceChildren(...READINESS.map((t) => h('li', {}, tag(!!c.live, c.live ? 'done' : 'not started'), t)));
+    }
+
     function pick(id) {
       sel = id; const c = byId[id];
       $('who').textContent = `${c.city}, ${c.name} · ${c.lang}`;
       $('live').hidden = !c.live;
+      renderProfile(c);
       paint(); resetSteps();
     }
 
@@ -283,7 +310,7 @@
     }
     document.querySelector('#cmp tbody').append(...[...COUNTRIES].sort((a, b) => a.name.localeCompare(b.name)).map((c) => {
       const r = results(c);
-      return h('tr', {}, h('td', {}, c.name), h('td', {}, c.city), h('td', {}, c.lang), h('td', {}, `${r.sc.score} / 100`), h('td', {}, r.weakest.label));
+      return h('tr', {}, h('td', {}, c.name), h('td', {}, c.city), h('td', {}, c.lang), h('td', {}, `${r.sc.score} / 100`), h('td', {}, r.weakest.label), h('td', {}, PROFILES[c.id].privacy), h('td', {}, PROFILES[c.id].boundary));
     }));
     $('run').addEventListener('click', run);
     $('reset').addEventListener('click', resetSteps);

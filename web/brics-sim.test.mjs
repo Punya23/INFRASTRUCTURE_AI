@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { COUNTRIES, FACTORS, DEMO_REQUESTS, candidateClaims, verifyClaims, redact, score, publicCount, briefNumbersValid, buildBrief } from './brics-sim.js';
+import { PROFILES, READINESS, COUNTRIES, FACTORS, DEMO_REQUESTS, candidateClaims, verifyClaims, redact, score, publicCount, briefNumbersValid, buildBrief } from './brics-sim.js';
 
 const root = dirname(fileURLToPath(import.meta.url));
 
@@ -78,4 +78,14 @@ test('map data: every member has a path and a pin inside the map', () => {
     assert.ok(members.has(c.id), `${c.id} missing from brics-world.json`);
     assert.ok(Math.abs(c.lonlat[0]) <= 180 && c.lonlat[1] <= 84 && c.lonlat[1] >= -58, `${c.id} pin outside map`);
   }
+});
+
+test('every member has a full profile and the readiness checklist is non-empty', () => {
+  for (const c of COUNTRIES) {
+    const p = PROFILES[c.id];
+    assert.ok(p, `${c.id} has no profile`);
+    for (const k of ['stats', 'boundary', 'privacy', 'note', 'script']) assert.ok(p[k] && p[k].length > 3, `${c.id}.${k}`);
+  }
+  assert.deepEqual(Object.keys(PROFILES).sort(), COUNTRIES.map((c) => c.id).sort());
+  assert.ok(READINESS.length >= 4);
 });

@@ -151,3 +151,28 @@ export function buildBrief(c, result, kept, feederRequests) {
 
 // Resident requests for the demo topics. Fixture counts; the second topic is under the threshold to show suppression.
 export const DEMO_REQUESTS = { feeder: 7, footpath: 3 };
+
+// Country profiles: who would supply the official numbers and boundaries, which privacy regime applies, and
+// what is still to do before a pilot. Agency and statute names are public-record pointers for planning, not legal
+// advice, and each needs checking with local counsel before any real work (the page says so). Nothing is ingested.
+export const PROFILES = {
+  IND: { stats: 'MoSPI / Census of India', boundary: 'Survey of India', privacy: 'Digital Personal Data Protection Act, 2023', note: 'Live today: OSM, WorldPop, PIB press releases and tenders are already in the pipeline.', script: 'Devanagari (and 20 more languages)' },
+  BRA: { stats: 'IBGE', boundary: 'IBGE (official territorial mesh)', privacy: 'LGPD (Lei 13.709/2018)', note: 'Portuguese is already a UI language; needs a gold set for Brazilian news and requests.', script: 'Latin' },
+  RUS: { stats: 'Rosstat', boundary: 'Rosreestr', privacy: 'Federal Law 152-FZ on Personal Data', note: 'Data-localisation and cross-border rules apply; hosting must be reviewed before any pilot.', script: 'Cyrillic' },
+  CHN: { stats: 'National Bureau of Statistics', boundary: 'Ministry of Natural Resources', privacy: 'Personal Information Protection Law (PIPL, 2021)', note: 'Mapping and cross-border data rules are strict; licensing of any boundary data comes first.', script: 'Simplified Han' },
+  ZAF: { stats: 'Stats SA', boundary: 'Chief Directorate: National Geo-spatial Information', privacy: 'Protection of Personal Information Act (POPIA)', note: 'English is the working language; other official languages would follow the same config route.', script: 'Latin' },
+  EGY: { stats: 'CAPMAS', boundary: 'Egyptian Survey Authority', privacy: 'Personal Data Protection Law No. 151 of 2020', note: 'Arabic right-to-left layout is exercised by this page; speech and translation need a gold set.', script: 'Arabic (right to left)' },
+  ETH: { stats: 'Ethiopian Statistics Service', boundary: 'Ethiopian Mapping Agency', privacy: 'Personal Data Protection Proclamation No. 1321/2024', note: 'Amharic has thin open corpora; the gold set would need to be built by hand.', script: 'Ethiopic (Ge\'ez)' },
+  IRN: { stats: 'Statistical Centre of Iran', boundary: 'National Cartographic Center', privacy: 'No single comprehensive statute; confirm the current position', note: 'Persian right-to-left; hosted AI providers and data access need a separate sanctions and access review.', script: 'Persian (right to left)' },
+  ARE: { stats: 'Federal Competitiveness and Statistics Centre', boundary: 'Per-emirate survey authorities', privacy: 'Federal Decree-Law 45 of 2021 (PDPL)', note: 'Boundaries and open data sit with each emirate, so the pilot starts from one emirate.', script: 'Arabic (right to left)' },
+  IDN: { stats: 'BPS (Statistics Indonesia)', boundary: 'BIG (Geospatial Information Agency)', privacy: 'Personal Data Protection Law No. 27 of 2022', note: 'Island geography needs ferry and bus-rapid-transit modes in the field config.', script: 'Latin' },
+};
+
+// The same checklist for every member; status is "not started" for all but India, because nothing else is built.
+export const READINESS = [
+  'Licence review of each dataset (ADR-0012)',
+  'Official boundary source agreed (ADR-0007)',
+  'Privacy review against the local law',
+  'Gold set for the national language (ADR-0008)',
+  'One city config file (config/cities/)',
+];
