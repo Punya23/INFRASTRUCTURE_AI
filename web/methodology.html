@@ -133,63 +133,13 @@
     @media (min-width: 1024px) { .container { padding: 0 3rem; } }
 
     /* Header & Nav */
-    .site-header {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 50;
-      background: rgba(247, 249, 255, 0.95); backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--outline-variant); box-shadow: 0 1px 8px rgba(20,32,43,0.04);
-    }
-    .header-inner { height: 5rem; display: flex; align-items: center; justify-content: space-between; gap: var(--space-md); }
-    .brand-group { display: flex; align-items: center; gap: var(--space-lg); }
-    .brand-link { display: flex; align-items: center; gap: var(--space-sm); }
-    .brand-logo { height: 2rem; width: auto; }
-    .brand-text { display: flex; flex-direction: column; }
-    .brand-name { color: var(--primary); display: flex; align-items: center; gap: var(--space-xs); font-weight: 700; }
-    .dpg-badge {
-      display: inline-flex; align-items: center; padding: 0.125rem 0.375rem;
-      border-radius: var(--radius-full); background: var(--surface-container-high);
-      color: var(--on-surface-variant); border: 1px solid var(--outline-variant);
-      text-transform: uppercase; font-size: 0.625rem; font-weight: 600;
-    }
-    .brand-sub { color: var(--on-surface-variant); display: none; }
-    @media (min-width: 640px) { .brand-sub { display: inline; font-size: 0.75rem; } }
 
-    .main-nav { display: none; align-items: center; gap: var(--space-md); margin-left: var(--space-sm); }
-    @media (min-width: 1024px) { .main-nav { display: flex; } }
-    .nav-link {
-      color: var(--on-surface-variant); padding: 0.25rem 0.5rem;
-      transition: color 0.2s, background 0.2s; border-radius: var(--radius-lg);
-    }
-    .nav-link:hover, .nav-link.active { color: var(--on-surface); }
-    .nav-link.active { color: var(--primary); background: var(--surface-container-high); font-weight: 600; }
 
-    .header-actions { display: flex; align-items: center; gap: var(--space-sm); }
-    .lang-switcher {
-      display: none; align-items: center; background: var(--surface-container-high);
-      padding: 0.125rem; border-radius: var(--radius-lg); border: 1px solid var(--outline-variant);
-    }
-    @media (min-width: 768px) { .lang-switcher { display: flex; } }
-    .lang-btn { padding: 0.25rem 0.625rem; border-radius: var(--radius); color: var(--on-surface-variant); transition: all 0.2s; }
-    .lang-btn:hover { color: var(--on-surface); }
-    .lang-btn.active { background: var(--surface-container-lowest); color: var(--primary); font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
 
-    .btn-primary {
-      display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.375rem 0.875rem;
-      border-radius: var(--radius-lg); background: var(--primary-container); color: var(--on-primary);
-      font-weight: 600; transition: background 0.2s;
-    }
-    .btn-primary:hover { background: var(--brand-teal-hover); }
 
-    .mobile-menu-btn { display: flex; align-items: center; justify-content: center; padding: 0.5rem; color: var(--on-surface); }
-    @media (min-width: 1024px) { .mobile-menu-btn { display: none; } }
-    .mobile-nav {
-      display: none; flex-direction: column; gap: var(--space-sm); padding: var(--space-md) var(--space-lg);
-      background: var(--surface-container-lowest); border-bottom: 1px solid var(--border-subtle);
-      position: fixed; top: 5rem; left: 0; right: 0; z-index: 49;
-    }
-    .mobile-nav.open { display: flex; }
 
     /* Notice Bar */
-    .notice-bar { margin-top: 5rem; background: var(--surface-container-high); border-bottom: 1px solid var(--outline-variant); padding: 0.375rem 0; }
+    .notice-bar { background: var(--surface-container-high); border-bottom: 1px solid var(--outline-variant); padding: 0.375rem 0; }
     .notice-inner { display: flex; align-items: center; justify-content: space-between; }
     .notice-left { display: flex; align-items: center; gap: var(--space-xs); color: var(--on-surface-variant); }
     .notice-dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--primary); }
@@ -282,57 +232,10 @@
     }
   </style>
   <script src="i18n.js"></script>
-  <link rel="stylesheet" href="nav.css"/>
 </head>
 <body>
   <!-- Header -->
-  <header class="site-header">
-    <div class="container header-inner">
-      <div class="brand-group">
-        <a class="brand-link" href="index.html">
-          <svg class="brand-logo" fill="none" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-            <rect fill="#0E5A66" height="32" rx="8" width="32"></rect>
-            <path d="M7 16H25M16 7V25" stroke="#FFFFFF" stroke-linecap="round" stroke-width="2.5"></path>
-            <circle cx="16" cy="16" fill="#E08A1E" r="3.5"></circle>
-          </svg>
-          <div class="brand-text">
-            <span class="text-title-lg brand-name">INFRA-AI <span class="dpg-badge text-label-sm">DPG</span></span>
-            <span class="text-label-sm brand-sub">India Infrastructure Intelligence</span>
-          </div>
-        </a>
-        <nav class="main-nav" id="main-nav">
-          <a class="nav-link text-title-md" href="index.html" data-i18n="navHome">Home</a>
-          <a class="nav-link text-title-md" href="nh-explorer.html" data-i18n="navNhMap">NH Map</a>
-          <a class="nav-link text-title-md" href="policymaker.html" data-i18n="navPolicymaker">Policymaker View</a>
-          <a class="nav-link text-title-md" href="invest/" data-i18n="inv.nav">Invest</a>
-          <a class="nav-link text-title-md active" href="methodology.html" data-i18n="navMethodology">Methodology</a>
-        </nav>
-      </div>
-      <div class="header-actions">
-        <div class="lang-switcher" id="lang-switcher">
-          <button class="lang-btn text-label-md active" data-lang="en">English</button>
-          <button class="lang-btn text-label-md" data-lang="hi">हिन्दी</button>
-          <button class="lang-btn text-label-md" data-lang="kn">ಕನ್ನಡ</button>
-        </div>
-        <a class="btn-primary text-body-sm" href="nh-explorer.html">
-          <span class="material-symbols-outlined" style="font-size:16px;">map</span>
-          <span>Open GIS Map</span>
-        </a>
-        <button class="mobile-menu-btn" id="mobile-menu-btn" type="button" aria-label="Menu">
-          <span class="material-symbols-outlined" style="font-size:24px;">menu</span>
-        </button>
-      </div>
-    </div>
-  </header>
-
-  <!-- Mobile Nav -->
-  <div class="mobile-nav" id="mobile-nav">
-    <a class="nav-link text-title-md" href="index.html" data-i18n="navHome">Home</a>
-    <a class="nav-link text-title-md" href="nh-explorer.html" data-i18n="navNhMap">NH Map</a>
-    <a class="nav-link text-title-md" href="policymaker.html" data-i18n="navPolicymaker">Policymaker View</a>
-    <a class="nav-link text-title-md" href="invest/" data-i18n="inv.nav">Invest</a>
-    <a class="nav-link text-title-md active" href="methodology.html" data-i18n="navMethodology">Methodology</a>
-  </div>
+  <script src="site-header.js"></script>
 
   <main>
     <!-- Notice Bar -->
@@ -775,17 +678,6 @@
   </footer>
 
   <script>
-    // Mobile navigation toggle
-    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-    const mobileNav = document.getElementById('mobile-nav');
-    if (mobileMenuBtn && mobileNav) {
-      mobileMenuBtn.addEventListener('click', () => {
-        mobileNav.classList.toggle('open');
-        const icon = mobileMenuBtn.querySelector('.material-symbols-outlined');
-        if (icon) icon.textContent = mobileNav.classList.contains('open') ? 'close' : 'menu';
-      });
-    }
-
     // === Language switcher — now handled by shared i18n.js ===
   </script>
 </body>

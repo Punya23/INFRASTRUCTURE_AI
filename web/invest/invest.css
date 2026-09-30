@@ -17,7 +17,7 @@
    Components (build them with h() from js/ui.js; --value is a custom property from 0 to 100):
      Layout   .inv-container  .inv-section  .inv-stack (--tight, --loose)  .inv-cluster  .inv-grid  .inv-list
               .inv-split (a main column and an aside that drops below it under 900 px)
-     Chrome   .inv-skip  .inv-header > .inv-header__inner  .inv-brand (+ __product)  .inv-nav  .inv-footer  .inv-disclaimer
+     Chrome   .inv-skip  .inv-footer  .inv-disclaimer
      Type     h1 h2 h3 p  .inv-display  .inv-lead  .inv-small  .inv-muted  .inv-num
      Action   .inv-btn  --primary | --secondary | --ghost  (+ --lg)
      Choice   .inv-chip .inv-chip--choice, with aria-pressed="true" on the selected one
@@ -221,48 +221,6 @@ main { flex: 1 0 auto; }
   text-decoration: none;
 }
 .inv-skip:focus { inset-block-start: var(--space-1); color: var(--on-brand); }
-
-.inv-header { border-block-end: 1px solid var(--border-subtle); background: var(--canvas-base); }
-.inv-header__inner {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-1) var(--space-3);
-  min-block-size: 4rem;
-  padding-block: var(--space-1);
-}
-
-/* The mark is a hexagon with a pinned saffron cell in it: the one place saffron is decorative */
-.inv-brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.625rem;
-  margin-inline-end: auto;
-  color: var(--text-primary);
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  text-decoration: none;
-}
-.inv-brand:hover { color: var(--text-primary); }
-.inv-brand::before {
-  content: '';
-  flex: none;
-  inline-size: 1.375rem;
-  block-size: 1.6rem;
-  clip-path: var(--hex-clip);
-  background: radial-gradient(circle, var(--accent-saffron) 0 22%, var(--brand-teal) 25%);
-}
-.inv-brand__product {
-  padding-inline-start: 0.625rem;
-  border-inline-start: 1px solid var(--border-strong);
-  color: var(--text-secondary);
-  font-weight: 500;
-}
-
-.inv-nav { display: flex; flex-wrap: wrap; gap: 0 var(--space-3); }
-.inv-nav a { padding-block: var(--space-1); color: var(--text-secondary); font-weight: 500; text-decoration: none; }
-.inv-nav a:hover { color: var(--text-primary); }
-.inv-nav a[aria-current='page'] { color: var(--brand-teal); text-decoration: underline; text-underline-offset: 0.35em; }
 
 .inv-footer {
   margin-block-start: var(--space-6);

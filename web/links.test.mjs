@@ -24,3 +24,19 @@ for (const page of pages) {
     assert.deepEqual(problems, []);
   });
 }
+
+// One shared header: every page mounts it, and each link it renders points at a real page.
+test('every page mounts the shared header and its links resolve', () => {
+  const js = readFileSync(join(root, 'site-header.js'), 'utf8');
+  const hrefs = [...js.matchAll(/href: '([^']+)',\s+key:/g)].map((m) => m[1]);
+  assert.equal(hrefs.length, 5);
+  for (const href of hrefs) {
+    const file = join(root, href);
+    assert.ok(existsSync(statSync(file, { throwIfNoEntry: false })?.isDirectory() ? join(file, 'index.html') : file), href);
+  }
+  for (const page of pages) {
+    const html = readFileSync(join(root, page), 'utf8');
+    assert.match(html, /<script src="(\.\.\/)?site-header\.js"><\/script>/, `${page} does not mount the shared header`);
+    assert.doesNotMatch(html, /<header\b/, `${page} still has its own header`);
+  }
+});

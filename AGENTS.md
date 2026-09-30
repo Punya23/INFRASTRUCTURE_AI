@@ -40,6 +40,7 @@ ADR-0003 and ADR-0013 are Accepted; ADR-0001 is superseded; the others are Propo
 - **Go (`api/`)** — `cmd/` + `internal/` layout; stdlib `net/http` routing; pgx + sqlc, no ORM; `context` with a timeout on all I/O; wrap errors with `%w`; validate at the handler boundary; table-driven tests.
 - **Python (`ml/`)** — 3.12, type hints, ruff for lint and format, pytest. Pipeline steps are plain functions behind a thin CLI; the Flask app stays thin (parse → call → return); notebooks import from `ml/` and hold no logic of their own.
 - **TypeScript (`web/`)** — Next.js App Router; server components by default, `"use client"` only for the map and interactive parts; Tailwind; strict mode; API types generated from OpenAPI; UI strings in per-language dictionaries (en, hi, kn), never hard-coded.
+- **Site header** — one component, `web/site-header.js` (+ `site-header.css`), mounted by every page; add or rename a nav link there, never in a page. `web/links.test.mjs` fails if a page grows its own header.
 - **SQL (`db/migrations/`)** — plain numbered SQL, forward-only; geometry in EPSG:4326 with GiST indexes; constraints (CHECK, UNIQUE, FK) in the database, not only in application code.
 - **Config** — YAML; every number carries a comment with its basis (a norm, a source, or "team judgment, <date>").
 - **Commits and PRs** — small, one concern each; the message says what changed and why; the PR template checklist is filled in.

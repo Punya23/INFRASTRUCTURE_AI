@@ -144,70 +144,12 @@
     /* ============================
        HEADER / NAV
        ============================ */
-    .site-header {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 50;
-      background: rgba(247, 249, 255, 0.95);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--outline-variant);
-      box-shadow: 0 1px 8px rgba(20,32,43,0.04);
-    }
-    .header-inner {
-      height: 5rem;
-      display: flex; align-items: center; justify-content: space-between; gap: var(--space-md);
-    }
-    .brand-group { display: flex; align-items: center; gap: var(--space-lg); }
-    .brand-link { display: flex; align-items: center; gap: var(--space-sm); }
-    .brand-logo { height: 2rem; width: auto; }
-    .brand-text { display: flex; flex-direction: column; }
-    .brand-name { color: var(--primary); display: flex; align-items: center; gap: var(--space-xs); }
-    .dpg-badge {
-      display: inline-flex; align-items: center;
-      padding: 0.125rem 0.375rem; border-radius: var(--radius-full);
-      background: var(--surface-container-high); color: var(--on-surface-variant);
-      border: 1px solid var(--outline-variant); text-transform: uppercase;
-    }
-    .brand-sub { color: var(--on-surface-variant); display: none; }
-    @media (min-width: 640px) { .brand-sub { display: inline; } }
 
-    .main-nav { display: none; align-items: center; gap: var(--space-md); margin-left: var(--space-sm); }
-    @media (min-width: 1024px) { .main-nav { display: flex; } }
-    .nav-link {
-      color: var(--on-surface-variant); padding: 0.25rem 0.5rem;
-      transition: color 0.2s;
-    }
-    .nav-link:hover, .nav-link.active { color: var(--on-surface); }
-    .nav-link.active {
-      color: var(--primary); background: var(--surface-container-high);
-      padding: 0.375rem 0.5rem; border-radius: var(--radius-lg);
-    }
 
-    .header-actions { display: flex; align-items: center; gap: var(--space-sm); }
 
     /* Language Switcher */
-    .lang-switcher {
-      display: none; align-items: center;
-      background: var(--surface-container-high); padding: 0.125rem; border-radius: var(--radius-lg);
-      border: 1px solid var(--outline-variant);
-    }
-    @media (min-width: 768px) { .lang-switcher { display: flex; } }
-    .lang-btn {
-      padding: 0.25rem 0.625rem; border-radius: var(--radius);
-      color: var(--on-surface-variant); transition: all 0.2s;
-    }
-    .lang-btn:hover { color: var(--on-surface); }
-    .lang-btn.active {
-      background: var(--surface-container-lowest); color: var(--primary);
-      font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,0.06);
-    }
 
     /* Search Bar */
-    .search-trigger {
-      display: flex; align-items: center; gap: var(--space-xs);
-      padding: 0.375rem 0.75rem; border-radius: var(--radius-lg);
-      background: var(--surface-container-lowest); border: 1px solid var(--outline-variant);
-      color: var(--on-surface-variant); transition: all 0.2s;
-    }
-    .search-trigger:hover { color: var(--on-surface); background: var(--surface-container); }
     .kbd-hint {
       padding: 0.125rem 0.25rem; border-radius: var(--radius-sm);
       background: var(--surface-container-high); color: var(--on-surface-variant);
@@ -246,21 +188,11 @@
 
 
     /* Mobile menu */
-    .mobile-menu-btn { display: flex; align-items: center; justify-content: center; }
-    @media (min-width: 1024px) { .mobile-menu-btn { display: none; } }
-    .mobile-nav {
-      display: none; position: fixed; top: 5rem; left: 0; right: 0; z-index: 49;
-      background: var(--surface-container-lowest); border-bottom: 1px solid var(--outline-variant);
-      box-shadow: var(--shadow-2); padding: var(--space-md);
-    }
-    .mobile-nav.open { display: flex; flex-direction: column; gap: var(--space-sm); }
-    .mobile-nav .nav-link { padding: 0.75rem; border-radius: var(--radius); display: block; }
-    .mobile-nav .nav-link:hover { background: var(--surface-container); }
 
     /* ============================
        MAIN CONTENT
        ============================ */
-    main { flex: 1; padding-top: 5rem; }
+    main { flex: 1; }
 
     /* --- Sovereign Notice Bar --- */
     .notice-bar {
@@ -602,68 +534,13 @@
   <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
   <script src="i18n.js"></script>
   <script src="speech.js"></script>
-  <link rel="stylesheet" href="nav.css"/>
 </head>
 <body>
 
   <!-- ============================
        HEADER
        ============================ -->
-  <header class="site-header" id="site-header">
-    <div class="container header-inner">
-      <div class="brand-group">
-        <a class="brand-link" href="index.html" id="brand-home">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48" fill="none" class="brand-logo">
-            <rect width="48" height="48" rx="8" fill="#0E5A66"/>
-            <circle cx="24" cy="24" r="16" stroke="#E08A1E" stroke-width="2" stroke-dasharray="3 2"/>
-            <path d="M24 10V38" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
-            <path d="M10 24H38" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
-            <path d="M14 14L34 34" stroke="#FFFFFF" stroke-width="1.75" stroke-linecap="round" opacity="0.8"/>
-            <path d="M34 14L14 34" stroke="#FFFFFF" stroke-width="1.75" stroke-linecap="round" opacity="0.8"/>
-            <circle cx="24" cy="24" r="5" fill="#E08A1E" stroke="#FFFFFF" stroke-width="1.5"/>
-          </svg>
-          <div class="brand-text">
-            <div class="brand-name">
-              <span class="text-title-lg" data-i18n="brand">INFRA-AI</span>
-              <span class="dpg-badge text-label-sm">DPG</span>
-            </div>
-            <span class="brand-sub text-label-sm" data-i18n="brandSub">Infrastructure intelligence for India</span>
-          </div>
-        </a>
-        <nav class="main-nav" id="main-nav">
-          <a class="nav-link text-title-md active" href="index.html" data-i18n="navHome">Home</a>
-          <a class="nav-link text-title-md" href="nh-explorer.html" data-i18n="navNhMap">NH Map</a>
-          <a class="nav-link text-title-md" href="policymaker.html" data-i18n="navPolicymaker">Policymaker View</a>
-          <a class="nav-link text-title-md" href="invest/" data-i18n="inv.nav">Invest</a>
-          <a class="nav-link text-title-md" href="methodology.html" data-i18n="navMethodology">Methodology</a>
-        </nav>
-      </div>
-      <div class="header-actions">
-        <div class="lang-switcher" id="lang-switcher">
-          <button class="lang-btn text-label-md active" data-lang="en">English</button>
-          <button class="lang-btn text-label-md" data-lang="hi">हिन्दी</button>
-          <button class="lang-btn text-label-md" data-lang="kn">ಕನ್ನಡ</button>
-        </div>
-        <button class="search-trigger" id="search-trigger-btn" type="button" aria-label="Search">
-          <span class="material-symbols-outlined" style="font-size:18px;">search</span>
-          <span class="text-body-sm" style="display:none;" id="search-hint-text">Search gazette, corridors...</span>
-          <kbd class="kbd-hint text-data-mono" style="display:none;" id="search-kbd">⌘K</kbd>
-        </button>
-        <button class="mobile-menu-btn" id="mobile-menu-btn" type="button" aria-label="Menu">
-          <span class="material-symbols-outlined" style="font-size:24px;">menu</span>
-        </button>
-      </div>
-    </div>
-  </header>
-
-  <!-- Mobile Nav -->
-  <div class="mobile-nav" id="mobile-nav">
-    <a class="nav-link text-title-md active" href="index.html" data-i18n="navHome">Home</a>
-    <a class="nav-link text-title-md" href="nh-explorer.html" data-i18n="navNhMap">NH Map</a>
-    <a class="nav-link text-title-md" href="policymaker.html" data-i18n="navPolicymaker">Policymaker View</a>
-    <a class="nav-link text-title-md" href="invest/" data-i18n="inv.nav">Invest</a>
-    <a class="nav-link text-title-md" href="methodology.html" data-i18n="navMethodology">Methodology</a>
-  </div>
+  <script src="site-header.js"></script>
 
   <main>
     <!-- Notice Bar -->
@@ -1038,18 +915,6 @@
     // are managed centrally via web/i18n.js + web/locales/*.json
     // The global setLanguage() function is still available for backward compatibility.
 
-    // --- Mobile Menu ---
-    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-    const mobileNav = document.getElementById('mobile-nav');
-    mobileMenuBtn.addEventListener('click', () => {
-      mobileNav.classList.toggle('open');
-      const icon = mobileMenuBtn.querySelector('.material-symbols-outlined');
-      icon.textContent = mobileNav.classList.contains('open') ? 'close' : 'menu';
-    });
-    mobileNav.querySelectorAll('a').forEach(a => {
-      a.addEventListener('click', () => mobileNav.classList.remove('open'));
-    });
-
     // --- Voice Search (Web Speech API; locale follows the selected UI language) ---
     const voiceBtn = document.getElementById('voice-search-btn');
     const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -1277,12 +1142,6 @@
       }, 200);
     }
 
-    document.getElementById('search-trigger-btn').addEventListener('click', () => {
-      searchOverlay.classList.add('open');
-      searchModalInput.value = '';
-      renderSearchResults('');
-      setTimeout(() => searchModalInput.focus(), 100);
-    });
     searchOverlay.addEventListener('click', (e) => { if (e.target === searchOverlay) searchOverlay.classList.remove('open'); });
     searchModalInput.addEventListener('input', (e) => renderSearchResults(e.target.value));
     document.addEventListener('keydown', (e) => {
@@ -1396,19 +1255,6 @@
       goToMap();
     }));
     loadPlace(pills[0].dataset.cityId);
-
-    // --- Show search hints on xl screens ---
-    function checkSearchHints() {
-      const show = window.innerWidth >= 1280;
-      const hint = document.getElementById('search-hint-text');
-      const kbd = document.getElementById('search-kbd');
-      const reconcile = document.querySelector('.notice-reconcile');
-      if (hint) hint.style.display = show ? 'inline' : 'none';
-      if (kbd) kbd.style.display = show ? 'inline' : 'none';
-      if (reconcile) reconcile.style.display = window.innerWidth >= 768 ? 'inline' : 'none';
-    }
-    checkSearchHints();
-    window.addEventListener('resize', checkSearchHints);
 
     // =========================================================================
     // SPEECH INTEGRATION

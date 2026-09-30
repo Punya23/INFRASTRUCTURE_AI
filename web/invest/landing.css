@@ -10,13 +10,6 @@
 .landing-not,
 .landing-note { --hex-ring: polygon(evenodd, 50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%, 50% 0, 50% 24%, 21% 38%, 21% 62%, 50% 76%, 79% 62%, 79% 38%, 50% 24%); }
 
-/* ---------- Header ---------- */
-
-@media (max-width: 39.99rem) {
-  /* the hero button sits right under the header on a phone; one call to action is enough there */
-  .landing-header-cta { display: none; }
-}
-
 /* ---------- Hero ---------- */
 
 .landing-hero { padding-block: var(--space-5) var(--space-2); }
