@@ -284,11 +284,6 @@
     .notice-dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--primary-container); }
     .notice-dpg { text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; color: var(--primary); }
     .notice-right { display: flex; align-items: center; gap: var(--space-md); }
-    .gazette-badge {
-      display: inline-flex; align-items: center; gap: 0.25rem;
-      background: var(--surface-container-lowest); padding: 0.125rem 0.5rem;
-      border-radius: var(--radius-full); box-shadow: var(--shadow-1); color: var(--primary);
-    }
 
     /* --- Hero Section --- */
     .hero { padding: var(--space-xl) 0; text-align: center; }
@@ -451,8 +446,6 @@
       background: var(--surface-container-low); padding: var(--space-md); border-radius: var(--radius-lg);
     }
     .synopsis-label { text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; color: var(--primary); }
-    .citation-link { color: var(--primary); font-weight: 600; cursor: pointer; }
-    .citation-link:hover { text-decoration: underline; }
     .confidence-indicator { color: var(--primary); display: flex; align-items: center; gap: 0.25rem; }
     .confidence-dot { width: 0.375rem; height: 0.375rem; border-radius: 50%; background: var(--primary); }
 
@@ -824,10 +817,6 @@
         </div>
         <div class="notice-right">
           <span style="display:none;color:var(--on-surface-variant);" class="notice-reconcile" data-i18n="noticeReconcile">Reconciling Gazettes, GIS Telemetry, and Ward Voices</span>
-          <div class="gazette-badge text-data-mono">
-            <span class="material-symbols-outlined" style="font-size:14px;">verified</span>
-            <span>Gazette Match: <strong id="gazette-percent">0</strong>%</span>
-          </div>
         </div>
       </div>
     </section>
@@ -942,10 +931,6 @@
                   <div class="synopsis" style="margin-bottom:var(--space-md);">
                     <span class="synopsis-label text-label-sm" data-i18n="synopsisLabel">About this place</span>
                     <p class="text-body-sm" style="color:var(--on-surface);margin-top:var(--space-xs);line-height:1.5;" data-i18n="synopsisText">Several transport projects are expanding connectivity along the eastern corridor, while residents have flagged active concerns regarding evening feeder buses and stormwater drainage along low-lying culverts.</p>
-                    <div style="padding-top:0.5rem;display:flex;align-items:center;justify-content:space-between;" class="text-data-mono">
-                      <span class="citation-link" id="citation-trigger">Source [Ref: MoRTH-Gazette-2024-F12]</span>
-                      <span class="confidence-indicator"><span class="confidence-dot"></span> High confidence</span>
-                    </div>
                   </div>
                   <div class="metrics-grid">
                     <div class="metric-card">
@@ -1119,71 +1104,68 @@
           </div>
         </div>
         <div class="cities-grid">
-          <!-- City 1: Pune -->
-          <div class="city-card">
+          <div class="city-card" data-city="pune">
             <div>
               <div class="city-image">
                 <img alt="Aerial view of Pune city showing modern metro viaducts" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpzlUQvh-zVlxg3ZbAvhWo0QH9WA3FLS8Ea8Ypilu1PtTcBkh_vGyD4csK7cbl9cHraPTdjNPceCBTYKENGsbiGUNJcoqoJ5-1ZWV043i3FwWUK7Z8T3kDFtxEu9I84B09BpbxDEkpNLAVgcHOzfejqqrTJZabbZsB-RqZ5eCxzfU9Trcnr8-UPq4Tz-zKLBlU6YVFHFdDG3-BrUUCvHvCYx51XUX2n-Qqi6IIBk7TRnuZiHyT8T1YPA"/>
-                <div class="city-state-badge text-body-sm">Maharashtra</div>
-                <div class="city-sites-badge text-data-mono">12 Active Sites</div>
+                <div class="city-state-badge text-body-sm" data-f="state">&nbsp;</div>
+                <div class="city-sites-badge text-data-mono" data-f="score">Loading…</div>
               </div>
               <div class="city-info">
                 <div class="city-name-row">
-                  <h3 class="text-headline-md">Pune Metropolitan</h3>
+                  <h3 class="text-headline-md" data-f="name">Pune</h3>
                   <span class="material-symbols-outlined" style="color:var(--outline);">east</span>
                 </div>
-                <p class="text-body-sm" style="color:var(--on-surface-variant);">Metro line expansion, Ring Road peripheral acquisition, and flood basin storm-line desilting.</p>
+                <p class="text-body-sm" style="color:var(--on-surface-variant);" data-f="best"></p>
                 <div class="city-metrics">
-                  <div class="city-metric text-body-sm"><span class="city-metric-dot teal"></span><span><strong>2 Corridors underway</strong> (Hinjawadi–Shivajinagar)</span></div>
-                  <div class="city-metric text-body-sm"><span class="city-metric-dot saffron"></span><span><strong>3,420 Citizen audits</strong> verified by ward officers</span></div>
+                  <div class="city-metric text-body-sm"><span class="city-metric-dot teal"></span><span data-f="transit"></span></div>
+                  <div class="city-metric text-body-sm"><span class="city-metric-dot saffron"></span><span data-f="pop"></span></div>
                 </div>
               </div>
             </div>
-            <div class="city-cta"><a class="btn-ghost text-body-sm" href="invest/city.html?c=pune&preset=balanced">Explore Pune Projects</a></div>
+            <div class="city-cta"><a class="btn-ghost text-body-sm" href="invest/city.html?c=pune&preset=balanced">Explore Pune scores</a></div>
           </div>
-          <!-- City 2: Bengaluru -->
-          <div class="city-card">
+          <div class="city-card" data-city="bengaluru">
             <div>
               <div class="city-image">
                 <img alt="Modern elevated rapid transit line in Bengaluru" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYKEhdJpZ3jEbnogM3MwQ6tA-Ekiia9pfkb9tN9BvoaM9R8u3ftoKn0MzVLB1rgEzYrIECLDZBLA5eAK600gOskT-Mgei-QTNiT50kwkckCRp1QoiYxEy5-k0tszptapfnQL517IAwvclPpqm02pAyWsG6VwNtCQ3WMoFhPku5j-S4CPCxitH7pd0Cxu6_svhBmP0nqHW_89qnu84cSAC62f-GkKhdUCnkAQEfYoyfkYERHjaOTEq5cg"/>
-                <div class="city-state-badge text-body-sm">Karnataka</div>
-                <div class="city-sites-badge text-data-mono">19 Active Sites</div>
+                <div class="city-state-badge text-body-sm" data-f="state">&nbsp;</div>
+                <div class="city-sites-badge text-data-mono" data-f="score">Loading…</div>
               </div>
               <div class="city-info">
                 <div class="city-name-row">
-                  <h3 class="text-headline-md">Bengaluru (East)</h3>
+                  <h3 class="text-headline-md" data-f="name">Bengaluru</h3>
                   <span class="material-symbols-outlined" style="color:var(--outline);">east</span>
                 </div>
-                <p class="text-body-sm" style="color:var(--on-surface-variant);">Metro Phase 2B airport link, suburban rail corridor, and Raja Kaluve stormwater rehabilitation.</p>
+                <p class="text-body-sm" style="color:var(--on-surface-variant);" data-f="best"></p>
                 <div class="city-metrics">
-                  <div class="city-metric text-body-sm"><span class="city-metric-dot teal"></span><span><strong>Airport Link Metro</strong> (Phase 2B pillar casting)</span></div>
-                  <div class="city-metric text-body-sm"><span class="city-metric-dot saffron"></span><span><strong>Stormwater priority</strong> (54 resident geotags)</span></div>
+                  <div class="city-metric text-body-sm"><span class="city-metric-dot teal"></span><span data-f="transit"></span></div>
+                  <div class="city-metric text-body-sm"><span class="city-metric-dot saffron"></span><span data-f="pop"></span></div>
                 </div>
               </div>
             </div>
-            <div class="city-cta"><a class="btn-ghost text-body-sm" href="invest/city.html?c=bengaluru&preset=balanced">Explore Bengaluru East</a></div>
+            <div class="city-cta"><a class="btn-ghost text-body-sm" href="invest/city.html?c=bengaluru&preset=balanced">Explore Bengaluru scores</a></div>
           </div>
-          <!-- City 3: Lucknow -->
-          <div class="city-card">
+          <div class="city-card" data-city="lucknow">
             <div>
               <div class="city-image">
                 <img alt="Serene panoramic view of Gomti riverfront in Lucknow" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUI8MeLHjD04l-UHc_jEdZP_roSfE2EkQ1NwS7YBDsCjZ2XduSvf0Be6nYBt1U6DWpvaXacHh31WvEpEQIv3xRvKuR434G8xuBQZdUND-JIsVyYQ4gv83gnJXSKlZb84mBvDQo1KMnBI11OIbiITjF0sarj4-FMBd2ov2n3MK-xGZW8pq7bEKEbECOcRAAehyibi1EFT4l0wrAobodhTx5j8dT44erg7FUhDZltsvXsJC4w9xcDyv4Gw"/>
-                <div class="city-state-badge text-body-sm">Uttar Pradesh</div>
-                <div class="city-sites-badge text-data-mono">9 Active Sites</div>
+                <div class="city-state-badge text-body-sm" data-f="state">&nbsp;</div>
+                <div class="city-sites-badge text-data-mono" data-f="score">Loading…</div>
               </div>
               <div class="city-info">
                 <div class="city-name-row">
-                  <h3 class="text-headline-md">Lucknow Capital</h3>
+                  <h3 class="text-headline-md" data-f="name">Lucknow</h3>
                   <span class="material-symbols-outlined" style="color:var(--outline);">east</span>
                 </div>
-                <p class="text-body-sm" style="color:var(--on-surface-variant);">Kisan Path Outer Ring Road completion, Gomti greenway preservation, and green transit electric bus fleet.</p>
+                <p class="text-body-sm" style="color:var(--on-surface-variant);" data-f="best"></p>
                 <div class="city-metrics">
-                  <div class="city-metric text-body-sm"><span class="city-metric-dot teal"></span><span><strong>Outer Ring Road</strong> (104 km full circumference)</span></div>
-                  <div class="city-metric text-body-sm"><span class="city-metric-dot saffron"></span><span><strong>1,890 Citizen requests</strong> for feeder connectivity</span></div>
+                  <div class="city-metric text-body-sm"><span class="city-metric-dot teal"></span><span data-f="transit"></span></div>
+                  <div class="city-metric text-body-sm"><span class="city-metric-dot saffron"></span><span data-f="pop"></span></div>
                 </div>
               </div>
             </div>
-            <div class="city-cta"><a class="btn-ghost text-body-sm" href="invest/city.html?c=lucknow&preset=balanced">Explore Lucknow Dossier</a></div>
+            <div class="city-cta"><a class="btn-ghost text-body-sm" href="invest/city.html?c=lucknow&preset=balanced">Explore Lucknow scores</a></div>
           </div>
         </div>
       </div>
@@ -1414,15 +1396,6 @@
       <div class="search-results" id="search-results"></div>
       <div class="text-body-sm" style="color:var(--on-surface-variant);margin-top:var(--space-md);text-align:center;">Press <kbd class="kbd-hint text-data-mono" style="padding:2px 6px;">Esc</kbd> to close</div>
     </div>
-  </div>
-
-  <!-- CITATION POPOVER -->
-  <div id="citation-popover" style="display:none;position:fixed;z-index:60;background:var(--surface-container-lowest);border:1px solid var(--border-strong);border-radius:var(--radius-lg);padding:var(--space-md);box-shadow:var(--shadow-2);max-width:20rem;">
-    <div class="text-title-md" style="color:var(--on-surface);margin-bottom:var(--space-xs);">MoRTH Gazette 2024</div>
-    <div class="text-body-sm" style="color:var(--on-surface-variant);margin-bottom:var(--space-xs);">Ministry of Road Transport & Highways</div>
-    <div class="text-data-mono" style="color:var(--on-surface-variant);margin-bottom:var(--space-xs);">Gazette No: F12-2024-MoRTH</div>
-    <div class="text-data-mono" style="color:var(--on-surface-variant);margin-bottom:var(--space-sm);">Verified: 15 Sep 2026, 14:32 IST</div>
-    <a href="https://egazette.gov.in" target="_blank" rel="noopener noreferrer" class="text-label-md" style="color:var(--primary);font-weight:600;">Verify at gazette.gov.in →</a>
   </div>
 
   <!-- Single Source of Truth Script -->
@@ -1708,29 +1681,25 @@
       document.getElementById('need-form').reset();
     });
 
-    // --- Citation Popover ---
-    const citationTrigger = document.getElementById('citation-trigger');
-    const citationPopover = document.getElementById('citation-popover');
-    citationTrigger.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const rect = citationTrigger.getBoundingClientRect();
-      citationPopover.style.display = citationPopover.style.display === 'none' ? 'block' : 'none';
-      citationPopover.style.left = `${Math.min(rect.left, window.innerWidth - 340)}px`;
-      citationPopover.style.top = `${rect.bottom + 8}px`;
-    });
-    document.addEventListener('click', () => { citationPopover.style.display = 'none'; });
-
-    // --- Animated Counter for Gazette % ---
-    function animateCounter(el, target, suffix = '') {
-      let current = 0;
-      const step = target / 60;
-      function update() {
-        current = Math.min(current + step, target);
-        el.textContent = Math.round(current * 10) / 10 + suffix;
-        if (current < target) requestAnimationFrame(update);
+    // --- City cards: real scores from /v1/cities/{id} (balanced preset) ---
+    document.querySelectorAll('.city-card[data-city]').forEach(async (card) => {
+      const set = (f, text) => { card.querySelector(`[data-f="${f}"]`).textContent = text; };
+      try {
+        const r = await fetch(`${API_BASE}/v1/cities/${encodeURIComponent(card.dataset.city)}?preset=balanced`);
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        const c = await r.json();
+        set('name', c.name);
+        set('state', c.state);
+        set('score', `Score ${c.score} / 100`);
+        set('best', c.best_area && c.best_area.name ? `Top area: ${c.best_area.name} (${c.best_area.score})` : '');
+        set('transit', `${c.data.metro_stations} metro · ${c.data.rail_stations} rail stations`);
+        set('pop', `Population ${(c.population / 1e5).toFixed(1)} lakh`);
+      } catch (err) {
+        console.error('city card', card.dataset.city, err);
+        set('score', 'Data unavailable');
       }
-      update();
-    }
+    });
+
     // --- Hydrate Dynamic Metrics from data.js ---
     function hydrateIndexData() {
       if (!window.INFRA_DATA) return;
@@ -1749,7 +1718,6 @@
 
     // Run on page load
     window.addEventListener('load', () => {
-      animateCounter(document.getElementById('gazette-percent'), 98.4);
       hydrateIndexData();
     });
 
