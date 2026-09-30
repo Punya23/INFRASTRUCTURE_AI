@@ -418,11 +418,15 @@
     }
     .city-card:hover { box-shadow: var(--shadow-3); transform: translateY(-3px); }
     .city-image {
-      position: relative; height: 6rem; width: 100%; overflow: hidden;
+      position: relative; height: 9rem; width: 100%; overflow: hidden;
       background: linear-gradient(135deg, var(--primary), var(--primary-container));
     }
-    .city-art { position: absolute; inset: 0; width: 100%; height: 100%; fill: #fff; opacity: .16; transition: transform .4s; }
-    .city-card:hover .city-art { transform: scale(1.05); }
+    .city-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .4s; }
+    .city-card:hover .city-photo { transform: scale(1.05); }
+    .city-image::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,.25), transparent 45%, rgba(0,0,0,.35)); }
+    .city-state-badge, .city-sites-badge { z-index: 1; }
+    .city-credits { margin-top: var(--space-md); color: var(--on-surface-variant); }
+    .city-credits a { color: inherit; text-decoration: underline; }
     .city-state-badge {
       position: absolute; top: var(--space-sm); left: var(--space-sm);
       padding: 0.25rem 0.625rem; border-radius: var(--radius);
@@ -746,7 +750,7 @@
           <div class="city-card" data-city="pune">
             <div>
               <div class="city-image">
-                <svg class="city-art" viewBox="0 0 320 96" preserveAspectRatio="xMidYMax slice" aria-hidden="true"><path d="M0 96V70l40-18 50 22 60-30 70 34 50-20 50 22v16z"/><path d="M110 96V58h20v-8h8v8h44v-8h8v8h20v38h-20V76a30 30 0 0 0-60 0v20z" opacity=".9"/></svg>
+                <img class="city-photo" src="img/cities/pune.jpg" alt="Shaniwar Wada fort gateway in Pune" loading="lazy" width="900" height="600"/>
                 <div class="city-state-badge text-body-sm" data-f="state">&nbsp;</div>
                 <div class="city-sites-badge text-data-mono" data-f="score">Loading…</div>
               </div>
@@ -767,7 +771,7 @@
           <div class="city-card" data-city="bengaluru">
             <div>
               <div class="city-image">
-                <svg class="city-art" viewBox="0 0 320 96" preserveAspectRatio="xMidYMax slice" aria-hidden="true"><path d="M20 96V60h18v36zm30 0V44h16v52zm210 0V52h20v44zm30 0V66h14v30z"/><path d="M110 96V68h100v28zm12-28V58h76v10zm16-10V50h44v8zm10-8a22 22 0 0 1 24 0v0zm12-22v14" opacity=".9"/><circle cx="160" cy="30" r="3"/></svg>
+                <img class="city-photo" src="img/cities/bengaluru.jpg" alt="Vidhana Soudha, the state legislature building in Bengaluru" loading="lazy" width="900" height="600"/>
                 <div class="city-state-badge text-body-sm" data-f="state">&nbsp;</div>
                 <div class="city-sites-badge text-data-mono" data-f="score">Loading…</div>
               </div>
@@ -788,7 +792,7 @@
           <div class="city-card" data-city="lucknow">
             <div>
               <div class="city-image">
-                <svg class="city-art" viewBox="0 0 320 96" preserveAspectRatio="xMidYMax slice" aria-hidden="true"><path d="M80 96V40l8-8 8 8v56zm144 0V40l8-8 8 8v56z"/><path d="M96 96V52h128v44h-36V74a24 24 0 0 0-48 0v22z" opacity=".9"/><path d="M130 52l30-16 30 16z"/></svg>
+                <img class="city-photo" src="img/cities/lucknow.jpg" alt="Rumi Darwaza gateway in Lucknow" loading="lazy" width="900" height="600"/>
                 <div class="city-state-badge text-body-sm" data-f="state">&nbsp;</div>
                 <div class="city-sites-badge text-data-mono" data-f="score">Loading…</div>
               </div>
@@ -809,7 +813,7 @@
           <div class="city-card" data-city="ahmedabad">
             <div>
               <div class="city-image">
-                <svg class="city-art" viewBox="0 0 320 96" preserveAspectRatio="xMidYMax slice" aria-hidden="true"><path d="M60 96V30h10v66zm190 0V30h10v66z"/><path d="M60 30h10l-5-10zm190 0h10l-5-10z"/><path d="M90 96V62h140v34zm20-34a50 34 0 0 1 100 0z" opacity=".9"/><path d="M130 62a30 18 0 0 1 60 0z"/></svg>
+                <img class="city-photo" src="img/cities/ahmedabad.jpg" alt="Sabarmati riverfront and Atal Pedestrian Bridge in Ahmedabad" loading="lazy" width="900" height="600"/>
                 <div class="city-state-badge text-body-sm" data-f="state">&nbsp;</div>
                 <div class="city-sites-badge text-data-mono" data-f="score">Loading…</div>
               </div>
@@ -828,6 +832,7 @@
             <div class="city-cta"><a class="btn-ghost text-body-sm" href="invest/city.html?c=ahmedabad&preset=balanced">Explore Ahmedabad scores</a></div>
           </div>
         </div>
+        <p class="city-credits text-body-sm">Photos via Wikimedia Commons — Pune: <a href="https://commons.wikimedia.org/wiki/File:Shaniwar_wada_(pune).jpg" rel="noopener">Samrudhi shelagaonkar</a>, CC BY-SA 4.0 · Bengaluru: <a href="https://commons.wikimedia.org/wiki/File:Vidhana_Soudha,_Bengaluru_3.jpg" rel="noopener">Quantumtunneling</a>, CC BY-SA 4.0 · Lucknow: <a href="https://commons.wikimedia.org/wiki/File:Rumi_Darwaza,_Lucknow.jpg" rel="noopener">Sapna2020</a>, CC BY-SA 4.0 · Ahmedabad: <a href="https://commons.wikimedia.org/wiki/File:Sabarmati_riverfront_and_Atal_Pedestrian_Bridge_01.jpg" rel="noopener">Pravega</a>, CC0.</p>
       </div>
     </section>
 
