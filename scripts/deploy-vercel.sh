@@ -54,7 +54,8 @@ smoke() {
   }
 
   # pages
-  for page in / /invest/ /invest/start.html "/invest/city.html?c=$CITY" /invest/state.html /invest/js/city.js; do
+  for page in / /invest/ /invest/start.html "/invest/city.html?c=$CITY" /invest/state.html /invest/js/city.js \
+              /invest/js/map.js /fixtures/public_transport/index.json /fixtures/national_highways/nh_segments.geojson; do
     check "page $page" "$page"
   done
   # API: every endpoint the city page calls
@@ -63,6 +64,7 @@ smoke() {
   check "city"      "/v1/cities/$CITY"                      'j["id"]=="'"$CITY"'"'
   check "areas"     "/v1/cities/$CITY/areas?limit=5"        'j["features"]'
   check "assets"    "/v1/cities/$CITY/assets?layers=bus_stops" ''
+  check "search"    "/v1/cities?q=$CITY&limit=3"             'j["cities"]'
   check "projects"  "/v1/cities/$CITY/projects"             '"projects" in j'
   check "compare"   "/v1/cities/$CITY/compare"              '"others" in j'
   # an unknown city must be a JSON 404, not a page or a 500
