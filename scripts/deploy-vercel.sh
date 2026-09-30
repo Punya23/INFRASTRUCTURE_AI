@@ -80,12 +80,12 @@ if [ "$SKIP_TESTS" = 0 ]; then
   say "Checks"
   command -v node >/dev/null || die "node not found"
   (cd "$ROOT" && node --test 'web/invest/js/*.test.mjs' >/dev/null) || die "web/invest page tests failed"
-  python3 -m py_compile "$ROOT/mock_api.py" "$STAGE/api/v1/[...path].py" || die "python does not compile"
+  python3 -m py_compile "$ROOT/mock_api.py" "$STAGE/api/v1.py" || die "python does not compile"
   echo "  ok"
 fi
 
 say "Stage $STAGE"
-# only generated directories are cleared; the committed vercel.json and api/v1 stay
+# only generated directories are cleared; the committed vercel.json and api/v1.py stay
 rm -r "$STAGE/public" "$STAGE/api/_lib" 2>/dev/null || true
 mkdir -p "$STAGE/public" "$STAGE/api/_lib/fixtures"
 # pages + the non-invest fixtures the other pages fetch; the invest fixtures live with the function
@@ -104,12 +104,12 @@ python3 - "$STAGE" "$CITY" <<'PY'
 import importlib.util, json, sys, threading, urllib.request
 from http.server import HTTPServer
 stage, city = sys.argv[1], sys.argv[2]
-spec = importlib.util.spec_from_file_location("fn", f"{stage}/api/v1/[...path].py")
+spec = importlib.util.spec_from_file_location("fn", f"{stage}/api/v1.py")
 fn = importlib.util.module_from_spec(spec); spec.loader.exec_module(fn)
 srv = HTTPServer(("127.0.0.1", 0), fn.handler)
 threading.Thread(target=srv.serve_forever, daemon=True).start()
 base = f"http://127.0.0.1:{srv.server_port}"
-for path in (f"/v1/cities/{city}", f"/api/v1/cities/{city}/projects", f"/api/v1/cities/{city}/areas?limit=1"):
+for path in (f"/v1/cities/{city}", f"/api/v1?__p=cities/{city}/projects", f"/api/v1?__p=cities/{city}/areas&limit=1"):
     with urllib.request.urlopen(base + path, timeout=20) as r:
         assert r.status == 200 and isinstance(json.load(r), dict), path
     print("  ok  ", path)
@@ -130,8 +130,11 @@ fi
 
 say "Deploy ($([ "$PROD" = 1 ] && echo production || echo preview))"
 args=(deploy --yes ${scope[@]+"${scope[@]}"}); [ "$PROD" = 1 ] && args+=(--prod)
-URL="$(vercel "${args[@]}" | tail -n1)"
-case "$URL" in https://*) ;; *) die "could not read the deployment URL from vercel (got: $URL)" ;; esac
+OUT="$(vercel "${args[@]}" 2>&1 | tee /dev/stderr)"
+# the stable alias is public; the per-deployment URL sits behind Vercel login on most accounts
+URL="$(printf '%s\n' "$OUT" | grep -Eo 'Aliased +https://[^ ]+' | grep -Eo 'https://.*' | head -n1)"
+[ -n "$URL" ] || URL="$(printf '%s\n' "$OUT" | grep -Eo 'https://[^ ]+\.vercel\.app' | tail -n1)"
+[ -n "$URL" ] || die "could not read the deployment URL from vercel"
 echo "  $URL"
 
 smoke "$URL"
