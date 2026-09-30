@@ -6,9 +6,9 @@
   var base = script.src.slice(0, script.src.lastIndexOf('/') + 1); // the web/ root, wherever the page sits
   var NAV = [
     { id: 'home',   href: 'index.html',        key: 'navHome',        label: 'Home' },
+    { id: 'invest', href: 'invest/',           key: 'inv.nav',        label: 'Invest' },
     { id: 'nh',     href: 'nh-explorer.html',  key: 'navNhMap',       label: 'NH Map' },
     { id: 'policy', href: 'policymaker.html',  key: 'navPolicymaker', label: 'Policymaker View' },
-    { id: 'invest', href: 'invest/',           key: 'inv.nav',        label: 'Invest' },
     { id: 'method', href: 'methodology.html',  key: 'navMethodology', label: 'Methodology' }
   ];
 
