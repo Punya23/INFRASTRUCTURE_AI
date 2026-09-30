@@ -12,7 +12,8 @@ import re
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import parse_qs, urlparse
 
-FIXTURES = os.path.join(os.path.dirname(__file__), "web", "fixtures", "invest")
+# INVEST_FIXTURES lets the Vercel function (deploy/vercel) point at the fixtures bundled next to it
+FIXTURES = os.environ.get("INVEST_FIXTURES") or os.path.join(os.path.dirname(__file__), "web", "fixtures", "invest")
 
 
 def load_json(path):
