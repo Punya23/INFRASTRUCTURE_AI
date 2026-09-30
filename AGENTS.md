@@ -4,20 +4,20 @@ Read this before changing anything. It applies to people and AI coding agents al
 
 ## What this repo is
 
-A multilingual, location-first infrastructure intelligence platform for India, built as a Digital Public Good. Pin a place → what exists, what changed, what's coming (from news, press releases and tenders — cited), what residents are asking for, and where the gaps and priorities are. The full plan is [README.md](README.md).
+A multilingual, location-first infrastructure intelligence platform for India, built as a Digital Public Good. Pin a place → what exists, what changed, what's coming (from news, press releases and tenders — cited), what residents are asking for, and where the gaps and priorities are. The full plan is [docs/PLAN.md](docs/PLAN.md).
 
 ## Status
 
-Scope is field-first: **national highways** and **metro rail** across India (ADR-0013). National highways: M1 data and M2 analysis landed (`ml/fields/national_highways/`, findings in `docs/fields/national-highways.md`), and M3 is half done — delay flags and cited events from PIB press releases; news, tenders and land-acquisition notices are still open; metro starts M1. **Investor flow landed ahead of M0** (ADR-0015): `ml/pipeline/invest` exports city and area scores to `web/fixtures/invest/`, a stdlib Go API (`api/`) serves them, and static pages in `web/invest/` show landing, onboarding, state and city views. It has no database and no login; the store package is the seam where Postgres slots in. A static **BRICS page** (`web/brics.html`, upcoming, simulation on invented sample data for ten pilot cities; nothing ingested) previews the ten-member idea; scope stays India only until an ADR says otherwise. **Next: M0 — Foundation** (README §13: DB, API, UI shell). Update this line whenever a milestone lands.
+Scope is field-first: **national highways** and **metro rail** across India (ADR-0013). National highways: M1 data and M2 analysis landed (`ml/fields/national_highways/`, findings in `docs/fields/national-highways.md`), and M3 is half done — delay flags and cited events from PIB press releases; news, tenders and land-acquisition notices are still open; metro starts M1. **Investor flow landed ahead of M0** (ADR-0015): `ml/pipeline/invest` exports city and area scores to `web/fixtures/invest/`, a stdlib Go API (`api/`) serves them, and static pages in `web/invest/` show landing, onboarding, state and city views. It has no database and no login; the store package is the seam where Postgres slots in. A static **BRICS page** (`web/brics.html`, upcoming, simulation on invented sample data for ten pilot cities; nothing ingested) previews the ten-member idea; scope stays India only until an ADR says otherwise. **Next: M0 — Foundation** (docs/PLAN.md §13: DB, API, UI shell). Update this line whenever a milestone lands.
 ADR-0003 and ADR-0013 are Accepted; ADR-0001 is superseded; the others are Proposed pending team review — follow them as the working default.
 
 ## Read in this order
 
-1. README §0–4 — product, users, problem-statement coverage, data scope (about 10 minutes).
+1. docs/PLAN.md §0–4 — product, users, problem-statement coverage, data scope (about 10 minutes).
 2. [`docs/fields/`](docs/fields/README.md) — the field plans (national highways, metro rail), the done bar, and the shared layer contract the UI builds against.
-3. Team research: [India_Existing_Project_Gaps.md](India_Existing_Project_Gaps.md) (why existing systems fall short) and [LokDristi_Datasets.md](LokDristi_Datasets.md) (dataset catalog, LGD join architecture). README §18 lists where they differ from the plan — those are open decisions, not settled ones.
+3. Team research: [India_Existing_Project_Gaps.md](India_Existing_Project_Gaps.md) (why existing systems fall short) and [LokDristi_Datasets.md](LokDristi_Datasets.md) (dataset catalog, LGD join architecture). docs/PLAN.md §18 lists where they differ from the plan — those are open decisions, not settled ones.
 4. [`docs/adr/`](docs/adr/README.md) — what was decided and why. To disagree, write a superseding ADR (skill `write-adr`); never silently diverge.
-5. README §6–8 — architecture, data model, pipelines — before touching those areas.
+5. docs/PLAN.md §6–8 — architecture, data model, pipelines — before touching those areas.
 6. The skill that matches your task (table below).
 
 ## Invariants — non-negotiable; every PR is reviewed against them
@@ -92,12 +92,13 @@ node --test web/links.test.mjs                         # every page link resolve
 node --test web/brics-sim.test.mjs                     # BRICS page simulation checks (quote, redaction, score, brief)
 cd ml && uv run python ../scripts/build_brics_map.py   # rebuild web/brics-world.json (Natural Earth 110m, generalised)
 scripts/deploy-vercel.sh [--prod]                        # stage web/ + /v1 function (mock_api.py) → Vercel deploy → smoke test; --stage-only / --smoke URL
+# .github/workflows/deploy-vercel.yml runs it with --prod on every push to main that touches web/, mock_api.py or deploy/ (repo secrets VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID)
 ```
 
 Still to come at M0: `docker compose up`, `make migrate`, `make city CITY=<id>`, `make eval CAP=<capability>`. Document each one here the moment it exists.
 
 ## When unsure
 
-- Product or scope question → add it to README §18 and ask the team; don't guess.
+- Product or scope question → add it to docs/PLAN.md §18 and ask the team; don't guess.
 - Technical choice with trade-offs → skill `write-adr`, status Proposed.
 - Data looks wrong → don't "fix" it silently in code; route it to `ingest_error` and note it in the EDA report.

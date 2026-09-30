@@ -1,0 +1,59 @@
+# Deploy the investor pages + /v1 mock API to Vercel on every push to main that touches what ships.
+# Runs scripts/deploy-vercel.sh --prod (checks -> stage -> deploy -> live smoke test).
+# Repo secrets: VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID (from deploy/vercel/.vercel/project.json).
+# Optional: VERCEL_PROTECTION_BYPASS if deployment protection is on for the project.
+name: deploy-vercel
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'web/**'
+      - 'mock_api.py'
+      - 'deploy/vercel/**'
+      - 'scripts/deploy-vercel.sh'
+      - '.github/workflows/deploy-vercel.yml'
+  workflow_dispatch:
+
+# one deploy at a time; a newer push waits rather than racing the older one
+concurrency:
+  group: deploy-vercel
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_PROTECTION_BYPASS: ${{ secrets.VERCEL_PROTECTION_BYPASS }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Require secrets
+        run: |
+          for v in VERCEL_TOKEN VERCEL_ORG_ID VERCEL_PROJECT_ID; do
+            [ -n "${!v}" ] || { echo "::error::missing repo secret $v"; exit 1; }
+          done
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      - name: Page tests
+        run: |
+          node --test 'web/invest/js/*.test.mjs'
+          node --test web/links.test.mjs
+      - name: Link Vercel project
+        run: |
+          mkdir -p deploy/vercel/.vercel
+          printf '{"projectId":"%s","orgId":"%s"}' "$VERCEL_PROJECT_ID" "$VERCEL_ORG_ID" > deploy/vercel/.vercel/project.json
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      - run: npm i -g vercel
+      - name: Deploy
+        run: scripts/deploy-vercel.sh --prod --skip-tests
