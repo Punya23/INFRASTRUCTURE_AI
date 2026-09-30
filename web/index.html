@@ -381,11 +381,8 @@
       padding: 0.125rem 0.5rem; border-radius: var(--radius-full);
       background: var(--surface-container-highest); color: var(--primary);
     }
-    .map-svg-container {
-      position: absolute; inset: 0; pointer-events: none;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .map-svg-container svg { width: 100%; height: 100%; opacity: 0.9; }
+    .map-canvas .map-live { position: absolute; inset: 0; z-index: 0; } /* beats .maplibregl-map { position: relative } */
+    .map-live .maplibregl-ctrl-attrib { font-size: 0.6875rem; }
 
     /* Map Legend */
     .map-legend {
@@ -401,7 +398,7 @@
     .legend-item { display: flex; align-items: center; gap: 0.5rem; }
     .legend-line-op { width: 0.75rem; height: 0.25rem; background: var(--primary); border-radius: var(--radius-full); }
     .legend-line-uc { width: 0.75rem; height: 0.375rem; background: var(--secondary-container); border-radius: var(--radius-sm); border: 1px solid var(--secondary); }
-    .legend-line-pl { width: 0.75rem; height: 0.125rem; border-top: 2px dashed var(--tertiary); }
+    .legend-line-pl { width: 0.75rem; height: 0.125rem; border-top: 2px solid var(--tertiary); }
     .legend-dot-cv { width: 0.625rem; height: 0.625rem; border-radius: 50%; background: var(--secondary); }
 
     /* Zoom controls */
@@ -733,6 +730,8 @@
     }
   </style>
   <link rel="stylesheet" href="speech.css"/>
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css"/>
+  <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
   <script src="i18n.js"></script>
   <script src="speech.js"></script>
   <link rel="stylesheet" href="nav.css"/>
@@ -889,68 +888,26 @@
               <div class="map-top-overlay">
                 <div class="map-layer-label text-title-md">
                   <span class="material-symbols-outlined" style="font-size:20px;">layers</span>
-                  <span data-i18n="mapLayer">Active Geographic Layer: Pune–Mumbai Metropolitan Arc</span>
+                  <span>Live map: Pune</span>
                 </div>
                 <div style="display:flex;align-items:center;gap:var(--space-xs);">
                   <span class="coords-badge text-data-mono">18.5204° N, 73.8567° E</span>
                   <span class="gis-badge text-label-sm">Survey GIS</span>
                 </div>
               </div>
-              <!-- SVG Map -->
-              <div class="map-svg-container">
-                <svg fill="none" preserveAspectRatio="xMidYMid slice" viewBox="0 0 900 600">
-                  <defs>
-                    <pattern height="10" id="hatch-amber" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse" width="10">
-                      <line stroke="#fda137" stroke-width="3" x1="0" x2="0" y1="0" y2="10"/>
-                    </pattern>
-                    <pattern height="40" id="civic-grid" patternUnits="userSpaceOnUse" width="40">
-                      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#d7e4f3" stroke-width="0.75"/>
-                    </pattern>
-                  </defs>
-                  <rect fill="url(#civic-grid)" height="600" opacity="0.6" width="900"/>
-                  <!-- River -->
-                  <path d="M 0,280 C 180,290 320,330 460,310 C 600,290 740,360 900,340" fill="none" stroke="#dde9f9" stroke-linecap="round" stroke-width="18"/>
-                  <path d="M 0,280 C 180,290 320,330 460,310 C 600,290 740,360 900,340" fill="none" stroke="#9dc8ff" stroke-dasharray="8 4" stroke-linecap="round" stroke-width="4"/>
-                  <!-- Operational Metro -->
-                  <path d="M 120,480 L 320,360 L 450,290 L 680,210 L 820,160" fill="none" stroke="#00414b" stroke-linecap="round" stroke-width="5">
-                    <animate attributeName="stroke-dasharray" values="0,2000;2000,0" dur="3s" fill="freeze"/>
-                  </path>
-                  <circle cx="120" cy="480" fill="#ffffff" r="5" stroke="#00414b" stroke-width="2.5"/>
-                  <circle cx="320" cy="360" fill="#ffffff" r="5" stroke="#00414b" stroke-width="2.5"/>
-                  <circle cx="450" cy="290" fill="#00414b" r="6" stroke="#ffffff" stroke-width="2">
-                    <animate attributeName="r" values="6;8;6" dur="2s" repeatCount="indefinite"/>
-                  </circle>
-                  <circle cx="680" cy="210" fill="#ffffff" r="5" stroke="#00414b" stroke-width="2.5"/>
-                  <circle cx="820" cy="160" fill="#ffffff" r="5" stroke="#00414b" stroke-width="2.5"/>
-                  <!-- Under Construction -->
-                  <path d="M 180,140 Q 380,180 520,380 T 840,490" fill="none" stroke="#fda137" stroke-dasharray="12 4" stroke-linecap="round" stroke-width="7">
-                    <animate attributeName="stroke-dashoffset" values="0;-32" dur="1.5s" repeatCount="indefinite"/>
-                  </path>
-                  <!-- Planned -->
-                  <path d="M 240,540 C 380,480 500,450 620,440 C 740,430 800,360 880,310" fill="none" stroke="#003c6a" stroke-dasharray="6 6" stroke-width="4"/>
-                  <!-- Delayed marker -->
-                  <circle cx="490" cy="410" fill="#ffdad6" opacity="0.6" r="16">
-                    <animate attributeName="r" values="16;20;16" dur="3s" repeatCount="indefinite"/>
-                  </circle>
-                  <circle cx="490" cy="410" fill="#ba1a1a" r="6"/>
-                  <!-- Citizen Hotspot -->
-                  <circle cx="390" cy="260" fill="#ffdcbe" opacity="0.75" r="22">
-                    <animate attributeName="opacity" values="0.75;0.4;0.75" dur="2.5s" repeatCount="indefinite"/>
-                  </circle>
-                  <circle cx="390" cy="260" fill="#8a5100" r="8"/>
-                </svg>
-              </div>
+              <!-- Real map: MapLibre over OpenFreeMap (OSM) tiles, layers from the repo fixtures -->
+              <div class="map-live" id="live-map" role="region" aria-label="Map of Pune with highways, bus routes and upcoming project news"></div>
               <!-- Legend -->
               <div class="map-legend text-label-md">
                 <div class="legend-header">
                   <span class="text-title-md text-body-sm" data-i18n="legendTitle">Infrastructure Map Legend</span>
-                  <span class="text-data-mono" style="color:var(--on-surface-variant);">Live Sync</span>
+                  <span class="text-data-mono" style="color:var(--on-surface-variant);">OSM · GTFS</span>
                 </div>
                 <div class="legend-grid">
-                  <div class="legend-item"><span class="legend-line-op"></span><span data-i18n="legendOp">Operational Metro & Exp</span></div>
-                  <div class="legend-item"><span class="legend-line-uc"></span><span data-i18n="legendUc">NH-48 Bypass (In Progress)</span></div>
-                  <div class="legend-item"><span class="legend-line-pl"></span><span data-i18n="legendPl">Planned Transit 2027+</span></div>
-                  <div class="legend-item"><span class="legend-dot-cv"></span><span data-i18n="legendCv">83 Citizen Need Flags</span></div>
+                  <div class="legend-item"><span class="legend-line-op"></span><span>National highway</span></div>
+                  <div class="legend-item"><span class="legend-line-uc"></span><span>Highway being built</span></div>
+                  <div class="legend-item"><span class="legend-line-pl"></span><span>PMPML bus route</span></div>
+                  <div class="legend-item"><span class="legend-dot-cv"></span><span>Project news (city-level)</span></div>
                 </div>
               </div>
               <!-- Zoom -->
@@ -1530,19 +1487,99 @@
       });
     });
 
-    // --- Zoom Animation ---
-    let zoomLevel = 1;
-    const mapSvg = document.querySelector('.map-svg-container svg');
-    document.getElementById('zoom-in-btn').addEventListener('click', () => {
-      zoomLevel = Math.min(zoomLevel + 0.15, 2);
-      mapSvg.style.transform = `scale(${zoomLevel})`;
-      mapSvg.style.transition = 'transform 0.3s ease';
-    });
-    document.getElementById('zoom-out-btn').addEventListener('click', () => {
-      zoomLevel = Math.max(zoomLevel - 0.15, 0.5);
-      mapSvg.style.transform = `scale(${zoomLevel})`;
-      mapSvg.style.transition = 'transform 0.3s ease';
-    });
+    // --- Real map (Pune) ---
+    // Base tiles: OpenFreeMap. ADR-0007: national/state outlines come only from the Survey of India layer, so
+    // the base style's OSM boundary and country/state labels are stripped with the same helper the city page uses.
+    // Layers are the repo's own fixtures: NH segments (OSM), PMPML GTFS routes, and the news-derived project points.
+    const API_BASE = ({ 8765: 'http://localhost:8080', 8766: 'http://localhost:8081' })[location.port] || '';
+    const PUNE_BBOX = [73.55, 18.3, 74.15, 18.75]; // west, south, east, north: the Pune metro region
+    const mapEl = document.getElementById('live-map');
+
+    function mapNotice(text) {
+      mapEl.innerHTML = '';
+      const p = document.createElement('p');
+      p.className = 'text-body-md';
+      p.style.cssText = 'position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:1rem;color:var(--on-surface-variant);';
+      p.textContent = text;
+      mapEl.appendChild(p);
+    }
+
+    async function getJSON(url) {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`${url}: HTTP ${res.status}`);
+      return res.json();
+    }
+
+    const inBox = ([x, y]) => x > PUNE_BBOX[0] && x < PUNE_BBOX[2] && y > PUNE_BBOX[1] && y < PUNE_BBOX[3];
+    const inPune = (f) => {
+      const g = f.geometry;
+      return (g.type === 'MultiLineString' ? g.coordinates.flat() : g.coordinates).some(inBox);
+    };
+
+    async function initLiveMap() {
+      const [{ baseLayers }, style] = await Promise.all([
+        import('./invest/js/map.js'),
+        getJSON('https://tiles.openfreemap.org/styles/liberty'),
+      ]);
+      const map = new maplibregl.Map({
+        container: mapEl,
+        style: { ...style, layers: baseLayers(style.layers) },
+        bounds: [[PUNE_BBOX[0] + 0.1, PUNE_BBOX[1] + 0.05], [PUNE_BBOX[2] - 0.1, PUNE_BBOX[3] - 0.05]],
+        attributionControl: { compact: true, customAttribution: 'Routes: PMPML GTFS · Highways: OSM' },
+      });
+      document.getElementById('zoom-in-btn').addEventListener('click', () => map.zoomIn());
+      document.getElementById('zoom-out-btn').addEventListener('click', () => map.zoomOut());
+      await new Promise((resolve, reject) => { map.once('load', resolve); map.once('error', (e) => reject(e.error)); });
+
+      const css = getComputedStyle(document.documentElement);
+      const c = (v) => css.getPropertyValue(v).trim();
+      // One failed layer must not blank the map: each source loads on its own and the rest still draw.
+      const [nh, bus, projects] = await Promise.allSettled([
+        getJSON('fixtures/national_highways/nh_segments.geojson'),
+        getJSON('fixtures/public_transport/gtfs_pune_pmpml_routes.geojson'),
+        getJSON(`${API_BASE}/v1/cities/pune/projects`),
+      ]);
+      const empty = { type: 'FeatureCollection', features: [] };
+      const fc = (r, keep) => (r.status === 'fulfilled' ? { type: 'FeatureCollection', features: r.value.features.filter(keep) } : empty);
+      if ([nh, bus, projects].some((r) => r.status === 'rejected')) console.warn('[map] a layer failed to load', [nh, bus, projects].filter((r) => r.status === 'rejected').map((r) => r.reason.message));
+
+      map.addSource('bus', { type: 'geojson', data: fc(bus, inPune) });
+      map.addLayer({ id: 'bus', type: 'line', source: 'bus', paint: { 'line-color': c('--tertiary'), 'line-width': 1, 'line-opacity': 0.35 } });
+      map.addSource('nh', { type: 'geojson', data: fc(nh, inPune) });
+      map.addLayer({ id: 'nh-open', type: 'line', source: 'nh', filter: ['==', ['get', 'status'], 'operational'], paint: { 'line-color': c('--primary'), 'line-width': 3.5 } });
+      map.addLayer({ id: 'nh-building', type: 'line', source: 'nh', filter: ['!=', ['get', 'status'], 'operational'], paint: { 'line-color': c('--secondary-container'), 'line-width': 4, 'line-dasharray': [2, 1.5] } });
+
+      // The news names a city, not a site, so every project sits at the city centre (geo_precision "city"): one
+      // marker per project, fanned out on a small ring so they stay individually clickable.
+      const pts = projects.status === 'fulfilled' ? projects.value.projects : [];
+      map.addSource('projects', { type: 'geojson', data: { type: 'FeatureCollection', features: pts.map((p, i) => {
+        const a = (2 * Math.PI * i) / pts.length;
+        return { type: 'Feature', properties: p, geometry: { type: 'Point', coordinates: [p.lon + 0.012 * Math.cos(a), p.lat + 0.012 * Math.sin(a)] } };
+      }) } });
+      map.addLayer({ id: 'projects', type: 'circle', source: 'projects', paint: { 'circle-radius': 8, 'circle-color': c('--secondary'), 'circle-stroke-color': '#fff', 'circle-stroke-width': 2 } });
+
+      // Popups are built with textContent: names and evidence come from scraped news, never as HTML.
+      const popup = new maplibregl.Popup({ maxWidth: '18rem' });
+      const show = (e, build) => popup.setLngLat(e.lngLat).setDOMContent(build(e.features[0].properties)).addTo(map);
+      const line = (tag, text) => { const el = document.createElement(tag); el.textContent = text; return el; };
+      map.on('click', 'projects', (e) => show(e, (p) => {
+        const box = document.createElement('div');
+        const link = line('a', 'Source ↗');
+        link.href = /^https?:\/\//.test(p.source_ref) ? p.source_ref : '#';
+        link.target = '_blank'; link.rel = 'noopener noreferrer';
+        box.append(line('strong', p.name), line('div', `${p.mode} · ${p.stage.replace(/_/g, ' ')} · ${p.event_date ?? 'date unknown'}`),
+          line('div', 'Location is the city centre; the article names no site.'), link);
+        return box;
+      }));
+      const road = (e) => show(e, (p) => line('div', `${p.name || p.ref || 'National highway'} · ${String(p.status).replace(/_/g, ' ')}`));
+      map.on('click', 'nh-open', road);
+      map.on('click', 'nh-building', road);
+      for (const id of ['projects', 'nh-open', 'nh-building']) {
+        map.on('mouseenter', id, () => { map.getCanvas().style.cursor = 'pointer'; });
+        map.on('mouseleave', id, () => { map.getCanvas().style.cursor = ''; });
+      }
+    }
+    initLiveMap().catch((err) => { console.error('[map]', err); mapNotice('The map could not load. Check your connection and reload.'); });
 
     // --- Search Overlay ---
     const searchOverlay = document.getElementById('search-overlay');
