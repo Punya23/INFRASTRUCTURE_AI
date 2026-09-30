@@ -11,7 +11,7 @@ func TestRateFromEnv(t *testing.T) {
 		want    int
 		wantErr bool
 	}{
-		{"", 120, false},
+		{"", 600, false},
 		{"30", 30, false},
 		{"0", 0, true},
 		{"-5", 0, true},

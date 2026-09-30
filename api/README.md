@@ -24,7 +24,7 @@ Flags and environment:
 | `-addr` | `:8080` | Listen address. |
 | `-data` | `../web/fixtures/invest` | Fixture directory. Any load or validation error is logged and the process exits 1. |
 | `INVEST_CORS_ORIGINS` | `http://localhost:8765` | Comma-separated exact origins allowed to read responses, written as the browser sends them: `scheme://host[:port]`, no `*`, no path, no trailing slash (anything else: exit 1). Blank means the default. |
-| `INVEST_RATE_LIMIT` | `120` | Requests per client per minute. Not a positive integer: exit 1. |
+| `INVEST_RATE_LIMIT` | `600` | Requests per client per minute. Not a positive integer: exit 1. |
 
 SIGINT/SIGTERM drain in-flight requests for up to 10 s, then exit.
 

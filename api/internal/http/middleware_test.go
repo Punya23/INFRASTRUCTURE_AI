@@ -444,7 +444,7 @@ func TestNew_chain(t *testing.T) {
 	}
 }
 
-// The zero Config must be safe: no CORS origin, 120 requests a minute, 5 seconds a request.
+// The zero Config must be safe: no CORS origin, 600 requests a minute, 5 seconds a request.
 func TestNew_zeroConfig(t *testing.T) {
 	h := New(loadWorld(t), Config{})
 	rec := request(h, "GET", "/v1/states", func(r *http.Request) { r.Header.Set("Origin", "http://localhost:8765") })
@@ -454,12 +454,12 @@ func TestNew_zeroConfig(t *testing.T) {
 	if got := rec.Header().Get("Access-Control-Allow-Origin"); got != "" {
 		t.Errorf("no configured origin, yet Allow-Origin = %q", got)
 	}
-	for i := 2; i <= 120; i++ {
+	for i := 2; i <= 600; i++ {
 		if got := request(h, "GET", "/healthz", nil).Code; got != http.StatusOK {
-			t.Fatalf("request %d = %d, want 200 (the default is 120 a minute)", i, got)
+			t.Fatalf("request %d = %d, want 200 (the default is 600 a minute)", i, got)
 		}
 	}
 	if got := request(h, "GET", "/healthz", nil).Code; got != http.StatusTooManyRequests {
-		t.Errorf("request 121 = %d, want 429", got)
+		t.Errorf("request 601 = %d, want 429", got)
 	}
 }

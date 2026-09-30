@@ -23,7 +23,7 @@ import (
 
 const (
 	defaultCORSOrigin = "http://localhost:8765" // the web dev server (.claude/launch.json)
-	defaultRate       = 120                     // requests per client per minute
+	defaultRate       = 600                     // requests per client per minute (a city page alone makes ~15, so 120 tripped after a few clicks)
 	shutdownTimeout   = 10 * time.Second
 )
 
