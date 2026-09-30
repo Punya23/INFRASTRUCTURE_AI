@@ -631,10 +631,7 @@
           </div>
         </a>
         <nav class="main-nav" id="main-nav">
-          <a class="nav-link text-title-md active" href="#hero" data-i18n="navExplore">Explore</a>
-          <a class="nav-link text-title-md" href="#map-section" data-i18n="navProjects">Projects</a>
-          <a class="nav-link text-title-md" href="#place-explorer" data-i18n="navArea">Your Area</a>
-          <a class="nav-link text-title-md" href="#trust-section" data-i18n="navAbout">About</a>
+          <a class="nav-link text-title-md active" href="index.html" data-i18n="navHome">Home</a>
           <a class="nav-link text-title-md" href="nh-explorer.html" data-i18n="navNhMap">NH Map</a>
           <a class="nav-link text-title-md" href="policymaker.html" data-i18n="navPolicymaker">Policymaker View</a>
           <a class="nav-link text-title-md" href="invest/" data-i18n="inv.nav">Invest</a>
@@ -661,10 +658,7 @@
 
   <!-- Mobile Nav -->
   <div class="mobile-nav" id="mobile-nav">
-    <a class="nav-link text-title-md" href="#hero" data-i18n="navExplore">Explore</a>
-    <a class="nav-link text-title-md" href="#map-section" data-i18n="navProjects">Projects</a>
-    <a class="nav-link text-title-md" href="#place-explorer" data-i18n="navArea">Your Area</a>
-    <a class="nav-link text-title-md" href="#trust-section" data-i18n="navAbout">About</a>
+    <a class="nav-link text-title-md active" href="index.html" data-i18n="navHome">Home</a>
     <a class="nav-link text-title-md" href="nh-explorer.html" data-i18n="navNhMap">NH Map</a>
     <a class="nav-link text-title-md" href="policymaker.html" data-i18n="navPolicymaker">Policymaker View</a>
     <a class="nav-link text-title-md" href="invest/" data-i18n="inv.nav">Invest</a>
@@ -1402,21 +1396,6 @@
       goToMap();
     }));
     loadPlace(pills[0].dataset.cityId);
-
-    // --- Nav Active State on Scroll ---
-    const sections = document.querySelectorAll('section[id]');
-    const navLinks = document.querySelectorAll('.main-nav .nav-link');
-    window.addEventListener('scroll', () => {
-      let current = '';
-      sections.forEach(section => {
-        const rect = section.getBoundingClientRect();
-        if (rect.top <= 120) current = section.id;
-      });
-      navLinks.forEach(link => {
-        link.classList.remove('active');
-        if (link.getAttribute('href') === `#${current}`) link.classList.add('active');
-      });
-    });
 
     // --- Show search hints on xl screens ---
     function checkSearchHints() {
