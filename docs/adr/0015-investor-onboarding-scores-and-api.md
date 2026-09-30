@@ -3,11 +3,11 @@
 - Status: Proposed
 - Date: 2026-09-29
 - Deciders: project team
-- Related: README §2, §9, §10, §15 · ADR-0003, ADR-0004, ADR-0006, ADR-0007, ADR-0011, ADR-0012, ADR-0014 · [design spec](../superpowers/specs/2026-09-29-investor-onboarding-design.md)
+- Related: docs/PLAN.md §2, §9, §10, §15 · ADR-0003, ADR-0004, ADR-0006, ADR-0007, ADR-0011, ADR-0012, ADR-0014 · [design spec](../superpowers/specs/2026-09-29-investor-onboarding-design.md)
 
 ## Context
 
-Investors and homebuyers (README §2) ask "which state, city and area should I look at?" The product request was a flow: landing page, then a state, its top five cities with reasons, the best areas of a city on a map, and other cities compared in a side panel. The comparison was first phrased as yearly returns ("Pune 10%, Delhi 13%").
+Investors and homebuyers (docs/PLAN.md §2) ask "which state, city and area should I look at?" The product request was a flow: landing page, then a state, its top five cities with reasons, the best areas of a city on a map, and other cities compared in a side panel. The comparison was first phrased as yearly returns ("Pune 10%, Delhi 13%").
 
 Three facts constrain it. ADR-0003 (Accepted) rules out prediction, the plan lists price forecasting under "Won't", and no dataset in the repo can support a return figure. M0 (Postgres, Go API, Next.js shell) has not started, yet the UI needs a real backend now. And GeoNames populations are unreliable as a city definition (Kallakurichi shows 1.68 M; Delhi is split into Rohini and Narela).
 

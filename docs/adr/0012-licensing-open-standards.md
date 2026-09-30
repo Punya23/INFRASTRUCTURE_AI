@@ -3,7 +3,7 @@
 - Status: Proposed
 - Date: 2026-09-28
 - Deciders: project team
-- Related: README §5, §15 · ADR-0007, ADR-0011 · skill `add-data-source`
+- Related: docs/PLAN.md §5, §15 · ADR-0007, ADR-0011 · skill `add-data-source`
 
 ## Context
 

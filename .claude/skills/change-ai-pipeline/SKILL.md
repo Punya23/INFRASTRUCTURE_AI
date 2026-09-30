@@ -6,7 +6,7 @@ description: Use when touching any AI step in INFRA-AI — LLM prompts or JSON s
 # Change an AI step
 
 Read first: ADR-0008 (LLM boundary), ADR-0009 (language stack), `AGENTS.md` invariants 3, 5, 11. For Claude API code, load the `claude-api` skill before writing it.
-Paths follow README §12; if one does not exist yet, create it there.
+Paths follow docs/PLAN.md §12; if one does not exist yet, create it there.
 
 ## Rules that never bend
 
@@ -25,7 +25,7 @@ Paths follow README §12; if one does not exist yet, create it there.
 3. Compare against the current version per field and per language, and put the table in the PR. A regression in any language blocks the merge unless the PR justifies it.
 4. Model choice: default `claude-opus-5`. Tune `effort` per route before considering a cheaper model. Moving a route to a different model tier is a team decision, recorded in an ADR with the evaluation numbers.
 5. Cost: bulk jobs use the Message Batches API; keep the system prompt and schema stable and first, so prompt caching works. State the cost per 1,000 items in the PR.
-6. Real-time paths (chat replies, briefs): measure p95 latency against README §14.
+6. Real-time paths (chat replies, briefs): measure p95 latency against docs/PLAN.md §14.
 
 ## Adding a language
 

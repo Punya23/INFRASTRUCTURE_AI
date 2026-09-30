@@ -3,7 +3,7 @@
 - Status: Proposed
 - Date: 2026-09-28
 - Deciders: project team
-- Related: README §6, §10, §12 · ADR-0005, ADR-0008 · skill `add-api-endpoint`
+- Related: docs/PLAN.md §6, §10, §12 · ADR-0005, ADR-0008 · skill `add-api-endpoint`
 
 ## Context
 

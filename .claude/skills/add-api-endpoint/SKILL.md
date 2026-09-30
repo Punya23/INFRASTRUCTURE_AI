@@ -5,8 +5,8 @@ description: Use when adding or changing an INFRA-AI HTTP endpoint — a Go API 
 
 # Add or change an endpoint
 
-Read first: README §10 (API) · ADR-0006 (services) · `AGENTS.md` invariants 2, 5, 10.
-Paths follow README §12; if one does not exist yet, create it there.
+Read first: docs/PLAN.md §10 (API) · ADR-0006 (services) · `AGENTS.md` invariants 2, 5, 10.
+Paths follow docs/PLAN.md §12; if one does not exist yet, create it there.
 
 ## Order: contract first
 

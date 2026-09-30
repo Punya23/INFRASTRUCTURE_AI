@@ -4,35 +4,11 @@
 
 A multilingual, location-first infrastructure intelligence platform, designed as a Digital Public Good (DPG).
 
-> **Status:** national highways and the investor flow are built on real data; the database, citizen intake and metro are not (see [What we built so far](#what-we-built-so-far)). This README is still the master plan.
-> Why each decision was made: [`docs/adr/`](docs/adr/README.md) · How to work in this repo (humans and AI agents): [`AGENTS.md`](AGENTS.md) · Step-by-step workflows: [`.claude/skills/`](.claude/skills/) · Field plans: [`docs/fields/`](docs/fields/README.md)
-> Team research already in the repo: [India_Existing_Project_Gaps.md](India_Existing_Project_Gaps.md) (where existing systems fall short, with audit evidence) · [LokDristi_Datasets.md](LokDristi_Datasets.md) (dataset catalog and LGD join architecture). Where they differ from this plan: [§18](#18-open-questions-and-assumptions).
+> **Master plan.** What is built today: see the [README](../README.md).
+> Why each decision was made: [`docs/adr/`](adr/README.md) · How to work in this repo (humans and AI agents): [`AGENTS.md`](../AGENTS.md) · Step-by-step workflows: [`.claude/skills/`](../.claude/skills/) · Field plans: [`docs/fields/`](fields/README.md)
+> Team research already in the repo: [India_Existing_Project_Gaps.md](../India_Existing_Project_Gaps.md) (where existing systems fall short, with audit evidence) · [LokDristi_Datasets.md](../LokDristi_Datasets.md) (dataset catalog and LGD join architecture). Where they differ from this plan: [§18](#18-open-questions-and-assumptions).
 
 **Contents:** [0 TL;DR](#0-tldr) · [1 Problem](#1-problem-and-our-angle) · [2 Users](#2-users-and-what-they-get) · [3 PS coverage](#3-problem-statement-coverage) · [4 Data scope](#4-data-scope-what-we-build-first) · [5 Sources](#5-data-sources) · [6 Architecture](#6-architecture) · [7 Data model](#7-data-model) · [8 Pipelines and analytics](#8-pipelines-and-analytics) · [9 Product and demo](#9-product-surfaces-and-demo) · [10 API](#10-api) · [11 Stack](#11-tech-stack) · [12 Layout](#12-repository-layout) · [13 Build plan](#13-build-plan) · [14 Evaluation](#14-evaluation) · [15 DPG and privacy](#15-digital-public-good-privacy-and-responsible-ai) · [16 Risks](#16-risks-and-mitigations) · [17 Scaling](#17-scaling-to-all-of-india) · [18 Open questions](#18-open-questions-and-assumptions) · [19 Working here](#19-working-on-this-repo) · [A Config](#appendix-a-config-examples) · [B Glossary](#appendix-b-glossary)
-
----
-
-## What we built so far
-
-Everything below runs today from files in this repo. No database, login or hosted AI yet (next: M0, §13).
-
-| Piece | What it does | Where |
-|---|---|---|
-| **Explore** | Type a city, see its map (bus and metro routes for 5 cities), scores and projects in the news. 18 UI languages, voice input | `web/index.html` |
-| **NH Explorer** | 1,42,905 km of national highways, 1,044 toll plazas, 10 km population access layer, bus and metro layers | `web/nh-explorer.html` |
-| **Policymaker View** | State-wise highway length, OSM coverage, deaths per 100 km, tolls, traffic counts; CSV export | `web/policymaker.html` |
-| **Invest flow** | 381 cities in 36 states and UTs scored on four presets (Balanced, Commuter, Highway, Growth), area hexagons, compare view, onboarding. Every score shows its drivers | `web/invest/`, `ml/pipeline/invest` |
-| **Go API** | 9 read endpoints under `/v1`, contract in `api/openapi.yaml`, same data from `mock_api.py` if Go is missing | `api/`, `mock_api.py` |
-| **BRICS page** | Upcoming. Runs the pipeline on invented sample data for a pilot city in each of ten members: verified quote, redaction, score, cited brief. Nothing fetched; scope stays India until an ADR says otherwise | `web/brics.html`, `web/brics-sim.js` |
-| **Methodology** | What the pipeline really does, in plain words | `web/methodology.html` |
-| **NH field data** | OSM + MoRTH + NHAI + WorldPop joined; 16 findings; delay flags; dated, cited events from PIB | `ml/fields/national_highways/`, `docs/fields/national-highways.md` |
-| **Public transport** | 8 GTFS feeds (38,797 stops) for Bengaluru, Chennai, Hyderabad, Mumbai, Pune; 44 upcoming bus and metro projects from news | `ml/fields/public_transport/` |
-| **Geography** | LGD states, districts, sub-districts, ULBs and wards, validated | `ml/fields/geography/` |
-| **Pitch deck** | 8 slides: problem, solution, real screenshots, feasibility, BRICS | `docs/INFRA-AI-pitch.pptx` |
-
-Checks: `ml` pytest and ruff, `go -C api test ./... -race`, `node --test 'web/invest/js/*.test.mjs' web/links.test.mjs web/brics-sim.test.mjs`. Deploy: `scripts/deploy-vercel.sh`. Commands are in [AGENTS.md](AGENTS.md).
-
-Not built: Postgres, citizen intake (voice, WhatsApp), AI briefs on live data, metro field, tenders and land-acquisition notices, hotspots and recommendations.
 
 ---
 
@@ -99,15 +75,15 @@ The growth outlook is informational, never investment advice ([§15](#15-digital
 
 ## 4. Data scope: what we build first
 
-Decided in [ADR-0013](docs/adr/0013-field-first-scope.md), which supersedes the earlier T-shaped scope ([ADR-0001](docs/adr/0001-t-shaped-data-scope.md)).
+Decided in [ADR-0013](adr/0013-field-first-scope.md), which supersedes the earlier T-shaped scope ([ADR-0001](adr/0001-t-shaped-data-scope.md)).
 
-**Field by field, all of India.** A *field* is one type of infrastructure, covered nationally and owned end to end by one person: sources → canonical data → EDA → geospatial analysis → findings → map layers and API → a cited pipeline of its projects. Two fields first; the next starts when both meet the done bar in [`docs/fields/`](docs/fields/README.md).
+**Field by field, all of India.** A *field* is one type of infrastructure, covered nationally and owned end to end by one person: sources → canonical data → EDA → geospatial analysis → findings → map layers and API → a cited pipeline of its projects. Two fields first; the next starts when both meet the done bar in [`docs/fields/`](fields/README.md).
 
 | # | Field | Owner | Covers | Plan |
 |---|---|---|---|---|
-| 1 | **National Highways** | Punya | NH network incl. expressways, lanes, toll plazas; NH pipeline incl. land-acquisition notifications; safety | [national-highways.md](docs/fields/national-highways.md) |
-| 2 | **Metro rail** | Data teammate | Metro, RRTS and monorail: lines, stations, pipeline, ridership, station catchments, TOD zones | [metro-rail.md](docs/fields/metro-rail.md) |
-| Next | Railways · airports · water (canals, irrigation) · health · education | — | One at a time, same template — skill [`add-field`](.claude/skills/add-field/SKILL.md) | — |
+| 1 | **National Highways** | Punya | NH network incl. expressways, lanes, toll plazas; NH pipeline incl. land-acquisition notifications; safety | [national-highways.md](fields/national-highways.md) |
+| 2 | **Metro rail** | Data teammate | Metro, RRTS and monorail: lines, stations, pipeline, ridership, station catchments, TOD zones | [metro-rail.md](fields/metro-rail.md) |
+| Next | Railways · airports · water (canals, irrigation) · health · education | — | One at a time, same template — skill [`add-field`](../.claude/skills/add-field/SKILL.md) | — |
 
 **Team:** two people on the UI, two on data (one per field). Shared parts — H3 grid and population, growth layers (GHSL, VIIRS, Open Buildings), news AI, the pin API and brief — are built once and reused by every field.
 
@@ -135,7 +111,7 @@ Swap-ins if the team knows another city better: Pune (Marathi), Hyderabad (Telug
 
 ## 5. Data sources
 
-Every record keeps `source`, `source_ref`, `fetched_at` and `license`. Licenses are checked **before** ingesting — see skill [`add-data-source`](.claude/skills/add-data-source/SKILL.md).
+Every record keeps `source`, `source_ref`, `fetched_at` and `license`. Licenses are checked **before** ingesting — see skill [`add-data-source`](../.claude/skills/add-data-source/SKILL.md).
 
 | Layer | Source | License / terms | Used for |
 |---|---|---|---|
@@ -159,11 +135,11 @@ Every record keeps `source`, `source_ref`, `fetched_at` and `license`. Licenses 
 
 Census 2011 is the latest published census; swap in Census 2027 figures when they are released.
 
-Rural and sector depth — MPLADS works (a direct misalignment signal), Mission Antyodaya village infrastructure, JJM, SBM-G, MGNREGA, PMAY, HMIS, the ABDM Health Facility Registry — and a real municipal grievance dataset (PCMC 2025 on data.gov.in) are cataloged in [LokDristi_Datasets.md](LokDristi_Datasets.md).
+Rural and sector depth — MPLADS works (a direct misalignment signal), Mission Antyodaya village infrastructure, JJM, SBM-G, MGNREGA, PMAY, HMIS, the ABDM Health Facility Registry — and a real municipal grievance dataset (PCMC 2025 on data.gov.in) are cataloged in [LokDristi_Datasets.md](../LokDristi_Datasets.md).
 
 ## 6. Architecture
 
-Decided in [ADR-0005](docs/adr/0005-postgres-single-datastore.md), [ADR-0006](docs/adr/0006-three-service-monorepo.md), [ADR-0007](docs/adr/0007-open-map-stack.md) and [ADR-0008](docs/adr/0008-llm-boundary.md).
+Decided in [ADR-0005](adr/0005-postgres-single-datastore.md), [ADR-0006](adr/0006-three-service-monorepo.md), [ADR-0007](adr/0007-open-map-stack.md) and [ADR-0008](adr/0008-llm-boundary.md).
 
 ```mermaid
 flowchart LR
@@ -227,7 +203,7 @@ flowchart LR
 
 ## 7. Data model
 
-Decided in [ADR-0004](docs/adr/0004-h3-grid-spatial-key.md).
+Decided in [ADR-0004](adr/0004-h3-grid-spatial-key.md).
 
 - Geometry in EPSG:4326; provenance and confidence on every row.
 - Per-source staging tables (`raw_<source>`) upsert on `(source, source_ref)`; conflation then writes the canonical tables below.
@@ -368,7 +344,7 @@ Example mappings (the full list lives in `config/taxonomy.yaml`):
 
 ### 8.2 Exploratory data analysis
 
-EDA comes before any scoring: it tells us what the scattered data can support. Each field has its own notebooks in `ml/notebooks/<field>/`, listed in its plan under [`docs/fields/`](docs/fields/README.md); the notebooks below are the cross-field ones.
+EDA comes before any scoring: it tells us what the scattered data can support. Each field has its own notebooks in `ml/notebooks/<field>/`, listed in its plan under [`docs/fields/`](fields/README.md); the notebooks below are the cross-field ones.
 
 | Notebook | Questions it answers | Feeds |
 |---|---|---|
@@ -384,7 +360,7 @@ Notebooks import functions from `ml/` — no logic lives only in a notebook. Eac
 
 ### 8.3 Analytics model — explainable, no prediction
 
-Decided in [ADR-0003](docs/adr/0003-explainable-analytics-no-prediction.md). Every parameter lives in `config/scoring.yaml` ([Appendix A](#appendix-a-config-examples)), and every score row stores its top `drivers`, so the UI can always answer "why?".
+Decided in [ADR-0003](adr/0003-explainable-analytics-no-prediction.md). Every parameter lives in `config/scoring.yaml` ([Appendix A](#appendix-a-config-examples)), and every score row stores its top `drivers`, so the UI can always answer "why?".
 
 **Access Gap** — how far a hexagon is from essential services, relative to a norm.
 
@@ -451,7 +427,7 @@ Category → intervention mappings (highway crossing → underpass or foot over-
 
 ### 8.4 News AI — "what's coming", with evidence
 
-Decided in [ADR-0008](docs/adr/0008-llm-boundary.md).
+Decided in [ADR-0008](adr/0008-llm-boundary.md).
 
 1. **Discover** — per city: every spelling and script of the city name × infrastructure keywords per language, plus known project and agency names → Google News RSS, PIB, GDELT, agency press pages. Nationally: PIB cabinet approvals.
 2. **Fetch and clean** — main text via `trafilatura`; keep URL, canonical URL, title, publish time, language and text hash. Full text is kept only for processing and deleted after a retention window; robots.txt is respected.
@@ -493,7 +469,7 @@ Prompt rules: extract only what is stated; unknown → `null`; dates as written,
 
 ### 8.5 Citizen intake — voice, text, messaging, any language
 
-Decided in [ADR-0009](docs/adr/0009-language-stack.md) and [ADR-0010](docs/adr/0010-citizen-intake.md).
+Decided in [ADR-0009](adr/0009-language-stack.md) and [ADR-0010](adr/0010-citizen-intake.md).
 
 | Channel | Why | Demo setup |
 |---|---|---|
@@ -558,7 +534,7 @@ Example (illustrative, not real data):
 3. **Policy dashboard** — drill-down from nation to state, district, city and ward; hotspot map; ranked recommendations with driver bars and evidence; misalignment scatter; silent gaps; impact tracker; CSV and GeoJSON export.
 4. **Citizen channels** — the WhatsApp / Telegram bot and the web "Report / Ask" page.
 5. **Review console** — low-confidence extractions and geocodes: approve, edit or reject.
-6. **Investor flow** (`web/invest/`, [ADR-0015](docs/adr/0015-investor-onboarding-scores-and-api.md)) — landing page, a three-step onboarding (home state, where to invest, what matters most), the top five cities of a state with the reasons behind each score, a city page with a hex heat map of areas, infrastructure layers and a best-areas list, and a right-hand panel that compares other cities. It ranks by an explainable Access + Momentum infrastructure score, never by returns or prices.
+6. **Investor flow** (`web/invest/`, [ADR-0015](adr/0015-investor-onboarding-scores-and-api.md)) — landing page, a three-step onboarding (home state, where to invest, what matters most), the top five cities of a state with the reasons behind each score, a city page with a hex heat map of areas, infrastructure layers and a best-areas list, and a right-hand panel that compares other cities. It ranks by an explainable Access + Momentum infrastructure score, never by returns or prices.
 
 The interface ships in English, Hindi and Kannada first; strings live in per-language dictionaries.
 
@@ -590,7 +566,7 @@ The interface ships in English, Hindi and Kannada first; strings live in per-lan
 | GET | `/v1/export/{dataset}.{format}` | Open, non-PII bulk exports (`geojson`, `csv`, `parquet`) |
 | — | `/open311/v2/…` | Open311 GeoReport v2 compatibility (Should) |
 
-Investor endpoints — live now as a stdlib Go server over pipeline-exported JSON (contract in `api/openapi.yaml`, [`api/README.md`](api/README.md)); they move onto Postgres at M0:
+Investor endpoints — live now as a stdlib Go server over pipeline-exported JSON (contract in `api/openapi.yaml`, [`api/README.md`](../api/README.md)); they move onto Postgres at M0:
 
 | Method | Path | Purpose |
 |---|---|---|
@@ -625,7 +601,8 @@ The context files exist now; everything marked with a milestone is created then.
 
 ```text
 INFRA_AI/
-├── README.md                    master plan (this file)
+├── README.md                    short intro: what is built, how to run
+├── docs/PLAN.md                 master plan (this file)
 ├── AGENTS.md                    rules for humans and AI agents working here
 ├── CLAUDE.md                    Claude Code entry point (imports AGENTS.md)
 ├── docs/adr/                    architecture decision records + template
@@ -666,7 +643,7 @@ INFRA_AI/
 
 ## 13. Build plan
 
-Field-first ([ADR-0013](docs/adr/0013-field-first-scope.md)): each data owner takes one field end to end, two people build the UI against a fixed layer contract, and shared parts are built once.
+Field-first ([ADR-0013](adr/0013-field-first-scope.md)): each data owner takes one field end to end, two people build the UI against a fixed layer contract, and shared parts are built once.
 
 **Team of four**
 
@@ -674,7 +651,7 @@ Field-first ([ADR-0013](docs/adr/0013-field-first-scope.md)): each data owner ta
 |---|---|---|
 | Field owner — National Highways (Punya) | NH sources, EDA, geospatial analysis, findings, NH layers and fixtures, NH pipeline events | OSM India extract filtered to NH + MoRTH state-wise NH length |
 | Field owner — Metro rail (data teammate) | Metro sources, EDA, geospatial analysis, findings, metro layers and fixtures, metro pipeline events | OSM metro lines and stations + operator km and station counts |
-| UI — explore | Map, layer toggles, status filter, pin → area panel, time slider | Fixtures in `web/fixtures/` + the layer contract in [`docs/fields/`](docs/fields/README.md) |
+| UI — explore | Map, layer toggles, status filter, pin → area panel, time slider | Fixtures in `web/fixtures/` + the layer contract in [`docs/fields/`](fields/README.md) |
 | UI — policy and citizen | Policy dashboard, recommendations view, citizen web app, i18n (en, hi, kn) | The same fixtures + the examples in `api/openapi.yaml` |
 
 Shared work has named owners: the two field owners own `db/` and the shared pipeline (grid, population, growth layers, news AI); the UI pair owns `web/`. Owners for `api/` and citizen intake are settled at M0 ([§18](#18-open-questions-and-assumptions)).
@@ -699,7 +676,7 @@ Shared work has named owners: the two field owners own `db/` and the shared pipe
 | **Could** | IVR · voice replies · impact tracker · GTFS service-level analysis · toll analysis · TOD opportunity map · street-network access (pandana / OSRM) · photo attachments |
 | **Won't (this round)** | Price or demand forecasting (the investor flow ranks by an explainable infrastructure score and shows no return, price or forecast — ADR-0015) · parcel-level recommendations · Aadhaar or any identity integration · every field at once |
 
-The layer contract in [`docs/fields/README.md`](docs/fields/README.md) and the OpenAPI spec are the contracts between the four roles, so nobody waits on anybody.
+The layer contract in [`docs/fields/README.md`](fields/README.md) and the OpenAPI spec are the contracts between the four roles, so nobody waits on anybody.
 
 ## 14. Evaluation
 
@@ -716,11 +693,11 @@ The layer contract in [`docs/fields/README.md`](docs/fields/README.md) and the O
 | Score robustness | Top-10 recommendations stable under ±20 % weight changes (1,000 draws) | ≥ 7 of 10 |
 | Latency (p95) | Tiles · cached brief · uncached brief · chat reply | < 200 ms · < 300 ms · < 8 s · < 30 s |
 
-Gold sets live in `ml/eval/` as versioned JSONL. Any prompt, schema or model change must match or beat them — see skill [`change-ai-pipeline`](.claude/skills/change-ai-pipeline/SKILL.md).
+Gold sets live in `ml/eval/` as versioned JSONL. Any prompt, schema or model change must match or beat them — see skill [`change-ai-pipeline`](../.claude/skills/change-ai-pipeline/SKILL.md).
 
 ## 15. Digital Public Good, privacy and responsible AI
 
-Decided in [ADR-0011](docs/adr/0011-privacy-do-no-harm.md) and [ADR-0012](docs/adr/0012-licensing-open-standards.md).
+Decided in [ADR-0011](adr/0011-privacy-do-no-harm.md) and [ADR-0012](adr/0012-licensing-open-standards.md).
 
 | DPG Standard indicator | How we meet it |
 |---|---|
@@ -767,7 +744,7 @@ Decided in [ADR-0011](docs/adr/0011-privacy-do-no-harm.md) and [ADR-0012](docs/a
 
 ## 17. Scaling to all of India
 
-- **A new field** follows one template (skill [`add-field`](.claude/skills/add-field/SKILL.md)) and covers all of India from the start; **a new city** is configuration plus one pipeline run (skill [`onboard-city`](.claude/skills/onboard-city/SKILL.md)).
+- **A new field** follows one template (skill [`add-field`](../.claude/skills/add-field/SKILL.md)) and covers all of India from the start; **a new city** is configuration plus one pipeline run (skill [`onboard-city`](../.claude/skills/onboard-city/SKILL.md)).
 - **Rural and district coverage:** add PMGSY rural roads, UDISE+ schools and NHRR facilities nationally; analyze at H3 resolution 6–7.
 - **Grid size:** India at resolution 8 is ≈4.5 million cells (3.29 million km² ÷ 0.74 km²) — it fits one Postgres. Partition score tables by state; keep materialized rollups for national views.
 - **Serving:** a stateless Go API behind a CDN; tiles versioned by snapshot and cached; a read replica for analytics.
@@ -780,23 +757,23 @@ Decided in [ADR-0011](docs/adr/0011-privacy-do-no-harm.md) and [ADR-0012](docs/a
 
 **Open questions — need a team answer**
 
-1. **Showcase cities:** are Bengaluru and Lucknow right for the demo? They no longer bound the data ([ADR-0013](docs/adr/0013-field-first-scope.md)).
+1. **Showcase cities:** are Bengaluru and Lucknow right for the demo? They no longer bound the data ([ADR-0013](adr/0013-field-first-scope.md)).
 2. **Event format:** hackathon length, judging criteria and demo format — these set the MoSCoW cut line.
 3. **Data access through the organizers:** PM GatiShakti, state GIS layers, CPGRAMS or municipal grievance extracts?
 4. **WhatsApp:** can business verification finish in time, or is the demo Telegram-first?
 5. **LLM budget and constraints:** what API budget, and is there a requirement for Indian / self-hosted models?
-6. **Shared ownership:** with two UI owners and two field owners, who owns `api/` (Go) and the citizen-intake pipeline? If nobody has Go capacity, FastAPI replaces Go ([ADR-0006](docs/adr/0006-three-service-monorepo.md)).
-7. **Metro owner:** add the second data owner's name to [`docs/fields/README.md`](docs/fields/README.md) and the metro plan.
-8. **NHAI GeoServer — decided:** used for analysis; only aggregates are committed, never its raw records or geometry; terms still to be requested from NHAI/MoRTH ([ADR-0014](docs/adr/0014-nhai-geoserver-data.md)).
+6. **Shared ownership:** with two UI owners and two field owners, who owns `api/` (Go) and the citizen-intake pipeline? If nobody has Go capacity, FastAPI replaces Go ([ADR-0006](adr/0006-three-service-monorepo.md)).
+7. **Metro owner:** add the second data owner's name to [`docs/fields/README.md`](fields/README.md) and the metro plan.
+8. **NHAI GeoServer — decided:** used for analysis; only aggregates are committed, never its raw records or geometry; terms still to be requested from NHAI/MoRTH ([ADR-0014](adr/0014-nhai-geoserver-data.md)).
 
 **Differences with the existing team docs — decide before M0**
 
 1. **Name:** this plan says INFRA-AI; the team docs say LokDristi (renamed from PRISM). Pick one — renaming is a find-and-replace.
-2. **Hackathon tech requirements:** [LokDristi_Datasets.md](LokDristi_Datasets.md) says Google Earth Engine is a Google hackathon requirement, and it uses Gemini and BigQuery. If Google tech is required: Gemini becomes the default provider behind the same `ml/ai/` functions (ADR-0008 already allows the swap); the growth layers — GHSL, VIIRS, Open Buildings, all in the Earth Engine catalog — are computed in Earth Engine; BigQuery is optional, next to PostGIS. Record the outcome as superseding ADRs.
-3. **Pilot scope — decided:** field-first — national highways and metro rail across India ([ADR-0013](docs/adr/0013-field-first-scope.md)). Rural drinking water, the gap report's suggestion, is a candidate for field #3; PCMC's 2025 grievance data is still the best real demand sample for the demo.
-4. **Citizen identifier:** the catalog's request schema has an Aadhaar-hashed citizen id; [ADR-0011](docs/adr/0011-privacy-do-no-harm.md) forbids Aadhaar. Keep ADR-0011: an unsalted hash of a 12-digit number can be reversed by brute force, and storing Aadhaar-derived identifiers brings UIDAI obligations a feedback platform does not need. An HMAC of the phone number does the same job.
-5. **Join key:** both use LGD codes for administrative data; this plan adds H3 hexagons for points, lines, rasters and hotspots ([ADR-0004](docs/adr/0004-h3-grid-spatial-key.md)). Compatible — confirm.
-6. **Optimizer and attribution:** the catalog proposes an OR-Tools portfolio optimizer and an attribution engine; this plan has explainable priority scores and a descriptive impact tracker. Compatible — optimization is not prediction ([ADR-0003](docs/adr/0003-explainable-analytics-no-prediction.md)); decide whether the optimizer is Must or Should.
+2. **Hackathon tech requirements:** [LokDristi_Datasets.md](../LokDristi_Datasets.md) says Google Earth Engine is a Google hackathon requirement, and it uses Gemini and BigQuery. If Google tech is required: Gemini becomes the default provider behind the same `ml/ai/` functions (ADR-0008 already allows the swap); the growth layers — GHSL, VIIRS, Open Buildings, all in the Earth Engine catalog — are computed in Earth Engine; BigQuery is optional, next to PostGIS. Record the outcome as superseding ADRs.
+3. **Pilot scope — decided:** field-first — national highways and metro rail across India ([ADR-0013](adr/0013-field-first-scope.md)). Rural drinking water, the gap report's suggestion, is a candidate for field #3; PCMC's 2025 grievance data is still the best real demand sample for the demo.
+4. **Citizen identifier:** the catalog's request schema has an Aadhaar-hashed citizen id; [ADR-0011](adr/0011-privacy-do-no-harm.md) forbids Aadhaar. Keep ADR-0011: an unsalted hash of a 12-digit number can be reversed by brute force, and storing Aadhaar-derived identifiers brings UIDAI obligations a feedback platform does not need. An HMAC of the phone number does the same job.
+5. **Join key:** both use LGD codes for administrative data; this plan adds H3 hexagons for points, lines, rasters and hotspots ([ADR-0004](adr/0004-h3-grid-spatial-key.md)). Compatible — confirm.
+6. **Optimizer and attribution:** the catalog proposes an OR-Tools portfolio optimizer and an attribution engine; this plan has explainable priority scores and a descriptive impact tracker. Compatible — optimization is not prediction ([ADR-0003](adr/0003-explainable-analytics-no-prediction.md)); decide whether the optimizer is Must or Should.
 
 **Assumptions this plan makes — correct them if wrong**
 
@@ -806,11 +783,11 @@ Decided in [ADR-0011](docs/adr/0011-privacy-do-no-harm.md) and [ADR-0012](docs/a
 
 ## 19. Working on this repo
 
-- **Rules:** [`AGENTS.md`](AGENTS.md) — invariants, conventions, definition of done. It applies to humans and AI agents; Claude Code loads it through [`CLAUDE.md`](CLAUDE.md).
-- **Decisions:** [`docs/adr/`](docs/adr/README.md) — read the relevant ones before changing an area. To disagree, write a superseding ADR; don't silently diverge.
-- **Fields:** [`docs/fields/`](docs/fields/README.md) — one plan per field, the done bar and the shared layer contract. Field owners and UI owners start there.
-- **Workflows:** [`.claude/skills/`](.claude/skills/) — `add-field`, `add-data-source`, `onboard-city`, `change-ai-pipeline`, `change-scoring`, `add-api-endpoint`, `write-adr`. Plain Markdown, so any agent or person can follow them.
-- **Pull requests:** fill in the checklist in [`.github/pull_request_template.md`](.github/pull_request_template.md).
+- **Rules:** [`AGENTS.md`](../AGENTS.md) — invariants, conventions, definition of done. It applies to humans and AI agents; Claude Code loads it through [`CLAUDE.md`](../CLAUDE.md).
+- **Decisions:** [`docs/adr/`](adr/README.md) — read the relevant ones before changing an area. To disagree, write a superseding ADR; don't silently diverge.
+- **Fields:** [`docs/fields/`](fields/README.md) — one plan per field, the done bar and the shared layer contract. Field owners and UI owners start there.
+- **Workflows:** [`.claude/skills/`](../.claude/skills/) — `add-field`, `add-data-source`, `onboard-city`, `change-ai-pipeline`, `change-scoring`, `add-api-endpoint`, `write-adr`. Plain Markdown, so any agent or person can follow them.
+- **Pull requests:** fill in the checklist in [`.github/pull_request_template.md`](../.github/pull_request_template.md).
 
 ---
 

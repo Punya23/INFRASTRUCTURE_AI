@@ -3,7 +3,7 @@
 - Status: Proposed
 - Date: 2026-09-28
 - Deciders: project team
-- Related: README §4 · ADR-0001, ADR-0009 · skill `onboard-city` · ADR-0013 (makes these the demo's showcase cities; data is no longer bounded by city)
+- Related: docs/PLAN.md §4 · ADR-0001, ADR-0009 · skill `onboard-city` · ADR-0013 (makes these the demo's showcase cities; data is no longer bounded by city)
 
 ## Context
 

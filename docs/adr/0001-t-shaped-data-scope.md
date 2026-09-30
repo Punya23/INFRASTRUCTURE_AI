@@ -3,7 +3,7 @@
 - Status: Superseded by ADR-0013
 - Date: 2026-09-28
 - Deciders: project team
-- Related: README §4, §17 · ADR-0002, ADR-0004
+- Related: docs/PLAN.md §4, §17 · ADR-0002, ADR-0004
 
 ## Context
 

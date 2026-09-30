@@ -68,7 +68,7 @@ grid:
   best_area_min_population: 5000  # ≈1,000 people/km²: a built-up neighbourhood — team judgment, 2026-09-29
 
 cities:
-  min_population: 100000          # README §4: cities of one lakh and above
+  min_population: 100000          # docs/PLAN.md §4: cities of one lakh and above
   urban_centre:
     min_density_per_km2: 1500     # UN Degree of Urbanisation (2020), urban-centre density threshold
     connectivity: 8               # 8-connected cells; the UN method uses 4-connectivity plus gap filling — team judgment, 2026-09-29
@@ -1318,7 +1318,7 @@ def test_pages_use_no_inline_script_and_no_inner_html():
 ### Task 16 (I2): ADR, README, AGENTS, methodology
 
 - [ ] Write `docs/adr/0015-investor-onboarding-scores-and-api.md` (Status Proposed): the decisions of spec §2, the score definition, "Go API before Postgres", the no-returns stance, the sensitivity table from `data/processed/invest/sensitivity.md`; add its row to `docs/adr/README.md`.
-- [ ] README §9 (product surface 6: investor flow), §10 (the new endpoints), §12 (`web/invest/`, `api/`, `config/scoring.yaml`, `config/states.yaml`, `ml/pipeline/invest/`), §13 status; AGENTS.md: Status line, Commands (`cd ml && uv run python -m pipeline.invest all`, `go -C api run ./cmd/api`, `node --test 'web/invest/js/*.test.mjs'`); note in `docs/fields/README.md` that fixtures under `web/fixtures/invest/` are cross-field.
+- [ ] docs/PLAN.md §9 (product surface 6: investor flow), §10 (the new endpoints), §12 (`web/invest/`, `api/`, `config/scoring.yaml`, `config/states.yaml`, `ml/pipeline/invest/`), §13 status; AGENTS.md: Status line, Commands (`cd ml && uv run python -m pipeline.invest all`, `go -C api run ./cmd/api`, `node --test 'web/invest/js/*.test.mjs'`); note in `docs/fields/README.md` that fixtures under `web/fixtures/invest/` are cross-field.
 
 ### Task 17 (I3): whole-branch review and fixes
 

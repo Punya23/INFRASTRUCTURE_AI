@@ -124,7 +124,7 @@ Area-profile section: nearest station (line, distance, status, expected opening,
 3. **Integration** — stations within walking distance of a rail station or bus terminal but without a proper link → integration works.
 4. **TOD planning** — upcoming stations with open or low-density land inside the influence zone → TOD planning (policy level, never parcels).
 
-Every recommendation carries drivers and evidence (README §8.3).
+Every recommendation carries drivers and evidence (docs/PLAN.md §8.3).
 
 ## Milestones and done checklist
 

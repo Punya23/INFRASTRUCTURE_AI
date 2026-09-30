@@ -1,7 +1,7 @@
 # Investor onboarding — where should I invest? (design)
 
 - Date: 2026-09-29 · Status: approved by the user on 2026-09-29 (returns → none, backend → Go without DB, login → none)
-- Related: README §2, §9, §10, §15 · ADR-0003, ADR-0004, ADR-0006, ADR-0011, ADR-0012, ADR-0014 · skill `add-api-endpoint`
+- Related: docs/PLAN.md §2, §9, §10, §15 · ADR-0003, ADR-0004, ADR-0006, ADR-0011, ADR-0012, ADR-0014 · skill `add-api-endpoint`
 
 ## 1. Goal
 
@@ -14,13 +14,13 @@ A visitor who wants to put money into property picks a state, sees the **top 5 c
 3. **State result** (`state.html?s=MH`) — top 5 cities: rank, score, three "why" chips with numbers, best area, "watch-outs".
 4. **City** (`city.html?c=pune`) — hex-grid heat map, ranked best areas, layer toggles (stations, bus stops, highways, tolls) and a **compare panel** on the right.
 
-**Persona and framing** — README §2 "Investor, homebuyer": a growth outlook that is informational, never advice (README §15). Growth is shown per H3 area (≈5 km²), never per parcel.
+**Persona and framing** — docs/PLAN.md §2 "Investor, homebuyer": a growth outlook that is informational, never advice (docs/PLAN.md §15). Growth is shown per H3 area (≈5 km²), never per parcel.
 
 ## 2. Decisions and non-goals
 
 | Decision | Choice | Why |
 |---|---|---|
-| "Returns %" | **None.** Rank by an explainable Access + Momentum score with drivers; compare cities by per-factor differences | ADR-0003 (Accepted), README §13 "Won't: price forecasting", AGENTS invariants 3 and 4. No source exists to compute returns. A past-only official price index (RBI HPI) is a possible follow-up after a license check (skill `add-data-source`) |
+| "Returns %" | **None.** Rank by an explainable Access + Momentum score with drivers; compare cities by per-factor differences | ADR-0003 (Accepted), docs/PLAN.md §13 "Won't: price forecasting", AGENTS invariants 3 and 4. No source exists to compute returns. A past-only official price index (RBI HPI) is a possible follow-up after a license check (skill `add-data-source`) |
 | Backend | **Go stdlib API** (ADR-0006) serving pipeline-exported JSON; no database yet | Nothing writes data. Postgres arrives with M0 and the store package swaps behind the same handlers |
 | Login | **None.** State and preset live in `localStorage` | Accounts mean personal data, an ADR and DPDP work (invariant 5) |
 | Web stack | Static HTML + ES modules under `web/invest/`, existing `i18n.js` | Matches the shipped `web/`; the Next.js shell is M0 |
@@ -208,7 +208,7 @@ JSON over HTTP. Errors are always `{"error": {"code": "...", "message": "..."}}`
 - **Data spot checks** (run when the real fixtures exist): Maharashtra returns ≥ 5 cities including Mumbai, Pune, Nagpur and Nashik; the Pune areas include at least three of Hinjewadi, Kharadi, Hadapsar, Baner, Wakad, Wagholi; Haryana has a Gurugram-area city; a state whose largest urban centre is under 100,000 people returns `total: 0` (Goa: its largest contiguous zone at 1,500 people/km² holds about 82,000, so the first real run has none — the original "Goa returns 2" was not attainable under the city rule).
 - **API (`go test ./...`, `go vet`):** table-driven per endpoint — happy path and every validation error, rate limit, CORS, compare ordering and deltas, search order, fail-closed on a corrupt fixture; the parity test in §7.
 - **Web:** in the browser, walk landing → start → Maharashtra → Pune → toggle layers → switch preset → open Delhi from the compare panel; zero console errors; check 360 px and 1280 px; screenshots attached to the PR description.
-- **Definition of done:** `cd ml && uv run pytest && uv run ruff check .` · `cd api && go vet ./... && go test ./...` · fixtures regenerated · ADR-0015 with the sensitivity table · README §9, §10, §12 and the AGENTS.md status and commands updated.
+- **Definition of done:** `cd ml && uv run pytest && uv run ruff check .` · `cd api && go vet ./... && go test ./...` · fixtures regenerated · ADR-0015 with the sensitivity table · docs/PLAN.md §9, §10, §12 and the AGENTS.md status and commands updated.
 
 ## 11. Risks and open items
 

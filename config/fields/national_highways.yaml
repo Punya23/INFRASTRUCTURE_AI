@@ -42,12 +42,12 @@ events:
   evidence_max_chars: 500          # one sentence of a public press release (the longest of the 22 events is 482
                                    #   characters); ADR-0012 allows a short quote and PIB allows free reproduction
   opening_paragraphs: 4            # the stage sentence must sit in the first four paragraphs — PIB releases state the news first
-  languages: [en]                  # Hindi and other-script releases are listed, not extracted, until a labelled gold set exists (README §14)
+  languages: [en]                  # Hindi and other-script releases are listed, not extracted, until a labelled gold set exists (docs/PLAN.md §14)
   max_listing_date_gap_days: 1     # MoRTH listing date vs the page's "Posted On" date
   confidence: {base: 0.75, nh_ref: 0.05, state: 0.05, cost: 0.05}  # official release + verified quote; +0.05 per anchor field found — team judgment, 2026-09-30
-  review_below: 0.6                # README §8.4 step 11
+  review_below: 0.6                # docs/PLAN.md §8.4 step 11
   rules:                           # first title match wins; `evidence` picks the sentence that states the stage.
-                                   #   The lifecycle enum (README §7) has no "awarded": a letter of award follows
+                                   #   The lifecycle enum (docs/PLAN.md §7) has no "awarded": a letter of award follows
                                    #   the tender, so bids received and contracts awarded both map to `tendered`
     - {type: cabinet_cost_revision, stage: approved, title: '^Cabinet approves Revised Cost', evidence: '\bapproved\b'}
     - {type: cabinet_approval, stage: approved, title: '^Cabinet approves', evidence: '\bapproved\b'}

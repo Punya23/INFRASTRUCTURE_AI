@@ -3,7 +3,7 @@
 - Status: Accepted
 - Date: 2026-09-28
 - Deciders: project team
-- Related: README §8.3, §14 · ADR-0004, ADR-0008 · skill `change-scoring`
+- Related: docs/PLAN.md §8.3, §14 · ADR-0004, ADR-0008 · skill `change-scoring`
 
 ## Context
 

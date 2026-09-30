@@ -44,7 +44,7 @@ Every feature in every field layer (GeoJSON now, vector tiles later) carries the
 
 Field-specific properties are listed in each field plan. The UI must render any field from these common properties alone, and treat field-specific ones as extras.
 
-**Area profile section** — each field adds one entry to `GET /v1/area` (README §10). Illustrative, not real data:
+**Area profile section** — each field adds one entry to `GET /v1/area` (docs/PLAN.md §10). Illustrative, not real data:
 
 ```json
 {

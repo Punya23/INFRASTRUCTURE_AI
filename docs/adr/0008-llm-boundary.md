@@ -3,7 +3,7 @@
 - Status: Proposed
 - Date: 2026-09-28
 - Deciders: project team
-- Related: README §8.4–8.6, §14 · ADR-0003, ADR-0009, ADR-0011 · skill `change-ai-pipeline`
+- Related: docs/PLAN.md §8.4–8.6, §14 · ADR-0003, ADR-0009, ADR-0011 · skill `change-ai-pipeline`
 
 ## Context
 

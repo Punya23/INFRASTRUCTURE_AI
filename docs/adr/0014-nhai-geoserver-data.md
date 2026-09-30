@@ -3,7 +3,7 @@
 - Status: Accepted
 - Date: 2026-09-29
 - Deciders: project team (NH field owner, 2026-09-28)
-- Related: README §18 · ADR-0011, ADR-0012 · `config/sources.yaml` (`nhai_*`) · skill `add-data-source`
+- Related: docs/PLAN.md §18 · ADR-0011, ADR-0012 · `config/sources.yaml` (`nhai_*`) · skill `add-data-source`
 
 ## Context
 

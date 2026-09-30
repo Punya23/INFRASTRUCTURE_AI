@@ -6,7 +6,7 @@ description: Use when starting a new INFRA-AI field — one type of infrastructu
 # Add a field
 
 Read first: ADR-0013 (field-first scope) · [`docs/fields/README.md`](../../../docs/fields/README.md) (done bar, shared layer contract, template) · an existing plan as the example ([`national-highways.md`](../../../docs/fields/national-highways.md)) · `AGENTS.md` invariants 1, 2, 7, 8.
-Paths follow README §12; if one does not exist yet, create it there.
+Paths follow docs/PLAN.md §12; if one does not exist yet, create it there.
 
 ## 1. Scope it — one page, before any data
 
@@ -37,7 +37,7 @@ Paths follow README §12; if one does not exist yet, create it there.
 
 - Metrics per H3 cell and per district or city, each with drivers (ADR-0003), parameters read from `config/fields/<field_id>.yaml`.
 - At minimum: access or coverage now; the change once the pipeline completes; the past growth effect where opening dates exist.
-- A new analysis library gets a line in README §11; a new service or datastore needs an ADR (skill `write-adr`).
+- A new analysis library gets a line in docs/PLAN.md §11; a new service or datastore needs an ADR (skill `write-adr`).
 
 ## 7. Pipeline and news
 
@@ -50,4 +50,4 @@ Paths follow README §12; if one does not exist yet, create it there.
 
 ## 9. Done
 
-- Tick every item of the done bar in `docs/fields/README.md`; write the 5–10 findings in the plan (statement, number, notebook, date); update the index status and the field table in README §4.
+- Tick every item of the done bar in `docs/fields/README.md`; write the 5–10 findings in the plan (statement, number, notebook, date); update the index status and the field table in docs/PLAN.md §4.

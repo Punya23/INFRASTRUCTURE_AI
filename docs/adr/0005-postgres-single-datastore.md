@@ -3,7 +3,7 @@
 - Status: Proposed
 - Date: 2026-09-28
 - Deciders: project team
-- Related: README §6, §7, §17 · ADR-0006, ADR-0010
+- Related: docs/PLAN.md §6, §7, §17 · ADR-0006, ADR-0010
 
 ## Context
 

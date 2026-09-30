@@ -5,8 +5,8 @@ description: Use when adding or changing any dataset or feed in INFRA-AI — an 
 
 # Add or change a data source
 
-Read first: `AGENTS.md` invariants 1, 2, 7, 8, 9 · README §5 (source table) and §8.1 (ingestion) · ADR-0012 (licensing) · your field plan in `docs/fields/`.
-Paths follow README §12; if one does not exist yet, create it there.
+Read first: `AGENTS.md` invariants 1, 2, 7, 8, 9 · docs/PLAN.md §5 (source table) and §8.1 (ingestion) · ADR-0012 (licensing) · your field plan in `docs/fields/`.
+Paths follow docs/PLAN.md §12; if one does not exist yet, create it there.
 
 ## 1. Is it worth it?
 
@@ -21,7 +21,7 @@ Paths follow README §12; if one does not exist yet, create it there.
 - Behind a login, registration form or CAPTCHA? A person downloads it by hand and the manifest says how. Never automate past a CAPTCHA or login.
 - Services that advertise write operations (for example WFS-T): send read-only requests only.
 - News and other text: keep metadata, a short evidence quote and the link — never republish full text.
-- License unclear? Do not ingest. Add it to README §18.
+- License unclear? Do not ingest. Add it to docs/PLAN.md §18.
 
 ## 3. Fetch
 
@@ -50,6 +50,6 @@ Paths follow README §12; if one does not exist yet, create it there.
 
 ## 7. Document in the same PR
 
-- A row in README §5: layer, linked source, license, what it is used for.
+- A row in docs/PLAN.md §5: layer, linked source, license, what it is used for.
 - Attribution on the app's About page if the license requires it.
 - If it changes what an index means, also follow skill `change-scoring`.

@@ -4,7 +4,7 @@
 - Date: 2026-09-28
 - Deciders: project team
 - Supersedes: ADR-0001
-- Related: README §4, §13 · ADR-0002, ADR-0004 · [`docs/fields/`](../fields/README.md) · skill `add-field`
+- Related: docs/PLAN.md §4, §13 · ADR-0002, ADR-0004 · [`docs/fields/`](../fields/README.md) · skill `add-field`
 
 ## Context
 

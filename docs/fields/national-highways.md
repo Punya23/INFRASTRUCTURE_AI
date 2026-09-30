@@ -105,7 +105,7 @@ Reproduce: `cd ml && uv run python -m common.fetch && uv run python -m fields.na
 
 `delay_flag` reads the NHAI dashboard layer at the fetch date. The layer has no date for a provisional completion certificate, so a passed scheduled date says nothing about a project that already carries one. A straight-line "physical progress vs elapsed time" score was tried and dropped: progress follows an S-curve, so even a strict cutoff labelled 83% of not-yet-overdue projects "behind". The scheduled date is the one on NHAI's dashboard and may already include time extensions — `overdue` is slippage against the current recorded schedule, not the original contract date. Per-project rows stay in `data/`; only state and national aggregates are committed (ADR-0014).
 
-`circuity` routes on a networkx graph of operational roads (trunk to tertiary, not NH-only — NHs alone break where they cross cities on untagged roads) and links (README §11); dead ends within `graph_snap_m` of another node are joined, because OSM ways often meet without sharing a node.
+`circuity` routes on a networkx graph of operational roads (trunk to tertiary, not NH-only — NHs alone break where they cross cities on untagged roads) and links (docs/PLAN.md §11); dead ends within `graph_snap_m` of another node are joined, because OSM ways often meet without sharing a node.
 
 Every threshold lives in [`config/fields/national_highways.yaml`](../../config/fields/national_highways.yaml), each with its basis.
 
@@ -131,7 +131,7 @@ Area-profile section: nearest NH (ref, distance, lanes, tolled), NH projects wit
 3. **Missing links** — city pairs above the circuity flag that the pipeline does not fix → link study.
 4. **Access gaps** — dense districts more than 25 km from an NH and not covered by the pipeline.
 
-Every recommendation carries drivers and evidence (README §8.3).
+Every recommendation carries drivers and evidence (docs/PLAN.md §8.3).
 
 ## Milestones and done checklist
 
