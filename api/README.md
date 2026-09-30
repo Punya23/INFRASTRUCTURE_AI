@@ -42,6 +42,7 @@ All `GET`. Presets are the ids in `/v1/meta`; omitted means the default (`balanc
 | `/v1/cities/{id}` | One city with its factor summary, flags and drivers. |
 | `/v1/cities/{id}/areas?preset&limit` | H3 cells as GeoJSON, ranked (limit 1-1000, default 500). |
 | `/v1/cities/{id}/assets?layers` | Stations, bus stops, highways, toll plazas. |
+| `/v1/cities/{id}/projects` | Upcoming bus and metro projects found in news, each with its verbatim evidence and article link (ADR-0016). `[]` when none. |
 | `/v1/cities/{id}/compare?preset&scope&limit` | The city against others (`metros`, `peers`, `state`, `india`), with reasons for each difference; limit 1-10, default 5. |
 
 Data routes send `Cache-Control: public, max-age=300`; every response sends `X-Content-Type-Options: nosniff`.

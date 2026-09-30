@@ -1,0 +1,42 @@
+# Upcoming bus and metro projects found in news (ml/fields/public_transport/upcoming.py). Every number states its basis.
+# Rules, not a model (ADR-0008): a headline or snippet becomes a project only if a stage rule and a mode rule match
+# it and the quote is found verbatim in the source text.
+
+# Cities the pipeline looks for: ids of web/fixtures/invest/cities.json. A news item counts for a city only when
+# the city's name or an alias appears in its own text. Team judgment, 2026-09-30: cities with a bus or metro
+# project in the pipeline; add an id to widen the search.
+cities: [srinagar, jammu, delhi, mumbai, bengaluru, hyderabad, chennai, pune, kolkata, ahmedabad, lucknow, kanpur,
+         agra, bhopal, indore, patna, bhubaneswar, surat, nagpur, kochi, coimbatore, madurai, guwahati, chandigarh]
+
+# Apify fetch (ADR-0016). The token comes from the environment (APIFY_TOKEN), never from this file.
+apify:
+  actor: apify~google-search-scraper       # Apify's own Google Search actor; swap for a news actor without a code change
+  queries:                                 # {city} is filled from cities above
+    - "{city} metro project news"
+    - "{city} electric bus project news"
+  country_code: in                         # India results
+  language_code: en
+  results_per_page: 10                     # one page of results per query keeps a run under the sync limit — team judgment
+  max_pages_per_query: 1
+  timeout_s: 300                           # the sync endpoint's own limit is 300 s
+
+# Stage rules, first match wins, so a specific stage is listed before a general one. Case-insensitive.
+# excluded = not upcoming (already open, or turned down): recorded in the rejects file, never shown.
+stages:
+  - {stage: excluded,           pattern: 'inaugurat|opened (?:for|to)|open(?:s|ed)? for commuters|rolled out|launched by|reject|scrapp|shelv|cancel'}
+  - {stage: stalled,            pattern: 'stalled|stuck|limbo|delaying|delayed|on hold'}
+  - {stage: proposed,           pattern: 'yet to approve|awaits?\b|awaiting|submitted|\bDPRs?\b|reviewing|under review|feasibility'}
+  - {stage: tendered,           pattern: 'tender|bids? invited|contract awarded|awarded'}
+  - {stage: approved,           pattern: 'approv|sanction|cabinet nod|\bnod\b|cleared|hit roads soon|to be inducted|to induct'}
+  - {stage: under_construction, pattern: 'under construction|underway|trial runs?|likely to (?:launch|open)|to be operational|to open|works? in'}
+  - {stage: proposed,           pattern: 'propos|\bplans?\b|planned|fast track'}
+
+# Mode rules. An item that matches both is ambiguous and goes to the rejects file.
+modes:
+  metro: '\bmetro|\bmonorail|\brrts\b'
+  bus:   '\b(?:e-)?buses?\b|\bBRT\b'
+
+# Confidence = base plus what the text states. Team judgment, 2026-09-30: a bare headline is a weak claim, and a
+# date, a cost or a length makes it easier to check.
+confidence: {base: 0.5, event_date: 0.1, cost_or_length: 0.1}
+review_below: 0.45      # below this a project goes to the rejects file (never happens at base 0.5; guards config edits)

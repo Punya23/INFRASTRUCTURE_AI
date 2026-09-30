@@ -98,6 +98,8 @@ export const api = {
   // layers: an array such as ['stations', 'bus_stops'], or omitted for all four.
   assets: async (id, layers) =>
     getJson(`/v1/cities/${checked(id, CITY_ID, 'city id')}/assets${query({ layers: Array.isArray(layers) ? layers.join(',') : layers })}`),
+  // Upcoming bus and metro projects found in news; each one carries its verbatim evidence and source link.
+  projects: async (id) => getJson(`/v1/cities/${checked(id, CITY_ID, 'city id')}/projects`),
   compare: async (id, { preset, scope, limit } = {}) =>
     getJson(`/v1/cities/${checked(id, CITY_ID, 'city id')}/compare${query({ preset, scope, limit })}`),
 };

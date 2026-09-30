@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { areaPlaces, assetCollection, assetText, bestAreas, busSourceLine, cityHref, compareReason, licenseLine, linkableCities, mapStrings, outOfView, placeText, readParams } from './city.js';
+import { areaPlaces, assetCollection, assetText, bestAreas, busSourceLine, cityHref, compareReason, licenseLine, linkableCities, mapStrings, outOfView, placeText, projectFacts, projectFeatures, publisher, readParams } from './city.js';
 import { ASSET_SOURCE, BREAKS, RAMP, baseLayers, bounds, cellCentre, clickAction } from './map.js';
 
 // A hexagon-ish ring around (lon, lat), closed like the API sends it.
@@ -167,6 +167,21 @@ test('linkableCities leaves out rows whose id could not be a city id', () => {
   const rows = [{ id: 'nagpur' }, { id: '../x' }, { id: 'javascript:alert(1)' }, { id: null }, {}, { id: 'aurangabad-mh' }];
   assert.deepEqual(linkableCities(rows).map((r) => r.id), ['nagpur', 'aurangabad-mh']);
   assert.deepEqual(linkableCities(undefined), []);
+});
+
+test('projectFeatures draws one badge per mode with its count, and skips a project with no point', () => {
+  const at = { lat: 34.01, lon: 74.92 };
+  const fc = projectFeatures([{ mode: 'metro', ...at }, { mode: 'metro', ...at }, { mode: 'bus', ...at }, { mode: 'bus', lat: null, lon: null }]);
+  assert.deepEqual(fc.features.map((f) => [f.properties.mode, f.properties.count, f.geometry.coordinates]),
+    [['metro', 2, [74.92, 34.01]], ['bus', 1, [74.92, 34.01]]]);
+  assert.deepEqual(projectFeatures(undefined).features, []);
+});
+
+test('projectFacts states only what the article gave; publisher is the link host', () => {
+  assert.equal(projectFacts({ length_km: 25, cost_crore: null, event_date: null }, echo), `inv.city.projects.km ${JSON.stringify({ n: '25.0' })}`);
+  assert.equal(projectFacts({ length_km: null, cost_crore: null, event_date: null }, echo), '');
+  assert.equal(publisher('https://www.example.test/a/b'), 'example.test');
+  assert.equal(publisher('not a url'), 'not a url');
 });
 
 test('outOfView is true only when part of the element is off screen', () => {

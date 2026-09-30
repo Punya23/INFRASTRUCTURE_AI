@@ -551,3 +551,16 @@ func (a *api) compareCity(w http.ResponseWriter, r *http.Request) {
 	}
 	writeJSON(w, compare(c, a.cities, preset, scope, limit))
 }
+
+// projects answers a city's upcoming bus and metro projects: an empty list when none was found in the news.
+func (a *api) projects(w http.ResponseWriter, r *http.Request) {
+	c, ok := a.pathCity(w, r)
+	if !ok {
+		return
+	}
+	writeJSON(w, struct {
+		City     string          `json:"city"`
+		AsOf     string          `json:"as_of"`
+		Projects []store.Project `json:"projects"`
+	}{c.ID, a.store.ProjectsAsOf(), a.store.Projects(c.ID)})
+}

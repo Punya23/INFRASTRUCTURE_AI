@@ -84,6 +84,7 @@ async function loadStyle(colours) {
 export const ASSET_SOURCE = {
   'highways-open': 'highways', 'highways-building': 'highways', bus_stops: 'bus_stops',
   'stations-rail': 'stations', 'stations-metro': 'stations', toll_plazas: 'toll_plazas',
+  'projects-metro': 'projects', 'projects-bus': 'projects', // upcoming projects: one badge per mode, from /projects
 };
 
 // [layer id, MapLibre layer spec], bottom to top.
@@ -93,6 +94,10 @@ const assetLayers = (c) => [
   ['bus_stops', { type: 'circle', paint: { 'circle-radius': 2.5, 'circle-color': c.ink, 'circle-opacity': 0.7 } }],
   ['stations-rail', { type: 'circle', filter: ['==', ['get', 'mode'], 'rail'], paint: { 'circle-radius': 5, 'circle-color': c.paper, 'circle-stroke-color': c.ink, 'circle-stroke-width': 2.5 } }],
   ['stations-metro', { type: 'circle', filter: ['==', ['get', 'mode'], 'metro'], paint: { 'circle-radius': 6, 'circle-color': c.ink, 'circle-stroke-color': c.paper, 'circle-stroke-width': 2 } }],
+  // Upcoming projects sit at the city centre (the news names a city, not a site), one badge per mode with the
+  // count in its size; a fixed pixel nudge keeps the two badges apart at every zoom.
+  ['projects-metro', { type: 'circle', filter: ['==', ['get', 'mode'], 'metro'], paint: { 'circle-radius': ['step', ['get', 'count'], 9, 3, 11, 6, 13], 'circle-color': c.saffron, 'circle-stroke-color': c.ink, 'circle-stroke-width': 2.5, 'circle-translate': [-12, 0] } }],
+  ['projects-bus', { type: 'circle', filter: ['==', ['get', 'mode'], 'bus'], paint: { 'circle-radius': ['step', ['get', 'count'], 9, 3, 11, 6, 13], 'circle-color': c.teal, 'circle-stroke-color': c.paper, 'circle-stroke-width': 2.5, 'circle-translate': [12, 0] } }],
   ['toll_plazas', { type: 'circle', paint: { 'circle-radius': 5, 'circle-color': c.saffron, 'circle-stroke-color': c.ink, 'circle-stroke-width': 1.5 } }],
 ];
 

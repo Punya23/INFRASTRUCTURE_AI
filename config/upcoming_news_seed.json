@@ -1,0 +1,105 @@
+{
+  "source": "web_search_seed",
+  "collected": "2026-09-30",
+  "note": "Headlines and links from web searches run on 2026-09-30, used until an Apify run replaces them (see docs/fields/upcoming-transport.md). Only the headline is stored, as written by the publisher; titles the search view cut short are kept as the visible prefix. Items whose status a later report contradicts (Coimbatore and Madurai metro, rejected Nov 2025) or whose target date has passed (Bengaluru Pink Line, 15 Aug 2026) were left out.",
+  "items": [
+    {
+      "title": "DPRs for Jammu and Srinagar metrolite projects submitted to Centre",
+      "url": "https://indianinfrastructure.com/2026/04/02/dprs-for-jammu-and-srinagar-metrolite-projects-submitted-to-centre/",
+      "description": "",
+      "date": "2026-04-02",
+      "query": "Srinagar metro neo project DPR approved upcoming"
+    },
+    {
+      "title": "Srinagar Metro: Revised DPR worth Rs 4893 crore awaits nod from MoHUA",
+      "url": "https://www.thekashmirmonitor.net/srinagar-metro-revised-dpr-worth-rs-4893-crore-awaits-nod-from-mohua/",
+      "description": "",
+      "date": null,
+      "query": "Srinagar metro neo project DPR approved upcoming"
+    },
+    {
+      "title": "Centre Reviewing Metro Projects For Jammu And Srinagar",
+      "url": "https://www.constructionworld.in/transport-infrastructure/metro-rail-and-railways-infrastructure/centre-reviewing-metro-projects-for-jammu-and-srinagar/89456",
+      "description": "",
+      "date": null,
+      "query": "Jammu Srinagar metro neo Cabinet approval news 2026"
+    },
+    {
+      "title": "Infrastructure for 200 e-Buses underway in Jammu & Srinagar",
+      "url": "https://brighterkashmir.com/infrastructure-for-200-e-buses-underway-in-jammu--srinagar",
+      "description": "",
+      "date": null,
+      "query": "electric buses Srinagar Jammu Smart City e-bus launch"
+    },
+    {
+      "title": "Hyderabad Metro Phase 2B Gets Cabinet Approval",
+      "url": "https://www.constructionworld.in/transport-infrastructure/metro-rail-and-railways-infrastructure/hyderabad-metro-phase-2b-gets-cabinet-approval/74893",
+      "description": "",
+      "date": null,
+      "query": "Hyderabad Metro Phase 2 approved Cabinet 2026 corridors"
+    },
+    {
+      "title": "State Cabinet approves Hyderabad Metro Rail phase-2 project",
+      "url": "https://www.constructionworld.in/transport-infrastructure/metro-rail-and-railways-infrastructure/state-cabinet-approves-hyderabad-metro-rail-phase-2-project/64379",
+      "description": "",
+      "date": null,
+      "query": "Hyderabad Metro Phase 2 approved Cabinet 2026 corridors"
+    },
+    {
+      "title": "DPR Ordered for New 25-km Pune's Hinjewadi–Khadakwasla Metro Corridor",
+      "url": "https://metrorailtoday.com/news/dpr-ordered-for-new-25-km-punes-hinjewadikhadakwasla-metro-corridor",
+      "description": "",
+      "date": null,
+      "query": "Pune metro new line approved 2026 Hinjewadi Swargate Khadakwasla"
+    },
+    {
+      "title": "Government of India Approves Pune Metro Expansion",
+      "url": "https://railway-news.com/government-of-india-approves-pune-metro-expansion/",
+      "description": "",
+      "date": null,
+      "query": "Pune metro new line approved 2026 Hinjewadi Swargate Khadakwasla"
+    },
+    {
+      "title": "Delhi Metro Phase 4: Three New Corridors To Be Operational By December, Says DMRC MD Vikas Kumar",
+      "url": "https://swarajyamag.com/amp/story/news-brief/delhi-metro-phase-4-three-new-corridors-to-be-operational-by-december-says-dmrc-md-vikas-kumar",
+      "description": "",
+      "date": null,
+      "query": "Delhi Metro Phase 4 corridors new stretch opening news"
+    },
+    {
+      "title": "Cabinet approves Ahmedabad Metro Rail project Phase 2A (Koteshwar",
+      "url": "https://www.pmindia.gov.in/en/news_updates/cabinet-approves-ahmedabad-metro-rail-project-phase-2a-koteshwar-road-to-airport-corridor/",
+      "description": "",
+      "date": null,
+      "query": "Patna Bhubaneswar Surat Ahmedabad metro extension approved news"
+    },
+    {
+      "title": "Trial runs for Kolkata Metro's Orange Line extension to Sector V scheduled to begin 10th October 2026",
+      "url": "https://swarajyamag.com/news-brief/trial-runs-for-kolkata-metros-orange-line-extension-to-sector-v-scheduled-to-begin-10th-october-2026",
+      "description": "",
+      "date": null,
+      "query": "Kolkata metro new stretch Orange Line Purple Line opening news"
+    },
+    {
+      "title": "Chennai Metro phase II: Poonamallee-Porur stretch likely to launch",
+      "url": "https://www.dtnext.in/news/chennai/chennai-metro-phase-ii-works-in-final-stages-new-routes-to-open-soon-847441",
+      "description": "",
+      "date": null,
+      "query": "Chennai metro phase 2 opening 2026 Poonamallee Porur"
+    },
+    {
+      "title": "Big relief for Bengaluru Commuters: 1,750 new electric BMTC buses to hit roads soon under PM E-DRIVE",
+      "url": "https://newsfirstprime.com/bengaluru/big-relief-for-bengaluru-commuters-1750-new-electric-bmtc-buses-to-hit-roads-soon-under-pm-e-drive-11101178",
+      "description": "",
+      "date": null,
+      "query": "BMTC electric buses Bengaluru new order 2026"
+    },
+    {
+      "title": "Bengaluru Electric Buses: 4,500 Approved for BMTC",
+      "url": "https://urbanacres.in/bengaluru-gets-approval-for-4500-new-electric-buses/",
+      "description": "",
+      "date": null,
+      "query": "BMTC electric buses Bengaluru new order 2026"
+    }
+  ]
+}

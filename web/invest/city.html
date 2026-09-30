@@ -61,10 +61,20 @@
                 <label><input type="checkbox" value="highways-open"> <span class="city-key city-key--nh" aria-hidden="true"></span> <span data-i18n="inv.city.layer.nh_open">National highways, open</span></label>
                 <label><input type="checkbox" value="highways-building"> <span class="city-key city-key--nh-building" aria-hidden="true"></span> <span data-i18n="inv.city.layer.nh_building">National highways, under construction</span></label>
                 <label><input type="checkbox" value="toll_plazas"> <span class="city-key city-key--toll" aria-hidden="true"></span> <span data-i18n="inv.city.layer.tolls">Toll plazas</span></label>
+                <label><input type="checkbox" value="projects-metro" disabled> <span class="city-key city-key--proj-metro" aria-hidden="true"></span> <span data-i18n="inv.city.layer.proj_metro">Upcoming metro projects</span></label>
+                <label><input type="checkbox" value="projects-bus" disabled> <span class="city-key city-key--proj-bus" aria-hidden="true"></span> <span data-i18n="inv.city.layer.proj_bus">Upcoming bus projects</span></label>
                 <p id="city-bus-source" class="inv-small inv-muted city-layers__note" hidden></p>
                 <div id="city-layer-msg"></div>
               </fieldset>
             </div>
+          </section>
+
+          <section class="city-projects" aria-labelledby="city-projects-heading">
+            <h2 id="city-projects-heading" data-i18n="inv.city.projects.heading">Upcoming bus and metro projects</h2>
+            <p class="inv-muted" data-i18n="inv.city.projects.intro">Projects that news reports put at a proposed, approved, tendered, under-construction or stalled stage. Each shows the words the stage was read from and a link to the article.</p>
+            <div id="city-projects-msg"></div>
+            <ul id="city-projects" class="city-projects__list" role="list"></ul>
+            <p class="inv-small inv-muted" data-i18n="inv.city.projects.note">Pins sit at the city centre: news names the city, not the site. Reports change; check the linked article before relying on a date or a cost.</p>
           </section>
 
           <section class="city-best-section" aria-labelledby="city-best-heading">

@@ -289,6 +289,9 @@ func TestLoad_failsClosed(t *testing.T) {
 	assets := func(fn func(a map[string]any)) func(*testing.T, string) {
 		return edit("assets/pune.json", func(r any) { fn(obj(r)) })
 	}
+	project := func(fn func(p map[string]any)) func(*testing.T, string) {
+		return edit("projects.json", func(r any) { fn(obj(arr(obj(r)["projects"])[0])) })
+	}
 	del := func(key string) func(m map[string]any) { return func(m map[string]any) { delete(m, key) } }
 	set := func(key string, v any) func(m map[string]any) { return func(m map[string]any) { m[key] = v } }
 	inSub := func(key string, fn func(m map[string]any)) func(m map[string]any) {
@@ -459,6 +462,21 @@ func TestLoad_failsClosed(t *testing.T) {
 		{"assets fetched_at null", assets(set("fetched_at", nil)), "$.fetched_at: null", nil},
 		{"assets license omitted", assets(del("license")), "$.license: missing", nil},
 		{"assets license empty", assets(set("license", "")), "license is empty", nil},
+
+		// projects.json: upcoming projects from news
+		{"projects file missing", func(t *testing.T, dir string) { _ = os.Remove(inDir(dir, "projects.json")) }, "projects.json", fs.ErrNotExist},
+		{"project for an unknown city", project(set("city", "atlantis")), `city "atlantis"`, nil},
+		{"project with an operational stage", project(set("stage", "operational")), `stage "operational"`, nil},
+		{"project with an unknown mode", project(set("mode", "ferry")), `mode "ferry"`, nil},
+		{"project without evidence", project(set("evidence", "")), "evidence is empty", nil},
+		{"project without a source link", project(set("source_ref", "pune")), "not a link", nil},
+		{"project latitude off the planet", project(set("lat", 123.0)), "not a coordinate", nil},
+		{"project confidence above 1", project(set("confidence", 1.5)), "outside 0..1", nil},
+		{"project license omitted", project(del("license")), "license: missing", nil},
+		{"duplicate project id", edit("projects.json", func(r any) {
+			l := arr(obj(r)["projects"])
+			obj(l[1])["id"] = obj(l[0])["id"]
+		}), "duplicate project id", nil},
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
@@ -856,5 +874,19 @@ func (p *parity) cityScore(c *store.City, pid string, areas *store.AreaSet, cell
 		if g.Unit != p.unit[g.Factor] {
 			p.addf("%s: gap %s unit = %q, meta says %q", at, g.Factor, g.Unit, p.unit[g.Factor])
 		}
+	}
+}
+
+func TestProjects(t *testing.T) {
+	s := mustLoad(t, testdata)
+	got := s.Projects("pune")
+	if len(got) != 2 || got[0].ID != "pune-metro-test-1" || got[1].ID != "pune-bus-test-1" {
+		t.Errorf("Projects(pune) = %+v, want the metro project (confidence 0.8) before the bus one (0.6)", got)
+	}
+	if got := s.Projects("delhi"); got == nil || len(got) != 0 {
+		t.Errorf("Projects(delhi) = %#v, want an empty non-nil slice", got)
+	}
+	if s.ProjectsAsOf() != "2026-09-30" {
+		t.Errorf("ProjectsAsOf() = %q", s.ProjectsAsOf())
 	}
 }

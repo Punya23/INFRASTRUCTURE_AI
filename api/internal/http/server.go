@@ -46,6 +46,7 @@ func New(s *store.Store, cfg Config) http.Handler {
 	mux.HandleFunc("GET /v1/cities/{id}", a.city)
 	mux.HandleFunc("GET /v1/cities/{id}/areas", a.areas)
 	mux.HandleFunc("GET /v1/cities/{id}/assets", a.assets)
+	mux.HandleFunc("GET /v1/cities/{id}/projects", a.projects)
 	mux.HandleFunc("GET /v1/cities/{id}/compare", a.compareCity)
 	mux.HandleFunc("/", notFound)
 

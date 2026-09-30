@@ -115,6 +115,38 @@ export function compareReason(other, t = tt) {
     .join(' · ');
 }
 
+// Upcoming projects as map points: one per mode that has any, at that mode's city point, carrying the count
+// (the badge size) and the mode. Nothing else is drawn from a project: the details are in the popup and list.
+export function projectFeatures(projects) {
+  const byMode = new Map();
+  for (const p of projects ?? []) {
+    if (!Number.isFinite(p.lat) || !Number.isFinite(p.lon)) continue; // a project without a point is listed, never drawn
+    const entry = byMode.get(p.mode) ?? { mode: p.mode, count: 0, lon: p.lon, lat: p.lat };
+    entry.count += 1;
+    byMode.set(p.mode, entry);
+  }
+  return {
+    type: 'FeatureCollection',
+    features: [...byMode.values()].map(({ mode, count, lon, lat }) => ({
+      type: 'Feature', geometry: { type: 'Point', coordinates: [lon, lat] }, properties: { mode, count },
+    })),
+  };
+}
+
+// The article's site, for "Source: …"; the link's own text when it is not a URL the browser can parse.
+export function publisher(link) {
+  try { return new URL(link).hostname.replace(/^www\./, ''); } catch { return String(link); }
+}
+
+// "12.5 km · ₹4,893 crore · 2 Apr 2026", only the parts the article states.
+export function projectFacts(p, t = tt) {
+  return [
+    Number.isFinite(p.length_km) ? t('inv.city.projects.km', { n: formatValue(p.length_km) }) : null,
+    Number.isFinite(p.cost_crore) ? t('inv.city.projects.crore', { n: formatCount(p.cost_crore) }) : null,
+    p.event_date ? t('inv.city.projects.dated', { date: p.event_date }) : null,
+  ].filter(Boolean).join(' · ');
+}
+
 // The collection an /assets answer holds for `source`. bus_stops may be null (the city has no bus
 // feed: null is returned); anything else that is not a FeatureCollection fails closed.
 export function assetCollection(data, source) {
@@ -161,6 +193,7 @@ function boot() {
     layerMsg: $('city-layer-msg'), areasMsg: $('city-areas-msg'), best: $('city-best'), bestLoading: $('city-best-loading'),
     scopes: $('city-scopes'), compare: $('city-compare'), compareMsg: $('city-compare-msg'),
     license: $('city-license'), busSource: $('city-bus-source'),
+    projects: $('city-projects'), projectsMsg: $('city-projects-msg'),
   };
 
   const params = readParams(location.search, loadPrefs().preset);
@@ -168,7 +201,7 @@ function boot() {
   const s = {
     id: params.id, preset: params.preset, scope: null,
     city: null, states: null, areas: null, places: new Map(), byId: new Map(), compare: null,
-    map: null, fitted: false, busSource: null,
+    map: null, fitted: false, busSource: null, projects: null, projectsOnMap: false,
   };
   if (!s.id) return showNotFound();
   syncUrl();
@@ -349,8 +382,19 @@ function boot() {
       h('p', { class: 'inv-small' }, p.bus_stops == null ? tt('inv.city.area.bus_none') : tt('inv.city.area.bus', { n: formatCount(p.bus_stops) })));
   };
 
+  // A badge's popup: the headlines of that mode's projects, each with its article link.
+  const projectsPopup = (mode) => {
+    const mine = (s.projects?.projects ?? []).filter((p) => p.mode === mode);
+    return h('div', { class: 'city-pop inv-stack--tight' },
+      h('p', { class: 'city-pop__title' }, tt(`inv.city.projects.popup.${mode}`, { n: mine.length })),
+      h('ul', { class: 'city-pop__list', role: 'list' }, mine.slice(0, 4).map((p) => h('li', { class: 'inv-small' },
+        h('a', { href: p.source_ref, target: '_blank', rel: 'noopener noreferrer' }, p.name), ' · ', tt(`inv.city.projects.stage.${p.stage}`)))),
+      mine.length > 4 ? h('p', { class: 'inv-small inv-muted' }, tt('inv.city.projects.popup.more', { n: mine.length - 4 })) : null);
+  };
+
   const popupContent = (kind, idOrProps) => {
     if (kind === 'area') return areaPopup(idOrProps);
+    if (ASSET_SOURCE[kind] === 'projects') return projectsPopup(idOrProps.mode);
     const [title, sub] = assetText(kind, idOrProps);
     return h('div', { class: 'city-pop inv-stack--tight' }, h('p', { class: 'city-pop__title' }, title), h('p', { class: 'inv-small inv-muted' }, sub));
   };
@@ -474,6 +518,7 @@ function boot() {
     clearLayerError(layer);
     if (!s.map) { input.checked = false; return; } // the toggles are hidden until the map is ready
     if (!input.checked) return s.map.setVisible(layer, false);
+    if (ASSET_SOURCE[layer] === 'projects') return s.map.setVisible(layer, true); // already on the map: its toggle is enabled only then
     if (!s.map.hasAssets(ASSET_SOURCE[layer])) setStatusKey(el.status, 'inv.loading');
     let collection;
     try {
@@ -505,6 +550,46 @@ function boot() {
   }
 
   el.layers.addEventListener('change', (event) => { if (event.target.matches('input')) toggleLayer(event.target); });
+
+  // ----- Upcoming projects: a list under the map, and one badge per mode on it -----
+  function renderProjects() {
+    const list = s.projects?.projects ?? [];
+    const name = s.city?.name ?? s.id;
+    el.projects.replaceChildren(...(list.length ? list.map((p) => h('li', { class: 'city-projects__item' },
+      h('div', { class: 'inv-cluster' },
+        h('span', { class: 'inv-badge' }, tt(`inv.city.projects.mode.${p.mode}`)),
+        h('span', { class: 'inv-chip' }, tt(`inv.city.projects.stage.${p.stage}`))),
+      h('p', { class: 'city-projects__name' }, h('a', { href: p.source_ref, target: '_blank', rel: 'noopener noreferrer' }, p.name)),
+      p.evidence === p.name ? null : h('blockquote', { class: 'city-projects__quote inv-small' }, `“${p.evidence}”`), // the headline is the quote when it is all the text there is
+      h('p', { class: 'inv-small inv-muted' }, [projectFacts(p), tt('inv.city.projects.source', { source: publisher(p.source_ref), license: p.license })].filter(Boolean).join(' · '))))
+      : [h('li', { class: 'inv-empty' }, tt('inv.city.projects.empty', { name }))]));
+  }
+
+  // Draws the badges once both the map and the projects are there, whichever arrives last. A mode with none stays
+  // disabled; the others are switched on, because showing them is the point of the layer.
+  function applyProjectsToMap() {
+    if (!s.map || !s.projects || s.projectsOnMap) return;
+    s.projectsOnMap = true;
+    const fc = projectFeatures(s.projects.projects);
+    if (!fc.features.length) return;
+    s.map.addAssets('projects', fc);
+    for (const { properties: { mode } } of fc.features) {
+      const input = el.layers.querySelector(`input[value="projects-${mode}"]`);
+      input.disabled = false;
+      input.checked = true;
+      s.map.setVisible(`projects-${mode}`, true);
+    }
+  }
+
+  const loadProjects = section({
+    body: el.projects, msg: el.projectsMsg, rows: 2,
+    load: () => api.projects(s.id),
+    render(data) {
+      s.projects = data;
+      renderProjects();
+      applyProjectsToMap();
+    },
+  });
 
   // ----- Compare -----
   function renderScopes() {
@@ -560,6 +645,7 @@ function boot() {
   loadHead();
   loadAreas();
   loadCompare();
+  loadProjects();
 
   createMap(el.map, { popupContent, strings: () => mapStrings() }).then((ctl) => {
     s.map = ctl;
@@ -568,6 +654,7 @@ function boot() {
     el.layers.hidden = false;
     renderBusToggle();
     applyAreasToMap();
+    applyProjectsToMap();
   }).catch((error) => {
     console.warn('[invest] map unavailable:', error?.message ?? error);
     el.mapNote.hidden = false;
@@ -586,6 +673,7 @@ function boot() {
     renderBusSource();
     if (s.areas) { renderBest(); areasStatus(); }
     if (s.compare) renderCompare();
+    if (s.projects) renderProjects();
   });
 }
 

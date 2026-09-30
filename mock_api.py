@@ -2,7 +2,7 @@
 Mock API server for the investor flow (port 8080).
 Serves web/fixtures/invest/ data so the frontend works without the Go binary.
 Replicates the Go API response shapes exactly.
-Usage: python mock_api.py
+Usage: python mock_api.py   (PORT=8081 to match a second checkout, see web/invest/js/config.js)
 """
 import gzip
 import json
@@ -29,6 +29,7 @@ def load_gz(path):
 META = load_json(os.path.join(FIXTURES, "meta.json"))
 STATES = load_json(os.path.join(FIXTURES, "states.json"))
 CITIES = load_json(os.path.join(FIXTURES, "cities.json"))
+PROJECTS = load_json(os.path.join(FIXTURES, "projects.json"))
 
 # Build indexes
 CITIES_BY_ID = {c["id"]: c for c in CITIES}
@@ -200,17 +201,12 @@ class Handler(BaseHTTPRequestHandler):
                 self.send_error_json("bad_request", f"preset must be one of {', '.join(PRESET_IDS)}", 400)
                 return
             limit = int(qp("limit", 500))
-            gz_path = os.path.join(FIXTURES, "assets", f"{city_id}.json.gz")
-            if not os.path.exists(gz_path):
+            gz_path = os.path.join(FIXTURES, "areas", f"{city_id}.geojson.gz")
+            if city_id not in CITIES_BY_ID or not os.path.exists(gz_path):
                 self.send_error_json("not_found", f"city {city_id!r} not found", 404)
                 return
             raw = load_gz(gz_path)
-            # The .gz file has "areas" as a FeatureCollection with features that have per-preset data
-            areas_fc = raw.get("areas")
-            if not areas_fc or areas_fc.get("type") != "FeatureCollection":
-                self.send_error_json("not_found", f"no areas for {city_id!r}", 404)
-                return
-            features = areas_fc.get("features", [])
+            features = raw.get("features", [])
             # Sort by preset score descending
             def cell_score(f):
                 return f.get("properties", {}).get("sc", {}).get(p, 0)
@@ -221,8 +217,8 @@ class Handler(BaseHTTPRequestHandler):
                 props = f.get("properties", {})
                 d_raw = props.get("d", {}).get(p, [])
                 g_raw = props.get("g", {}).get(p, [])
-                drivers = [{"factor": x["factor"], "points": x["value"], "value": props.get("f", {}).get(x["factor"]), "unit": UNITS.get(x["factor"], "")} for x in d_raw]
-                gaps = [{"factor": x["factor"], "subscore": x["value"], "value": props.get("f", {}).get(x["factor"]), "unit": UNITS.get(x["factor"], "")} for x in g_raw]
+                drivers = [{"factor": k, "points": v, "value": props.get("f", {}).get(k), "unit": UNITS.get(k, "")} for k, v in d_raw]
+                gaps = [{"factor": k, "subscore": v, "value": props.get("f", {}).get(k), "unit": UNITS.get(k, "")} for k, v in g_raw]
                 out_features.append({
                     "type": "Feature",
                     "geometry": f.get("geometry"),
@@ -272,6 +268,17 @@ class Handler(BaseHTTPRequestHandler):
             if "toll_plazas" in want:
                 out["toll_plazas"] = raw.get("toll_plazas")
             self.send_json(out)
+            return
+
+        # ── GET /v1/cities/{id}/projects ──────────────────────────────────
+        m = re.fullmatch(r"/v1/cities/([a-z0-9-]{2,64})/projects", path)
+        if m:
+            city_id = m.group(1)
+            if city_id not in CITIES_BY_ID:
+                self.send_error_json("not_found", f"city {city_id!r} not found", 404)
+                return
+            mine = sorted((p for p in PROJECTS["projects"] if p["city"] == city_id), key=lambda p: (-p["confidence"], p["id"]))
+            self.send_json({"city": city_id, "as_of": PROJECTS["as_of"], "projects": mine})
             return
 
         # ── GET /v1/cities/{id}/compare ───────────────────────────────────
@@ -360,8 +367,9 @@ class Handler(BaseHTTPRequestHandler):
 
 
 if __name__ == "__main__":
-    server = HTTPServer(("localhost", 8080), Handler)
-    print(f"Mock investor API listening on http://localhost:8080")
+    port = int(os.environ.get("PORT", 8080))
+    server = HTTPServer(("localhost", port), Handler)
+    print(f"Mock investor API listening on http://localhost:{port}")
     print(f"Default preset: {DEFAULT_PRESET}, presets: {PRESET_IDS}")
     print("Press Ctrl+C to stop.")
     server.serve_forever()

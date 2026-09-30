@@ -913,3 +913,33 @@ func TestUnknownRoutes(t *testing.T) {
 		wantError(t, do(h, tc.method, tc.target), 404, "not_found")
 	}
 }
+
+func TestCityProjects(t *testing.T) {
+	h := newServer(t)
+	var got struct {
+		City     string `json:"city"`
+		AsOf     string `json:"as_of"`
+		Projects []struct {
+			ID       string  `json:"id"`
+			Evidence string  `json:"evidence"`
+			Cost     float64 `json:"cost_crore"`
+		} `json:"projects"`
+	}
+	rec := get(t, h, "/v1/cities/pune/projects")
+	wantOK(t, rec)
+	decode(t, rec, &got)
+	if got.City != "pune" || got.AsOf != "2026-09-30" || len(got.Projects) != 2 || got.Projects[0].Cost != 9857.85 || got.Projects[0].Evidence == "" {
+		t.Errorf("pune projects = %s", rec.Body)
+	}
+	rec = get(t, h, "/v1/cities/delhi/projects") // a known city with none: 200 and [], never null
+	wantOK(t, rec)
+	if !strings.Contains(rec.Body.String(), `"projects":[]`) {
+		t.Errorf("delhi projects = %s, want an empty list", rec.Body)
+	}
+	if rec := get(t, h, "/v1/cities/atlantis/projects"); rec.Code != 404 {
+		t.Errorf("unknown city: status %d, want 404", rec.Code)
+	}
+	if rec := get(t, h, "/v1/cities/Bad_ID/projects"); rec.Code != 400 {
+		t.Errorf("bad id: status %d, want 400", rec.Code)
+	}
+}

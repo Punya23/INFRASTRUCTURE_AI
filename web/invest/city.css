@@ -134,8 +134,21 @@
 .city-key--rail { background: var(--surface); border: 2.5px solid var(--text-primary); }
 .city-key--bus { inline-size: 0.4rem; block-size: 0.4rem; margin-inline: 0.2375rem; background: var(--text-primary); }
 .city-key--toll { background: var(--accent-saffron); border: 1.5px solid var(--text-primary); }
+.city-key--proj-metro { background: var(--accent-saffron); border: 2px solid var(--text-primary); }
+.city-key--proj-bus { background: var(--brand-teal); border: 2px solid var(--surface); box-shadow: 0 0 0 1px var(--text-primary); }
 .city-key--nh, .city-key--nh-building { inline-size: 1.25rem; block-size: 0; border-radius: 0; border-block-start: 3px solid var(--brand-teal); }
 .city-key--nh-building { border-block-start: 3px dashed var(--accent-saffron); }
+
+/* ---------- Upcoming projects ---------- */
+
+.city-projects > * + * { margin-block-start: var(--space-2); }
+.city-projects__list { margin: 0; padding: 0; list-style: none; border-block-start: 1px solid var(--border-subtle); }
+.city-projects__item { padding-block: var(--space-2); border-block-end: 1px solid var(--border-subtle); }
+.city-projects__item > * + * { margin-block-start: var(--space-1); }
+.city-projects__name { font-weight: 600; line-height: var(--leading-tight); }
+.city-projects__quote { margin: 0; padding-inline-start: var(--space-2); border-inline-start: 3px solid var(--border-strong); color: var(--text-secondary); }
+.city-pop__list { margin: 0; padding: 0; list-style: none; }
+.city-pop__list li + li { margin-block-start: var(--space-1); }
 
 /* ---------- Best areas ---------- */
 

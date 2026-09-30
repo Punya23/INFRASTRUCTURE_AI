@@ -21,6 +21,7 @@ Short records of significant decisions — context, decision, consequences, alte
 | [0013](0013-field-first-scope.md) | Field-first scope: national highways and metro rail first, then one field at a time | Accepted |
 | [0014](0014-nhai-geoserver-data.md) | Use NHAI Datalake GeoServer data for analysis; publish aggregates only | Accepted |
 | [0015](0015-investor-onboarding-scores-and-api.md) | Investor onboarding: explainable city and area scores served by a Go API before the database | Proposed |
+| [0016](0016-apify-news-for-upcoming-transport.md) | Apify news scraping for upcoming bus and metro projects, shown on the city map | Proposed |
 
 **Statuses:** Proposed → Accepted → Deprecated, or Superseded by ADR-NNNN. Proposed ADRs are the working default until the team reviews them. An accepted decision is never rewritten — a new ADR supersedes it.
 

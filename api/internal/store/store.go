@@ -45,6 +45,8 @@ type Store struct {
 	byState       map[string][]*City // one entry per state in states.json, possibly empty
 	areas         map[string]*AreaSet
 	assets        map[string]*AssetSet
+	projects      map[string][]Project // upcoming projects by city id; a city without one is absent
+	projectsAsOf  string
 	factorIDs     map[string]bool
 	presetIDs     []string
 	presetSet     map[string]bool
@@ -56,10 +58,11 @@ type Store struct {
 // and the path of the file it was found in.
 func Load(dir string) (*Store, error) {
 	s := &Store{
-		byID:    map[string]*City{},
-		byState: map[string][]*City{},
-		areas:   map[string]*AreaSet{},
-		assets:  map[string]*AssetSet{},
+		byID:     map[string]*City{},
+		byState:  map[string][]*City{},
+		areas:    map[string]*AreaSet{},
+		assets:   map[string]*AssetSet{},
+		projects: map[string][]Project{},
 	}
 	statesPath := filepath.Join(dir, "states.json")
 	if err := s.loadMeta(filepath.Join(dir, "meta.json")); err != nil {
@@ -78,6 +81,9 @@ func Load(dir string) (*Store, error) {
 		if err := s.loadCityFiles(dir, &s.cities[i]); err != nil {
 			return nil, err
 		}
+	}
+	if err := s.loadProjects(filepath.Join(dir, "projects.json")); err != nil {
+		return nil, err
 	}
 	for _, l := range s.byState { // largest city first; id keeps the order stable
 		slices.SortFunc(l, func(a, b *City) int {
@@ -120,6 +126,19 @@ func (s *Store) Assets(id string) (*AssetSet, bool) {
 	a, ok := s.assets[id]
 	return a, ok
 }
+
+// Projects returns a copy of a city's upcoming projects, best-evidenced first (confidence, then id). A city
+// with none gives an empty, non-nil slice.
+func (s *Store) Projects(id string) []Project {
+	out := slices.Clone(s.projects[id])
+	if out == nil {
+		return []Project{}
+	}
+	return out
+}
+
+// ProjectsAsOf is the as_of date of projects.json.
+func (s *Store) ProjectsAsOf() string { return s.projectsAsOf }
 
 // CitiesInState returns a copy of the list of a state's cities, largest first. A state with no city, and an
 // unknown code, both give an empty slice; HasState tells them apart. The *City values point into the Store
@@ -202,6 +221,35 @@ func (s *Store) loadCities(path string) error {
 		s.byID[c.ID] = c
 		s.byState[c.State] = append(s.byState[c.State], c)
 	}
+	return nil
+}
+
+func (s *Store) loadProjects(path string) error {
+	var f ProjectFile
+	if err := readJSON(path, &f); err != nil {
+		return err
+	}
+	if f.AsOf == "" {
+		return fmt.Errorf("%s: as_of is empty", path)
+	}
+	seen := map[string]bool{}
+	for i := range f.Projects {
+		p := f.Projects[i]
+		if err := s.checkProject(&p); err != nil {
+			return fmt.Errorf("%s: project %d: %w", path, i, err)
+		}
+		if seen[p.ID] {
+			return fmt.Errorf("%s: duplicate project id %q", path, p.ID)
+		}
+		seen[p.ID] = true
+		s.projects[p.City] = append(s.projects[p.City], p)
+	}
+	for _, l := range s.projects {
+		slices.SortFunc(l, func(a, b Project) int {
+			return cmp.Or(cmp.Compare(b.Confidence, a.Confidence), cmp.Compare(a.ID, b.ID))
+		})
+	}
+	s.projectsAsOf = f.AsOf
 	return nil
 }
 

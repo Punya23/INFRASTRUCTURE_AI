@@ -864,6 +864,33 @@ paths:
         "500": {$ref: "#/components/responses/Internal"}
         "503": {$ref: "#/components/responses/Timeout"}
 
+  /v1/cities/{id}/projects:
+    get:
+      operationId: getCityProjects
+      tags: [cities]
+      summary: Upcoming bus and metro projects found in news for a city
+      description: |
+        Projects that news reports put at an upcoming stage (proposed, approved, tendered, under construction
+        or stalled). Every project carries `evidence`, the verbatim headline or sentence the stage was read
+        from, and the `source_ref` link of the article (AGENTS invariant 3; ADR-0012: metadata, a short quote
+        and a link, never the article). `lat`/`lon` are the city centre while `geo_precision` is `city`: the
+        news names the city, not a site. A city with none has `projects: []`.
+      parameters:
+        - $ref: "#/components/parameters/CityId"
+      responses:
+        "200":
+          description: The city's upcoming projects, highest confidence first.
+          headers:
+            Cache-Control: {$ref: "#/components/headers/CacheControl"}
+          content:
+            application/json:
+              schema: {$ref: "#/components/schemas/ProjectsResponse"}
+        "400": {$ref: "#/components/responses/BadRequest"}
+        "404": {$ref: "#/components/responses/NotFound"}
+        "429": {$ref: "#/components/responses/RateLimited"}
+        "500": {$ref: "#/components/responses/Internal"}
+        "503": {$ref: "#/components/responses/Timeout"}
+
   /v1/cities/{id}/compare:
     get:
       operationId: compareCity
@@ -1542,6 +1569,37 @@ components:
         tier: {type: string}
         license: {type: string}
         fetched_at: {type: string, format: date}
+    ProjectsResponse:
+      type: object
+      required: [city, as_of, projects]
+      additionalProperties: false
+      properties:
+        city: {type: string}
+        as_of: {type: string, format: date}
+        projects: {type: array, items: {$ref: "#/components/schemas/UpcomingProject"}}
+    UpcomingProject:
+      type: object
+      required: [id, city, mode, stage, name, evidence, event_date, lat, lon, geo_precision, cost_crore, length_km, extractor, source, source_ref, fetched_at, license, confidence]
+      additionalProperties: false
+      properties:
+        id: {type: string}
+        city: {type: string}
+        mode: {type: string, enum: [metro, bus]}
+        stage: {type: string, enum: [proposed, approved, tendered, under_construction, stalled]}
+        name: {type: string, description: The article headline.}
+        evidence: {type: string, description: Verbatim text the stage was read from, checked against the source text by code.}
+        event_date: {type: [string, "null"], format: date, description: Publication date when known.}
+        lat: {type: number}
+        lon: {type: number}
+        geo_precision: {type: string, enum: [city]}
+        cost_crore: {type: [number, "null"], description: Cost in rupees crore when the evidence states exactly one.}
+        length_km: {type: [number, "null"], description: Length when the evidence states exactly one.}
+        extractor: {type: string}
+        source: {type: string}
+        source_ref: {type: string, description: Link to the article.}
+        fetched_at: {type: string, format: date}
+        license: {type: string}
+        confidence: {type: number, minimum: 0, maximum: 1}
     AssetsResponse:
       type: object
       description: The provenance of the file is always present; of the layers, only those asked for.

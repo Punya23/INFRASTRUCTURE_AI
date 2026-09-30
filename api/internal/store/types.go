@@ -245,3 +245,30 @@ type BusSource struct {
 	License   string `json:"license"`
 	FetchedAt string `json:"fetched_at"`
 }
+
+// ProjectFile is projects.json: upcoming bus and metro projects found in news (pipeline
+// ml/fields/public_transport/upcoming.py). Every project carries the verbatim headline or sentence that
+// states its stage (AGENTS invariants 1 and 3).
+type ProjectFile struct {
+	AsOf     string    `json:"as_of"`
+	Projects []Project `json:"projects"`
+}
+
+// Project is one upcoming bus or metro project. Lat and Lon are the city centre while GeoPrecision is "city":
+// the news names the city, not a site. EventDate, CostCrore and LengthKm are nil when the text does not state them.
+type Project struct {
+	ID           string   `json:"id"`
+	City         string   `json:"city"`
+	Mode         string   `json:"mode"`
+	Stage        string   `json:"stage"`
+	Name         string   `json:"name"`
+	Evidence     string   `json:"evidence"`
+	EventDate    *string  `json:"event_date"`
+	Lat          float64  `json:"lat"`
+	Lon          float64  `json:"lon"`
+	GeoPrecision string   `json:"geo_precision"`
+	CostCrore    *float64 `json:"cost_crore"`
+	LengthKm     *float64 `json:"length_km"`
+	Extractor    string   `json:"extractor"`
+	Provenance
+}

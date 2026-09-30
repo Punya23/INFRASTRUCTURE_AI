@@ -111,12 +111,14 @@ test('city, areas, assets and compare build their paths and queries', async (t) 
   await api.assets('pune', ['stations', 'bus_stops']);
   await api.assets('pune');
   await api.compare('pune', { preset: 'highway', scope: 'metros', limit: 5 });
+  await api.projects('pune');
   assert.deepEqual(urls, [
     '/v1/cities/pune?preset=growth',
     '/v1/cities/pune/areas?preset=growth&limit=1000',
     '/v1/cities/pune/assets?layers=stations%2Cbus_stops',
     '/v1/cities/pune/assets',
     '/v1/cities/pune/compare?preset=highway&scope=metros&limit=5',
+    '/v1/cities/pune/projects',
   ]);
 });
 
@@ -128,6 +130,7 @@ test('an id that could steer a path is rejected before any request is made', asy
     await assert.rejects(api.areas(id), { code: 'bad_request' });
     await assert.rejects(api.assets(id), { code: 'bad_request' });
     await assert.rejects(api.compare(id), { code: 'bad_request' });
+    await assert.rejects(api.projects(id), { code: 'bad_request' });
   }
   for (const code of ['mh', 'MHA', 'M', '../', 'M/', undefined]) {
     await assert.rejects(api.stateCities(code), { code: 'bad_request' }, String(code));

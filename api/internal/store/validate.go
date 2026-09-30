@@ -384,3 +384,34 @@ func (s *Store) tierOf(population float64) string {
 		return "mid"
 	}
 }
+
+var (
+	projectModes  = map[string]bool{"metro": true, "bus": true}
+	projectStages = map[string]bool{"proposed": true, "approved": true, "tendered": true, "under_construction": true, "stalled": true}
+	geoPrecisions = map[string]bool{"city": true}
+)
+
+// checkProject validates one project of projects.json against the cities: the city must exist, the enums
+// hold, the point is on Earth, and the provenance and the evidence quote are present.
+func (s *Store) checkProject(p *Project) error {
+	switch {
+	case !idPattern.MatchString(p.ID):
+		return fmt.Errorf("id %q does not match %s", p.ID, idPattern)
+	case s.byID[p.City] == nil:
+		return fmt.Errorf("city %q is not in cities.json", p.City)
+	case !projectModes[p.Mode]:
+		return fmt.Errorf("mode %q is not metro or bus", p.Mode)
+	case !projectStages[p.Stage]:
+		return fmt.Errorf("stage %q is not an upcoming stage", p.Stage)
+	case !geoPrecisions[p.GeoPrecision]:
+		return fmt.Errorf("geo_precision %q is not known", p.GeoPrecision)
+	case math.IsNaN(p.Lat) || math.IsNaN(p.Lon) || p.Lat < -90 || p.Lat > 90 || p.Lon < -180 || p.Lon > 180:
+		return fmt.Errorf("point (%v, %v) is not a coordinate", p.Lat, p.Lon)
+	case p.Confidence < 0 || p.Confidence > 1 || math.IsNaN(p.Confidence):
+		return fmt.Errorf("confidence %v is outside 0..1", p.Confidence)
+	case !strings.HasPrefix(p.SourceRef, "http://") && !strings.HasPrefix(p.SourceRef, "https://"):
+		return fmt.Errorf("source_ref %q is not a link", p.SourceRef)
+	}
+	return requireText([2]string{"name", p.Name}, [2]string{"evidence", p.Evidence}, [2]string{"extractor", p.Extractor},
+		[2]string{"source", p.Source}, [2]string{"fetched_at", p.FetchedAt}, [2]string{"license", p.License})
+}

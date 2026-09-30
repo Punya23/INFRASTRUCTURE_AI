@@ -1,0 +1,7 @@
+{
+  "as_of": "2026-09-30",
+  "projects": [
+    {"id": "pune-metro-test-1", "city": "pune", "mode": "metro", "stage": "approved", "name": "Test headline: Pune metro line approved", "evidence": "Test headline: Pune metro line approved", "event_date": "2026-05-01", "lat": 18.5196, "lon": 73.8554, "geo_precision": "city", "cost_crore": 9857.85, "length_km": null, "extractor": "rules:upcoming:test", "source": "synthetic-test", "source_ref": "https://example.test/pune", "fetched_at": "2026-09-30", "license": "synthetic-test", "confidence": 0.8},
+    {"id": "pune-bus-test-1", "city": "pune", "mode": "bus", "stage": "proposed", "name": "Test headline: Pune e-buses proposed", "evidence": "Test headline: Pune e-buses proposed", "event_date": null, "lat": 18.5196, "lon": 73.8554, "geo_precision": "city", "cost_crore": null, "length_km": null, "extractor": "rules:upcoming:test", "source": "synthetic-test", "source_ref": "https://example.test/pune-bus", "fetched_at": "2026-09-30", "license": "synthetic-test", "confidence": 0.6}
+  ]
+}

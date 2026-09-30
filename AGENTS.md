@@ -75,6 +75,7 @@ cd ml && uv run python -m common.fetch                  # download every source 
 cd ml && uv run python -m fields.national_highways all  # NH field: extract → … → analyze → fixtures
 cd ml && uv run python -m fields.public_transport.gtfs all  # GTFS feeds: validate → NH/toll link → fixtures
 cd ml && uv run pytest && uv run ruff check .           # checks before every commit
+cd ml && uv run python -m fields.public_transport.upcoming build  # upcoming bus/metro projects from news → web/fixtures/invest/projects.json (fetch needs APIFY_TOKEN; ADR-0016)
 cd ml && uv run python -m pipeline.invest all           # investor flow: cities → facts → export to web/fixtures/invest (also osm, sensitivity)
 ```
 
@@ -83,6 +84,7 @@ Go API and investor pages (repo root):
 ```bash
 go -C api run ./cmd/api                                  # serve /v1/* on :8080 from web/fixtures/invest (see api/README.md)
 go -C api vet ./... && go -C api test ./... -race        # API checks before every commit
+python3 mock_api.py                                      # no Go? same /v1/* from the fixtures on :8080 (PORT=8081 for a second checkout)
 python3 -m http.server 8765 --directory web              # pages at http://localhost:8765/invest/ (CORS default matches this port)
 node --test 'web/invest/js/*.test.mjs'                   # page logic tests
 ```
