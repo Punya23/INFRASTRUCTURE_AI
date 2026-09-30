@@ -52,6 +52,7 @@
   overflow: hidden;
   background: var(--surface-sunken);
 }
+.city-map:fullscreen { block-size: 100%; border-radius: 0; border: 0; }
 .city-map__note {
   position: absolute;
   inset: 0;

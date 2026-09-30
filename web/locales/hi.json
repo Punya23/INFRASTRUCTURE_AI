@@ -400,6 +400,8 @@
   "inv.why.metro_access.none": "लगभग कोई निवासी मेट्रो स्टेशन से {km} km के भीतर नहीं रहता",
   "inv.city.map.title": "इलाकों का नक्शा",
   "inv.city.map.zoom_in": "ज़ूम इन",
+  "inv.city.map.fullscreen": "पूर्ण स्क्रीन",
+  "inv.city.map.exit_fullscreen": "पूर्ण स्क्रीन से बाहर निकलें",
   "inv.city.map.zoom_out": "ज़ूम आउट",
   "inv.city.map.close": "बंद करें",
   "inv.city.map.satellite": "सैटेलाइट",

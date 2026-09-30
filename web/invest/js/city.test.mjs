@@ -194,7 +194,7 @@ test('mapStrings gives every MapLibre string the page uses from an inv.city key'
   const strings = mapStrings((key) => key);
   assert.deepEqual(Object.keys(strings).sort(), [
     'Basemap.Satellite', 'Basemap.Streets', 'CooperativeGesturesHandler.MacHelpText', 'CooperativeGesturesHandler.MobileHelpText', 'CooperativeGesturesHandler.WindowsHelpText',
-    'Map.Title', 'NavigationControl.ZoomIn', 'NavigationControl.ZoomOut', 'Popup.Close']);
+    'FullscreenControl.Enter', 'FullscreenControl.Exit', 'Map.Title', 'NavigationControl.ZoomIn', 'NavigationControl.ZoomOut', 'Popup.Close']);
   assert.ok(Object.values(strings).every((v) => v.startsWith('inv.city.map.')));
 });
 

@@ -400,6 +400,8 @@
   "inv.why.metro_access.none": "ಮೆಟ್ರೋ ನಿಲ್ದಾಣದಿಂದ {km} km ಒಳಗೆ ಬಹುತೇಕ ಯಾರೂ ವಾಸಿಸುವುದಿಲ್ಲ",
   "inv.city.map.title": "ಪ್ರದೇಶಗಳ ನಕ್ಷೆ",
   "inv.city.map.zoom_in": "ಹಿಗ್ಗಿಸಿ",
+  "inv.city.map.fullscreen": "ಪೂರ್ಣ ಪರದೆ",
+  "inv.city.map.exit_fullscreen": "ಪೂರ್ಣ ಪರದೆಯಿಂದ ನಿರ್ಗಮಿಸಿ",
   "inv.city.map.zoom_out": "ಕುಗ್ಗಿಸಿ",
   "inv.city.map.close": "ಮುಚ್ಚಿ",
   "inv.city.map.satellite": "ಉಪಗ್ರಹ",

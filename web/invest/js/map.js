@@ -152,6 +152,8 @@ export async function createMap(container, { popupContent, strings }) {
     // compact: false keeps the attribution text on screen at every width
     built.addControl(new gl.AttributionControl({ compact: false, customAttribution: ATTRIBUTION }), 'bottom-right');
     built.addControl(new gl.NavigationControl({ showCompass: false }), 'top-right');
+    // the map container itself goes full screen, so its popups and controls come along
+    built.addControl(new gl.FullscreenControl({ container }), 'top-right');
     return built;
   };
   let map = build(style);
@@ -237,6 +239,8 @@ export async function createMap(container, { popupContent, strings }) {
     const set = (selector, apply) => container.querySelectorAll(selector).forEach(apply);
     set('.maplibregl-ctrl-zoom-in', (b) => { b.title = t['NavigationControl.ZoomIn']; b.setAttribute('aria-label', t['NavigationControl.ZoomIn']); });
     set('.maplibregl-ctrl-zoom-out', (b) => { b.title = t['NavigationControl.ZoomOut']; b.setAttribute('aria-label', t['NavigationControl.ZoomOut']); });
+    set('.maplibregl-ctrl-fullscreen', (b) => { b.title = t['FullscreenControl.Enter']; b.setAttribute('aria-label', t['FullscreenControl.Enter']); });
+    set('.maplibregl-ctrl-shrink', (b) => { b.title = t['FullscreenControl.Exit']; b.setAttribute('aria-label', t['FullscreenControl.Exit']); });
     set('.maplibregl-popup-close-button', (b) => b.setAttribute('aria-label', t['Popup.Close']));
     set('.maplibregl-desktop-message', (d) => { d.textContent = t[navigator.userAgent.includes('Mac') ? 'CooperativeGesturesHandler.MacHelpText' : 'CooperativeGesturesHandler.WindowsHelpText']; });
     set('.maplibregl-mobile-message', (d) => { d.textContent = t['CooperativeGesturesHandler.MobileHelpText']; });

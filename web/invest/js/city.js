@@ -176,6 +176,8 @@ export const mapStrings = (t = tt) => ({
   'Map.Title': t('inv.city.map.title'),
   'NavigationControl.ZoomIn': t('inv.city.map.zoom_in'),
   'NavigationControl.ZoomOut': t('inv.city.map.zoom_out'),
+  'FullscreenControl.Enter': t('inv.city.map.fullscreen'),
+  'FullscreenControl.Exit': t('inv.city.map.exit_fullscreen'),
   'Popup.Close': t('inv.city.map.close'),
   'Basemap.Satellite': t('inv.city.map.satellite'),
   'Basemap.Streets': t('inv.city.map.streets'),
