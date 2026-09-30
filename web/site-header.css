@@ -2,6 +2,7 @@
    so it looks and sits the same on the home, NH, policymaker, methodology and investor pages.
    Sticky in flow at a fixed height (--site-header-h) so pages need no top offset. */
 :root { --site-header-h: 64px; }
+html { scroll-padding-top: var(--site-header-h); } /* in-page jumps clear the sticky header */
 .sh {
   --sh-text: #14202b; --sh-muted: #4a5a66; --sh-primary: #0e5a66; --sh-hover: #eef3f4; --sh-line: #d6dfe3;
   position: sticky; top: 0; z-index: 1000; height: var(--site-header-h);
