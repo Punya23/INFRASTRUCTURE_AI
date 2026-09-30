@@ -837,13 +837,14 @@
           </div>
         </div>
 
+        <p class="text-body-sm" id="search-msg" role="status" style="min-height:1.25rem;color:var(--on-surface-variant);margin-top:var(--space-xs);"></p>
         <!-- Quick suggestions -->
         <div class="quick-suggestions text-label-md">
           <span style="color:var(--on-surface-variant);" data-i18n="trySuggestion">Try searching:</span>
-          <button class="suggestion-pill" type="button" data-city="Pune, Maharashtra">Pune</button>
-          <button class="suggestion-pill" type="button" data-city="Bengaluru (Whitefield), Karnataka">Bengaluru</button>
-          <button class="suggestion-pill" type="button" data-city="Lucknow, Uttar Pradesh">Lucknow</button>
-          <button class="suggestion-pill" type="button" data-city="Ahmedabad, Gujarat">Ahmedabad</button>
+          <button class="suggestion-pill" type="button" data-city-id="pune">Pune</button>
+          <button class="suggestion-pill" type="button" data-city-id="bengaluru">Bengaluru</button>
+          <button class="suggestion-pill" type="button" data-city-id="lucknow">Lucknow</button>
+          <button class="suggestion-pill" type="button" data-city-id="ahmedabad">Ahmedabad</button>
         </div>
       </div>
     </section>
@@ -858,14 +859,14 @@
               <div class="map-top-overlay">
                 <div class="map-layer-label text-title-md">
                   <span class="material-symbols-outlined" style="font-size:20px;">layers</span>
-                  <span>Live map: Pune</span>
+                  <span id="map-label">Live map</span>
                 </div>
                 <div style="display:flex;align-items:center;gap:var(--space-xs);">
-                  <span class="coords-badge text-data-mono">18.5204° N, 73.8567° E</span>
+                  <span class="coords-badge text-data-mono" id="map-coords"></span>
                 </div>
               </div>
               <!-- Real map: MapLibre over OpenFreeMap (OSM) tiles, layers from the repo fixtures -->
-              <div class="map-live" id="live-map" role="region" aria-label="Map of Pune with highways, bus routes and upcoming project news"></div>
+              <div class="map-live" id="live-map" role="region" aria-label="Map with highways, bus routes and upcoming project news"></div>
               <!-- Legend -->
               <div class="map-legend text-label-md">
                 <div class="legend-header">
@@ -938,8 +939,8 @@
                 </div>
               </div>
               <div style="padding-top:var(--space-md);">
-                <a class="btn-full text-title-md" href="invest/city.html?c=pune&preset=balanced">
-                  <span data-i18n="openDossier">Open Full Pune Dossier</span>
+                <a class="btn-full text-title-md" id="dossier-link" href="invest/">
+                  <span id="dossier-label">Open Full Dossier</span>
                   <span class="material-symbols-outlined" style="font-size:18px;">north_east</span>
                 </a>
               </div>
@@ -1124,16 +1125,16 @@
           <h4 class="text-title-md" data-i18n="footerExplore">Explore</h4>
           <ul class="text-body-sm">
             <li><a href="#map-section">City maps</a></li>
-            <li><a href="#map-section">Transit corridors</a></li>
+            <li><a href="#place-explorer">City dossiers</a></li>
             <li><a href="nh-explorer.html">Highway networks</a></li>
           </ul>
         </div>
         <div class="footer-col">
           <h4 class="text-title-md" data-i18n="footerProjects">Projects</h4>
           <ul class="text-body-sm">
-            <li><a href="#map-section">Project map</a></li>
             <li><a href="policymaker.html">Policymaker view</a></li>
             <li><a href="invest/">Invest</a></li>
+            <li><a href="methodology.html">Methodology</a></li>
           </ul>
         </div>
         <div class="footer-col">
@@ -1180,14 +1181,6 @@
       a.addEventListener('click', () => mobileNav.classList.remove('open'));
     });
 
-    // --- Search Suggestions ---
-    const suggestionPills = document.querySelectorAll('.suggestion-pill');
-    suggestionPills.forEach(pill => {
-      pill.addEventListener('click', () => {
-        document.getElementById('civic-search-input').value = pill.dataset.city;
-      });
-    });
-
     // --- Voice Search (Web Speech API; locale follows the selected UI language) ---
     const voiceBtn = document.getElementById('voice-bhashini-btn');
     const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -1213,6 +1206,7 @@
       rec.onend = () => {
         voiceBtn.classList.remove('listening');
         if (!heard) input.value = previous; // nothing recognised: never leave a made-up value
+        else exploreQuery(input.value);
         input.placeholder = prevPlaceholder;
         recognizer = null;
       };
@@ -1232,13 +1226,17 @@
       });
     });
 
-    // --- Real map (Pune) ---
+    // --- Place panel + real map ---
+    // Everything here comes from the API (/v1/cities/{id}, /projects, /states).
     // Base tiles: OpenFreeMap. ADR-0007: national/state outlines come only from the Survey of India layer, so
     // the base style's OSM boundary and country/state labels are stripped with the same helper the city page uses.
-    // Layers are the repo's own fixtures: NH segments (OSM), PMPML GTFS routes, and the news-derived project points.
+    // Layers are the repo's own fixtures: NH segments (OSM), GTFS bus routes (Pune only so far), and the news-derived project points.
     const API_BASE = ({ 8765: 'http://localhost:8080', 8766: 'http://localhost:8081' })[location.port] || '';
-    const PUNE_BBOX = [73.55, 18.3, 74.15, 18.75]; // west, south, east, north: the Pune metro region
-    const mapEl = document.getElementById('live-map');
+    const HALF_SPAN = [0.3, 0.225]; // lon, lat: map window around a city centre (~ a metro region), team judgment 2026-09-30
+    const $ = (id) => document.getElementById(id);
+    const mapEl = $('live-map');
+    const searchInput = $('civic-search-input');
+    const searchMsg = $('search-msg');
 
     function mapNotice(text) {
       mapEl.innerHTML = '';
@@ -1255,52 +1253,46 @@
       return res.json();
     }
 
-    const inBox = ([x, y]) => x > PUNE_BBOX[0] && x < PUNE_BBOX[2] && y > PUNE_BBOX[1] && y < PUNE_BBOX[3];
-    const inPune = (f) => {
+    const boxOf = (c) => [c.lon - HALF_SPAN[0], c.lat - HALF_SPAN[1], c.lon + HALF_SPAN[0], c.lat + HALF_SPAN[1]];
+    const nearBox = (b) => (f) => {
       const g = f.geometry;
-      return (g.type === 'MultiLineString' ? g.coordinates.flat() : g.coordinates).some(inBox);
+      return (g.type === 'MultiLineString' ? g.coordinates.flat() : g.coordinates).some(([x, y]) => x > b[0] && x < b[2] && y > b[1] && y < b[3]);
     };
 
-    async function initLiveMap() {
+    // Resolves to { show(city, projects) } once the map is up. Built on the first place shown, so it opens on that city.
+    async function initLiveMap(city) {
       const [{ baseLayers }, style] = await Promise.all([
         import('./invest/js/map.js'),
         getJSON('https://tiles.openfreemap.org/styles/liberty'),
       ]);
+      const view = (b) => [[b[0] + 0.1, b[1] + 0.05], [b[2] - 0.1, b[3] - 0.05]];
       const map = new maplibregl.Map({
         container: mapEl,
         style: { ...style, layers: baseLayers(style.layers) },
-        bounds: [[PUNE_BBOX[0] + 0.1, PUNE_BBOX[1] + 0.05], [PUNE_BBOX[2] - 0.1, PUNE_BBOX[3] - 0.05]],
-        attributionControl: { compact: true, customAttribution: 'Routes: PMPML GTFS · Highways: OSM' },
+        bounds: view(boxOf(city)),
+        attributionControl: { compact: true, customAttribution: 'Routes: GTFS feeds · Highways: OSM' },
       });
-      document.getElementById('zoom-in-btn').addEventListener('click', () => map.zoomIn());
-      document.getElementById('zoom-out-btn').addEventListener('click', () => map.zoomOut());
+      $('zoom-in-btn').addEventListener('click', () => map.zoomIn());
+      $('zoom-out-btn').addEventListener('click', () => map.zoomOut());
       await new Promise((resolve, reject) => { map.once('load', resolve); map.once('error', (e) => reject(e.error)); });
 
       const css = getComputedStyle(document.documentElement);
       const c = (v) => css.getPropertyValue(v).trim();
       // One failed layer must not blank the map: each source loads on its own and the rest still draw.
-      const [nh, bus, projects] = await Promise.allSettled([
+      const [nh, bus] = await Promise.allSettled([
         getJSON('fixtures/national_highways/nh_segments.geojson'),
         getJSON('fixtures/public_transport/gtfs_pune_pmpml_routes.geojson'),
-        getJSON(`${API_BASE}/v1/cities/pune/projects`),
       ]);
-      const empty = { type: 'FeatureCollection', features: [] };
-      const fc = (r, keep) => (r.status === 'fulfilled' ? { type: 'FeatureCollection', features: r.value.features.filter(keep) } : empty);
-      if ([nh, bus, projects].some((r) => r.status === 'rejected')) console.warn('[map] a layer failed to load', [nh, bus, projects].filter((r) => r.status === 'rejected').map((r) => r.reason.message));
+      if ([nh, bus].some((r) => r.status === 'rejected')) console.warn('[map] a layer failed to load', [nh, bus].filter((r) => r.status === 'rejected').map((r) => r.reason.message));
+      const features = (r) => (r.status === 'fulfilled' ? r.value.features : []);
+      const fc = (features) => ({ type: 'FeatureCollection', features });
 
-      map.addSource('bus', { type: 'geojson', data: fc(bus, inPune) });
+      map.addSource('bus', { type: 'geojson', data: fc([]) });
       map.addLayer({ id: 'bus', type: 'line', source: 'bus', paint: { 'line-color': c('--tertiary'), 'line-width': 1, 'line-opacity': 0.35 } });
-      map.addSource('nh', { type: 'geojson', data: fc(nh, inPune) });
+      map.addSource('nh', { type: 'geojson', data: fc([]) });
       map.addLayer({ id: 'nh-open', type: 'line', source: 'nh', filter: ['==', ['get', 'status'], 'operational'], paint: { 'line-color': c('--primary'), 'line-width': 3.5 } });
       map.addLayer({ id: 'nh-building', type: 'line', source: 'nh', filter: ['!=', ['get', 'status'], 'operational'], paint: { 'line-color': c('--secondary-container'), 'line-width': 4, 'line-dasharray': [2, 1.5] } });
-
-      // The news names a city, not a site, so every project sits at the city centre (geo_precision "city"): one
-      // marker per project, fanned out on a small ring so they stay individually clickable.
-      const pts = projects.status === 'fulfilled' ? projects.value.projects : [];
-      map.addSource('projects', { type: 'geojson', data: { type: 'FeatureCollection', features: pts.map((p, i) => {
-        const a = (2 * Math.PI * i) / pts.length;
-        return { type: 'Feature', properties: p, geometry: { type: 'Point', coordinates: [p.lon + 0.012 * Math.cos(a), p.lat + 0.012 * Math.sin(a)] } };
-      }) } });
+      map.addSource('projects', { type: 'geojson', data: fc([]) });
       map.addLayer({ id: 'projects', type: 'circle', source: 'projects', paint: { 'circle-radius': 8, 'circle-color': c('--secondary'), 'circle-stroke-color': '#fff', 'circle-stroke-width': 2 } });
 
       // Popups are built with textContent: names and evidence come from scraped news, never as HTML.
@@ -1310,8 +1302,7 @@
       map.on('click', 'projects', (e) => show(e, (p) => {
         const box = document.createElement('div');
         const link = line('a', 'Source ↗');
-        link.href = /^https?:\/\//.test(p.source_ref) ? p.source_ref : '#';
-        link.target = '_blank'; link.rel = 'noopener noreferrer';
+        if (/^https?:\/\//.test(p.source_ref)) { link.href = p.source_ref; link.target = '_blank'; link.rel = 'noopener noreferrer'; }
         box.append(line('strong', p.name), line('div', `${p.mode} · ${p.stage.replace(/_/g, ' ')} · ${p.event_date ?? 'date unknown'}`),
           line('div', 'Location is the city centre; the article names no site.'), link);
         return box;
@@ -1323,15 +1314,42 @@
         map.on('mouseenter', id, () => { map.getCanvas().style.cursor = 'pointer'; });
         map.on('mouseleave', id, () => { map.getCanvas().style.cursor = ''; });
       }
+
+      return {
+        // The news names a city, not a site, so every project sits at the city centre (geo_precision "city"): one
+        // marker per project, fanned out on a small ring so they stay individually clickable.
+        show(city, projects) {
+          const box = boxOf(city);
+          const keep = nearBox(box);
+          map.getSource('bus').setData(fc(features(bus).filter(keep)));
+          map.getSource('nh').setData(fc(features(nh).filter(keep)));
+          map.getSource('projects').setData(fc(projects.map((p, i) => {
+            const a = (2 * Math.PI * i) / projects.length;
+            return { type: 'Feature', properties: p, geometry: { type: 'Point', coordinates: [p.lon + 0.012 * Math.cos(a), p.lat + 0.012 * Math.sin(a)] } };
+          })));
+          popup.remove();
+          map.fitBounds(view(box), { duration: 800 });
+        },
+      };
     }
-    initLiveMap().catch((err) => { console.error('[map]', err); mapNotice('The map could not load. Check your connection and reload.'); });
+
+    let mapCtl = null; // promise of the map controller, created on the first city
+    function showOnMap(city, projects) {
+      mapCtl ??= initLiveMap(city).catch((err) => { console.error('[map]', err); mapNotice('The map could not load. Check your connection and reload.'); return null; });
+      mapCtl.then((ctl) => ctl?.show(city, projects));
+    }
+
+    let stateNames; // code -> name, fetched once; a failure only means the panel shows the code
+    const stateName = async (code) => {
+      stateNames ??= getJSON(`${API_BASE}/v1/states`).then((r) => Object.fromEntries(r.states.map((s) => [s.code, s.name]))).catch(() => ({}));
+      return (await stateNames)[code] ?? code;
+    };
 
     // --- Search Overlay ---
     const searchOverlay = document.getElementById('search-overlay');
     const searchModalInput = document.getElementById('search-modal-input');
     const searchResults = document.getElementById('search-results');
     // Real city search: /v1/cities?q= (same API the invest pages use; see web/invest/js/config.js for the dev ports).
-    const SEARCH_API = ({ 8765: 'http://localhost:8080', 8766: 'http://localhost:8081' })[location.port] || '';
     let searchSeq = 0;
     let searchTimer;
 
@@ -1351,7 +1369,7 @@
       searchMessage('Searching…');
       searchTimer = setTimeout(async () => {
         try {
-          const res = await fetch(`${SEARCH_API}/v1/cities?q=${encodeURIComponent(q)}&limit=8`);
+          const res = await fetch(`${API_BASE}/v1/cities?q=${encodeURIComponent(q)}&limit=8`);
           if (!res.ok) throw new Error(`HTTP ${res.status}`);
           const { cities } = await res.json();
           if (seq !== searchSeq) return;
@@ -1396,7 +1414,7 @@
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
         const c = await r.json();
         set('name', c.name);
-        set('state', c.state);
+        set('state', await stateName(c.state));
         set('score', `Score ${c.score} / 100`);
         set('best', c.best_area && c.best_area.name ? `Top area: ${c.best_area.name} (${c.best_area.score})` : '');
         set('transit', `${c.data.metro_stations} metro · ${c.data.rail_stations} rail stations`);
@@ -1407,9 +1425,11 @@
       }
     });
 
-    // --- Place panel: real Pune data from /v1/cities/pune and /v1/cities/pune/projects ---
-    (async () => {
-      const el = (id) => document.getElementById(id);
+    // --- Place panel: any city, from /v1/cities/{id} and /v1/cities/{id}/projects ---
+    let placeSeq = 0;
+    async function loadPlace(id) {
+      const seq = ++placeSeq; // a slower answer for an earlier pick is dropped
+      const el = (i) => document.getElementById(i);
       const row = (label, value) => {
         const d = document.createElement('div');
         d.style.cssText = 'display:flex;justify-content:space-between;align-items:center;padding:var(--space-xs) 0;border-bottom:1px solid var(--border-subtle);';
@@ -1418,26 +1438,27 @@
         d.append(a, b);
         return d;
       };
+      el('place-name').textContent = 'Loading…';
       try {
-        const get = async (path) => {
-          const r = await fetch(`${API_BASE}${path}`);
-          if (!r.ok) throw new Error(`${path}: HTTP ${r.status}`);
-          return r.json();
-        };
-        const [c, pr] = await Promise.all([get('/v1/cities/pune?preset=balanced'), get('/v1/cities/pune/projects')]);
-        const projects = pr.projects;
+        const enc = encodeURIComponent(id);
+        const [c, { projects }] = await Promise.all([getJSON(`${API_BASE}/v1/cities/${enc}?preset=balanced`), getJSON(`${API_BASE}/v1/cities/${enc}/projects`)]);
+        const state = await stateName(c.state);
+        if (seq !== placeSeq) return;
+        el('place-name').textContent = `${c.name}, ${state}`;
+        el('map-label').textContent = `Live map: ${c.name}`;
+        el('map-coords').textContent = `${Math.abs(c.lat).toFixed(4)}° ${c.lat >= 0 ? 'N' : 'S'}, ${Math.abs(c.lon).toFixed(4)}° ${c.lon >= 0 ? 'E' : 'W'}`;
         el('place-updated').textContent = `Data as of ${c.fetched_at}`;
         el('place-synopsis').textContent = `${c.name} scores ${c.score} / 100 for existing infrastructure` +
           (c.best_area && c.best_area.name ? `; the top-scoring area is ${c.best_area.name} (${c.best_area.score}).` : '.') +
           ` ${projects.length} transit project news items tracked.`;
         el('metric-projects').textContent = projects.length;
-        el('metric-stations').textContent = c.data.metro_stations;
-        const here = el('here-list');
-        here.append(row('Metro stations', c.data.metro_stations), row('Rail stations', c.data.rail_stations));
-        if (c.data.bus) here.append(row(`Bus stops (${c.data.bus.operator})`, c.data.bus.stops.toLocaleString('en-IN')));
-        const built = el('built-list');
-        if (!projects.length) built.textContent = 'No project news found.';
-        for (const p of projects.slice(0, 6)) {
+        el('metric-stations').textContent = c.data?.metro_stations ?? '–';
+        const here = [];
+        if (c.data?.metro_stations != null) here.push(row('Metro stations', c.data.metro_stations));
+        if (c.data?.rail_stations != null) here.push(row('Rail stations', c.data.rail_stations));
+        if (c.data?.bus) here.push(row(`Bus stops (${c.data.bus.operator})`, c.data.bus.stops.toLocaleString('en-IN')));
+        el('here-list').replaceChildren(...here);
+        const built = projects.slice(0, 6).map((p) => {
           const d = document.createElement('div');
           d.style.cssText = 'padding:var(--space-sm);background:rgba(217,119,6,0.06);border-radius:var(--radius-lg);border-left:3px solid var(--status-construction);';
           const t = document.createElement('div'); t.className = 'text-body-sm'; t.style.fontWeight = '600'; t.textContent = p.name;
@@ -1448,13 +1469,49 @@
             m.append(a);
           }
           d.append(t, m);
-          built.append(d);
-        }
+          return d;
+        });
+        if (!built.length) { const none = document.createElement('p'); none.textContent = `No project news found for ${c.name} yet.`; built.push(none); }
+        el('built-list').replaceChildren(...built);
+        el('dossier-link').href = `invest/city.html?c=${enc}&preset=balanced`;
+        el('dossier-label').textContent = `Open full ${c.name} dossier`;
+        showOnMap(c, projects);
       } catch (err) {
+        if (seq !== placeSeq) return;
         console.error('place panel', err);
+        el('place-name').textContent = 'Could not load this place';
         el('place-synopsis').textContent = 'Data unavailable.';
       }
-    })();
+    }
+
+    // Hero search: resolve the typed text to a city through the same API the header search uses.
+    const goToMap = () => document.getElementById('map-section').scrollIntoView({ behavior: 'smooth' });
+    async function exploreQuery(raw) {
+      const q = raw.split(/[,(]/)[0].trim(); // "Pune, Maharashtra" -> "Pune"
+      if (q.length < 2) { searchMsg.textContent = 'Type at least 2 letters of a city name.'; return; }
+      searchMsg.textContent = 'Searching…';
+      try {
+        const { cities } = await getJSON(`${API_BASE}/v1/cities?q=${encodeURIComponent(q)}&limit=1`);
+        if (!cities.length) { searchMsg.textContent = `No city matches "${q}". Try another spelling.`; return; }
+        searchMsg.textContent = '';
+        searchInput.value = cities[0].name;
+        loadPlace(cities[0].id);
+        goToMap();
+      } catch (err) {
+        console.error('[search]', err);
+        searchMsg.textContent = 'Search is unavailable right now. Try again in a moment.';
+      }
+    }
+    document.getElementById('explore-btn').addEventListener('click', (e) => { e.preventDefault(); exploreQuery(searchInput.value); });
+    searchInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') exploreQuery(searchInput.value); });
+    const pills = document.querySelectorAll('.suggestion-pill');
+    pills.forEach((pill) => pill.addEventListener('click', () => {
+      searchInput.value = pill.textContent;
+      searchMsg.textContent = '';
+      loadPlace(pill.dataset.cityId);
+      goToMap();
+    }));
+    loadPlace(pills[0].dataset.cityId);
 
     // --- Nav Active State on Scroll ---
     const sections = document.querySelectorAll('section[id]');

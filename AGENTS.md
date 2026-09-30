@@ -87,6 +87,7 @@ go -C api vet ./... && go -C api test ./... -race        # API checks before eve
 python3 mock_api.py                                      # no Go? same /v1/* from the fixtures on :8080 (PORT=8081 for a second checkout)
 python3 -m http.server 8765 --directory web              # pages at http://localhost:8765/invest/ (CORS default matches this port)
 node --test 'web/invest/js/*.test.mjs'                   # page logic tests
+node --test web/links.test.mjs                         # every page link resolves (no bare #, missing file or anchor)
 scripts/deploy-vercel.sh [--prod]                        # stage web/ + /v1 function (mock_api.py) → Vercel deploy → smoke test; --stage-only / --smoke URL
 ```
 
