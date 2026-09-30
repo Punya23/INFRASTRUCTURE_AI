@@ -876,7 +876,7 @@
                 <div class="legend-grid">
                   <div class="legend-item"><span class="legend-line-op"></span><span>National highway</span></div>
                   <div class="legend-item"><span class="legend-line-uc"></span><span>Highway being built</span></div>
-                  <div class="legend-item"><span class="legend-line-pl"></span><span>PMPML bus route</span></div>
+                  <div class="legend-item"><span class="legend-line-pl"></span><span>Bus and metro routes (GTFS)</span></div>
                   <div class="legend-item"><span class="legend-dot-cv"></span><span>Project news (city-level)</span></div>
                 </div>
               </div>
@@ -1279,12 +1279,24 @@
       const css = getComputedStyle(document.documentElement);
       const c = (v) => css.getPropertyValue(v).trim();
       // One failed layer must not blank the map: each source loads on its own and the rest still draw.
-      const [nh, bus] = await Promise.allSettled([
+      const [nh, feedIndex] = await Promise.allSettled([
         getJSON('fixtures/national_highways/nh_segments.geojson'),
-        getJSON('fixtures/public_transport/gtfs_pune_pmpml_routes.geojson'),
+        getJSON('fixtures/public_transport/index.json'),
       ]);
-      if ([nh, bus].some((r) => r.status === 'rejected')) console.warn('[map] a layer failed to load', [nh, bus].filter((r) => r.status === 'rejected').map((r) => r.reason.message));
+      if ([nh, feedIndex].some((r) => r.status === 'rejected')) console.warn('[map] a layer failed to load', [nh, feedIndex].filter((r) => r.status === 'rejected').map((r) => r.reason.message));
       const features = (r) => (r.status === 'fulfilled' ? r.value.features : []);
+      // GTFS route files are large (up to 4 MB), so only the feeds covering the chosen city are fetched, once each.
+      const routeFiles = new Map();
+      const routesFor = async (city) => {
+        if (feedIndex.status !== 'fulfilled') return [];
+        const covering = feedIndex.value.feeds.filter((f) => city.lon >= f.bbox[0] && city.lon <= f.bbox[2] && city.lat >= f.bbox[1] && city.lat <= f.bbox[3]);
+        const sets = await Promise.allSettled(covering.map((f) => {
+          if (!routeFiles.has(f.routes_file)) routeFiles.set(f.routes_file, getJSON(`fixtures/public_transport/${f.routes_file}`));
+          return routeFiles.get(f.routes_file).catch((err) => { routeFiles.delete(f.routes_file); throw err; });
+        }));
+        return sets.flatMap((r) => (r.status === 'fulfilled' ? r.value.features : []));
+      };
+      let showSeq = 0;
       const fc = (features) => ({ type: 'FeatureCollection', features });
 
       map.addSource('bus', { type: 'geojson', data: fc([]) });
@@ -1318,10 +1330,11 @@
       return {
         // The news names a city, not a site, so every project sits at the city centre (geo_precision "city"): one
         // marker per project, fanned out on a small ring so they stay individually clickable.
-        show(city, projects) {
+        async show(city, projects) {
+          const seq = ++showSeq;
           const box = boxOf(city);
           const keep = nearBox(box);
-          map.getSource('bus').setData(fc(features(bus).filter(keep)));
+          map.getSource('bus').setData(fc([]));
           map.getSource('nh').setData(fc(features(nh).filter(keep)));
           map.getSource('projects').setData(fc(projects.map((p, i) => {
             const a = (2 * Math.PI * i) / projects.length;
@@ -1329,6 +1342,8 @@
           })));
           popup.remove();
           map.fitBounds(view(box), { duration: 800 });
+          const routes = (await routesFor(city)).filter(keep);
+          if (seq === showSeq) map.getSource('bus').setData(fc(routes)); // a newer pick owns the layer
         },
       };
     }
