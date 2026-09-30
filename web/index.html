@@ -409,7 +409,7 @@
     .cities-grid {
       display: grid; grid-template-columns: 1fr; gap: var(--space-lg); margin-top: var(--space-lg);
     }
-    @media (min-width: 768px) { .cities-grid { grid-template-columns: 1fr 1fr 1fr; } }
+    @media (min-width: 768px) { .cities-grid { grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); } }
     .city-card {
       background: var(--surface-container-lowest); border-radius: var(--radius-xl);
       overflow: hidden; box-shadow: var(--shadow-2);
@@ -418,13 +418,9 @@
     }
     .city-card:hover { box-shadow: var(--shadow-3); transform: translateY(-3px); }
     .city-image {
-      position: relative; height: 12rem; width: 100%; overflow: hidden;
+      position: relative; height: 6rem; width: 100%; overflow: hidden;
+      background: linear-gradient(135deg, var(--primary), var(--primary-container));
     }
-    .city-image img {
-      width: 100%; height: 100%; object-fit: cover;
-      transition: transform 0.5s;
-    }
-    .city-card:hover .city-image img { transform: scale(1.05); }
     .city-state-badge {
       position: absolute; top: var(--space-sm); left: var(--space-sm);
       padding: 0.25rem 0.625rem; border-radius: var(--radius);
@@ -748,7 +744,6 @@
           <div class="city-card" data-city="pune">
             <div>
               <div class="city-image">
-                <img alt="Aerial view of Pune city showing modern metro viaducts" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpzlUQvh-zVlxg3ZbAvhWo0QH9WA3FLS8Ea8Ypilu1PtTcBkh_vGyD4csK7cbl9cHraPTdjNPceCBTYKENGsbiGUNJcoqoJ5-1ZWV043i3FwWUK7Z8T3kDFtxEu9I84B09BpbxDEkpNLAVgcHOzfejqqrTJZabbZsB-RqZ5eCxzfU9Trcnr8-UPq4Tz-zKLBlU6YVFHFdDG3-BrUUCvHvCYx51XUX2n-Qqi6IIBk7TRnuZiHyT8T1YPA"/>
                 <div class="city-state-badge text-body-sm" data-f="state">&nbsp;</div>
                 <div class="city-sites-badge text-data-mono" data-f="score">Loading…</div>
               </div>
@@ -769,7 +764,6 @@
           <div class="city-card" data-city="bengaluru">
             <div>
               <div class="city-image">
-                <img alt="Modern elevated rapid transit line in Bengaluru" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYKEhdJpZ3jEbnogM3MwQ6tA-Ekiia9pfkb9tN9BvoaM9R8u3ftoKn0MzVLB1rgEzYrIECLDZBLA5eAK600gOskT-Mgei-QTNiT50kwkckCRp1QoiYxEy5-k0tszptapfnQL517IAwvclPpqm02pAyWsG6VwNtCQ3WMoFhPku5j-S4CPCxitH7pd0Cxu6_svhBmP0nqHW_89qnu84cSAC62f-GkKhdUCnkAQEfYoyfkYERHjaOTEq5cg"/>
                 <div class="city-state-badge text-body-sm" data-f="state">&nbsp;</div>
                 <div class="city-sites-badge text-data-mono" data-f="score">Loading…</div>
               </div>
@@ -790,7 +784,6 @@
           <div class="city-card" data-city="lucknow">
             <div>
               <div class="city-image">
-                <img alt="Serene panoramic view of Gomti riverfront in Lucknow" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUI8MeLHjD04l-UHc_jEdZP_roSfE2EkQ1NwS7YBDsCjZ2XduSvf0Be6nYBt1U6DWpvaXacHh31WvEpEQIv3xRvKuR434G8xuBQZdUND-JIsVyYQ4gv83gnJXSKlZb84mBvDQo1KMnBI11OIbiITjF0sarj4-FMBd2ov2n3MK-xGZW8pq7bEKEbECOcRAAehyibi1EFT4l0wrAobodhTx5j8dT44erg7FUhDZltsvXsJC4w9xcDyv4Gw"/>
                 <div class="city-state-badge text-body-sm" data-f="state">&nbsp;</div>
                 <div class="city-sites-badge text-data-mono" data-f="score">Loading…</div>
               </div>
@@ -807,6 +800,26 @@
               </div>
             </div>
             <div class="city-cta"><a class="btn-ghost text-body-sm" href="invest/city.html?c=lucknow&preset=balanced">Explore Lucknow scores</a></div>
+          </div>
+          <div class="city-card" data-city="ahmedabad">
+            <div>
+              <div class="city-image">
+                <div class="city-state-badge text-body-sm" data-f="state">&nbsp;</div>
+                <div class="city-sites-badge text-data-mono" data-f="score">Loading…</div>
+              </div>
+              <div class="city-info">
+                <div class="city-name-row">
+                  <h3 class="text-headline-md" data-f="name">Ahmedabad</h3>
+                  <span class="material-symbols-outlined" style="color:var(--outline);">east</span>
+                </div>
+                <p class="text-body-sm" style="color:var(--on-surface-variant);" data-f="best"></p>
+                <div class="city-metrics">
+                  <div class="city-metric text-body-sm"><span class="city-metric-dot teal"></span><span data-f="transit"></span></div>
+                  <div class="city-metric text-body-sm"><span class="city-metric-dot saffron"></span><span data-f="pop"></span></div>
+                </div>
+              </div>
+            </div>
+            <div class="city-cta"><a class="btn-ghost text-body-sm" href="invest/city.html?c=ahmedabad&preset=balanced">Explore Ahmedabad scores</a></div>
           </div>
         </div>
       </div>
