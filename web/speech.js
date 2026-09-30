@@ -4,7 +4,7 @@
  * =============================================================================
  * Modular STT and TTS with provider abstraction.
  * Uses Web Speech API (browser-native) as default provider.
- * Architecture supports swapping to Bhashini, Google Cloud, or Azure
+ * Architecture supports swapping to Google Cloud or Azure
  * via environment configuration (ADR-0008: swappable AI providers).
  *
  * Integrates with i18n.js for locale-aware speech:

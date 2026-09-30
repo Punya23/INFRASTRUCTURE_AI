@@ -826,7 +826,7 @@
             <input class="search-input text-body-md" id="civic-search-input" type="text" value="Pune, Maharashtra" data-placeholder-en="Search your city, neighborhood, PIN code or landmark..." data-placeholder-hi="अपना शहर, मोहल्ला, पिन कोड या लैंडमार्क खोजें..." data-placeholder-kn="ನಿಮ್ಮ ನಗರ, ನೆರೆಹೊರೆ, ಪಿನ್ ಕೋಡ್ ಅಥವಾ ಮೈಲಿಗಲ್ಲು ಹುಡುಕಿ..." placeholder="Search your city, neighborhood, PIN code or landmark..."/>
           </div>
           <div class="search-actions">
-            <button class="voice-btn text-label-md" id="voice-bhashini-btn" type="button" title="Search using speech">
+            <button class="voice-btn text-label-md" id="voice-search-btn" type="button" title="Search using speech">
               <span class="material-symbols-outlined" style="font-size:18px;color:var(--secondary);">mic</span>
               <span class="voice-btn-text" data-i18n="voiceBtn">बोलें · ಮಾತನಾಡಿ · Speak</span>
             </button>
@@ -1182,7 +1182,7 @@
     });
 
     // --- Voice Search (Web Speech API; locale follows the selected UI language) ---
-    const voiceBtn = document.getElementById('voice-bhashini-btn');
+    const voiceBtn = document.getElementById('voice-search-btn');
     const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
     let recognizer = null;
     function startVoice() {

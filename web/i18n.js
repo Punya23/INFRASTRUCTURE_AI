@@ -346,7 +346,7 @@
   }
 
   // =========================================================================
-  // SPEECH LOCALE — for Bhashini / Web Speech API integration
+  // SPEECH LOCALE — for Web Speech API
   // =========================================================================
   function getSpeechLocale() {
     var config = getLanguageConfig(currentLang);
@@ -354,7 +354,7 @@
   }
 
   function isSpeechSupported(langCode) {
-    // Speech codes known to be supported by Web Speech API / Bhashini
+    // Speech codes known to be supported by Web Speech API
     var supported = ['en', 'hi', 'mr', 'kn', 'ta', 'te', 'bn', 'gu', 'ml'];
     return supported.indexOf(langCode || currentLang) !== -1;
   }
