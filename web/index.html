@@ -759,7 +759,6 @@
           <a class="nav-link text-title-md active" href="#hero" data-i18n="navExplore">Explore</a>
           <a class="nav-link text-title-md" href="#map-section" data-i18n="navProjects">Projects</a>
           <a class="nav-link text-title-md" href="#place-explorer" data-i18n="navArea">Your Area</a>
-          <a class="nav-link text-title-md" href="#citizen-voice-section" data-i18n="navVoice">Citizen Voice</a>
           <a class="nav-link text-title-md" href="#trust-section" data-i18n="navAbout">About</a>
           <a class="nav-link text-title-md" href="nh-explorer.html" data-i18n="navNhMap">NH Map</a>
           <a class="nav-link text-title-md" href="policymaker.html" data-i18n="navPolicymaker">Policymaker View</a>
@@ -778,13 +777,6 @@
           <span class="text-body-sm" style="display:none;" id="search-hint-text">Search gazette, corridors...</span>
           <kbd class="kbd-hint text-data-mono" style="display:none;" id="search-kbd">⌘K</kbd>
         </button>
-        <a class="btn-primary text-body-sm" href="#" id="report-need-trigger">
-          <span class="material-symbols-outlined" style="font-size:16px;">campaign</span>
-          <span data-i18n="reportNeed">Report a Need</span>
-        </a>
-        <div class="avatar">
-          <span class="material-symbols-outlined" style="font-size:18px;color:var(--on-primary);">person</span>
-        </div>
         <button class="mobile-menu-btn" id="mobile-menu-btn" type="button" aria-label="Menu">
           <span class="material-symbols-outlined" style="font-size:24px;">menu</span>
         </button>
@@ -797,7 +789,6 @@
     <a class="nav-link text-title-md" href="#hero" data-i18n="navExplore">Explore</a>
     <a class="nav-link text-title-md" href="#map-section" data-i18n="navProjects">Projects</a>
     <a class="nav-link text-title-md" href="#place-explorer" data-i18n="navArea">Your Area</a>
-    <a class="nav-link text-title-md" href="#citizen-voice-section" data-i18n="navVoice">Citizen Voice</a>
     <a class="nav-link text-title-md" href="#trust-section" data-i18n="navAbout">About</a>
     <a class="nav-link text-title-md" href="nh-explorer.html" data-i18n="navNhMap">NH Map</a>
     <a class="nav-link text-title-md" href="policymaker.html" data-i18n="navPolicymaker">Policymaker View</a>
@@ -815,9 +806,6 @@
           <span style="color:var(--outline-variant);">/</span>
           <span data-i18n="noticeTitle">Public Infrastructure Observatory of India</span>
         </div>
-        <div class="notice-right">
-          <span style="display:none;color:var(--on-surface-variant);" class="notice-reconcile" data-i18n="noticeReconcile">Reconciling Gazettes, GIS Telemetry, and Ward Voices</span>
-        </div>
       </div>
     </section>
 
@@ -827,8 +815,6 @@
         <div class="eyebrow-pill text-label-md">
           <span class="material-symbols-outlined" style="font-size:16px;color:var(--secondary);">explore</span>
           <span data-i18n="heroEyebrow">Hyperlocal Civic Transparency</span>
-          <span style="color:var(--outline-variant);">•</span>
-          <span class="text-data-mono" data-i18n="heroCities">812 Cities & Taluks</span>
         </div>
         <h1 class="text-headline-xl" data-i18n="heroTitle">Know what's happening in your place.</h1>
         <p class="hero-subtitle text-body-lg" data-i18n="heroSubtitle">Explore infrastructure around you — what is already here, what is being built, what is planned, and what people in your area are asking for.</p>
@@ -858,11 +844,6 @@
           <button class="suggestion-pill" type="button" data-city="Bengaluru (Whitefield), Karnataka">Bengaluru</button>
           <button class="suggestion-pill" type="button" data-city="Lucknow, Uttar Pradesh">Lucknow</button>
           <button class="suggestion-pill" type="button" data-city="Ahmedabad, Gujarat">Ahmedabad</button>
-          <span style="color:var(--outline-variant);">•</span>
-          <a href="#citizen-voice-section" style="color:var(--secondary);font-weight:600;display:flex;align-items:center;gap:0.25rem;">
-            <span data-i18n="tellUs">Tell us what your area needs</span>
-            <span class="material-symbols-outlined" style="font-size:16px;">arrow_right_alt</span>
-          </a>
         </div>
       </div>
     </section>
@@ -881,7 +862,6 @@
                 </div>
                 <div style="display:flex;align-items:center;gap:var(--space-xs);">
                   <span class="coords-badge text-data-mono">18.5204° N, 73.8567° E</span>
-                  <span class="gis-badge text-label-sm">Survey GIS</span>
                 </div>
               </div>
               <!-- Real map: MapLibre over OpenFreeMap (OSM) tiles, layers from the repo fixtures -->
@@ -917,105 +897,43 @@
                     </div>
                     <h2 class="text-headline-md" style="margin-top:0.25rem;" id="place-name">Pune, Maharashtra</h2>
                   </div>
-                  <span class="update-badge text-data-mono">Updated 28 Sep 2026</span>
+                  <span class="update-badge text-data-mono" id="place-updated"></span>
                 </div>
                 <!-- Tabs -->
                 <div class="tab-bar" id="tab-bar">
                   <button class="tab-btn text-body-sm active" data-tab="overview" type="button">Overview</button>
                   <button class="tab-btn text-body-sm" data-tab="whats-here" type="button">What's Here</button>
                   <button class="tab-btn text-body-sm" data-tab="being-built" type="button">Being Built</button>
-                  <button class="tab-btn text-body-sm" data-tab="people" type="button">People</button>
                 </div>
                 <!-- Tab: Overview -->
                 <div class="tab-content active" id="tab-overview">
                   <div class="synopsis" style="margin-bottom:var(--space-md);">
                     <span class="synopsis-label text-label-sm" data-i18n="synopsisLabel">About this place</span>
-                    <p class="text-body-sm" style="color:var(--on-surface);margin-top:var(--space-xs);line-height:1.5;" data-i18n="synopsisText">Several transport projects are expanding connectivity along the eastern corridor, while residents have flagged active concerns regarding evening feeder buses and stormwater drainage along low-lying culverts.</p>
+                    <p class="text-body-sm" style="color:var(--on-surface);margin-top:var(--space-xs);line-height:1.5;" id="place-synopsis">Loading…</p>
                   </div>
                   <div class="metrics-grid">
                     <div class="metric-card">
-                      <div class="metric-label text-label-md" data-i18n="metricProjects">Live Projects</div>
-                      <div class="metric-value text-data-metric teal" id="metric-projects">14 Sites</div>
+                      <div class="metric-label text-label-md">Projects in the news</div>
+                      <div class="metric-value text-data-metric teal" id="metric-projects">–</div>
                     </div>
                     <div class="metric-card">
-                      <div class="metric-label text-label-md" data-i18n="metricAudits">Citizen Audits</div>
-                      <div class="metric-value text-data-metric saffron" id="metric-audits">3,420</div>
-                    </div>
-                  </div>
-                  <div class="hot-issue" style="margin-top:var(--space-md);">
-                    <div class="hot-issue-icon">
-                      <span class="material-symbols-outlined" style="font-size:18px;">campaign</span>
-                    </div>
-                    <div class="text-body-sm">
-                      <span style="font-weight:600;color:var(--on-surface);" data-i18n="hotIssueLabel">Top Neighborhood Need:</span>
-                      <span style="color:var(--on-surface-variant);" data-i18n="hotIssueText"> 83 residents signed feeder bus frequency petition for Hadapsar.</span>
+                      <div class="metric-label text-label-md">Metro stations</div>
+                      <div class="metric-value text-data-metric saffron" id="metric-stations">–</div>
                     </div>
                   </div>
                 </div>
                 <!-- Tab: What's Here -->
                 <div class="tab-content" id="tab-whats-here">
                   <div class="synopsis">
-                    <span class="synopsis-label text-label-sm">Infrastructure Assets</span>
-                    <div style="display:flex;flex-direction:column;gap:var(--space-sm);margin-top:var(--space-sm);">
-                      <div style="display:flex;justify-content:space-between;align-items:center;padding:var(--space-xs) 0;border-bottom:1px solid var(--border-subtle);">
-                        <span class="text-body-sm" style="font-weight:600;">Metro Stations</span>
-                        <span class="text-data-mono" style="color:var(--primary);">16 operational</span>
-                      </div>
-                      <div style="display:flex;justify-content:space-between;align-items:center;padding:var(--space-xs) 0;border-bottom:1px solid var(--border-subtle);">
-                        <span class="text-body-sm" style="font-weight:600;">Flyovers</span>
-                        <span class="text-data-mono" style="color:var(--primary);">28 audited</span>
-                      </div>
-                      <div style="display:flex;justify-content:space-between;align-items:center;padding:var(--space-xs) 0;border-bottom:1px solid var(--border-subtle);">
-                        <span class="text-body-sm" style="font-weight:600;">Water Treatment Plants</span>
-                        <span class="text-data-mono" style="color:var(--primary);">4 active</span>
-                      </div>
-                      <div style="display:flex;justify-content:space-between;align-items:center;padding:var(--space-xs) 0;">
-                        <span class="text-body-sm" style="font-weight:600;">Public Parks</span>
-                        <span class="text-data-mono" style="color:var(--primary);">142 mapped</span>
-                      </div>
-                    </div>
+                    <span class="synopsis-label text-label-sm">Transport assets (OSM · GTFS)</span>
+                    <div id="here-list" style="display:flex;flex-direction:column;gap:var(--space-sm);margin-top:var(--space-sm);"></div>
                   </div>
                 </div>
                 <!-- Tab: Being Built -->
                 <div class="tab-content" id="tab-being-built">
                   <div class="synopsis">
-                    <span class="synopsis-label text-label-sm">Active Construction</span>
-                    <div style="display:flex;flex-direction:column;gap:var(--space-sm);margin-top:var(--space-sm);">
-                      <div style="padding:var(--space-sm);background:rgba(217,119,6,0.06);border-radius:var(--radius-lg);border-left:3px solid var(--status-construction);">
-                        <div class="text-body-sm" style="font-weight:600;">Hinjawadi–Shivajinagar Metro</div>
-                        <div class="text-data-mono" style="color:var(--status-construction);margin-top:2px;">62% complete · ETA Dec 2027</div>
-                        <div style="margin-top:var(--space-xs);height:6px;background:var(--surface-container-high);border-radius:var(--radius-full);overflow:hidden;">
-                          <div style="width:62%;height:100%;background:var(--status-construction);border-radius:var(--radius-full);transition:width 1s;"></div>
-                        </div>
-                      </div>
-                      <div style="padding:var(--space-sm);background:rgba(217,119,6,0.06);border-radius:var(--radius-lg);border-left:3px solid var(--status-construction);">
-                        <div class="text-body-sm" style="font-weight:600;">Ring Road Peripheral Acquisition</div>
-                        <div class="text-data-mono" style="color:var(--status-construction);margin-top:2px;">38% complete · ETA Mar 2028</div>
-                        <div style="margin-top:var(--space-xs);height:6px;background:var(--surface-container-high);border-radius:var(--radius-full);overflow:hidden;">
-                          <div style="width:38%;height:100%;background:var(--status-construction);border-radius:var(--radius-full);transition:width 1s;"></div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- Tab: People -->
-                <div class="tab-content" id="tab-people">
-                  <div class="synopsis">
-                    <span class="synopsis-label text-label-sm">Citizen Demand Summary</span>
-                    <div style="display:flex;flex-direction:column;gap:var(--space-sm);margin-top:var(--space-sm);">
-                      <div style="display:flex;align-items:center;gap:var(--space-sm);padding:var(--space-xs) 0;border-bottom:1px solid var(--border-subtle);">
-                        <span style="width:0.5rem;height:0.5rem;border-radius:50%;background:var(--secondary);flex-shrink:0;"></span>
-                        <span class="text-body-sm"><strong>Feeder Buses</strong> — 83 petitions, Hadapsar ward</span>
-                      </div>
-                      <div style="display:flex;align-items:center;gap:var(--space-sm);padding:var(--space-xs) 0;border-bottom:1px solid var(--border-subtle);">
-                        <span style="width:0.5rem;height:0.5rem;border-radius:50%;background:var(--secondary);flex-shrink:0;"></span>
-                        <span class="text-body-sm"><strong>Pedestrian Safety</strong> — 56 flags, Viman Nagar</span>
-                      </div>
-                      <div style="display:flex;align-items:center;gap:var(--space-sm);padding:var(--space-xs) 0;">
-                        <span style="width:0.5rem;height:0.5rem;border-radius:50%;background:var(--secondary);flex-shrink:0;"></span>
-                        <span class="text-body-sm"><strong>Stormwater Drainage</strong> — 41 reports, Kharadi</span>
-                      </div>
-                    </div>
+                    <span class="synopsis-label text-label-sm">Project news</span>
+                    <div id="built-list" style="display:flex;flex-direction:column;gap:var(--space-sm);margin-top:var(--space-sm);"></div>
                   </div>
                 </div>
               </div>
@@ -1047,7 +965,6 @@
               <h3 class="text-headline-md" data-i18n="ch1Title">What was built?</h3>
               <p class="text-body-sm" style="color:var(--on-surface-variant);line-height:1.5;" data-i18n="ch1Desc">Explore completed flyovers, commissioned metro routes, water treatment plants, and public parks. Review post-completion audits and see how existing assets hold up under seasonal stress.</p>
             </div>
-            <div class="chapter-footer text-body-sm"><span style="color:var(--on-surface-variant);">Asset Longevity Tracker</span><span style="color:var(--primary);" id="stat-km">42,800+ audited km</span></div>
           </article>
           <!-- Chapter 2 -->
           <article class="chapter-card">
@@ -1056,7 +973,6 @@
               <h3 class="text-headline-md" data-i18n="ch2Title">What is being built?</h3>
               <p class="text-body-sm" style="color:var(--on-surface-variant);line-height:1.5;" data-i18n="ch2Desc">Real-time ground visibility on contractor mobilization, physical milestone execution, utility relocations, and honest revised delivery timelines without sugarcoating delays.</p>
             </div>
-            <div class="chapter-footer text-body-sm"><span style="color:var(--on-surface-variant);">Active Site Feeds</span><span style="color:var(--secondary);" id="stat-sites">3,120 Worksites</span></div>
           </article>
           <!-- Chapter 3 -->
           <article class="chapter-card">
@@ -1065,7 +981,6 @@
               <h3 class="text-headline-md" data-i18n="ch3Title">What is coming?</h3>
               <p class="text-body-sm" style="color:var(--on-surface-variant);line-height:1.5;" data-i18n="ch3Desc">Upcoming alignments, land acquisition status, environmental green clearances, and sanctioned budgetary disbursements before barricades arrive in your neighborhood.</p>
             </div>
-            <div class="chapter-footer text-body-sm"><span style="color:var(--on-surface-variant);">Pipeline Gazette</span><span style="color:var(--tertiary);" id="stat-budget">₹4.8L Cr Approved</span></div>
           </article>
           <!-- Chapter 4 -->
           <article class="chapter-card">
@@ -1074,7 +989,6 @@
               <h3 class="text-headline-md" data-i18n="ch4Title">What do people need?</h3>
               <p class="text-body-sm" style="color:var(--on-surface-variant);line-height:1.5;" data-i18n="ch4Desc">Community priorities that master plans overlook. Flag dangerous crossings, flood-prone underpasses, absent bus shelters, or lack of footpath connectivity in your native language.</p>
             </div>
-            <div class="chapter-footer text-body-sm"><span style="color:var(--on-surface-variant);">Ward Demands Logged</span><span style="color:var(--secondary);" id="stat-submissions">184,200 Submissions</span></div>
           </article>
           <!-- Chapter 5 -->
           <article class="chapter-card wide">
@@ -1084,9 +998,9 @@
               <p class="text-body-sm" style="color:var(--on-surface-variant);line-height:1.5;max-width:40rem;" data-i18n="ch5Desc">Every inference connects to an open gazette, state tender portal, or satellite radar pass. No black boxes. Check confidence ratings, ministry reference numbers, and ground audit notes with one click.</p>
             </div>
             <div style="padding-top:var(--space-md);margin-top:var(--space-md);display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-md);" class="text-body-sm text-data-mono" style="color:var(--on-surface-variant);">
-              <span style="display:flex;align-items:center;gap:0.25rem;"><span style="width:0.5rem;height:0.5rem;border-radius:50%;background:var(--primary);"></span> MoRTH Gazette Sync</span>
-              <span style="display:flex;align-items:center;gap:0.25rem;"><span style="width:0.5rem;height:0.5rem;border-radius:50%;background:var(--primary);"></span> State PWD Master Ledgers</span>
-              <span style="display:flex;align-items:center;gap:0.25rem;"><span style="width:0.5rem;height:0.5rem;border-radius:50%;background:var(--secondary);"></span> Bhashini Multilingual Intake</span>
+              <span style="display:flex;align-items:center;gap:0.25rem;"><span style="width:0.5rem;height:0.5rem;border-radius:50%;background:var(--primary);"></span> OpenStreetMap (ODbL)</span>
+              <span style="display:flex;align-items:center;gap:0.25rem;"><span style="width:0.5rem;height:0.5rem;border-radius:50%;background:var(--primary);"></span> WorldPop · GHSL 2020</span>
+              <span style="display:flex;align-items:center;gap:0.25rem;"><span style="width:0.5rem;height:0.5rem;border-radius:50%;background:var(--secondary);"></span> GTFS feeds · news headlines</span>
             </div>
           </article>
         </div>
@@ -1171,85 +1085,6 @@
       </div>
     </section>
 
-    <!-- 5. CITIZEN VOICE -->
-    <section class="citizen-voice" id="citizen-voice-section">
-      <div class="container">
-        <div class="voice-card">
-          <div class="voice-header">
-            <div class="ground-truth-badge text-label-md">
-              <span class="material-symbols-outlined" style="font-size:16px;">campaign</span>
-              <span data-i18n="groundTruth">Ground Truth Network</span>
-            </div>
-            <h2 class="text-headline-xl" data-i18n="voiceTitle">What does your area need?</h2>
-            <p class="text-body-lg" style="color:var(--on-surface-variant);margin-top:0.5rem;" data-i18n="voiceSubtitle">Tell us what is difficult, missing, unsafe, or changing in your neighborhood. Submissions are verified with neighbors and mapped straight to municipal ward works.</p>
-          </div>
-          <div class="voices-grid">
-            <!-- Card 1 -->
-            <div class="voice-entry">
-              <div style="display:flex;flex-direction:column;gap:var(--space-xs);">
-                <div class="voice-entry-header">
-                  <span class="voice-category text-label-sm">Road Safety</span>
-                  <span class="text-data-mono" style="color:var(--on-surface-variant);">Pune (Viman Nagar)</span>
-                </div>
-                <p class="text-body-md" style="font-weight:500;padding-top:0.25rem;">"Safer pedestrian crossing and zebra markings near the metro station exit before schools open."</p>
-              </div>
-              <div style="padding-top:var(--space-sm);display:flex;align-items:center;justify-content:space-between;" class="text-body-sm">
-                <span class="voice-verified"><span class="material-symbols-outlined" style="font-size:16px;">how_to_reg</span> 56 neighbors verified</span>
-                <span class="text-label-sm" style="color:var(--on-surface-variant);">4 days ago</span>
-              </div>
-            </div>
-            <!-- Card 2 -->
-            <div class="voice-entry">
-              <div style="display:flex;flex-direction:column;gap:var(--space-xs);">
-                <div class="voice-entry-header">
-                  <span class="voice-category text-label-sm">Public Transport</span>
-                  <span class="text-data-mono" style="color:var(--on-surface-variant);">Bengaluru (Whitefield)</span>
-                </div>
-                <p class="text-body-md" style="font-weight:500;padding-top:0.25rem;">"Reliable feeder buses after 8 PM connecting metro terminal to residential clusters in Kadugodi."</p>
-              </div>
-              <div style="padding-top:var(--space-sm);display:flex;align-items:center;justify-content:space-between;" class="text-body-sm">
-                <span class="voice-verified"><span class="material-symbols-outlined" style="font-size:16px;">how_to_reg</span> 83 neighbors verified</span>
-                <span class="text-label-sm" style="color:var(--on-surface-variant);">Yesterday</span>
-              </div>
-            </div>
-            <!-- Card 3 -->
-            <div class="voice-entry">
-              <div style="display:flex;flex-direction:column;gap:var(--space-xs);">
-                <div class="voice-entry-header">
-                  <span class="voice-category text-label-sm">Drainage & Monsoon</span>
-                  <span class="text-data-mono" style="color:var(--on-surface-variant);">Lucknow (Gomti Nagar Ext)</span>
-                </div>
-                <p class="text-body-md" style="font-weight:500;padding-top:0.25rem;">"Our underpass road floods every monsoon season because the silt trap hasn't been cleaned in 2 years."</p>
-              </div>
-              <div style="padding-top:var(--space-sm);display:flex;align-items:center;justify-content:space-between;" class="text-body-sm">
-                <span class="voice-verified"><span class="material-symbols-outlined" style="font-size:16px;">how_to_reg</span> 41 neighbors verified</span>
-                <span class="text-label-sm" style="color:var(--on-surface-variant);">2 weeks ago</span>
-              </div>
-            </div>
-          </div>
-          <!-- Action Bar -->
-          <div class="voice-action-bar">
-            <div class="voice-info">
-              <div class="voice-icon"><span class="material-symbols-outlined" style="font-size:24px;">mic</span></div>
-              <div>
-                <div class="text-title-md" data-i18n="voicePrefer">Prefer speaking over typing?</div>
-                <div class="text-body-sm" style="color:var(--on-surface-variant);" data-i18n="voiceIntake">Voice intake enabled in Hindi, Kannada, Marathi, Tamil, Bengali & English via Bhashini AI.</div>
-              </div>
-            </div>
-            <div class="voice-actions">
-              <button class="btn-secondary text-title-md" id="speak-language-btn" type="button">
-                <span class="material-symbols-outlined" style="font-size:18px;color:var(--secondary);">mic</span>
-                <span data-i18n="speakBtn">Speak in your language</span>
-              </button>
-              <a class="btn-accent text-title-md" href="#" id="submit-need-trigger">
-                <span data-i18n="submitNeed">Submit neighborhood request</span>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <!-- 6. TRUST SECTION -->
     <section class="trust-section" id="trust-section">
       <div class="container">
@@ -1260,13 +1095,6 @@
               <span data-i18n="trustTitle1">Zero Surveillance Principle</span>
             </div>
             <p class="text-body-sm" style="color:var(--on-surface-variant);line-height:1.5;" data-i18n="trustDesc1">INFRA-AI collects no personal phone numbers, advertising identifiers, or tracking tokens. Every contribution is geocoded anonymously to protect civic participation.</p>
-          </div>
-          <div class="trust-item">
-            <div class="trust-title text-title-md">
-              <span class="material-symbols-outlined" style="font-size:20px;">menu_book</span>
-              <span data-i18n="trustTitle2">Gazette Open Verification</span>
-            </div>
-            <p class="text-body-sm" style="color:var(--on-surface-variant);line-height:1.5;" data-i18n="trustDesc2">All data pipelines map strictly to published union state gazettes, legislative assembly budgetary questions, and public tender awards verified on Open Data standards.</p>
           </div>
           <div class="trust-item">
             <div class="trust-title text-title-md">
@@ -1291,10 +1119,6 @@
             <span class="text-body-sm" style="color:var(--on-surface-variant);" data-i18n="footerBrandSub">Infrastructure intelligence for India</span>
           </div>
           <p class="text-body-sm" style="color:var(--on-surface-variant);max-width:28rem;margin-bottom:var(--space-md);" data-i18n="footerBrandDesc">A sovereign, public-access infrastructure observatory reconciling capital works, spatial planning, and citizen ground truth across Indian states and union territories.</p>
-          <div class="footer-dpg text-data-mono">
-            <span class="footer-dpg-dot"></span>
-            <span>Digital Public Good (DPG) Registry Standard v2.4</span>
-          </div>
         </div>
         <div class="footer-col">
           <h4 class="text-title-md" data-i18n="footerExplore">Explore</h4>
@@ -1315,79 +1139,15 @@
         <div class="footer-col">
           <h4 class="text-title-md" data-i18n="footerVoice">Citizen Voice & Trust</h4>
           <ul class="text-body-sm">
-            <li><a href="#" id="footer-report-need">Share neighborhood need</a></li>
-            <li><a href="#trust-section">Gazette verification</a></li>
           </ul>
         </div>
       </div>
       <div class="footer-bottom text-body-sm" style="color:var(--on-surface-variant);">
         <span>Map data © OpenStreetMap contributors • Built on Digital Public Good principles</span>
-        <span class="sample-tag text-label-sm">Sample data · Prototype · Informational civic platform</span>
+        <span class="sample-tag text-label-sm">Prototype · Informational civic platform</span>
       </div>
     </div>
   </footer>
-
-  <!-- SUBMIT NEED MODAL -->
-  <div class="modal-overlay" id="submit-modal">
-    <div class="modal-box">
-      <div id="submit-form-container">
-        <div class="modal-header">
-          <h3 class="text-headline-md" data-i18n="modalTitle">Submit a Neighborhood Need</h3>
-          <button class="modal-close" id="modal-close-btn" type="button"><span class="material-symbols-outlined" style="font-size:18px;">close</span></button>
-        </div>
-        <form id="need-form">
-          <div class="form-group">
-            <label class="form-label text-label-md" for="need-location" data-i18n="formLocation">Location</label>
-            <input class="form-input" id="need-location" type="text" placeholder="e.g. Viman Nagar, Pune" required/>
-          </div>
-          <div class="form-group">
-            <label class="form-label text-label-md" for="need-category" data-i18n="formCategory">Category</label>
-            <select class="form-select" id="need-category" required>
-              <option value="">Select category...</option>
-              <option value="road-safety">Road Safety</option>
-              <option value="public-transport">Public Transport</option>
-              <option value="drainage">Drainage & Monsoon</option>
-              <option value="water-supply">Water Supply</option>
-              <option value="electricity">Electricity</option>
-              <option value="sanitation">Sanitation</option>
-              <option value="pedestrian">Pedestrian & Footpaths</option>
-              <option value="green-space">Green Spaces & Parks</option>
-              <option value="other">Other Infrastructure</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label text-label-md" for="need-description" data-i18n="formDescription">Describe the need</label>
-            <div class="speech-textarea-group">
-              <textarea class="form-textarea" id="need-description" placeholder="What is difficult, missing, or unsafe? Be specific about the location and the impact on your daily life." required></textarea>
-              <div id="mic-btn-container"></div>
-            </div>
-            <div class="speech-voice-label" id="voice-input-hint">
-              <span class="material-symbols-outlined">mic</span>
-              <span data-i18n="speechVoiceHint">Or tap the mic to speak your need</span>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="form-label text-label-md" for="need-urgency" data-i18n="formUrgency">Urgency Level</label>
-            <select class="form-select" id="need-urgency">
-              <option value="moderate">Moderate — affects daily life</option>
-              <option value="high">High — safety concern</option>
-              <option value="critical">Critical — immediate danger</option>
-            </select>
-          </div>
-          <button class="btn-full text-title-md" type="submit" style="margin-top:var(--space-md);">
-            <span class="material-symbols-outlined" style="font-size:18px;">send</span>
-            <span data-i18n="formSubmit">Submit Request</span>
-          </button>
-        </form>
-      </div>
-      <div class="form-success" id="submit-success">
-        <div class="success-icon"><span class="material-symbols-outlined" style="font-size:32px;">check_circle</span></div>
-        <h3 class="text-headline-md" data-i18n="successTitle">Request Submitted!</h3>
-        <p class="text-body-md" style="color:var(--on-surface-variant);" data-i18n="successDesc">Your neighborhood need has been logged and will be verified with nearby residents. You'll receive updates as it's matched to municipal ward works.</p>
-        <button class="btn-secondary text-title-md" id="submit-another-btn" type="button" data-i18n="successAnother">Submit another request</button>
-      </div>
-    </div>
-  </div>
 
   <!-- SEARCH OVERLAY -->
   <div class="search-overlay" id="search-overlay">
@@ -1397,9 +1157,6 @@
       <div class="text-body-sm" style="color:var(--on-surface-variant);margin-top:var(--space-md);text-align:center;">Press <kbd class="kbd-hint text-data-mono" style="padding:2px 6px;">Esc</kbd> to close</div>
     </div>
   </div>
-
-  <!-- Single Source of Truth Script -->
-  <script src="data.js"></script>
   <script>
     // ============================
     // INFRA-AI Interactive Features
@@ -1433,7 +1190,6 @@
 
     // --- Voice Search (Web Speech API; locale follows the selected UI language) ---
     const voiceBtn = document.getElementById('voice-bhashini-btn');
-    const speakLangBtn = document.getElementById('speak-language-btn');
     const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
     let recognizer = null;
     function startVoice() {
@@ -1463,7 +1219,6 @@
       rec.start();
     }
     voiceBtn.addEventListener('click', startVoice);
-    speakLangBtn.addEventListener('click', startVoice);
 
     // --- Tabs ---
     const tabBar = document.getElementById('tab-bar');
@@ -1633,54 +1388,6 @@
       if (e.key === 'Escape') searchOverlay.classList.remove('open');
     });
 
-    // --- Submit Need Modal ---
-    const submitModal = document.getElementById('submit-modal');
-    const formContainer = document.getElementById('submit-form-container');
-    const successDiv = document.getElementById('submit-success');
-    function openModal() { submitModal.classList.add('open'); formContainer.style.display = 'block'; successDiv.classList.remove('show'); }
-    function closeModal() { submitModal.classList.remove('open'); }
-    document.getElementById('report-need-trigger').addEventListener('click', (e) => { e.preventDefault(); openModal(); });
-    document.getElementById('submit-need-trigger').addEventListener('click', (e) => { e.preventDefault(); openModal(); });
-    document.getElementById('footer-report-need').addEventListener('click', (e) => { e.preventDefault(); openModal(); });
-    document.getElementById('modal-close-btn').addEventListener('click', closeModal);
-    submitModal.addEventListener('click', (e) => { if (e.target === submitModal) closeModal(); });
-    document.getElementById('need-form').addEventListener('submit', (e) => {
-      e.preventDefault();
-      // Gather form data
-      const form = e.target;
-      const request = {
-        id: 'INFRA-' + Date.now().toString(36).toUpperCase(),
-        timestamp: new Date().toISOString(),
-        location: document.getElementById('need-location').value || '',
-        category: document.getElementById('need-category').value || '',
-        description: document.getElementById('need-description').value || '',
-        urgency: document.getElementById('need-urgency').value || 'moderate',
-        inputMethod: document.getElementById('need-description').dataset.speechUsed === 'true' ? 'voice' : 'text',
-        status: 'submitted',
-        language: (window.InfraI18n && window.InfraI18n.getCurrentLang()) || document.documentElement.lang || 'en'
-      };
-      // Store in localStorage
-      const existing = JSON.parse(localStorage.getItem('infra_ai_requests') || '[]');
-      existing.push(request);
-      localStorage.setItem('infra_ai_requests', JSON.stringify(existing));
-      // Update success view with ticket ID
-      const ticketEl = document.getElementById('ticket-id-display');
-      if (ticketEl) ticketEl.textContent = request.id;
-      formContainer.style.display = 'none';
-      successDiv.classList.add('show');
-      // Update submission count
-      const countEl = document.getElementById('stat-submissions');
-      if (countEl) {
-        const total = existing.length;
-        countEl.textContent = total + ' Request' + (total !== 1 ? 's' : '') + ' logged';
-      }
-    });
-    document.getElementById('submit-another-btn').addEventListener('click', () => {
-      formContainer.style.display = 'block';
-      successDiv.classList.remove('show');
-      document.getElementById('need-form').reset();
-    });
-
     // --- City cards: real scores from /v1/cities/{id} (balanced preset) ---
     document.querySelectorAll('.city-card[data-city]').forEach(async (card) => {
       const set = (f, text) => { card.querySelector(`[data-f="${f}"]`).textContent = text; };
@@ -1700,26 +1407,54 @@
       }
     });
 
-    // --- Hydrate Dynamic Metrics from data.js ---
-    function hydrateIndexData() {
-      if (!window.INFRA_DATA) return;
-      const d = window.INFRA_DATA;
-      if (d.cities && d.cities.pune) {
-        const mp = document.getElementById('metric-projects');
-        if (mp) mp.textContent = d.cities.pune.projectSites + ' Sites';
-        const ma = document.getElementById('metric-audits');
-        if (ma) ma.textContent = d.cities.pune.citizenAudits.toLocaleString('en-IN');
+    // --- Place panel: real Pune data from /v1/cities/pune and /v1/cities/pune/projects ---
+    (async () => {
+      const el = (id) => document.getElementById(id);
+      const row = (label, value) => {
+        const d = document.createElement('div');
+        d.style.cssText = 'display:flex;justify-content:space-between;align-items:center;padding:var(--space-xs) 0;border-bottom:1px solid var(--border-subtle);';
+        const a = document.createElement('span'); a.className = 'text-body-sm'; a.style.fontWeight = '600'; a.textContent = label;
+        const b = document.createElement('span'); b.className = 'text-data-mono'; b.style.color = 'var(--primary)'; b.textContent = value;
+        d.append(a, b);
+        return d;
+      };
+      try {
+        const get = async (path) => {
+          const r = await fetch(`${API_BASE}${path}`);
+          if (!r.ok) throw new Error(`${path}: HTTP ${r.status}`);
+          return r.json();
+        };
+        const [c, pr] = await Promise.all([get('/v1/cities/pune?preset=balanced'), get('/v1/cities/pune/projects')]);
+        const projects = pr.projects;
+        el('place-updated').textContent = `Data as of ${c.fetched_at}`;
+        el('place-synopsis').textContent = `${c.name} scores ${c.score} / 100 for existing infrastructure` +
+          (c.best_area && c.best_area.name ? `; the top-scoring area is ${c.best_area.name} (${c.best_area.score}).` : '.') +
+          ` ${projects.length} transit project news items tracked.`;
+        el('metric-projects').textContent = projects.length;
+        el('metric-stations').textContent = c.data.metro_stations;
+        const here = el('here-list');
+        here.append(row('Metro stations', c.data.metro_stations), row('Rail stations', c.data.rail_stations));
+        if (c.data.bus) here.append(row(`Bus stops (${c.data.bus.operator})`, c.data.bus.stops.toLocaleString('en-IN')));
+        const built = el('built-list');
+        if (!projects.length) built.textContent = 'No project news found.';
+        for (const p of projects.slice(0, 6)) {
+          const d = document.createElement('div');
+          d.style.cssText = 'padding:var(--space-sm);background:rgba(217,119,6,0.06);border-radius:var(--radius-lg);border-left:3px solid var(--status-construction);';
+          const t = document.createElement('div'); t.className = 'text-body-sm'; t.style.fontWeight = '600'; t.textContent = p.name;
+          const m = document.createElement('div'); m.className = 'text-data-mono'; m.style.marginTop = '2px';
+          m.textContent = `${p.mode} · ${p.stage.replace(/_/g, ' ')} · ${p.event_date ?? 'date unknown'} `;
+          if (/^https?:\/\//.test(p.source_ref)) {
+            const a = document.createElement('a'); a.href = p.source_ref; a.target = '_blank'; a.rel = 'noopener noreferrer'; a.textContent = 'Source ↗';
+            m.append(a);
+          }
+          d.append(t, m);
+          built.append(d);
+        }
+      } catch (err) {
+        console.error('place panel', err);
+        el('place-synopsis').textContent = 'Data unavailable.';
       }
-      if (d.stats) {
-        const ss = document.getElementById('stat-submissions');
-        if (ss) ss.textContent = d.stats.submissionsLabel;
-      }
-    }
-
-    // Run on page load
-    window.addEventListener('load', () => {
-      hydrateIndexData();
-    });
+    })();
 
     // --- Nav Active State on Scroll ---
     const sections = document.querySelectorAll('section[id]');
@@ -1788,32 +1523,6 @@
               const h1 = heroSection.querySelector('h1, .text-headline-xl');
               const p = heroSection.querySelector('.text-body-lg');
               return (h1 ? h1.textContent.trim() : '') + '. ' + (p ? p.textContent.trim() : '');
-            }
-          });
-        }
-      }
-
-      // Citizen Voice section
-      const voiceSection = document.getElementById('citizen-voice-section');
-      if (voiceSection) {
-        const voiceHeader = voiceSection.querySelector('.voice-header, h2');
-        if (voiceHeader) {
-          const voiceListenContainer = document.createElement('span');
-          voiceListenContainer.style.marginLeft = '0.5rem';
-          voiceListenContainer.style.display = 'inline-block';
-          voiceListenContainer.style.verticalAlign = 'middle';
-          voiceHeader.appendChild(voiceListenContainer);
-          INFRA_SPEECH.createListenButton({
-            container: voiceListenContainer,
-            label: 'Listen',
-            getText: function() {
-              var entries = voiceSection.querySelectorAll('.voice-entry, .voice-card');
-              var texts = [];
-              entries.forEach(function(e) {
-                var quote = e.querySelector('blockquote, .voice-quote, p');
-                if (quote) texts.push(quote.textContent.trim());
-              });
-              return texts.length ? texts.join('. ') : 'No citizen voice entries available.';
             }
           });
         }
