@@ -12,15 +12,15 @@ import (
 
 // Defaults for the zero Config values.
 const (
-	defaultRate    = 120
+	defaultRate    = 600
 	defaultTimeout = 5 * time.Second
 )
 
-// Config tunes the middleware. The zero value is safe: no browser origin is allowed, a client may make 120
+// Config tunes the middleware. The zero value is safe: no browser origin is allowed, a client may make 600
 // requests a minute and a request gets 5 seconds.
 type Config struct {
 	CORSOrigins    []string         // exact origins, like "http://localhost:8765", whose pages may read the responses
-	RatePerMinute  int              // requests per client in each fixed one-minute window; 0 means 120
+	RatePerMinute  int              // requests per client in each fixed one-minute window; 0 means 600
 	RequestTimeout time.Duration    // time one request may take before it is answered 503; 0 means 5 s
 	Now            func() time.Time // the rate limiter's clock; nil means time.Now (tests inject one)
 }
