@@ -8,6 +8,7 @@ cd ml && uv run python -m fields.public_transport.upcoming build                
 ```
 
 - **Config:** `config/fields/upcoming_transport.yaml` (cities searched, actor and queries, stage and mode rules, confidence weights).
+- **Filters:** `skip_domains` (social, forums, wikis), `reference_titles` (route-map and portal pages), `max_age_days` (dated items only). Each reject and its reason is in the rejects file. The fetch runs in batches of `queries_per_run` because one call for every query times out at Apify's gateway.
 - **Seed:** `config/upcoming_news_seed.json`, headlines and links from web searches on 2026-09-30. Items whose status a later report contradicts, or whose target date has passed, were left out on purpose.
 - **Output:** `projects.json` (served at `/v1/cities/{id}/projects`); rejects with reasons in `data/processed/upcoming_rejects.csv`.
 - **Reading a project:** `stage` is one of proposed, approved, tendered, under_construction, stalled. `evidence` is text found verbatim in the item. `geo_precision: city` means the pin is the city centre.

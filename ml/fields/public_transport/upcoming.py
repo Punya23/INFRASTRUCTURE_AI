@@ -23,6 +23,7 @@ import urllib.error
 import urllib.request
 from datetime import UTC, date, datetime
 from pathlib import Path
+from urllib.parse import urlparse
 
 import yaml
 
@@ -66,21 +67,26 @@ def load_config() -> dict:
 # --- fetch ---------------------------------------------------------------------------------------------------
 
 
-def apify_input(cfg: dict) -> dict:
-    """The actor input: one query per template and configured city, newline-separated as the actor expects."""
+def apify_inputs(cfg: dict) -> list[dict]:
+    """Actor inputs, one per batch of queries (one query per template and configured city, newline-separated as
+    the actor expects). A single run of every query outlasts Apify's gateway, so each call stays small."""
     cities = {c["id"]: c for c in json.loads(CITIES.read_text())}
     unknown = [i for i in cfg["cities"] if i not in cities]
     if unknown:
         raise ValueError(f"config cities not in cities.json: {unknown}")
     a = cfg["apify"]
     queries = [q.format(city=cities[i]["name"]) for i in cfg["cities"] for q in a["queries"]]
-    return {
-        "queries": "\n".join(queries),
-        "countryCode": a["country_code"],
-        "languageCode": a["language_code"],
-        "resultsPerPage": a["results_per_page"],
-        "maxPagesPerQuery": a["max_pages_per_query"],
-    }
+    size = a["queries_per_run"]
+    return [
+        {
+            "queries": "\n".join(queries[i : i + size]),
+            "countryCode": a["country_code"],
+            "languageCode": a["language_code"],
+            "resultsPerPage": a["results_per_page"],
+            "maxPagesPerQuery": a["max_pages_per_query"],
+        }
+        for i in range(0, len(queries), size)
+    ]
 
 
 def fetch_apify() -> None:
@@ -92,19 +98,24 @@ def fetch_apify() -> None:
             "APIFY_TOKEN is not set; create one at console.apify.com/settings/integrations"
         )
     cfg = load_config()
-    request = urllib.request.Request(
-        APIFY_RUN.format(actor=cfg["apify"]["actor"]),
-        data=json.dumps(apify_input(cfg)).encode(),
-        headers={"Content-Type": "application/json", "Authorization": f"Bearer {token}"},
-        method="POST",
-    )
-    try:
-        with urllib.request.urlopen(request, timeout=cfg["apify"]["timeout_s"] + 30) as response:
-            items = json.load(response)
-    except (OSError, urllib.error.HTTPError, json.JSONDecodeError) as exc:
-        raise ApifyError(f"Apify run failed: {exc}") from exc
-    if not isinstance(items, list):
-        raise ApifyError(f"Apify answered {type(items).__name__}, want a list of dataset items")
+    items: list = []
+    for batch in apify_inputs(cfg):
+        request = urllib.request.Request(
+            APIFY_RUN.format(actor=cfg["apify"]["actor"]),
+            data=json.dumps(batch).encode(),
+            headers={"Content-Type": "application/json", "Authorization": f"Bearer {token}"},
+            method="POST",
+        )
+        try:
+            with urllib.request.urlopen(
+                request, timeout=cfg["apify"]["timeout_s"] + 30
+            ) as response:
+                got = json.load(response)
+        except (OSError, urllib.error.HTTPError, json.JSONDecodeError) as exc:
+            raise ApifyError(f"Apify run failed: {exc}") from exc
+        if not isinstance(got, list):
+            raise ApifyError(f"Apify answered {type(got).__name__}, want a list of dataset items")
+        items += got  # a failed batch raises above, so nothing is stored from a partial run
     RAW_APIFY.parent.mkdir(parents=True, exist_ok=True)
     RAW_APIFY.write_text(
         json.dumps(
@@ -168,6 +179,18 @@ def extract(item: dict, cities: dict[str, dict], cfg: dict) -> tuple[list[dict],
     """The projects (one per city named) in one news item, or ([], reason)."""
     if not item["title"] or not item["url"].startswith(("http://", "https://")):
         return [], "no_title_or_link"
+    host = urlparse(item["url"]).hostname or ""
+    if any(host == d or host.endswith("." + d) for d in cfg["skip_domains"]):
+        return [], "not_news_source"
+    if re.search(cfg["reference_titles"], item["title"], re.IGNORECASE):
+        return [], "reference_page"
+    published = item_date(item)
+    if (
+        published
+        and (date.fromisoformat(item["fetched_at"]) - date.fromisoformat(published)).days
+        > cfg["max_age_days"]
+    ):
+        return [], "stale"
     text = f"{item['title']}\n{item['description']}".strip()
     stage_rule = next((r for r in cfg["stages"] if r["re"].search(text)), None)
     if stage_rule is None:
@@ -185,7 +208,6 @@ def extract(item: dict, cities: dict[str, dict], cfg: dict) -> tuple[list[dict],
         quote, text
     ):  # the check the invariant asks for, done by code
         return [], "quote_not_in_source"
-    published = item_date(item)
     cost = _single({float(v.replace(",", "")) for v in _COST.findall(quote)})
     length = _single({float(v.replace(",", "")) for v in _LENGTH.findall(quote)})
     w = cfg["confidence"]

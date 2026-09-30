@@ -59,6 +59,14 @@ def test_items_that_fail_go_to_rejects_with_a_reason(title, reason):
     assert up.extract(item(title), CITIES, CFG) == ([], reason)
 
 
+def test_social_posts_and_old_reports_are_not_projects():
+    social = item("Pune metro approved", url="https://www.instagram.com/reel/x/")
+    assert up.extract(social, CITIES, CFG) == ([], "not_news_source")
+    old = item("Pune metro approved", date="2020-12-15T12:00:00.000Z")
+    assert up.extract(old, CITIES, CFG) == ([], "stale")
+    assert up.extract(item("Pune metro approved", date="2026-08-01"), CITIES, CFG)[1] is None
+
+
 def test_link_must_be_http():
     assert up.extract(item("Pune metro approved", url="javascript:alert(1)"), CITIES, CFG) == (
         [],
@@ -113,9 +121,11 @@ def test_fetch_without_a_token_fails_closed(monkeypatch):
         up.fetch_apify()
 
 
-def test_apify_input_has_one_query_per_template_and_city():
-    queries = up.apify_input(CFG)["queries"].split("\n")
+def test_apify_inputs_split_every_query_into_small_batches():
+    batches = up.apify_inputs(CFG)
+    queries = [q for b in batches for q in b["queries"].split("\n")]
     assert len(queries) == len(CFG["cities"]) * len(CFG["apify"]["queries"])
+    assert all(len(b["queries"].split("\n")) <= CFG["apify"]["queries_per_run"] for b in batches)
 
 
 def test_committed_fixture_matches_the_seed():
