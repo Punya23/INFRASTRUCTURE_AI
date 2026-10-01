@@ -1,0 +1,724 @@
+/* ==========================================================================
+   INFRA-AI Dark Mode — comprehensive token overrides for ALL pages.
+   Loaded by site-header.js on every page. Activates on html[data-theme="dark"].
+   Covers: index.html, policymaker, methodology, nh-explorer, brics, invest,
+   speech components, onboarding modal, search overlays, map overlays.
+   ========================================================================== */
+
+/* --- Smooth transition on theme change --- */
+html[data-theme="dark"] *,
+html[data-theme="dark"] *::before,
+html[data-theme="dark"] *::after {
+  transition: background-color 0.3s ease, color 0.2s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* ==========================================================================
+   1. DESIGN SYSTEM TOKENS (shared across index, policymaker, methodology, nh)
+   ========================================================================== */
+html[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* Foundational Canvas & Text */
+  --canvas-base: #0F1419;
+  --surface: #1A2332;
+  --text-primary: #E8ECF1;
+  --text-secondary: #9EAAB8;
+  --text-muted: #6B7A8A;
+  --border-subtle: #2A3544;
+  --border-strong: #3D4E5F;
+
+  /* Sovereign Accent — slightly brighter for dark backgrounds */
+  --brand-teal: #1A8A9A;
+  --brand-teal-hover: #22A0B2;
+  --accent-saffron: #F0A040;
+
+  /* Status Tokens */
+  --status-operational: #22A0B2;
+  --status-construction: #ECA209;
+  --status-planned: #5A8EC5;
+  --status-stalled: #D04E42;
+  --status-cancelled: #8892A0;
+
+  /* Surface variants */
+  --surface-container: #1E2D3D;
+  --surface-container-low: #172536;
+  --surface-container-high: #253647;
+  --surface-container-highest: #2C3E50;
+  --surface-container-lowest: #131C28;
+  --surface-dim: #121A24;
+  --surface-bright: #1E2D3D;
+
+  /* Primary palette */
+  --primary: #1A8A9A;
+  --primary-container: #0E5A66;
+  --on-primary: #FFFFFF;
+  --on-primary-container: #A0D8E2;
+
+  /* Secondary palette */
+  --secondary: #F0A040;
+  --secondary-container: #8A5100;
+  --on-secondary: #1A1200;
+  --on-secondary-container: #FFD8A0;
+  --secondary-fixed: #4A2E00;
+
+  /* Tertiary palette */
+  --tertiary: #5A9ADA;
+  --tertiary-container: #1A4470;
+  --on-tertiary: #FFFFFF;
+  --on-tertiary-container: #A0C8F0;
+  --tertiary-fixed: #1A3050;
+
+  /* On surface */
+  --on-surface: #E8ECF1;
+  --on-surface-variant: #9EAAB8;
+  --outline: #5A6A7A;
+  --outline-variant: #3D4E5F;
+
+  /* Error */
+  --error: #F04040;
+  --error-container: #4A1A1A;
+  --on-error-container: #FFB4AB;
+
+  /* Elevation — darker shadows */
+  --shadow-1: 0px 1px 4px rgba(0, 0, 0, 0.30);
+  --shadow-2: 0px 4px 16px rgba(0, 0, 0, 0.35);
+  --shadow-3: 0px 12px 32px rgba(0, 0, 0, 0.40);
+
+  /* Invest-flow tokens (pages under /invest/) */
+  --on-brand: #FFFFFF;
+  --teal-tint: #0E3A42;
+  --saffron-tint: #3A2A10;
+  --saffron-ink: #FFD090;
+  --surface-sunken: #121A24;
+  --surface-hover: #253647;
+  --border-control: #5A6A7A;
+  --track: #2A3544;
+  --up-ink: #4ACA6A;
+  --up-tint: #1A3420;
+  --error-ink: #F06060;
+  --error-tint: #3A1A1A;
+  --focus-ring: #1A8A9A;
+}
+
+/* ==========================================================================
+   2. BRICS PAGE TOKENS (uses its own --canvas, --ink, --surface, etc.)
+   ========================================================================== */
+html[data-theme="dark"] {
+  --canvas: #0F1419;
+  --ink: #E8ECF1;
+  --ink-2: #9EAAB8;
+  --ink-3: #6B7A8A;
+  --line: #2A3544;
+  --line-strong: #3D4E5F;
+  --teal: #1A8A9A;
+  --teal-deep: #22A0B2;
+  --teal-wash: #0E3A42;
+  --saffron: #F0A040;
+  --saffron-wash: #3A2A10;
+  --bad: #D04E42;
+  --bad-wash: #3A1A1A;
+  --land: #253647;
+  --sea: #1A2332;
+}
+
+/* ==========================================================================
+   3. BODY & HTML BASE
+   ========================================================================== */
+html[data-theme="dark"] body {
+  background: var(--canvas-base, var(--canvas, #0F1419));
+  color: var(--text-primary, var(--ink, #E8ECF1));
+}
+
+/* ==========================================================================
+   4. SITE HEADER
+   ========================================================================== */
+html[data-theme="dark"] .sh {
+  --sh-text: #E8ECF1;
+  --sh-muted: #9EAAB8;
+  --sh-primary: #1A8A9A;
+  --sh-hover: rgba(255, 255, 255, 0.06);
+  --sh-line: #2A3544;
+  background: rgba(15, 20, 25, 0.96);
+  backdrop-filter: blur(12px);
+}
+html[data-theme="dark"] .sh__brand { color: var(--sh-primary) !important; }
+html[data-theme="dark"] .sh__dpg {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--sh-line);
+  color: var(--sh-muted);
+}
+html[data-theme="dark"] .sh__menu {
+  background: #1A2332;
+  border-bottom-color: var(--sh-line);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.30);
+}
+
+/* ==========================================================================
+   5. HARDCODED rgba(255,255,255,...) OVERLAYS → dark equivalents
+   ========================================================================== */
+/* Map overlays on index.html */
+html[data-theme="dark"] .map-top-overlay {
+  background: rgba(15, 20, 25, 0.9);
+  backdrop-filter: blur(12px);
+}
+html[data-theme="dark"] .map-legend {
+  background: rgba(15, 20, 25, 0.95);
+  backdrop-filter: blur(12px);
+}
+
+/* City card badges */
+html[data-theme="dark"] .city-state-badge {
+  background: rgba(26, 35, 50, 0.92);
+  backdrop-filter: blur(12px);
+  color: var(--primary);
+}
+html[data-theme="dark"] .city-sites-badge {
+  background: rgba(26, 35, 50, 0.92);
+  color: var(--on-surface);
+}
+
+/* NH Explorer map chips & legend */
+html[data-theme="dark"] .map-chip {
+  background: rgba(15, 20, 25, 0.92);
+  backdrop-filter: blur(8px);
+  border-color: var(--border-subtle);
+}
+html[data-theme="dark"] .map-overlay-top .map-chip {
+  background: rgba(15, 20, 25, 0.92);
+}
+
+/* Loading overlay */
+html[data-theme="dark"] .loading-overlay {
+  background: rgba(15, 20, 25, 0.8);
+}
+
+/* ==========================================================================
+   6. INDEX.HTML SPECIFIC
+   ========================================================================== */
+/* Hero section gradient backgrounds */
+html[data-theme="dark"] .hero {
+  background: transparent;
+}
+
+/* Search apparatus */
+html[data-theme="dark"] .search-apparatus {
+  background: var(--surface-container-lowest);
+  box-shadow: var(--shadow-3);
+}
+html[data-theme="dark"] .search-input {
+  color: var(--on-surface);
+}
+
+/* Cities overlay & panel */
+html[data-theme="dark"] .cities-overlay {
+  background: rgba(0, 0, 0, 0.65);
+}
+html[data-theme="dark"] .cities-panel {
+  background: var(--surface-container-lowest);
+}
+html[data-theme="dark"] .cities-search {
+  background: var(--surface);
+  border-color: var(--border-subtle);
+  color: var(--on-surface);
+}
+
+/* Chapter cards */
+html[data-theme="dark"] .chapter-card {
+  background: var(--surface-container-lowest);
+  box-shadow: var(--shadow-1);
+}
+html[data-theme="dark"] .chapter-card:hover {
+  box-shadow: var(--shadow-2);
+}
+
+/* Status pills - adjust rgba backgrounds */
+html[data-theme="dark"] .status-pill.operational { background: rgba(26, 138, 154, 0.15); }
+html[data-theme="dark"] .status-pill.construction { background: rgba(236, 162, 9, 0.15); }
+html[data-theme="dark"] .status-pill.planned { background: rgba(90, 142, 197, 0.15); border-color: var(--status-planned); }
+html[data-theme="dark"] .status-pill.citizen { background: rgba(240, 160, 64, 0.15); }
+html[data-theme="dark"] .status-pill.sovereign { background: var(--surface-container-high); }
+
+/* Five questions section */
+html[data-theme="dark"] .five-questions {
+  background: var(--surface-container-low);
+}
+
+/* Search modal */
+html[data-theme="dark"] .search-overlay {
+  background: rgba(0, 0, 0, 0.7);
+}
+html[data-theme="dark"] .search-modal {
+  background: var(--surface-container-lowest);
+}
+html[data-theme="dark"] .search-modal-input {
+  background: var(--surface);
+  color: var(--on-surface);
+  border-color: var(--primary);
+}
+
+/* Place panel */
+html[data-theme="dark"] .place-panel {
+  background: var(--surface-container-lowest);
+}
+
+/* Map canvas */
+html[data-theme="dark"] .map-canvas {
+  background: var(--surface-container-low);
+}
+
+/* Footer */
+html[data-theme="dark"] .site-footer {
+  background: var(--surface-container-lowest);
+  border-top-color: var(--outline-variant);
+}
+
+/* Onboarding modal */
+html[data-theme="dark"] .onboard-overlay {
+  background: rgba(0, 0, 0, 0.6);
+}
+html[data-theme="dark"] .onboard-modal,
+html[data-theme="dark"] .onboard-content {
+  background: var(--surface);
+  color: var(--text-primary);
+}
+
+/* ==========================================================================
+   7. NH EXPLORER SPECIFIC
+   ========================================================================== */
+html[data-theme="dark"] .sidebar {
+  background: var(--surface);
+  border-left-color: var(--border-subtle);
+}
+html[data-theme="dark"] .sidebar-header {
+  background: var(--surface);
+  border-bottom-color: var(--border-subtle);
+}
+html[data-theme="dark"] .stat-card {
+  background: var(--canvas-base);
+  border-color: var(--border-subtle);
+}
+html[data-theme="dark"] .state-table th {
+  background: var(--surface);
+  border-bottom-color: var(--border-subtle);
+}
+html[data-theme="dark"] .state-table td {
+  border-bottom-color: rgba(255, 255, 255, 0.04);
+}
+html[data-theme="dark"] .state-table tr:hover td {
+  background: rgba(26, 138, 154, 0.06);
+}
+
+/* NH Explorer popup */
+html[data-theme="dark"] .maplibregl-popup-content {
+  background: var(--surface) !important;
+  color: var(--text-primary) !important;
+  box-shadow: var(--shadow-3) !important;
+}
+html[data-theme="dark"] .maplibregl-popup-tip {
+  border-top-color: var(--surface) !important;
+}
+
+/* NH status badges */
+html[data-theme="dark"] .status-operational { background: rgba(26, 138, 154, 0.15); }
+html[data-theme="dark"] .status-under_construction { background: rgba(236, 162, 9, 0.15); }
+html[data-theme="dark"] .status-proposed { background: rgba(90, 142, 197, 0.15); }
+html[data-theme="dark"] .tier-badge { background: rgba(236, 162, 9, 0.2); }
+
+/* ==========================================================================
+   8. POLICYMAKER PAGE SPECIFIC
+   ========================================================================== */
+html[data-theme="dark"] .dashboard-hero {
+  background: linear-gradient(180deg, rgba(30, 45, 61, 0.4) 0%, rgba(15, 20, 25, 0) 100%);
+  border-bottom-color: var(--border-subtle);
+}
+
+/* ==========================================================================
+   9. METHODOLOGY PAGE SPECIFIC
+   ========================================================================== */
+html[data-theme="dark"] .method-card {
+  background: var(--surface-container-lowest);
+  border-color: var(--border-subtle);
+}
+html[data-theme="dark"] .formula-expression {
+  background: var(--surface);
+  border-color: var(--border-subtle);
+  color: var(--primary);
+}
+html[data-theme="dark"] .formula-banner {
+  background: var(--surface-container-low);
+  border-color: var(--border-strong);
+}
+html[data-theme="dark"] .sources-table {
+  border-color: var(--border-subtle);
+}
+html[data-theme="dark"] .sources-table th {
+  background: var(--surface-container-low);
+  color: var(--on-surface);
+}
+html[data-theme="dark"] .sources-table td {
+  border-bottom-color: var(--border-subtle);
+}
+html[data-theme="dark"] .sources-table tr:hover td {
+  background: var(--surface-container-low);
+}
+html[data-theme="dark"] .citation-chip {
+  background: var(--surface-container-high);
+  border-color: rgba(26, 138, 154, 0.25);
+}
+html[data-theme="dark"] .citation-chip:hover {
+  background: var(--surface-container);
+}
+
+/* ==========================================================================
+   10. BRICS PAGE SPECIFIC
+   ========================================================================== */
+html[data-theme="dark"] .card {
+  background: var(--surface, #1A2332);
+  border-color: var(--line, #2A3544);
+}
+html[data-theme="dark"] .chip {
+  background: var(--surface, #1A2332);
+  border-color: var(--line-strong, #3D4E5F);
+  color: var(--ink, #E8ECF1);
+}
+html[data-theme="dark"] .step {
+  background: var(--surface, #1A2332);
+  border-color: var(--line, #2A3544);
+}
+html[data-theme="dark"] .step .n {
+  background: var(--canvas, #0F1419);
+  border-color: var(--line-strong, #3D4E5F);
+  color: var(--ink-3, #6B7A8A);
+}
+html[data-theme="dark"] .mono {
+  background: var(--canvas, #0F1419);
+  border-color: var(--line, #2A3544);
+  color: var(--ink, #E8ECF1);
+}
+html[data-theme="dark"] .native {
+  background: var(--teal-wash, #0E3A42);
+  color: var(--ink, #E8ECF1);
+}
+html[data-theme="dark"] .brief {
+  border-inline-start-color: var(--teal, #1A8A9A);
+  background: var(--teal-wash, #0E3A42);
+  color: var(--ink, #E8ECF1);
+}
+html[data-theme="dark"] .claim {
+  border-color: var(--line, #2A3544);
+  background: var(--surface, #1A2332);
+}
+html[data-theme="dark"] .claim.no {
+  border-color: #5A2A24;
+  background: #2A1614;
+}
+html[data-theme="dark"] .live-note {
+  background: var(--saffron-wash, #3A2A10);
+  border-color: #5A4020;
+}
+html[data-theme="dark"] .live-note a {
+  color: #FFD090;
+}
+html[data-theme="dark"] .bar .track {
+  background: var(--canvas, #0F1419);
+  border-color: var(--line, #2A3544);
+}
+html[data-theme="dark"] .big {
+  color: var(--teal, #1A8A9A);
+}
+html[data-theme="dark"] s {
+  color: var(--ink-3, #6B7A8A);
+}
+/* BRICS table */
+html[data-theme="dark"] table {
+  border-color: var(--border-subtle, var(--line, #2A3544));
+}
+html[data-theme="dark"] th {
+  color: var(--text-secondary, var(--ink-2, #9EAAB8));
+  border-bottom-color: var(--border-subtle, var(--line, #2A3544));
+}
+html[data-theme="dark"] td {
+  border-bottom-color: var(--border-subtle, var(--line, #2A3544));
+  color: var(--text-primary, var(--ink, #E8ECF1));
+}
+html[data-theme="dark"] tr:hover td {
+  background: var(--surface-hover, rgba(26, 138, 154, 0.06));
+}
+/* BRICS map SVG */
+html[data-theme="dark"] .map .c {
+  stroke: #2A3544;
+}
+html[data-theme="dark"] .map .pin {
+  fill: #1A2332;
+  stroke: var(--ink, #E8ECF1);
+}
+html[data-theme="dark"] .map {
+  background: var(--sea, #1A2332);
+}
+/* BRICS ready tags */
+html[data-theme="dark"] .ready .tag {
+  background: var(--canvas, #0F1419);
+  color: var(--ink-2, #9EAAB8);
+  border-color: var(--line-strong, #3D4E5F);
+}
+html[data-theme="dark"] .ready .tag.ok {
+  background: var(--teal-wash, #0E3A42);
+  color: var(--teal, #1A8A9A);
+  border-color: var(--teal-wash, #0E3A42);
+}
+html[data-theme="dark"] .tag.ok {
+  background: var(--teal-wash, #0E3A42);
+  color: var(--teal, #1A8A9A);
+}
+html[data-theme="dark"] .tag.no {
+  background: var(--bad-wash, #3A1A1A);
+  color: var(--bad, #D04E42);
+}
+
+/* ==========================================================================
+   11. INVEST FLOW PAGES (invest.css overrides)
+   ========================================================================== */
+html[data-theme="dark"] .inv-card {
+  background: var(--surface);
+  border-color: var(--border-subtle);
+}
+html[data-theme="dark"] .inv-footer {
+  background: var(--surface);
+  border-color: var(--border-subtle);
+  color: var(--text-secondary);
+}
+html[data-theme="dark"] .inv-chip {
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+}
+html[data-theme="dark"] .inv-disclaimer {
+  border-color: var(--accent-saffron);
+}
+html[data-theme="dark"] .inv-skeleton {
+  background: var(--surface-container);
+}
+html[data-theme="dark"] .inv-error {
+  background: var(--error-tint);
+  border-color: var(--error-ink);
+}
+
+/* ==========================================================================
+   12. SPEECH COMPONENTS
+   ========================================================================== */
+html[data-theme="dark"] .speech-mic-btn {
+  border-color: var(--border-subtle);
+  background: var(--surface-container-lowest, var(--surface));
+  color: var(--brand-teal);
+}
+html[data-theme="dark"] .speech-mic-btn:hover:not(:disabled) {
+  background: rgba(26, 138, 154, 0.1);
+  border-color: var(--brand-teal);
+}
+html[data-theme="dark"] .speech-tts-btn {
+  border-color: var(--border-subtle);
+  background: var(--surface);
+  color: var(--brand-teal);
+}
+html[data-theme="dark"] .speech-modal,
+html[data-theme="dark"] .speech-error {
+  background: var(--surface);
+  border-color: var(--border-subtle);
+  color: var(--text-primary);
+}
+
+/* ==========================================================================
+   13. FORM CONTROLS (global)
+   ========================================================================== */
+html[data-theme="dark"] input,
+html[data-theme="dark"] select,
+html[data-theme="dark"] textarea {
+  background: var(--surface, #1A2332);
+  color: var(--text-primary, var(--ink, #E8ECF1));
+  border-color: var(--border-strong, var(--line-strong, #3D4E5F));
+}
+html[data-theme="dark"] input::placeholder,
+html[data-theme="dark"] textarea::placeholder {
+  color: var(--text-muted, var(--ink-3, #6B7A8A));
+}
+html[data-theme="dark"] input:focus,
+html[data-theme="dark"] select:focus,
+html[data-theme="dark"] textarea:focus {
+  border-color: var(--primary, var(--teal, #1A8A9A));
+}
+
+/* ==========================================================================
+   14. CODE BLOCKS
+   ========================================================================== */
+html[data-theme="dark"] code,
+html[data-theme="dark"] pre {
+  background: var(--surface-container, #1E2D3D);
+  color: var(--text-primary, #E8ECF1);
+}
+
+/* ==========================================================================
+   15. LINKS (non-header)
+   ========================================================================== */
+html[data-theme="dark"] a:not(.sh a):not(.sh__link):not([class*="btn"]):not([class*="chip"]):not([class*="city"]):not([class*="pill"]):visited:not(.sh a) {
+  color: var(--primary, var(--teal, #1A8A9A));
+}
+
+/* ==========================================================================
+   16. SCROLLBAR (webkit)
+   ========================================================================== */
+html[data-theme="dark"] ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+html[data-theme="dark"] ::-webkit-scrollbar-track {
+  background: var(--canvas-base, var(--canvas, #0F1419));
+}
+html[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: var(--border-strong, var(--line-strong, #3D4E5F));
+  border-radius: 4px;
+}
+html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+  background: var(--outline, #5A6A7A);
+}
+
+/* ==========================================================================
+   17. I18N LANGUAGE DROPDOWN
+   ========================================================================== */
+html[data-theme="dark"] #i18n-dropdown-toggle {
+  background: var(--surface);
+  border-color: var(--border-subtle);
+  color: var(--text-primary);
+}
+html[data-theme="dark"] .i18n-dropdown-menu,
+html[data-theme="dark"] #i18n-dropdown-menu {
+  background: var(--surface);
+  border-color: var(--border-subtle);
+  box-shadow: var(--shadow-3);
+}
+html[data-theme="dark"] .i18n-dropdown-menu li:hover,
+html[data-theme="dark"] #i18n-dropdown-menu li:hover,
+html[data-theme="dark"] .i18n-dropdown-menu button:hover,
+html[data-theme="dark"] #i18n-dropdown-menu button:hover {
+  background: var(--surface-container);
+}
+
+/* ==========================================================================
+   18. IMAGE BRIGHTNESS (subtle, skip SVGs)
+   ========================================================================== */
+html[data-theme="dark"] img:not([src*=".svg"]) {
+  filter: brightness(0.90) contrast(1.05);
+}
+
+/* ==========================================================================
+   19. MISCELLANEOUS ELEMENTS
+   ========================================================================== */
+/* Kbd hint */
+html[data-theme="dark"] .kbd-hint {
+  background: var(--surface-container-high);
+  color: var(--on-surface-variant);
+}
+
+/* Sample tag */
+html[data-theme="dark"] .sample-tag {
+  background: var(--surface-container-high);
+  border-color: var(--outline-variant);
+  color: var(--secondary);
+}
+
+/* Eyebrow pill */
+html[data-theme="dark"] .eyebrow-pill {
+  background: var(--surface-container);
+  border-color: var(--outline-variant);
+}
+
+/* Synopsis */
+html[data-theme="dark"] .synopsis {
+  background: var(--surface-container-low);
+}
+
+/* Metric card */
+html[data-theme="dark"] .metric-card {
+  background: var(--surface-container);
+}
+
+/* Tab bar */
+html[data-theme="dark"] .tab-bar {
+  background: var(--surface-container);
+}
+html[data-theme="dark"] .tab-btn.active {
+  background: var(--surface-container-lowest);
+  color: var(--primary);
+}
+
+/* Map frame */
+html[data-theme="dark"] .map-frame {
+  background: var(--surface-container-lowest);
+}
+
+/* Zoom buttons */
+html[data-theme="dark"] .zoom-btn {
+  background: var(--surface-container-lowest);
+  color: var(--on-surface);
+}
+html[data-theme="dark"] .zoom-btn:hover {
+  background: var(--surface-container);
+}
+
+/* Rail buttons */
+html[data-theme="dark"] .rail-btn {
+  background: var(--surface-container-lowest);
+  border-color: var(--border-subtle);
+  color: var(--primary);
+}
+
+/* City cards */
+html[data-theme="dark"] .city-card {
+  background: var(--surface-container-lowest);
+}
+html[data-theme="dark"] .city-card.see-all {
+  background: var(--surface-container-high);
+  color: var(--primary);
+}
+
+/* Voice button */
+html[data-theme="dark"] .voice-btn {
+  background: var(--surface-container);
+  color: var(--primary);
+}
+html[data-theme="dark"] .voice-btn:hover {
+  background: var(--surface-container-high);
+}
+
+/* Suggestion pills */
+html[data-theme="dark"] .suggestion-pill {
+  background: var(--surface-container);
+  color: var(--on-surface);
+}
+html[data-theme="dark"] .suggestion-pill:hover {
+  background: var(--surface-container-high);
+}
+
+/* Coords badge & update badge */
+html[data-theme="dark"] .coords-badge,
+html[data-theme="dark"] .update-badge {
+  background: var(--surface-container);
+  color: var(--on-surface-variant);
+}
+
+/* Precision badge */
+html[data-theme="dark"] .precision-badge {
+  background: var(--surface-container-high);
+  color: var(--primary);
+}
+
+/* Trust section */
+html[data-theme="dark"] .trust-title {
+  color: var(--primary);
+}
+
+/* Footer links */
+html[data-theme="dark"] .footer-col a {
+  color: var(--on-surface-variant);
+}
+html[data-theme="dark"] .footer-col a:hover {
+  color: var(--primary);
+}

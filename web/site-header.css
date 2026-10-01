@@ -41,6 +41,20 @@ html { scroll-padding-top: var(--site-header-h); } /* in-page jumps clear the st
 }
 .sh__menu.is-open { display: flex; flex-direction: column; gap: 0.125rem; }
 .sh__menu .sh__link { padding: 0.75rem; font-size: 1rem; }
+/* --- Theme toggle (dark mode) --- */
+.sh__theme-toggle {
+  display: flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px; border: 1px solid var(--sh-line);
+  border-radius: 0.5rem; background: transparent; color: var(--sh-text);
+  cursor: pointer; transition: background 0.2s, border-color 0.2s, transform 0.2s;
+}
+.sh__theme-toggle:hover { background: var(--sh-hover); border-color: var(--sh-muted); }
+.sh__theme-toggle:active { transform: scale(0.92); }
+.sh__theme-toggle:focus-visible {
+  outline: 2px solid var(--sh-primary); outline-offset: 2px;
+}
+.sh__theme-toggle svg { transition: opacity 0.25s, transform 0.3s; }
+.sh__theme-sun, .sh__theme-moon { flex-shrink: 0; }
 @media (min-width: 860px) {
   .sh__nav { display: flex; }
   .sh__burger { display: none; }
